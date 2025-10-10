@@ -2,7 +2,7 @@
 //Console.WriteLine("Hello, World!");
 using WypozyczalniaSamochodow.Model;
 
-FirstClass fc = new FirstClass();
+//FirstClass fc = new FirstClass();
 
 Person p1 = new Person() { FirstName = "Igor", LastName="Borowicz", Age=21 };
 Console.WriteLine(p1);

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace WypozyczalniaSamochodow.Model
 {
-    public  class FirstClass
+    internal class Branch
     {
-
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required string City { get; set; }
     }
 }
