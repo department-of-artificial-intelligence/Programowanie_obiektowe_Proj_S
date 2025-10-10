@@ -4,7 +4,7 @@ using CarRental.Model;
 
 PierwszaKlasa pk = new PierwszaKlasa();
 
-Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 34 };
+Car p1 = new Car() { CarBrand = "BMW", CarModel = "M3", ProductionYear = 2024 };
 
 Console.WriteLine(p1);
 //Console.WriteLine($"{p1.FirstName} {p1.LastName} {p1.Age}");
