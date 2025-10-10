@@ -6,16 +6,11 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Person
+    public class Pracownik
     {
-        public int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public int Age { get; set; }
-
-        public override string ToString()
-        {
-            return $"{FirstName} {LastName} {Age}";
-        }
+        public required int Id { get; set; }
+        public required int Age { get; set; }
     }
 }

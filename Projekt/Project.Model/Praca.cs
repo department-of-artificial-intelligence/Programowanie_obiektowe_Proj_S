@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class PierwszaKlasa
+    public class Praca
     {
+        public required string Name { get; set; }
+        public required string Typeofjob { get; set; }
     }
 }
