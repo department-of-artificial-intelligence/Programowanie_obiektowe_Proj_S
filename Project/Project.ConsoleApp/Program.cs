@@ -6,16 +6,9 @@ namespace Project.ConsoleApp
     {
         private static void Main()
         {
-            var person = new Person()
-            {
-                FirstName = "Jan",
-                LastName = "Kowalski",
-                Age = 40
-            };
+            var hotel = new Hotel() { Address = "aa", Name = "bb" };
 
-            Console.WriteLine(person);
-
-            Console.WriteLine(ProjectProperties.Text);
+            Console.WriteLine(hotel);
         }
     }
 }
