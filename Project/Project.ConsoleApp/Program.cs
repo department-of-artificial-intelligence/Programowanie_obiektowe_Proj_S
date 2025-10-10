@@ -7,18 +7,7 @@
     {
         static void Main(string[] args)
         {
-
-            PierwszaKlasa klas = new PierwszaKlasa();
-
-            Person person = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 11 };
-
-            person.Age = 12;
-
-            //Console.WriteLine($"{person.LastName}");
-
-            //Console.WriteLine("Hello, World!");
-
-            Console.WriteLine(person);
+            Console.WriteLine("Start point of the application . . .");
         }
     }
 }

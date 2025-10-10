@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class PierwszaKlasa
+    public enum Genre
     {
+        HORROR,
+        ROMANTIC,
+        ADVANTAGE,
+        DETECTIVE,
+        COMMEDY,
+        
 
     }
 }
