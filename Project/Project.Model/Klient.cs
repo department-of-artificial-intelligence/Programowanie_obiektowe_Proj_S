@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Kl
+    internal class Klient
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Adress { get; set; }
+
+
     }
 }
