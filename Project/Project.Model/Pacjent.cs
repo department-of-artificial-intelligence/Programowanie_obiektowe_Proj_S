@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class PierwszaKlasa
+    internal class Pacjent
     {
     }
 }

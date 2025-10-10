@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Person
+    public class Pracownicy
     {
         public int Id { get; set; }
         public required string FirstName { get; set; } 
