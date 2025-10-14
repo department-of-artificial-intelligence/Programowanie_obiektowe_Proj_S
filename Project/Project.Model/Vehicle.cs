@@ -8,19 +8,25 @@ namespace Project.Model
 {
     public class Vehicle
     {
+        public enum VehicleStatus { Avaliable, InTransit, UnderMaintenance }
+        public enum VehicleType { CompanyCar, DeliveryVan, Truck, SemiTrailer /*naczepa*/ }
         public int Id { get; set; }
-        public int ProdYear { get; set; }
-        public int MileAge { get; set; } //przebieg
+        public int VinNumber { get; set; }
+        public int ProductionYear { get; set; }
+        public int EngineSize { get; set; }
+        public int MileAge { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
         public string RegNum { get; set; }
-        public string Body { get; set; } //nadwozie
-        public string Status { get; set; } //wypozyczony, w naprawie, dostepny
+
+        public VehicleStatus Status { get; set; }
+        public VehicleType Type { get; set; }
 
         public override string ToString()
         {
-            return $"{Brand} {Model}\nID: {Id}\nRegister Number: {RegNum}\nBody: {Body}\nProduction Year: {ProdYear}\nMileage: {MileAge}\nStatus: {Status}";
+            return $"Vehicle ID: {Id}, VIN: {VinNumber}, Brand: {Brand}, Model: {Model}, " +
+                   $"Production year: {ProductionYear}, Engine: {EngineSize}cc, Mileage: {MileAge} km, " +
+                   $"Registration: {RegNum}, Type: {Type}, Status: {Status}";
         }
-
     }
 }
