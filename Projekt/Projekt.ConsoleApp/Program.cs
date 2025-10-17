@@ -3,9 +3,9 @@
 
 using Project.Model;
 
-PierwszaKlasa pk = new PierwszaKlasa();
+Praca p = new Praca();
 
-Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 19 };
+Pracownik empl = new Pracownik() { FirstName = "Jan", LastName = "Kowalski", Id = 23231, Age = 19 };
 
-Console.WriteLine(p1);
+Console.WriteLine(empl);
 //Console.WriteLine($"{p1.FirstName} {p1.LastName} {p1.Age}");
