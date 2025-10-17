@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public required Person Resident { get; set; }
+        public required IEnumerable<Person> HistoricResidents { get; set; }
 
         public required DateTime ResidentFrom { get; set; }
 

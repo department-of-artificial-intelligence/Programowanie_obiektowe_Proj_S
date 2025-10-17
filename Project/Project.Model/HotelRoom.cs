@@ -10,6 +10,6 @@
     
         public required int Floor { get; set; }
 
-        public IEnumerable<RoomHistoryEntry> History { get; set; }
+        public required IEnumerable<RoomHistoryEntry> History { get; set; }
     }
 }
