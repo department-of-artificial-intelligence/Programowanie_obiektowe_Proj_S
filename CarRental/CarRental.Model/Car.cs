@@ -8,7 +8,6 @@ namespace CarRental.Model
 {
     public class Car
     {
-        public int CarId { get; set; }
         public string CarBrand { get; set; }
         public string CarModel { get; set; }
         public int ProductionYear { get; set; }
@@ -20,7 +19,7 @@ namespace CarRental.Model
 
         public override string ToString()
         {
-            return $"{CarBrand} {CarModel} {ProductionYear}";
+            return $"Marka: {CarBrand} | Model: {CarModel} | Rok produkcji: {ProductionYear}";
         }
     }
 }
