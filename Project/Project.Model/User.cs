@@ -6,12 +6,28 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class User
+    public class User
     {
-        public int Id { get; set; }
+        public int _id { get; set; }
 
-        public required string Username { get; set; }
-        public required string HashPassword { get; set; }
+        public string Username { get; set; }
+        public string HashPassword { get; set; }
+
+        // Default Constructor without params
+        public User() { }
+
+        public User(int id, string username, string hashPassword)
+        {
+            _id = id;
+            this.Username = username;
+            this.HashPassword = hashPassword;
+        }
+
+
+        public override string ToString()
+        {
+            return String.Format("User: {0} with username: {1}",_id, Username);
+        }
 
     }
 }

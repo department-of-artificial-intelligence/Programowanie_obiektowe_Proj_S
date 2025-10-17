@@ -8,12 +8,22 @@ namespace Project.Model
 {
     public enum Genre
     {
+        ACTION,
+        ROMANCE,
+        MYSTERY,
+        DRAMA,
+        COMEDY,
+        THRILLER,
+        FANTASY,
         HORROR,
-        ROMANTIC,
-        ADVANTAGE,
-        DETECTIVE,
-        COMMEDY,
-        
-
+        WESTERN,
+        SCIENCE_FICITION,
+        ADVENTURE,
+        ANIMATION,
+        HISTORY,
+        DOCUMENTARY,
+        MUSICAL,
+        PSHYCHOLOGICAL,
+        EPIC
     }
 }
