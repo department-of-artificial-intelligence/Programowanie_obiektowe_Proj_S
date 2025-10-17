@@ -1,4 +1,8 @@
-﻿using Project.Model;
+﻿using Project.Models;
 
-Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 40 };
-Console.WriteLine(p1);
+Film myTetsFilm = new("Test", 120, 30)
+{
+    description = "TestDescription"
+};
+
+Console.WriteLine(myTetsFilm.trailerUrl);
