@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace Biura.model
 {
-    
-    internal class biuro
+
+    public class Biuro
     {
         public string Name { get; set; }
         public string Location { get; set; }
-        public Owner Owner { get; set; }
-        
+        public Person Owner { get; set; }
 
+        public Biuro(string name, string location, Person owner)
+        {
+            Name = name;
+            Location = location;
+            Owner = owner;
+        }
+
+        public override string ToString()
+        {
+            return $"biuro wycieczkowe {Name} ul {Location} wlasciciel {Owner.ToString()}";
+        }
     }
 }
