@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class RentalPoint
+    internal class Customer
     {
-        public int Id { get; set; };
-        public string Adress { get; set; }
-        public int Adress_number { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        
+
 
     }
 }
