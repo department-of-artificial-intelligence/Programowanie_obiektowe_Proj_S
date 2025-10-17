@@ -12,6 +12,7 @@ namespace Project.Model
         public string Model { get; set; }
         public bool Isavailable {  get; set; }
         public string Type { get; set; }
+        public int Price {  get; set; }
         public Station CurrentStation { get; internal set; }
 
         public void Rent()
@@ -28,7 +29,7 @@ namespace Project.Model
         }
 
         public void ShowInfo() {
-            Console.WriteLine($"ID: {Id}, Model: {Model}, Avaialable: {Isavailable}");
+            Console.WriteLine($"ID: {Id}, Model: {Model}, Avaialable: {Isavailable}, Type of bycicle: {Type} Price per hour: {Price}");
         }
     }
 }
