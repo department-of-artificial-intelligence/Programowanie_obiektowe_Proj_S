@@ -17,9 +17,10 @@ Concert c1 = new Concert() { Artist = a1, Venue = v1 };
 Concert c2 = new Concert() { Artist = a2, Venue = v2 };
 Concert c3 = new Concert() { Artist = a3, Venue = v3 };
 
-Festival f1 = new Festival
+Festival f1 = new Festival() {Name ="Festiwal", Artists = [ a1, a2, a3], Venue = v1 };
 
 Console.WriteLine(v1);
 Console.WriteLine(a2);
 Console.WriteLine(c3);
+Console.WriteLine(f1);
 //Console.WriteLine($"{p1.FirstName} {p1.LastName} {p1.Age}");
