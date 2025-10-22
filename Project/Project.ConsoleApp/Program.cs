@@ -1,7 +1,2 @@
-﻿namespace Project.ConsoleApp
-{
-    internal class Program
-    {
+﻿//Console.WriteLine("Hello world!");
 
-    }
-}
