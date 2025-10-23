@@ -12,13 +12,14 @@ namespace Project.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Cost { get; set; }
+        public DateTime ExecutionDate { get; set; }
 
         public int AppointmentId { get; set; }
         public Appointment Appointment { get; set; }
 
         public override string ToString()
         {
-            return $"{Id} {Name} {Description} {Cost} ";
+            return $"{Id} - {Name}: {Description}, Cost: {Cost:C}, Executed on: {ExecutionDate:yyyy-MM-dd HH:mm}";
         }
 
 

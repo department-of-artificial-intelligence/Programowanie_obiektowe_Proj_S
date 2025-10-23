@@ -15,7 +15,7 @@ namespace Project.Model
         public string Email { get; set; }
         public string Address { get; set; }
 
-        List<Animal> Animals { get; set; }
+        public List<Animal> Animals { get; set; }
 
 
         public override string ToString()
