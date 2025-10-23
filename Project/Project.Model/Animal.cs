@@ -12,16 +12,18 @@ namespace Project.Model
         public string Name { get; set; }
         public string Species { get; set; }
         public string Breed { get; set; }
-        public int Age { get; set; }
-        public string MicrochipNuber { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string MicrochipNumber { get; set; }
 
         public int OwnerId { get; set; }
         public Owner Owner { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public List<Appointment> Appointments { get; set; } = new();
+
+        public int GetAge() => (int)((DateTime.Now - DateOfBirth).TotalDays / 365.25);
 
         public override string ToString()
         {
-            return $"{Name} {Species} {Breed} {Age} {MicrochipNuber}";
+            return $"{Name} {Species} {Breed}, Age: {GetAge()}";
         }
     }
 
