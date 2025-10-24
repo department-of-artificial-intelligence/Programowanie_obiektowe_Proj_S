@@ -2,7 +2,7 @@
 //Console.WriteLine("Hello, World!");
 using Project.Model;
 
-
+// transactions: commit, rollback
 
 Venue v1 = new Venue() { Name = "Stadion Narodowy", City = "Warszawa", FloorCapacity=10000, SeatsCapacity=30000};
 Venue v2 = new Venue() { Name = "Tauron Arena", City = "Kraków", FloorCapacity = 5000, SeatsCapacity = 15000 };

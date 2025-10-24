@@ -7,7 +7,7 @@ public class Concert
     public Venue Venue { get; set; }
     public DateTime Date { get; set; }
 
-
+    int Tickets_Sold { get; set; } = 0;
 
     public override string ToString()
     {
