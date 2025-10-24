@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model
+﻿namespace Project.Model;
+public class Review : BaseEntity<int>
 {
-    public class Review : BaseEntity<int>
+    public User User { get; set; }
+    public Movie Movie { get; set; }
+    public float Rate { get; set; } // between 0 and 5 
+    public string Comment { get; set; }
+
+    public Review(User user, Movie movie, float rate, string comment)
     {
-        public User user { get; set; }
-        public Movie movie { get; set; }
-        public float rate { get; set; } // between 0 and 5 
-        public string comment {get; set; }
-
-        public Review() { }
-
-        public Review(User user, Movie movie, float rate, string comment) 
-        {
-            this.user = user;
-            this.movie = movie;
-            this.rate = rate;
-            this.comment = comment;
-        }
+        User = user;
+        Movie = movie;
+        Rate = rate;
+        Comment = comment;
     }
 }
