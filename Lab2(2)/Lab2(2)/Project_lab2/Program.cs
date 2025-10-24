@@ -12,9 +12,9 @@ namespace Lab2_2_.Project_lab2
         {
             var towars = new Invertar();
 
-            towars.AddTowar(new Towar(20, "Paracetamol", 18, new DateTime(2026.20.20)));
-            towars.AddTowar(new Towar(20, "Paracetamol", 18, "20.30.2026"));
-            towars.AddTowar(new Towar(20, "Paracetamol", 18, "20.30.2026"));
+            towars.AddTowar(new Towar(20, "Paracetamol", 18, new DateTime(2026,12,20)));
+            towars.AddTowar(new Towar(20, "Paracetamol", 18, new DateTime(2026, 9, 10)));
+            towars.AddTowar(new Towar(20, "Paracetamol", 18, new DateTime(2027, 1, 30)));
 
             towars.ShowAll();   
         }

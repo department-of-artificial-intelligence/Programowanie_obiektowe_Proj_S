@@ -15,6 +15,11 @@ namespace Lab2_2_.Project_lab2
             _towars.Add(towar);
         }
 
+        public void SellTowar(Towar towar)
+        {
+            _towars.Remove(towar);
+        }
+
         public void ShowAll()
         {
             Console.WriteLine("_________________________________Asortyment_________________________________");
