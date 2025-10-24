@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace WypozyczalniaSamochodow.Model
 {
+    interface IBranch
+    {
+        void ShowBranches();
+        void AddBranch(string name, string city);
+        void RemoveBranch(string city);
+
+        void AddCar(Car car);
+        void RemoveCar(Car car);
+    }
+
     public class Branch
     {
         public int Id { get; set; }
@@ -26,14 +36,14 @@ namespace WypozyczalniaSamochodow.Model
             Cars = new List<Car>();
         }
 
-        public void AddCarToOffer(Car car)
+        public void AddCar(Car car)
         {
             if (car == null) return;
             Cars.Add(car);
             CarsCount++;
         }
 
-        public void RemoveCarFromOffer(Car car)
+        public void RemoveCar(Car car)
         {
             if(car == null) return;
             Cars.Remove(car);

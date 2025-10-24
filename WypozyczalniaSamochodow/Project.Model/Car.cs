@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace WypozyczalniaSamochodow.Model
 {
+    interface ICar
+    {
+        void ShowCars();
+        
+    }
+
     public class Car
     {
         public int Id { get; set; }
@@ -18,6 +24,7 @@ namespace WypozyczalniaSamochodow.Model
         public string Gearbox { get; set; }
         public string FuelType { get; set; }
         public bool IsAvailable { get; set; }
+        public int BranchId { get; set; }
 
         public Car() : this(0, string.Empty, string.Empty, 0, 0, 0, 0, string.Empty, string.Empty, false) { }
 
@@ -39,7 +46,7 @@ namespace WypozyczalniaSamochodow.Model
         {
             return string.Format
             (
-                $"Car {Id} - Dostępność: {IsAvailable}:\n"+
+                $"Car {Id} - Dostępność: {(IsAvailable ? "Dostępny" : "Niedostępny")}\n"+
                 $"Brand: {Brand} \nModel: {Model} \nProduction Year: {ProductionYear} \nEngine Volume: {EngineVolume} \nAvarage Consumption: {AvgConsumption} " +
                 $"\nPower: {Power} \nGearbox: {Gearbox} \nFuel Type: {FuelType}"
             );
