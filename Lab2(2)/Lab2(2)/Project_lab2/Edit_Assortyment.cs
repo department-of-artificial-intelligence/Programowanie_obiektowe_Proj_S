@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Lab2_2_.Project_lab2
 {
-    class Sprzedaz : Invertar
+    class      class Edit_Assortyment : Assortyment
     {
-        public void Sprzedaj(string nazwa, int ilosc)
+        public void Sell(string nazwa, int ilosc)
         {
             var towar = _towars.FirstOrDefault(t => t.Nazwa == nazwa);
             if (towar == null)

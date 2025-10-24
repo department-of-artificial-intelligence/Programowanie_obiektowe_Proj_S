@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab2_2_.Project_lab2
 {
-    internal class Invertar
+     class Assortyment
     {
         private List<Towar> _towars = new();
 

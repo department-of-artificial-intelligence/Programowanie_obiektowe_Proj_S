@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Lab2_2_.Project_lab2
 {
-    class Towar
+    class Product
     {
         public string _name_towar { get; set; }
         public int _id_towar { get; set; }
         public int _number_towar { get; set; } 
         public DateTime _godnosc_towaru { get; set; }
 
-        public Towar(int id_towar, string name_towar,  int number_towar, DateTime godnosc_towaru)
+        public Product(int id_towar, string name_towar,  int number_towar, DateTime godnosc_towaru)
         {
             _name_towar = name_towar;
             _id_towar = id_towar;
