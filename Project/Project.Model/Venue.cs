@@ -10,6 +10,7 @@ public class Venue
 
     public override string ToString()
     {
-        return $"{Name} -  {City}, Pojemność: Płyta - {FloorCapacity}, Trybuny - {SeatsCapacity}";
+        //return $"{Name} -  {City}, Pojemność: Płyta - {FloorCapacity}, Trybuny - {SeatsCapacity}";
+        return $"{Name} -  {City}";
     }
 }
