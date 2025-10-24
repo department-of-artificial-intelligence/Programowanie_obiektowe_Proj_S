@@ -8,36 +8,48 @@ namespace Project.Model
 {
     public class Order
     {
-        public enum OrderStatus { Pending, InProgress, Completed, Cancelled }
-        public int Id { get; set; }
-        public required string LoadDesc { get; set; }
-        public required string LoadingAddress { get; set; }
-        public required string UnloadingAdress { get; set; }
-        //public 
+        public int Id { get; private set; }
+        public string LoadingDescription { get; private set; }
+        public string LoadingAddress { get; private set; }
+        public string UnloadingAdress { get; private set; }
 
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
-        public Driver? AssigneDriver { get; private set; }
+        public Driver? AssignedDriver { get; private set; }
         public Vehicle? AssignedVehicle { get; private set; }
+
+        public Order(int id, string loadDesc, string loadingAddress, string unloadingAddress)
+        {
+            this.Id = id;   
+            this.LoadingDescription = loadDesc;
+            this.LoadingAddress = loadingAddress;
+            this.UnloadingAdress = unloadingAddress;
+        }
 
         public void AssignOrder(Driver driver)
         {
             if(Status != OrderStatus.Pending)
             {
-                Console.WriteLine("ERROR - This order does not exist.");
+                Console.WriteLine("ERROR - Order {Id} cannot be assigned. Only 'pending' orders can be assigned.");
                 return;
             }
-            if(driver.IsAvailable || driver.AssignedVehicle == null)
+            if(!driver.IsAvailable || driver.AssignedVehicle == null)
                 {
                 Console.WriteLine($"ERROR - Driver: {driver.FirstName} {driver.LastName} is not available now.");
                 return;
                 }
-            {
                 this.AssignedDriver = driver;
                 this.AssignedVehicle = driver.AssignedVehicle;
                 this.Status = OrderStatus.InProgress;
                 Console.WriteLine($"Order {Id} has been assigned to driver {driver.FirstName} {driver.LastName} and is now in progress.");
-            }
         }
+
+        public override string ToString()
+        {
+            return $"Order with ID: {Id} \n" +
+                   $"Loading Address: {LoadingAddress}\n" +
+                   $"Unloading address: {UnloadingAdress}\n" +
+                   $"Loading description: {LoadingDescription}";
         }
     }
 }
+

@@ -13,9 +13,12 @@ namespace Project.Model
         public required string LastName { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Vehicle? AssignedVehicle { get; private set; }
-        public override string ToString()
+
+        public Driver(int id, string firstName, string lastName)
         {
-            return $"{FirstName} {LastName}, ID: {Id}. Is available? - {IsAvailable}";
+            this.Id = id ;
+            this.FirstName = firstName ;
+            this.LastName = lastName ;
         }
 
         public void AssignVehicle(Vehicle vehicle)
@@ -25,18 +28,23 @@ namespace Project.Model
                 AssignedVehicle = vehicle;
                 IsAvailable = false;
                 vehicle.AssignDriver(this);
-                Console.WriteLine($"Vehicle with ID: {vehicle.Id} ({vehicle.RegNum}) assigned to driver {FirstName} {LastName}.");
+                Console.WriteLine($"Vehicle with ID: {vehicle.Id} ({vehicle.RegistrationNumber}) assigned to driver {FirstName} {LastName}.");
             }
         }
 
         public void CompleteOrder()
         {
             if (AssignedVehicle != null) {
-                Console.WriteLine($"Driver {FirstName} {LastName} has completed the order with vehicle with ID: {AssignedVehicle.Id} ({AssignedVehicle.RegNum}");
+                Console.WriteLine($"Driver {FirstName} {LastName} has completed the order with vehicle with ID: {AssignedVehicle.Id} ({AssignedVehicle.RegistrationNumber}");
                 IsAvailable = true;
                 AssignedVehicle.MarkAsAvailable();
                 AssignedVehicle = null;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}, ID: {Id}. Is available? - {IsAvailable}";
         }
     }
 }

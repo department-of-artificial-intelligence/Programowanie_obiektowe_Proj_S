@@ -6,23 +6,33 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Vehicle
+    public class Vehicle : IVehicle
     {
-        public enum VehicleStatus { Available, InTransit, UnderMaintenance }
-        public enum VehicleType { CompanyCar, DeliveryVan, Truck, SemiTrailer /*naczepa*/ }
         public int Id { get; set; }
         public int VinNumber { get; set; }
         public int ProductionYear { get; set; }
         public int EngineSize { get; set; }
-        public int MileAge { get; set; }
+        public int Mileage { get; set; }
         public required string Brand { get; set; }
         public required string Model { get; set; }
-        public required string RegNum { get; set; }
+        public required string RegistrationNumber { get; set; }
 
         public VehicleStatus VStatus { get; set; } = VehicleStatus.Available;
         public VehicleType VType { get; set; }
 
         public Driver? AssignedDriver { get; private set; }
+
+        public Vehicle(int id, int vinNumber, int productionYear, int engineSize, int mileage, string brand, string model, string registationNumber)
+        {
+            this.Id = id;
+            this.VinNumber = vinNumber;
+            this.ProductionYear = productionYear;
+            this.EngineSize = engineSize;
+            this.Mileage = mileage;
+            this.Brand = brand;
+            this.Model = model;
+            this.RegistrationNumber = registationNumber;
+        }
 
         public bool IsAvailable => VStatus == VehicleStatus.Available;
 
@@ -44,8 +54,8 @@ namespace Project.Model
         public override string ToString()
         {
             return $"Vehicle ID: {Id}, VIN: {VinNumber}, Brand: {Brand}, Model: {Model}, " +
-                   $"Production year: {ProductionYear}, Engine: {EngineSize}cc, Mileage: {MileAge} km, " +
-                   $"Registration: {RegNum}, Type: {VType}, Status: {VStatus}";
+                   $"Production year: {ProductionYear}, Engine: {EngineSize}cc, Mileage: {Mileage} km, " +
+                   $"Registration: {RegistrationNumber}, Type: {VType}, Status: {VStatus}";
         }
     }
 }
