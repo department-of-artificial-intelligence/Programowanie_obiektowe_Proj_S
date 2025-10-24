@@ -12,7 +12,7 @@ namespace Project.Model
     {
         public int Id { get; set; }
         public DateTime Data { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public Decimal TotalCost { get; set; }
         public string Status { get; set; } = "Scheduled";
 
@@ -22,11 +22,14 @@ namespace Project.Model
         public int VeterinarianId { get; set; }
         public Veterinarian Veterinarian { get; set; }
 
+        public int ClinicId { get; set; }
+        public Clinic Clinic { get; set; }
+
         public List<Treatment> Treatments { get; set; } = new();
 
         public override string ToString()
         {
-            return $"{Date:d} - {Description} ({Status}), Cost: {TotalCost:C}";
+            return $"{Data:d} - {Description} {Status}, Cost: {TotalCost:C}";
         }
 
 
