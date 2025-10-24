@@ -7,53 +7,51 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Pracownik : public Pracodawca : public Praca
+    public class Pracownik : Osoba : IPracujacy : IKontakt
     {
-        public required string FirstName { get; set; }
-        
-        public required string LastName { get; set; }
-
-        public required int Id { get; set; }
-
-        public required int Age { get; set; }
-
-
-        public void Project(int start, int end, string status, int grade)
+        public Adres AdresZamieszkania { get; set; }
+        public Stanowisko StanowiskoPracy { get; set; }
+       
+        public List<Projekt> ListaProjektow { get; set; } = new List<Projekt>();
+       
+        public void PassedProjects()
         {
-            int start = Console.ReadLine();
-            int end = Console.ReadLine();
-            string status = Console.ReadLine();
-            int grade = Console.ReadLine();
-        }
-
-        public void PassedProjects(Project(int start,int end,string status ,int grade),int amountofpassed)
-        {
-            amountofpassed = 0;
-
-            if(grade > 60)
+            int amountofpassed = 0;
+       
+            foreach (Projekt p in ListaProjektow)
             {
-                Console.WriteLine("Projekty zaliczone: ", Project(start, end, status, grade));
-                amountofpassed++;
+                if (p.Status == "Zakończony" && p.Ocena > 60)
+                {
+                    amountofpassed = amountofpassed + 1;
+                }
             }
-
-            Console.WriteLine("Liczba zaliczonych projektów: ", amountofpassed)
+            return amountofpassed;
         }
-
-        public void NotPassedProjects(Project(int start, int end, string status, int grade), int amountofnotpassed)
+       
+        public void NotPassedProjects()
         {
-            amountofnotpassed = 0;
-
-            if (grade < 60)
+            int amountofnotpassed = 0;
+       
+            foreach (Projekt p in ListaProjektow)
             {
-                Console.WriteLine("Projekty zaliczone: ", Project(start, end, status, grade));
-                amountofnotpassed++;
+                if (p.Status == "Zakończony" && p.Ocena < 60)
+                {
+                    amountofnotpassed = amountofnotpassed + 1;
+                }
             }
-
-            Console.WriteLine("Liczba niezaliczonych projektów: ", amountofnotpassed)
+            return amountofnotpassed;
         }
-
-
-    }
+       
+        public Adres Adres { get; set; }
+        public string Email { get; set;}
+        public string Telefon {  get; set; }
+       
+        public string LoadContactInfo()
+        {
+            return $"Email: {Email} | Telefon: {Telefon} | Adres: {Adres.Miasto}, {Adres.Ulica}"
+        }
+       
+        }
 
     
 }

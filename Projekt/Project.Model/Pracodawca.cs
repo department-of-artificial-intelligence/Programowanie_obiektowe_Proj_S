@@ -8,28 +8,47 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Pracodawca : public Pracownik
+    public class Pracodawca : Osoba
     {
-        public required string B_FirstName {  get; set; }
 
-        public required string B_LastName { get; set; }
+        public List<Dzial> ListaDzialow {  get; set; } = new List<Dzial>();
 
-        public required int B_Id { get; set; }
+        public Adres Adres { get; set; }
+        public string Email { get; set; }
+        public string Telefon { get; set; }
 
-        public required int B_Age { get; set; }
-
-
-        public required int Amountofemployees { get; set; }
-
-
-        public void DoEmployeesProjectsCheck( )
+        public string LoadContactInfo()
         {
-            Console.WriteLine(grade);
+            return $"Email firmy: {Email} | Telefon: {Telefon} | Adres siedziby: {Adres.Miasto}"
         }
 
-        public void DoMeeting(string MeetingDate)
+        public void DoEmployeesProjectsCheck()
         {
-            if(MeetingDate == "25.XX.20XX")
+            Console.WriteLine($"Szef {B_FirstName} sprawdza projekty")
+            
+            foreach(Pracownik prac in ListaPracownikow)
+            {
+                Console.WriteLine($"Pracownik {prac.FirstName} {prac.LastName}")
+
+                if(prac.ListaPracownikow.Count == 0)
+                {
+                    Console.WriteLine("Brak przypisanych projektow")
+                }
+                else
+                {
+                    foreach(Projekt proj in prac.ListaProjektow)
+                    {
+                        Console.WriteLine($"Projekt: '{proj.Name}', Ocena: {proj.Ocena}")
+                    }
+                }
+            }
+        }
+
+        public void DoMeeting()
+        {
+            string MeetingDate = "XX.XX.XXXX";
+
+            if (MeetingDate == "25.XX.20XX")
             {
                 Console.WriteLine("Dzisiaj odbędzie sie ważne spotkanie o godz. 16:00")
             }
