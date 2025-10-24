@@ -42,7 +42,7 @@ namespace Project.ConsoleApp
                 var list = Activator.CreateInstance(instanceType)!;
                 var method = instanceType.GetMethod("Add")!;
 
-                foreach (var _ in Enumerable.Range(1, 10))
+                foreach (var _ in Enumerable.Range(1, Random.Shared.Next(1, 10)))
                 {
                     method.Invoke(list, [MiniMock(genericType)]);
                 }
@@ -76,13 +76,12 @@ namespace Project.ConsoleApp
 
             Console.WriteLine(_hotel);
 
-            foreach (var room in _hotel.Rooms) 
+            foreach (var room in _hotel.Rooms)
             {
-
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"    {room}");
 
-                foreach (var entry in room.History)
+                foreach (var entry in room.HistoricResidents)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"        {entry}");

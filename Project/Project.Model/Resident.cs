@@ -1,14 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Project.Model.Abstract;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Model
 {
-    public record Resident
+    public record Resident : IResident
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public required Person Person { get; set; }
 
-        public DateTime ResidentFrom { get; set; }
+        public required DateTime ResidentFrom { get; set; }
 
         public Resident() { }
 

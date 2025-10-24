@@ -10,6 +10,6 @@
 
         public required IEnumerable<Resident> Residents { get; set; }
 
-        public required IEnumerable<RoomHistoryEntry> History { get; set; }
+        public required IEnumerable<RoomHistoricResident> HistoricResidents { get; set; }
     }
 }
