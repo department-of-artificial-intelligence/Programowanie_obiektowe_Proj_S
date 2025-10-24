@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model
+﻿namespace Project.Model;
+public enum MovieMarkType
 {
-    public enum MovieMarkType
-    {
-        FAVORITE,
-        WATCH_LATER,
-        WATCHED
-    }
+    FAVORITE = 1,
+    WATCH_LATER = 2,
+    WATCHED = 3
 }
+
