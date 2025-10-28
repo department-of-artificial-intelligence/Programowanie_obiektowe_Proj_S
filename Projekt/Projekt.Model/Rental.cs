@@ -8,6 +8,7 @@ namespace Projekt.Model
 {
     public class Rental
     {
+        //Wypozyczenie auta
         public int Id {  get; set; }
         public int CustomerId {  get; set; }
 
@@ -25,3 +26,4 @@ namespace Projekt.Model
 
     }
 }
+

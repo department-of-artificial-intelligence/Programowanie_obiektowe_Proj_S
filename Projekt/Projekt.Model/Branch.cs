@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
+    //Odział
     public class Branch
     {
         public int Id { get; set; }
