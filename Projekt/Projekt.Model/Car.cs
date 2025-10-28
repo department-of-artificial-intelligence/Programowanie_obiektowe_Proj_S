@@ -17,14 +17,14 @@ namespace Projekt.Model
 
 
         public string GetNumerRejestracyjny()
-        {
+        {hgjghjgh
             return numerRejestracyjny;
         }
 
         public void SetNumerRejestracyjny(string value)
         {
             numerRejestracyjny = value;
-        }
+        }fgddg
 
     }
 }
