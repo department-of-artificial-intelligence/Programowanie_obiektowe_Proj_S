@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +12,12 @@ namespace Projekt.Model
         public int Id { get; set; }
         public string Marka { get; set; }
         public string Model { get; set; }
-        public int Rocznik { get; set; }
-        private string numerRejestracyjny;
-        public decimal CenaZaDobe { get; set; }
-
-
-        public string GetNumerRejestracyjny()
-        {hgjghjgh
-            return numerRejestracyjny;
-        }
-
-        public void SetNumerRejestracyjny(string value)
-        {
-            numerRejestracyjny = value;
-        }fgddg
-
+        public int Year { get; set; }
+        private string RegistrationNumber { get; set; }
+        public int Mileage { get; set; }
+        public decimal DailyRate { get; set; }
+        public CarStatus Status { get; set; }
+        public int CurrentBranchId { get; set; }
+        public virtual Branch CurrentBranch { get; set; }
     }
 }
