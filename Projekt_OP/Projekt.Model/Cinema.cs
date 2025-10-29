@@ -19,8 +19,9 @@ namespace Projekt.Model
         {
             this._cinemaID = 0;
             this._cinemaName = string.Empty;
-        }
 
+        }
+        
 
         public Cinema(int CinemaID,string CinemaName) 
         {
