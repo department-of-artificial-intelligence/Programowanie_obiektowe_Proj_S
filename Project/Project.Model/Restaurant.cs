@@ -1,23 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Project.Model;
 
-namespace Project.Model
+namespace RestaurantNetwork.Model
 {
-    public class Restaurant
+    public class Restaurant : IRestaurant
     {
-        public required string Name {  get; set; }
-        public required string Address { get; set; }
-        public List<MenuItem> Menu { get; set; } = new();
-        public List<Employee> Employees { get; set; } = new();
+        public string Name { get; }
+        public string Address { get; }
+        public Manager Manager { get; }
+        public List<MenuItem> Menu { get; }
+        public List<Employee> Employees { get; }
+        public List<Order> Orders { get; }
 
-        public Restaurant(string name, string address) {
+        public Restaurant(string name, string address, Manager manager)
+        {
             Name = name;
             Address = address;
+            Manager = manager;
             Menu = new List<MenuItem>();
             Employees = new List<Employee>();
+            Orders = new List<Order>();
         }
+
+        public void AddMenuItem(MenuItem item) => Menu.Add(item);
+        public void AddEmployee(Employee emp) => Employees.Add(emp);
+        public void AddOrder(Order order) => Orders.Add(order);
+
+        public override string ToString() => $"{Name} ({Address})";
     }
 }
