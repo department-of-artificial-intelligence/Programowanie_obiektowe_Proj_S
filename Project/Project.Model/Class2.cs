@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Trenerzy
+    public class Tr
     {
         public required int Person_id { get; set; }
         public required string First_name { get; set; }
