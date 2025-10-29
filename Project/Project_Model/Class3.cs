@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project_Model
 {
-    public class Student:Person{
-        public int Id { get; set; }
-        public List<string>Lekcje=new List<string>();
-
+    internal class Lesson{
+        public string subject {  get; set; }
     }
 }
