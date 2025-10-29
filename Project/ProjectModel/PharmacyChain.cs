@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Siec_Aptek
+    public class PharmacyChain
     {
-        public List<Apteka> _apteki { get; set; }
+        public List<Pharmacy> _apteki { get; set; }
 
-        public Siec_Aptek(List<Apteka> apteki)
+        public PharmacyChain(List<Pharmacy> apteki)
         {
-            _apteki = new List<Apteka>();
+            _apteki = new List<Pharmacy>();
             if(apteki != null)
             {
-                foreach(Apteka apteka in apteki)
+                foreach(Pharmacy apteka in apteki)
                 {
                     _apteki.Add(apteka);
                 }
@@ -23,7 +23,7 @@ namespace Project.Model
         }
         public void wyswietlSiecAptek()
         {
-            foreach(Apteka a in _apteki)
+            foreach(Pharmacy a in _apteki)
             {
                 Console.WriteLine($"{a},\n");
             }

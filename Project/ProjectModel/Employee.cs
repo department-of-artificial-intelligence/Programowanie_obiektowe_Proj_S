@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class Adres
+    internal class Employee
     {
     }
 }

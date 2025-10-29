@@ -2,5 +2,5 @@
 using Project.Model;
 using System.Runtime.Loader;
 
-Apteka apteka1 = new Apteka(1, "Słoneczna Apteka");
+Pharmacy apteka1 = new Pharmacy(1, "Słoneczna Apteka");
 apteka1.wyswietlNazwe();
