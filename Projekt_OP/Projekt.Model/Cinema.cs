@@ -6,38 +6,34 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
-    public class Kino
+    public class Cinema
     {
         public required int _cinemaID;
         public required string _cinemaName;
-        public required int _cinemaRoom;
 
         public int CinemaID { get { return _cinemaID; } set { _cinemaID = value; } }
 
         public string CinemaName { get { return _cinemaName; } set { _cinemaName = value; } }
 
-        public int CinemaRoom { get { return _cinemaRoom; } set { _cinemaRoom = value; } }
-
-        public Kino() 
+        public Cinema() 
         {
             this._cinemaID = 0;
-            this._cinemaName = null;
-            this._cinemaRoom = 0;
+            this._cinemaName = string.Empty;
         }
 
 
-        public Kino(int CinemaID,string CinemaName, int CinemaRoom) 
+        public Cinema(int CinemaID,string CinemaName) 
         {
             _cinemaID = CinemaID;
             _cinemaName = CinemaName;
-            _cinemaRoom = CinemaRoom;
         }
 
-        public string showName() { }
 
-        public int showID() { }
+        public override string ToString()
+        {
+            return $"Kino: {_cinemaName} - {_cinemaID}\n";
+        }
 
-        public string showRooms() { }
 
 
     }

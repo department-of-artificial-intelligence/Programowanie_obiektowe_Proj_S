@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
-    internal class SalaKinowa
+    public class Employee
     {
+        public string _name;
+        public string _lastName;
+        public int _iD;
+
+
     }
 }

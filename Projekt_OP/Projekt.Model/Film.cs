@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
-    internal class Film
+    public class Film
     {
     }
 }
