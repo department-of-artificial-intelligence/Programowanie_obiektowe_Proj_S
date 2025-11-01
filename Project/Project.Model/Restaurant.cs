@@ -1,30 +1,58 @@
-﻿using Project.Model;
+﻿using RestaurantManagement.Models.Enums;
+using System.Security.Cryptography.X509Certificates;
 
-namespace RestaurantNetwork.Model
+namespace RestaurantManagement.Models
 {
-    public class Restaurant : IRestaurant
+    public class Restaurant
     {
-        public string Name { get; }
-        public string Address { get; }
-        public Manager Manager { get; }
-        public List<MenuItem> Menu { get; }
-        public List<Employee> Employees { get; }
-        public List<Order> Orders { get; }
+        public required string Name { get; set; }
+        public required Address Address { get; set; }
+        public required string PhoneNumber { get; set; }
+        public required string Email { get; set; }
+        public required TimeOnly OpeningHours { get; set; }
+        public required TimeOnly ClosingHours { get; set; }
+        public required List<MenuItem> Menu { get; set; }
+        public required List<Employee> Employees { get; set; }
+        public required List<Person> Clients { get; set; }
 
-        public Restaurant(string name, string address, Manager manager)
+
+        //GetEmployeesByType
+        public List<Employee> GetEmployeesByType(EmployeeType type)
         {
-            Name = name;
-            Address = address;
-            Manager = manager;
-            Menu = new List<MenuItem>();
-            Employees = new List<Employee>();
-            Orders = new List<Order>();
+         return Employees.Where(e => e.EmployeeType == type).ToList();
+           }
+
+        //Zwroc imiona i nazwiska danego typu pracownika ----- krotki:
+        public List<(string FirstName, string LastName)> GetEmployeesFirstAndLastNameByType(EmployeeType type)
+        {
+            return Employees
+                .Where(e => e.EmployeeType == type)
+                .Select(e => (e.FirstName, e.LastName))
+                .ToList();
         }
 
-        public void AddMenuItem(MenuItem item) => Menu.Add(item);
-        public void AddEmployee(Employee emp) => Employees.Add(emp);
-        public void AddOrder(Order order) => Orders.Add(order);
 
-        public override string ToString() => $"{Name} ({Address})";
+        //Doda nowy przepis do istniejacej listy
+        /* public void AddMenu(MenuItem menuItem)
+         {
+              Menu.Add(menuItem);
+         }
+        */
+
+        public void AddMenus(IEnumerable<MenuItem> menuItems)
+        {
+            Menu.AddRange(menuItems);
+        }
+
+
+        // 2) usuwa po nazwie
+        public void RemoveMenu(string menuName) 
+        {
+            var menuItem = Menu.FirstOrDefault(m => m.Name.ToLower() == menuName.ToLower());
+            if (menuItem != null)
+            {
+                Menu.Remove(menuItem);
+            }
+        }
     }
 }
