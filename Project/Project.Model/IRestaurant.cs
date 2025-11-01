@@ -1,4 +1,4 @@
-﻿using Project.Model;
+﻿using RestaurantManagement.Models;
 
 namespace RestaurantNetwork.Model
 {
