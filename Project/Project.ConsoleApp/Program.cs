@@ -58,6 +58,7 @@ namespace Project.ConsoleApp
                 }
             }
         }
+
         static void ShowActorMenu()
         {
             while (true)
@@ -105,19 +106,20 @@ namespace Project.ConsoleApp
                 Console.Write("Birth Date (yyyy-mm-dd): ");
                 DateTime birthDate = ReadDateTime();
 
-                Console.Write("Image URL: ");
-                string previewImgUrl = ReadRequiredString("Image URL");
+                Console.Write("Profile Image URL: ");
+                string profileImageUrl = ReadRequiredString("Profile Image URL");
 
                 Console.Write("Biography: ");
                 string biography = ReadRequiredString("Biography");
 
-                Console.Write("Popularity: ");
+                Console.Write("Popularity (0-100): ");
                 double popularity = ReadDouble();
 
-                var actor = new Actor(firstName, lastName, nationality, birthDate, previewImgUrl, biography, popularity);
+                var actor = new Actor(firstName, lastName, nationality, birthDate, profileImageUrl, biography, popularity);
                 actors.Add(actor);
 
                 Console.WriteLine($"\nActor added successfully! ID: {actor.Id}");
+                Console.WriteLine($"Name: {actor.FullName}, Age: {actor.Age}");
             }
             catch (Exception ex)
             {
@@ -184,13 +186,27 @@ namespace Project.ConsoleApp
 
             try
             {
-                Console.Write("New first name (current: {0}): ", actor.FirstName);
-                string firstName = Console.ReadLine() ?? "";
+                Console.Write($"New first name (current: {actor.FirstName}): ");
+                string firstName = Console.ReadLine() ?? actor.FirstName;
 
-                Console.Write("New biography (current: {0}): ", actor.Biography);
-                string biography = Console.ReadLine() ?? "";
+                Console.Write($"New last name (current: {actor.LastName}): ");
+                string lastName = Console.ReadLine() ?? actor.LastName;
 
-                Console.WriteLine("Actor information updated!");
+                Console.Write($"New nationality (current: {actor.Nationality}): ");
+                string nationality = Console.ReadLine() ?? actor.Nationality;
+
+                Console.Write($"New biography (current: {actor.Biography}): ");
+                string biography = Console.ReadLine() ?? actor.Biography;
+
+                Console.Write($"New popularity (current: {actor.Popularity}): ");
+                string popularityInput = Console.ReadLine();
+                double popularity = string.IsNullOrEmpty(popularityInput) ? actor.Popularity : double.Parse(popularityInput);
+
+                actor.SetBiography(biography);
+                actor.SetPopularity(popularity);
+                actor.UpdatePersonalInfo(firstName, lastName, nationality, actor.BirthDate, actor.ProfileImageUrl);
+
+                Console.WriteLine("Actor information updated successfully!");
             }
             catch (Exception ex)
             {
@@ -219,7 +235,7 @@ namespace Project.ConsoleApp
             }
             WaitForKey();
         }
-        
+
         static void ShowCinemaMenu()
         {
             while (true)
@@ -265,8 +281,8 @@ namespace Project.ConsoleApp
                 Console.Write("Address: ");
                 string address = ReadRequiredString("Address");
 
-                Console.Write("Contact Number: ");
-                string contactNumber = ReadRequiredString("Contact number");
+                Console.Write("Contact Phone: ");
+                string contactPhone = ReadRequiredString("Contact phone");
 
                 Console.Write("Contact Email: ");
                 string contactEmail = ReadRequiredString("Contact email");
@@ -274,7 +290,7 @@ namespace Project.ConsoleApp
                 Console.Write("Manager Name: ");
                 string managerName = ReadRequiredString("Manager name");
 
-                var cinema = new Cinema(name, address, contactNumber, contactEmail, managerName);
+                var cinema = new Cinema(name, address, contactPhone, contactEmail, managerName);
                 cinemas.Add(cinema);
 
                 Console.WriteLine($"\nCinema added successfully! ID: {cinema.Id}");
@@ -344,13 +360,22 @@ namespace Project.ConsoleApp
 
             try
             {
-                Console.Write("New name (current: {0}): ", cinema.CinemaName);
-                string name = Console.ReadLine() ?? cinema.CinemaName;
+                Console.Write($"New name (current: {cinema.Name}): ");
+                string name = Console.ReadLine() ?? cinema.Name;
 
-                Console.Write("New address (current: {0}): ", cinema.Adress);
-                string address = Console.ReadLine() ?? cinema.Adress;
+                Console.Write($"New address (current: {cinema.Address}): ");
+                string address = Console.ReadLine() ?? cinema.Address;
 
-                cinema.UpdateGlobalInfo(name, address, cinema.ContactNumber, cinema.ContactEmail, cinema.ManagerName);
+                Console.Write($"New contact phone (current: {cinema.ContactPhone}): ");
+                string contactPhone = Console.ReadLine() ?? cinema.ContactPhone;
+
+                Console.Write($"New contact email (current: {cinema.ContactEmail}): ");
+                string contactEmail = Console.ReadLine() ?? cinema.ContactEmail;
+
+                Console.Write($"New manager name (current: {cinema.ManagerName}): ");
+                string managerName = Console.ReadLine() ?? cinema.ManagerName;
+
+                cinema.UpdateInfo(name, address, contactPhone, contactEmail, managerName);
                 Console.WriteLine("Cinema information updated!");
             }
             catch (Exception ex)
@@ -379,13 +404,13 @@ namespace Project.ConsoleApp
             Console.Write("Enter film ID: ");
             string filmId = ReadRequiredString("Film ID");
 
-            if (cinema.AddAvalibleFilmId(filmId))
+            if (cinema.AddItem(filmId))
             {
                 Console.WriteLine("Film successfully added to available films!");
             }
             else
             {
-                Console.WriteLine("Failed to add film. Possibly reached limit (5 films) or film already added.");
+                Console.WriteLine("Failed to add film. Possibly reached limit (10 films) or film already added.");
             }
             WaitForKey();
         }
@@ -409,7 +434,7 @@ namespace Project.ConsoleApp
             Console.Write("Enter film ID to remove: ");
             string filmId = ReadRequiredString("Film ID");
 
-            if (cinema.DeleteAvalibleFilmId(filmId))
+            if (cinema.RemoveItem(filmId))
             {
                 Console.WriteLine("Film successfully removed from available films!");
             }
@@ -446,10 +471,11 @@ namespace Project.ConsoleApp
                 return;
             }
 
-            cinema.UpdateRating(rating);
+            cinema.AddRating(rating);
             Console.WriteLine($"Cinema rated successfully! Current rating: {cinema.Rating:F2}");
             WaitForKey();
         }
+
         static void ShowAuditoriumMenu()
         {
             while (true)
@@ -507,7 +533,7 @@ namespace Project.ConsoleApp
                 var auditorium = new Auditorium(cinemaId, name, roomNumber, rows, seatsPerRow);
                 auditoriums.Add(auditorium);
 
-                Console.WriteLine($"\nAuditorium added successfully! ID: {auditorium.Id}, Capacity: {auditorium.MaxCapacity}");
+                Console.WriteLine($"\nAuditorium added successfully! ID: {auditorium.Id}, Capacity: {auditorium.Capacity}");
             }
             catch (Exception ex)
             {
@@ -574,19 +600,19 @@ namespace Project.ConsoleApp
 
             try
             {
-                Console.Write("New name (current: {0}): ", auditorium.AuditoriumName);
-                string name = Console.ReadLine() ?? auditorium.AuditoriumName;
+                Console.Write($"New name (current: {auditorium.Name}): ");
+                string name = Console.ReadLine() ?? auditorium.Name;
 
-                Console.Write("New room number (current: {0}): ", auditorium.RoomNumber);
+                Console.Write($"New room number (current: {auditorium.RoomNumber}): ");
                 uint roomNumber = ReadUInt(auditorium.RoomNumber);
 
-                Console.Write("New number of rows (current: {0}): ", auditorium.Rows);
+                Console.Write($"New number of rows (current: {auditorium.Rows}): ");
                 uint rows = ReadUInt(auditorium.Rows);
 
-                Console.Write("New number of seats per row (current: {0}): ", auditorium.SeatsPerRow);
+                Console.Write($"New number of seats per row (current: {auditorium.SeatsPerRow}): ");
                 uint seatsPerRow = ReadUInt(auditorium.SeatsPerRow);
 
-                auditorium.UpdateGlobalInfo(name, roomNumber, rows, seatsPerRow);
+                auditorium.UpdateLayout(name, roomNumber, rows, seatsPerRow);
                 Console.WriteLine("Auditorium information updated!");
             }
             catch (Exception ex)
@@ -615,7 +641,7 @@ namespace Project.ConsoleApp
             Console.Write("Enter feature: ");
             string feature = ReadRequiredString("Feature");
 
-            if (auditorium.AddFeature(feature))
+            if (auditorium.AddItem(feature))
             {
                 Console.WriteLine("Feature added successfully!");
             }
@@ -645,7 +671,7 @@ namespace Project.ConsoleApp
             Console.Write("Enter feature to remove: ");
             string feature = ReadRequiredString("Feature");
 
-            if (auditorium.DeleteFeature(feature))
+            if (auditorium.RemoveItem(feature))
             {
                 Console.WriteLine("Feature removed successfully!");
             }
@@ -682,10 +708,11 @@ namespace Project.ConsoleApp
                 return;
             }
 
-            auditorium.UpdateRating(rating);
+            auditorium.AddRating(rating);
             Console.WriteLine($"Auditorium rated successfully! Current rating: {auditorium.Rating:F2}");
             WaitForKey();
         }
+
         static void ShowFilmMenu()
         {
             while (true)
@@ -743,13 +770,13 @@ namespace Project.ConsoleApp
                 Console.Write("Age Restriction (true/false): ");
                 bool ageRestriction = ReadBoolean();
 
-                Console.Write("Image URL: ");
-                string imageUrl = ReadRequiredString("Image URL");
+                Console.Write("Poster URL: ");
+                string posterUrl = ReadRequiredString("Poster URL");
 
                 Console.Write("Trailer URL: ");
                 string trailerUrl = ReadRequiredString("Trailer URL");
 
-                var film = new Film(title, description, duration, director, genre, ageRestriction, imageUrl, trailerUrl);
+                var film = new Film(title, description, duration, director, genre, ageRestriction, posterUrl, trailerUrl);
                 films.Add(film);
 
                 Console.WriteLine($"\nFilm added successfully! ID: {film.Id}");
@@ -819,14 +846,23 @@ namespace Project.ConsoleApp
 
             try
             {
-                Console.Write("New title (current: {0}): ", film.Title);
+                Console.Write($"New title (current: {film.Title}): ");
                 string title = Console.ReadLine() ?? film.Title;
 
-                Console.Write("New description (current: {0}): ", film.Description);
+                Console.Write($"New description (current: {film.Description}): ");
                 string description = Console.ReadLine() ?? film.Description;
 
-                film.UpdateGlobalInfo(title, description, film.DurationInMinutes, film.Director,
-                                    film.Genre, film.AgeRestriction, film.PreviewImgUrl, film.TrailerUrl);
+                Console.Write($"New duration (current: {film.DurationMinutes}): ");
+                string durationInput = Console.ReadLine();
+                uint duration = string.IsNullOrEmpty(durationInput) ? film.DurationMinutes : uint.Parse(durationInput);
+
+                Console.Write($"New director (current: {film.Director}): ");
+                string director = Console.ReadLine() ?? film.Director;
+
+                Console.Write($"New genre (current: {film.Genre}): ");
+                string genre = Console.ReadLine() ?? film.Genre;
+
+                film.UpdateInfo(title, description, duration, director, genre, film.HasAgeRestriction, film.PosterUrl, film.TrailerUrl);
                 Console.WriteLine("Film information updated!");
             }
             catch (Exception ex)
@@ -855,13 +891,13 @@ namespace Project.ConsoleApp
             Console.Write("Enter actor ID: ");
             string actorId = ReadRequiredString("Actor ID");
 
-            if (film.AddActorId(actorId))
+            if (film.AddItem(actorId))
             {
                 Console.WriteLine("Actor successfully added to film!");
             }
             else
             {
-                Console.WriteLine("Failed to add actor. Possibly reached limit (5 actors) or actor already added.");
+                Console.WriteLine("Failed to add actor. Possibly reached limit (10 actors) or actor already added.");
             }
             WaitForKey();
         }
@@ -885,7 +921,7 @@ namespace Project.ConsoleApp
             Console.Write("Enter actor ID to remove: ");
             string actorId = ReadRequiredString("Actor ID");
 
-            if (film.DeleteActorId(actorId))
+            if (film.RemoveItem(actorId))
             {
                 Console.WriteLine("Actor successfully removed from film!");
             }
@@ -922,10 +958,11 @@ namespace Project.ConsoleApp
                 return;
             }
 
-            film.UpdateRating(rating);
+            film.AddRating(rating);
             Console.WriteLine($"Film rated successfully! Current rating: {film.Rating:F2}");
             WaitForKey();
         }
+
         static void ShowSeanceMenu()
         {
             while (true)
@@ -937,6 +974,8 @@ namespace Project.ConsoleApp
                 Console.WriteLine("3. Find Seance by ID");
                 Console.WriteLine("4. Add Occupied Seat");
                 Console.WriteLine("5. Remove Occupied Seat");
+                Console.WriteLine("6. Update Seance Time");
+                Console.WriteLine("7. Update Seance Price");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -948,6 +987,8 @@ namespace Project.ConsoleApp
                     case "3": FindSeanceById(); break;
                     case "4": AddOccupiedSeat(); break;
                     case "5": RemoveOccupiedSeat(); break;
+                    case "6": UpdateSeanceTime(); break;
+                    case "7": UpdateSeancePrice(); break;
                     case "0": return;
                     default: Console.WriteLine("Invalid choice!"); WaitForKey(); break;
                 }
@@ -983,16 +1024,18 @@ namespace Project.ConsoleApp
                     return;
                 }
 
-                Console.Write("Start date and time (yyyy-mm-dd hh:mm:ss): ");
+                Console.Write("Start date and time (yyyy-mm-dd hh:mm): ");
                 DateTime startTime = ReadDateTime();
 
                 Console.Write("Price: ");
-                double price = ReadDouble();
+                decimal price = ReadDecimal();
 
-                var seance = new Seance(filmId, auditoriumId, startTime, price, film);
+                var seance = new Seance(filmId, auditoriumId, startTime, price, film.DurationMinutes);
                 seances.Add(seance);
 
-                Console.WriteLine($"\nSeance added successfully! ID: {seance.Id}, End: {seance.EndTime}");
+                Console.WriteLine($"\nSeance added successfully! ID: {seance.Id}");
+                Console.WriteLine($"End Time: {seance.EndTime:g}");
+                Console.WriteLine($"Available Seats: {seance.AvailableSeats(auditorium.Capacity)}");
             }
             catch (Exception ex)
             {
@@ -1068,13 +1111,14 @@ namespace Project.ConsoleApp
                 return;
             }
 
-            if (seance.AddOccupiedSeatId(seatId, auditorium))
+            if (seance.ReserveSeat(seatId, auditorium.Capacity))
             {
-                Console.WriteLine("Seat successfully added to occupied seats!");
+                Console.WriteLine("Seat successfully reserved!");
+                Console.WriteLine($"Available seats remaining: {seance.AvailableSeats(auditorium.Capacity)}");
             }
             else
             {
-                Console.WriteLine("Failed to add seat. Possibly reached capacity limit or seat already added.");
+                Console.WriteLine("Failed to reserve seat. Possibly reached capacity limit or seat already reserved.");
             }
             WaitForKey();
         }
@@ -1098,16 +1142,92 @@ namespace Project.ConsoleApp
             Console.Write("Enter seat ID to remove: ");
             string seatId = ReadRequiredString("Seat ID");
 
-            if (seance.DeleteOccupiedSeatId(seatId))
+            if (seance.CancelSeatReservation(seatId))
             {
-                Console.WriteLine("Seat successfully removed from occupied seats!");
+                var auditorium = auditoriums.FirstOrDefault(a => a.Id == seance.AuditoriumId);
+                Console.WriteLine("Seat reservation cancelled successfully!");
+                if (auditorium != null)
+                {
+                    Console.WriteLine($"Available seats now: {seance.AvailableSeats(auditorium.Capacity)}");
+                }
             }
             else
             {
-                Console.WriteLine("Failed to remove seat. Possibly not in the list.");
+                Console.WriteLine("Failed to cancel seat reservation. Possibly not in the list.");
             }
             WaitForKey();
         }
+
+        static void UpdateSeanceTime()
+        {
+            Console.Clear();
+            Console.WriteLine("=== UPDATE SEANCE TIME ===");
+
+            Console.Write("Enter seance ID: ");
+            string seanceId = ReadRequiredString("Seance ID");
+
+            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            if (seance == null)
+            {
+                Console.WriteLine("Seance with this ID not found.");
+                WaitForKey();
+                return;
+            }
+
+            Console.Write("Enter new start time (yyyy-mm-dd hh:mm): ");
+            DateTime newStartTime = ReadDateTime();
+
+            var film = films.FirstOrDefault(f => f.Id == seance.FilmId);
+            if (film == null)
+            {
+                Console.WriteLine("Film for this seance not found.");
+                WaitForKey();
+                return;
+            }
+
+            try
+            {
+                seance.UpdateTime(newStartTime, film.DurationMinutes);
+                Console.WriteLine($"Seance time updated successfully! New end time: {seance.EndTime:g}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            WaitForKey();
+        }
+
+        static void UpdateSeancePrice()
+        {
+            Console.Clear();
+            Console.WriteLine("=== UPDATE SEANCE PRICE ===");
+
+            Console.Write("Enter seance ID: ");
+            string seanceId = ReadRequiredString("Seance ID");
+
+            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            if (seance == null)
+            {
+                Console.WriteLine("Seance with this ID not found.");
+                WaitForKey();
+                return;
+            }
+
+            Console.Write($"Enter new price (current: {seance.Price:C}): ");
+            decimal newPrice = ReadDecimal();
+
+            try
+            {
+                seance.UpdatePrice(newPrice);
+                Console.WriteLine($"Seance price updated successfully! New price: {seance.Price:C}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            WaitForKey();
+        }
+
         static void ShowReservationMenu()
         {
             while (true)
@@ -1117,6 +1237,7 @@ namespace Project.ConsoleApp
                 Console.WriteLine("1. Add Reservation");
                 Console.WriteLine("2. View All Reservations");
                 Console.WriteLine("3. Find Reservation by ID");
+                Console.WriteLine("4. Update Reservation Info");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -1126,6 +1247,7 @@ namespace Project.ConsoleApp
                     case "1": AddReservation(); break;
                     case "2": ViewAllReservations(); break;
                     case "3": FindReservationById(); break;
+                    case "4": UpdateReservation(); break;
                     case "0": return;
                     default: Console.WriteLine("Invalid choice!"); WaitForKey(); break;
                 }
@@ -1142,11 +1264,11 @@ namespace Project.ConsoleApp
                 Console.Write("Seance ID: ");
                 string seanceId = ReadRequiredString("Seance ID");
 
-                Console.Write("Customer Name: ");
-                string customerName = ReadRequiredString("Customer name");
+                Console.Write("Customer First Name: ");
+                string customerFirstName = ReadRequiredString("Customer first name");
 
-                Console.Write("Customer Surname: ");
-                string customerSurname = ReadRequiredString("Customer surname");
+                Console.Write("Customer Last Name: ");
+                string customerLastName = ReadRequiredString("Customer last name");
 
                 Console.Write("Customer Email: ");
                 string customerEmail = ReadRequiredString("Customer email");
@@ -1157,10 +1279,11 @@ namespace Project.ConsoleApp
                 Console.Write("Payment Method: ");
                 string paymentMethod = ReadRequiredString("Payment method");
 
-                var reservation = new Reservation(seanceId, customerName, customerSurname, customerEmail, customerPhone, paymentMethod);
+                var reservation = new Reservation(seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
                 reservations.Add(reservation);
 
                 Console.WriteLine($"\nReservation added successfully! ID: {reservation.Id}");
+                Console.WriteLine($"Customer: {reservation.CustomerFullName}");
             }
             catch (Exception ex)
             {
@@ -1208,6 +1331,47 @@ namespace Project.ConsoleApp
             }
             WaitForKey();
         }
+
+        static void UpdateReservation()
+        {
+            Console.Clear();
+            Console.WriteLine("=== UPDATE RESERVATION ===");
+
+            Console.Write("Enter reservation ID to update: ");
+            string id = ReadRequiredString("Reservation ID");
+
+            var reservation = reservations.FirstOrDefault(r => r.Id == id);
+            if (reservation == null)
+            {
+                Console.WriteLine("Reservation with this ID not found.");
+                WaitForKey();
+                return;
+            }
+
+            try
+            {
+                Console.Write($"New first name (current: {reservation.CustomerFirstName}): ");
+                string firstName = Console.ReadLine() ?? reservation.CustomerFirstName;
+
+                Console.Write($"New last name (current: {reservation.CustomerLastName}): ");
+                string lastName = Console.ReadLine() ?? reservation.CustomerLastName;
+
+                Console.Write($"New email (current: {reservation.CustomerEmail}): ");
+                string email = Console.ReadLine() ?? reservation.CustomerEmail;
+
+                Console.Write($"New phone (current: {reservation.CustomerPhone}): ");
+                string phone = Console.ReadLine() ?? reservation.CustomerPhone;
+
+                reservation.UpdateCustomerInfo(firstName, lastName, email, phone);
+                Console.WriteLine("Reservation information updated!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            WaitForKey();
+        }
+
         static void ShowTicketMenu()
         {
             while (true)
@@ -1217,6 +1381,7 @@ namespace Project.ConsoleApp
                 Console.WriteLine("1. Add Ticket");
                 Console.WriteLine("2. View All Tickets");
                 Console.WriteLine("3. Find Ticket by ID");
+                Console.WriteLine("4. Update Ticket Type");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -1226,6 +1391,7 @@ namespace Project.ConsoleApp
                     case "1": AddTicket(); break;
                     case "2": ViewAllTickets(); break;
                     case "3": FindTicketById(); break;
+                    case "4": UpdateTicketType(); break;
                     case "0": return;
                     default: Console.WriteLine("Invalid choice!"); WaitForKey(); break;
                 }
@@ -1265,13 +1431,21 @@ namespace Project.ConsoleApp
                 Console.Write("Seat ID: ");
                 string seatId = ReadRequiredString("Seat ID");
 
-                Console.Write("Ticket type (standard/student/senior/child/vip): ");
-                string ticketType = ReadRequiredString("Ticket type");
+                Console.WriteLine("Ticket types: Standard, Student, Senior, Child, VIP");
+                Console.Write("Ticket type: ");
+                string ticketTypeInput = ReadRequiredString("Ticket type");
 
-                var ticket = new Ticket(reservationId, cinemaId, auditoriumId, seanceId, filmId, seatId, ticketType, seance);
+                if (!Enum.TryParse<TicketType>(ticketTypeInput, true, out TicketType ticketType))
+                {
+                    Console.WriteLine("Invalid ticket type. Using Standard.");
+                    ticketType = TicketType.Standard;
+                }
+
+                var ticket = new Ticket(reservationId, cinemaId, auditoriumId, seanceId, filmId, seatId, seance.Price, ticketType);
                 tickets.Add(ticket);
 
-                Console.WriteLine($"\nTicket added successfully! ID: {ticket.Id}, Price: {ticket.Price:C}");
+                Console.WriteLine($"\nTicket added successfully! ID: {ticket.Id}");
+                Console.WriteLine($"Final Price: {ticket.FinalPrice:C} (Discount: {ticket.Discount:C})");
             }
             catch (Exception ex)
             {
@@ -1319,6 +1493,47 @@ namespace Project.ConsoleApp
             }
             WaitForKey();
         }
+
+        static void UpdateTicketType()
+        {
+            Console.Clear();
+            Console.WriteLine("=== UPDATE TICKET TYPE ===");
+
+            Console.Write("Enter ticket ID: ");
+            string id = ReadRequiredString("Ticket ID");
+
+            var ticket = tickets.FirstOrDefault(t => t.Id == id);
+            if (ticket == null)
+            {
+                Console.WriteLine("Ticket with this ID not found.");
+                WaitForKey();
+                return;
+            }
+
+            Console.WriteLine($"Current ticket type: {ticket.Type}");
+            Console.WriteLine("Available types: Standard, Student, Senior, Child, VIP");
+            Console.Write("New ticket type: ");
+            string ticketTypeInput = ReadRequiredString("Ticket type");
+
+            if (!Enum.TryParse<TicketType>(ticketTypeInput, true, out TicketType newType))
+            {
+                Console.WriteLine("Invalid ticket type.");
+                WaitForKey();
+                return;
+            }
+
+            try
+            {
+                ticket.UpdateTicketType(newType);
+                Console.WriteLine($"Ticket type updated successfully! New price: {ticket.FinalPrice:C}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            WaitForKey();
+        }
+
         static void ShowCinemaNetworkMenu()
         {
             while (true)
@@ -1329,6 +1544,7 @@ namespace Project.ConsoleApp
                 Console.WriteLine("2. View All Cinema Networks");
                 Console.WriteLine("3. Find Cinema Network by Name");
                 Console.WriteLine("4. Update Cinema Network Information");
+                Console.WriteLine("5. Update Total Cinemas");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -1339,6 +1555,7 @@ namespace Project.ConsoleApp
                     case "2": ViewAllCinemaNetworks(); break;
                     case "3": FindCinemaNetworkByName(); break;
                     case "4": UpdateCinemaNetwork(); break;
+                    case "5": UpdateTotalCinemas(); break;
                     case "0": return;
                     default: Console.WriteLine("Invalid choice!"); WaitForKey(); break;
                 }
@@ -1361,7 +1578,7 @@ namespace Project.ConsoleApp
                 var network = new CinemaNetwork(companyName, managerName);
                 cinemaNetworks.Add(network);
 
-                Console.WriteLine($"\nCinema network added successfully!");
+                Console.WriteLine($"\nCinema network added successfully! ID: {network.Id}");
             }
             catch (Exception ex)
             {
@@ -1430,13 +1647,13 @@ namespace Project.ConsoleApp
 
             try
             {
-                Console.Write("New company name (current: {0}): ", network.CompanyName);
+                Console.Write($"New company name (current: {network.CompanyName}): ");
                 string companyName = Console.ReadLine() ?? network.CompanyName;
 
-                Console.Write("New manager name (current: {0}): ", network.ManagerName);
+                Console.Write($"New manager name (current: {network.ManagerName}): ");
                 string managerName = Console.ReadLine() ?? network.ManagerName;
 
-                network.updateGlobalInfo(companyName, managerName);
+                network.UpdateInfo(companyName, managerName);
                 Console.WriteLine("Cinema network information updated!");
             }
             catch (Exception ex)
@@ -1445,6 +1662,40 @@ namespace Project.ConsoleApp
             }
             WaitForKey();
         }
+
+        static void UpdateTotalCinemas()
+        {
+            Console.Clear();
+            Console.WriteLine("=== UPDATE TOTAL CINEMAS ===");
+
+            Console.Write("Enter company name: ");
+            string name = ReadRequiredString("Company name");
+
+            var network = cinemaNetworks.FirstOrDefault(cn =>
+                cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (network == null)
+            {
+                Console.WriteLine("Cinema network with this name not found.");
+                WaitForKey();
+                return;
+            }
+
+            Console.Write($"Enter total cinemas count (current: {network.TotalCinemas}): ");
+            int count = ReadInt();
+
+            try
+            {
+                network.SetTotalCinemas(count);
+                Console.WriteLine("Total cinemas count updated!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            WaitForKey();
+        }
+
+        // Utility methods
         static void WaitForKey()
         {
             Console.WriteLine("\nPress any key to continue...");
@@ -1481,6 +1732,23 @@ namespace Project.ConsoleApp
             }
         }
 
+        static int ReadInt(int defaultValue = 0)
+        {
+            while (true)
+            {
+                string? input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input) && defaultValue != 0)
+                {
+                    return defaultValue;
+                }
+                if (int.TryParse(input, out int result))
+                {
+                    return result;
+                }
+                Console.Write("Please enter a valid number: ");
+            }
+        }
+
         static double ReadDouble()
         {
             while (true)
@@ -1494,6 +1762,19 @@ namespace Project.ConsoleApp
             }
         }
 
+        static decimal ReadDecimal()
+        {
+            while (true)
+            {
+                string? input = Console.ReadLine();
+                if (decimal.TryParse(input, out decimal result))
+                {
+                    return result;
+                }
+                Console.Write("Please enter a valid decimal number: ");
+            }
+        }
+
         static DateTime ReadDateTime()
         {
             while (true)
@@ -1503,7 +1784,7 @@ namespace Project.ConsoleApp
                 {
                     return result;
                 }
-                Console.Write("Please enter a valid date (yyyy-mm-dd): ");
+                Console.Write("Please enter a valid date (yyyy-mm-dd) or date with time (yyyy-mm-dd hh:mm): ");
             }
         }
 
@@ -1516,9 +1797,9 @@ namespace Project.ConsoleApp
                 {
                     return result;
                 }
-                if (input?.ToLower() == "true" || input == "1")
+                if (input?.ToLower() == "true" || input == "1" || input?.ToLower() == "yes")
                     return true;
-                if (input?.ToLower() == "false" || input == "0")
+                if (input?.ToLower() == "false" || input == "0" || input?.ToLower() == "no")
                     return false;
                 Console.Write("Please enter 'true' or 'false': ");
             }
@@ -1528,31 +1809,44 @@ namespace Project.ConsoleApp
         {
             try
             {
+                // Create actors
                 var actor1 = new Actor("Tom", "Hanks", "American", new DateTime(1956, 7, 9),
-                    "https://example.com/tom_hanks.jpg", "Famous American actor", 9.5);
+                    "https://example.com/tom_hanks.jpg", "Famous American actor known for Forrest Gump and Cast Away.", 95.5);
                 var actor2 = new Actor("Meryl", "Streep", "American", new DateTime(1949, 6, 22),
-                    "https://example.com/meryl_streep.jpg", "Legendary American actress", 9.8);
+                    "https://example.com/meryl_streep.jpg", "Legendary American actress with multiple Academy Awards.", 98.2);
                 actors.AddRange([actor1, actor2]);
 
-                var cinema = new Cinema("Multiplex", "123 Main Street", "+380441234567", "info@multiplex.ua", "Ivan Petrenko");
+                // Create cinema
+                var cinema = new Cinema("Multiplex Cinema", "123 Main Street, Kyiv", "+380441234567", "info@multiplex.ua", "Ivan Petrenko");
                 cinemas.Add(cinema);
 
-                var auditorium = new Auditorium(cinema.Id, "Hall 1", 1, 10, 15);
+                // Create auditorium
+                var auditorium = new Auditorium(cinema.Id, "IMAX Hall", 1, 12, 20);
+                auditorium.AddItem("Dolby Atmos");
+                auditorium.AddItem("3D Projection");
                 auditoriums.Add(auditorium);
 
-                var film = new Film("Forrest Gump", "Story of a man with low IQ", 142, "Robert Zemeckis",
-                    "Drama", false, "https://example.com/forrest_gump.jpg", "https://example.com/forrest_trailer");
+                // Create film
+                var film = new Film("Forrest Gump", "The story of a man with low IQ who accomplished great things in his life",
+                    142, "Robert Zemeckis", "Drama", false,
+                    "https://example.com/forrest_gump.jpg", "https://example.com/forrest_trailer");
+                film.AddItem(actor1.Id);
                 films.Add(film);
 
-                var seance = new Seance(film.Id, auditorium.Id, DateTime.Now.AddHours(2), 150.0, film);
+                // Create seance
+                var seance = new Seance(film.Id, auditorium.Id, DateTime.Now.AddHours(2), 250.0m, film.DurationMinutes);
                 seances.Add(seance);
 
-                var network = new CinemaNetwork("CinemaMax", "Olena Sydorenko");
+                // Create cinema network
+                var network = new CinemaNetwork("CinemaMax Ukraine", "Olena Sydorenko");
+                network.SetTotalCinemas(15);
                 cinemaNetworks.Add(network);
+
+                Console.WriteLine("Sample data created successfully!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating test data: {ex.Message}");
+                Console.WriteLine($"Error creating sample data: {ex.Message}");
             }
         }
     }

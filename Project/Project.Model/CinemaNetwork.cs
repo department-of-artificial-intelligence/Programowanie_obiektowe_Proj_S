@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Project.Entities;
+﻿using Project.Entities;
 
 namespace Project.Models
 {
@@ -12,40 +6,59 @@ namespace Project.Models
     {
         public string CompanyName { get; private set; }
         public string ManagerName { get; private set; }
+        public int TotalCinemas { get; private set; }
 
-        public CinemaNetwork()
+        public CinemaNetwork(string companyName, string managerName) : base()
         {
-            throw new NotImplementedException("Cannot create an epty Cinema Network obj");
+            ValidateNetworkData(companyName, managerName);
+
+            CompanyName = companyName;
+            ManagerName = managerName;
         }
 
-        public CinemaNetwork(string companyName, string managerName)
+        public CinemaNetwork(string id, string companyName, string managerName,
+            DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
         {
-            this.CompanyName = companyName;
-            this.ManagerName = managerName;
+            ValidateNetworkData(companyName, managerName);
+
+            CompanyName = companyName;
+            ManagerName = managerName;
         }
 
-        public CinemaNetwork(string companyName, string managerName, DateTime updatedAt, DateTime createdAt)
+        private static void ValidateNetworkData(string companyName, string managerName)
         {
-            this.CompanyName = companyName;
-            this.ManagerName = managerName;
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (string.IsNullOrWhiteSpace(companyName))
+                throw new ArgumentException("Company name is required", nameof(companyName));
+
+            if (string.IsNullOrWhiteSpace(managerName))
+                throw new ArgumentException("Manager name is required", nameof(managerName));
+        }
+
+        public void UpdateInfo(string companyName, string managerName)
+        {
+            ValidateNetworkData(companyName, managerName);
+
+            CompanyName = companyName;
+            ManagerName = managerName;
+
+            MarkAsUpdated();
+        }
+
+        public void SetTotalCinemas(int count)
+        {
+            if (count < 0)
+                throw new ArgumentException("Count cannot be negative");
+
+            TotalCinemas = count;
+            MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Company name: {this.CompanyName} \n" +
-                   $"Manager name: {this.ManagerName} \n" +
-                   $"updated_at: {this.UpdatedAt} \n" +
-                   $"created_at: {this.CreatedAt} \n";
-        }
-
-        public void updateGlobalInfo(string companyName, string managerName)
-        {
-            this.CompanyName = companyName;
-            this.ManagerName = managerName;
-
-            this.MarkAsUpdated();
+            return $"Cinema Network: {CompanyName}\n" +
+                   $"Manager: {ManagerName}\n" +
+                   $"Total Cinemas: {TotalCinemas}\n" +
+                   $"ID: {Id}";
         }
     }
 }

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Utils
+﻿namespace Project.Utils
 {
-    public static class RatingHandler
+    public static class RatingCalculator
     {
-        public static double CalculateRating(uint customersRated, double currentRating, uint mark)
+        public static double CalculateNewRating(uint currentTotalRatings, double currentRating, uint newRating)
         {
-            return ((currentRating * customersRated) + mark) / (customersRated + 1);
+            return ((currentRating * currentTotalRatings) + newRating) / (currentTotalRatings + 1);
         }
     }
 }

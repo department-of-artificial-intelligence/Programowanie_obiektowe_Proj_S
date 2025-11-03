@@ -1,82 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Project.Entities;
-using Project.Utils;
+﻿using Project.Entities;
 
 namespace Project.Models
 {
     public class Reservation : BaseEntity
     {
-        public string Id { get; private set; }
         public string SeanceId { get; private set; }
-        public string CustomerName { get; private set; }
-        public string CustomerSurname { get; private set; }
+        public string CustomerFirstName { get; private set; }
+        public string CustomerLastName { get; private set; }
         public string CustomerEmail { get; private set; }
         public string CustomerPhone { get; private set; }
         public string PaymentMethod { get; private set; }
 
-        public Reservation()
+        public string CustomerFullName => $"{CustomerFirstName} {CustomerLastName}";
+
+        public Reservation(string seanceId, string customerFirstName, string customerLastName,
+            string customerEmail, string customerPhone, string paymentMethod) : base()
         {
-            throw new NotImplementedException("Cannot create an epty Reservation obj");
+            ValidateReservationData(seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
+
+            SeanceId = seanceId;
+            CustomerFirstName = customerFirstName;
+            CustomerLastName = customerLastName;
+            CustomerEmail = customerEmail;
+            CustomerPhone = customerPhone;
+            PaymentMethod = paymentMethod;
         }
 
-        public Reservation
-        (
-            string seanceId,
-            string customerName,
-            string customerSurname,
-            string customerEmail,
-            string customerPhone,
-            string paymentMethod    
-        )
+        public Reservation(string id, string seanceId, string customerFirstName, string customerLastName,
+            string customerEmail, string customerPhone, string paymentMethod,
+            DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
         {
-            this.Id = IdHandler.CreateId();
-            this.SeanceId = seanceId;
-            this.CustomerName = customerName;
-            this.CustomerSurname = customerSurname;
-            this.CustomerEmail = customerEmail;
-            this.CustomerPhone = customerPhone;
-            this.PaymentMethod = paymentMethod;
+            ValidateReservationData(seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
+
+            SeanceId = seanceId;
+            CustomerFirstName = customerFirstName;
+            CustomerLastName = customerLastName;
+            CustomerEmail = customerEmail;
+            CustomerPhone = customerPhone;
+            PaymentMethod = paymentMethod;
         }
 
-        public Reservation
-        (
-            string id,
-            string seanceId,
-            string customerName,
-            string customerSurname,
-            string customerEmail,
-            string customerPhone,
-            string paymentMethod,
-            DateTime updatedAt,
-            DateTime createdAt
-        )
+        private static void ValidateReservationData(string seanceId, string firstName, string lastName,
+            string email, string phone, string paymentMethod)
         {
-            this.Id = id;
-            this.SeanceId = seanceId;
-            this.CustomerName = customerName;
-            this.CustomerSurname = customerSurname;
-            this.CustomerEmail = customerEmail;
-            this.CustomerPhone = customerPhone;
-            this.PaymentMethod = paymentMethod;
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (string.IsNullOrWhiteSpace(seanceId))
+                throw new ArgumentException("Seance ID is required", nameof(seanceId));
+
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name is required", nameof(firstName));
+
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name is required", nameof(lastName));
+
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email is required", nameof(email));
+
+            if (string.IsNullOrWhiteSpace(phone))
+                throw new ArgumentException("Phone is required", nameof(phone));
+
+            if (string.IsNullOrWhiteSpace(paymentMethod))
+                throw new ArgumentException("Payment method is required", nameof(paymentMethod));
+        }
+
+        public void UpdateCustomerInfo(string firstName, string lastName, string email, string phone)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name is required", nameof(firstName));
+
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name is required", nameof(lastName));
+
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email is required", nameof(email));
+
+            CustomerFirstName = firstName;
+            CustomerLastName = lastName;
+            CustomerEmail = email;
+            CustomerPhone = phone;
+
+            MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Reservation Id: {this.Id} \n" +
-                   $"Seance Id: {this.SeanceId} \n" +
-                   $"Customer Name / Surname: {this.CustomerName} / {this.CustomerSurname} \n" +
-                   $"Customer email: {this.CustomerEmail} \n" +
-                   $"Customer phone: {this.CustomerPhone} \n" +
-                   $"Payment methot: {this.PaymentMethod} \n" +
-                   $"updated_at: {this.UpdatedAt} \n" +
-                   $"created_at: {this.CreatedAt} \n";
+            return $"Reservation for: {CustomerFullName}\n" +
+                   $"Contact: {CustomerEmail} | {CustomerPhone}\n" +
+                   $"Seance: {SeanceId}\n" +
+                   $"Payment: {PaymentMethod}\n" +
+                   $"ID: {Id}";
         }
     }
 }

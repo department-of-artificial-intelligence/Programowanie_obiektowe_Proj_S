@@ -4,161 +4,138 @@ using Project.Utils;
 
 namespace Project.Models
 {
-    public class Film : BaseEntity, IRating
+    public class Film : BaseEntity, IRatable, IListManageable<string>
     {
-        public string Id { get; private set; }
-        public List<string> ActorsId { get; private set; } = [];
-
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public uint DurationInMinutes { get; private set; } = 0;
+        public uint DurationMinutes { get; private set; }
         public string Director { get; private set; }
         public string Genre { get; private set; }
-        public bool AgeRestriction { get; private set; } = false;
-        public string PreviewImgUrl { get; private set; }
+        public bool HasAgeRestriction { get; private set; }
+        public string PosterUrl { get; private set; }
         public string TrailerUrl { get; private set; }
 
-        public double Rating { get; private set; } = 0;
-        public uint CustomersRated { get; private set; } = 0;
+        public double Rating { get; private set; }
+        public uint TotalRatings { get; private set; }
 
-        public void UpdateRating(uint mark)
+        private readonly List<string> _actorIds;
+        public IReadOnlyList<string> ActorIds => _actorIds.AsReadOnly();
+        public IReadOnlyList<string> Items => ActorIds;
+
+        public Film(string title, string description, uint durationMinutes, string director,
+            string genre, bool hasAgeRestriction, string posterUrl, string trailerUrl) : base()
         {
-            Rating = RatingHandler.CalculateRating(CustomersRated, Rating, mark);
-            CustomersRated++;
+            ValidateFilmData(title, description, durationMinutes, director, genre);
 
-            this.MarkAsUpdated();
+            Title = title;
+            Description = description;
+            DurationMinutes = durationMinutes;
+            Director = director;
+            Genre = genre;
+            HasAgeRestriction = hasAgeRestriction;
+            PosterUrl = posterUrl;
+            TrailerUrl = trailerUrl;
+            _actorIds = [];
         }
 
-        public Film()
+        public Film(string id, string title, string description, uint durationMinutes,
+            string director, string genre, bool hasAgeRestriction, string posterUrl,
+            string trailerUrl, List<string> actorIds, double rating, uint totalRatings,
+            DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
         {
-            throw new NotImplementedException("Cannot create an epty Film obj");
+            ValidateFilmData(title, description, durationMinutes, director, genre);
+
+            Title = title;
+            Description = description;
+            DurationMinutes = durationMinutes;
+            Director = director;
+            Genre = genre;
+            HasAgeRestriction = hasAgeRestriction;
+            PosterUrl = posterUrl;
+            TrailerUrl = trailerUrl;
+            _actorIds = actorIds ?? [];
+            Rating = rating;
+            TotalRatings = totalRatings;
         }
 
-        public Film
-        (
-            string title,
-            string description, 
-            uint durationInMinutes, 
-            string director, 
-            string genre, 
-            bool ageRestriction, 
-            string previewImgUrl, 
-            string trailerUrl
-        )
+        private static void ValidateFilmData(string title, string description, uint durationMinutes, string director, string genre)
         {
-            this.Id = IdHandler.CreateId();
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException("Title is required", nameof(title));
 
-            this.Title = title;
-            this.Description = description;
-            this.DurationInMinutes = durationInMinutes;
-            this.Director = director;
-            this.Genre = genre;
-            this.AgeRestriction = ageRestriction;
-            this.PreviewImgUrl = previewImgUrl;
-            this.TrailerUrl = trailerUrl;
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Description is required", nameof(description));
+
+            if (durationMinutes < 1)
+                throw new ArgumentException("Duration must be at least 1 minute", nameof(durationMinutes));
+
+            if (string.IsNullOrWhiteSpace(director))
+                throw new ArgumentException("Director is required", nameof(director));
+
+            if (string.IsNullOrWhiteSpace(genre))
+                throw new ArgumentException("Genre is required", nameof(genre));
         }
 
-        public Film
-        (
-            string id,
-            List<string> actorsId,
-            string title,
-            string description,
-            uint durationInMinutes,
-            string director,
-            string genre,
-            bool ageRestriction,
-            string previewImgUrl,
-            string trailerUrl,
-            double rating,
-            uint customersRated,
-            DateTime updatedAt,
-            DateTime createdAt
-        )
+        public void AddRating(uint rating)
         {
-            this.Id = id;
-            this.ActorsId = actorsId;
-            this.Title = title;
-            this.Description = description;
-            this.DurationInMinutes = durationInMinutes;
-            this.Director = director;
-            this.Genre = genre;
-            this.AgeRestriction = ageRestriction;
-            this.PreviewImgUrl = previewImgUrl;
-            this.TrailerUrl = trailerUrl;
-            this.Rating = rating;
-            this.CustomersRated = customersRated;
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (rating < 1 || rating > 5)
+                throw new ArgumentException("Rating must be between 1 and 5");
+
+            Rating = RatingCalculator.CalculateNewRating(TotalRatings, Rating, rating);
+            TotalRatings++;
+            MarkAsUpdated();
         }
 
-        public bool AddActorId(string actorId)
+        public bool AddItem(string actorId)
         {
-            if (!ArrayHandler.AddUniqueStringToMax5NlementsArray(this.ActorsId, actorId, 5))
+            if (CollectionHelper.AddUniqueItem(_actorIds, actorId, 10))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
         }
 
-        public string GetAllActorsId()
+        public bool RemoveItem(string actorId)
         {
-            return ArrayHandler.StringArrayToString(this.ActorsId);
-        }
-
-        public bool DeleteActorId(string actorId)
-        {
-            if (!ArrayHandler.DeleteElFromStringArray(this.ActorsId, actorId))
+            if (CollectionHelper.RemoveItem(_actorIds, actorId))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
+        }
+
+        public string GetItemsAsString() => CollectionHelper.ToString(_actorIds);
+
+        public void UpdateInfo(string title, string description, uint durationMinutes,
+            string director, string genre, bool hasAgeRestriction, string posterUrl, string trailerUrl)
+        {
+            ValidateFilmData(title, description, durationMinutes, director, genre);
+
+            Title = title;
+            Description = description;
+            DurationMinutes = durationMinutes;
+            Director = director;
+            Genre = genre;
+            HasAgeRestriction = hasAgeRestriction;
+            PosterUrl = posterUrl;
+            TrailerUrl = trailerUrl;
+
+            MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Film id: {this.Id} \n" +
-                   $"Film actors: {this.GetAllActorsId()} \n" +
-                   $"Film title: {this.Title} \n" +
-                   $"Film description: {this.Description} \n" +
-                   $"Film duration: {this.DurationInMinutes}m \n" +
-                   $"Film director: {this.Director} \n" +
-                   $"Film genre: {this.Genre} \n" +
-                   $"Film age restriction: {this.AgeRestriction} \n" +
-                   $"Film img url: {this.PreviewImgUrl} \n" +
-                   $"Film trailer url: {this.TrailerUrl} \n" +
-                   $"Film rating: {this.Rating} \n" +
-                   $"Film customers rated: {this.CustomersRated} \n" +
-                   $"Film updated_at: {this.UpdatedAt} \n" +
-                   $"Film created_at: {this.CreatedAt} \n";
-        }
-
-        public void UpdateGlobalInfo
-        (
-            string title,
-            string description,
-            uint durationInMinutes,
-            string director,
-            string genre,
-            bool ageRestriction,
-            string previewImgUrl,
-            string trailerUrl
-        )
-        {
-            this.Title = title;
-            this.Description = description;
-            this.DurationInMinutes = durationInMinutes;
-            this.Director = director;
-            this.Genre = genre;
-            this.AgeRestriction = ageRestriction;
-            this.PreviewImgUrl = previewImgUrl;
-            this.TrailerUrl = trailerUrl;
-
-            this.MarkAsUpdated();
+            return $"Film: {Title}\n" +
+                   $"Director: {Director} | Genre: {Genre}\n" +
+                   $"Duration: {DurationMinutes} minutes\n" +
+                   $"Age Restriction: {(HasAgeRestriction ? "Yes" : "No")}\n" +
+                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Actors: {GetItemsAsString()}\n" +
+                   $"ID: {Id}";
         }
     }
 }

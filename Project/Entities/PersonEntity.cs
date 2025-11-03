@@ -1,64 +1,76 @@
-﻿using Project.Utils;
-
-
-namespace Project.Entities
+﻿namespace Project.Entities
 {
     public abstract class PersonEntity : BaseEntity
     {
-        public string Id { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Nationality { get; private set; }
-        public DateTime BirthDate { get; private set; }
+        public string FirstName { get; protected set; }
+        public string LastName { get; protected set; }
+        public string Nationality { get; protected set; }
+        public DateTime BirthDate { get; protected set; }
+        public string ProfileImageUrl { get; protected set; }
 
-        public string PreviewImgUrl { get; private set; }
+        public string FullName => $"{FirstName} {LastName}";
+        public int Age => CalculateAge();
 
-        protected PersonEntity()
+        protected PersonEntity(string firstName, string lastName, string nationality,
+            DateTime birthDate, string profileImageUrl) : base()
         {
-            throw new NotImplementedException("Cannot create an epty Person obj");
+            ValidatePersonData(firstName, lastName, nationality, birthDate);
+
+            FirstName = firstName;
+            LastName = lastName;
+            Nationality = nationality;
+            BirthDate = birthDate;
+            ProfileImageUrl = profileImageUrl;
         }
 
-        protected PersonEntity
-        (
-            string firstName, 
-            string lastName, 
-            string nationality, 
-            DateTime birthDate,
-            string previewImgUrl
-        )
+        protected PersonEntity(string id, string firstName, string lastName, string nationality,
+            DateTime birthDate, string profileImageUrl, DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
         {
-            this.Id = IdHandler.CreateId();
-    
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Nationality = nationality;
-            this.BirthDate = birthDate;
-            this.PreviewImgUrl = previewImgUrl;
+            ValidatePersonData(firstName, lastName, nationality, birthDate);
+
+            FirstName = firstName;
+            LastName = lastName;
+            Nationality = nationality;
+            BirthDate = birthDate;
+            ProfileImageUrl = profileImageUrl;
         }
 
-        protected PersonEntity
-        (
-            string id, 
-            string firstName, 
-            string lastName, 
-            string nationality, 
-            DateTime birthDate, 
-            string previewImgUrl,
-            
-            DateTime updatedAt,
-            DateTime createdAt
-        )
+        private static void ValidatePersonData(string firstName, string lastName, string nationality, DateTime birthDate)
         {
-            this.Id = id;
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new ArgumentException("First name is required", nameof(firstName));
 
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Nationality = nationality;
-            this.BirthDate = birthDate;
-            this.PreviewImgUrl = previewImgUrl;
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new ArgumentException("Last name is required", nameof(lastName));
 
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (string.IsNullOrWhiteSpace(nationality))
+                throw new ArgumentException("Nationality is required", nameof(nationality));
+
+            if (birthDate > DateTime.Now.AddYears(-5))
+                throw new ArgumentException("Invalid birth date", nameof(birthDate));
+        }
+
+        private int CalculateAge()
+        {
+            var today = DateTime.Today;
+            var age = today.Year - BirthDate.Year;
+
+            if (BirthDate.Date > today.AddYears(-age)) age--;
+            return age;
+        }
+
+        public void UpdatePersonalInfo(string firstName, string lastName, string nationality,
+            DateTime birthDate, string profileImageUrl)
+        {
+            ValidatePersonData(firstName, lastName, nationality, birthDate);
+
+            FirstName = firstName;
+            LastName = lastName;
+            Nationality = nationality;
+            BirthDate = birthDate;
+            ProfileImageUrl = profileImageUrl;
+
+            MarkAsUpdated();
         }
     }
 }

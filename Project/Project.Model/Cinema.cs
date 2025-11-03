@@ -1,146 +1,130 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Project.Entities;
+﻿using Project.Entities;
 using Project.Interfaces;
 using Project.Utils;
 
 namespace Project.Models
 {
-    public class Cinema : BaseEntity, IRating
+    public class Cinema : BaseEntity, IRatable, IListManageable<string>
     {
-        public string Id { get; private set; }
-        public string CinemaName { get; private set; }
-        public string Adress { get; private set; }
-        public string ContactNumber { get; private set; }
+        public string Name { get; private set; }
+        public string Address { get; private set; }
+        public string ContactPhone { get; private set; }
         public string ContactEmail { get; private set; }
         public string ManagerName { get; private set; }
 
-        public List<string> AvalibleFilms { get; private set; } = [];
+        public double Rating { get; private set; }
+        public uint TotalRatings { get; private set; }
 
-        public double Rating { get; private set; } = 0;
-        public uint CustomersRated { get; private set; } = 0;
+        private readonly List<string> _availableFilmIds;
+        public IReadOnlyList<string> AvailableFilmIds => _availableFilmIds.AsReadOnly();
+        public IReadOnlyList<string> Items => AvailableFilmIds;
 
-        public void UpdateRating(uint mark)
+        public Cinema(string name, string address, string contactPhone,
+            string contactEmail, string managerName) : base()
         {
-            Rating = RatingHandler.CalculateRating(CustomersRated, Rating, mark);
-            CustomersRated++;
+            ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
 
-            this.MarkAsUpdated();
+            Name = name;
+            Address = address;
+            ContactPhone = contactPhone;
+            ContactEmail = contactEmail;
+            ManagerName = managerName;
+            _availableFilmIds = [];
         }
 
-        public Cinema()
+        public Cinema(string id, string name, string address, string contactPhone,
+            string contactEmail, string managerName, List<string> availableFilmIds,
+            double rating, uint totalRatings, DateTime createdAt, DateTime updatedAt)
+            : base(id, createdAt, updatedAt)
         {
-            throw new NotImplementedException("Cannot create an epty Cinema obj");
+            ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
+
+            Name = name;
+            Address = address;
+            ContactPhone = contactPhone;
+            ContactEmail = contactEmail;
+            ManagerName = managerName;
+            _availableFilmIds = availableFilmIds ?? [];
+            Rating = rating;
+            TotalRatings = totalRatings;
         }
 
-        public Cinema
-        (
-            string cinemaName,
-            string adress,
-            string contactNumber,
-            string contactEmail,
-            string managerName
-        )
+        private static void ValidateCinemaData(string name, string address, string contactPhone,
+            string contactEmail, string managerName)
         {
-            this.Id = IdHandler.CreateId();
-            this.CinemaName = cinemaName;
-            this.Adress = adress;
-            this.ContactNumber = contactNumber;
-            this.ContactEmail = contactEmail;
-            this.ManagerName = managerName;
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Cinema name is required", nameof(name));
+
+            if (string.IsNullOrWhiteSpace(address))
+                throw new ArgumentException("Address is required", nameof(address));
+
+            if (string.IsNullOrWhiteSpace(contactPhone))
+                throw new ArgumentException("Contact phone is required", nameof(contactPhone));
+
+            if (string.IsNullOrWhiteSpace(contactEmail))
+                throw new ArgumentException("Contact number name is required", nameof(contactEmail));
+
+            if (string.IsNullOrWhiteSpace(managerName))
+                throw new ArgumentException("Manager name is required", nameof(managerName));
         }
 
-        public Cinema
-        (
-            string id,
-            string cinemaName,
-            string adress,
-            string contactNumber,
-            string contactEmail,
-            string managerName,
-            List<string> avalibleFilms,
-            double rating,
-            uint customersRated,
-            DateTime updatedAt,
-            DateTime createdAt
-        )
+        public void AddRating(uint rating)
         {
-            this.Id = id;
-            this.CinemaName = cinemaName;
-            this.Adress = adress;
-            this.ContactNumber = contactNumber;
-            this.ContactEmail = contactEmail;
-            this.ManagerName = managerName;
-            this.AvalibleFilms = avalibleFilms;
-            this.Rating = rating;
-            this.CustomersRated = customersRated;
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (rating < 1 || rating > 5)
+                throw new ArgumentException("Rating must be between 1 and 5");
+
+            Rating = RatingCalculator.CalculateNewRating(TotalRatings, Rating, rating);
+            TotalRatings++;
+            MarkAsUpdated();
         }
 
-        public bool AddAvalibleFilmId(string filmId)
+        public bool AddItem(string filmId)
         {
-            if (!ArrayHandler.AddUniqueStringToMax5NlementsArray(this.AvalibleFilms, filmId, 5))
+            if (CollectionHelper.AddUniqueItem(_availableFilmIds, filmId, 10))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
         }
 
-        public string GetAllAvalibleFilmId()
+        public bool RemoveItem(string filmId)
         {
-            return ArrayHandler.StringArrayToString(this.AvalibleFilms);
-        }
-
-        public bool DeleteAvalibleFilmId(string filmId)
-        {
-            if (!ArrayHandler.DeleteElFromStringArray(this.AvalibleFilms, filmId))
+            if (CollectionHelper.RemoveItem(_availableFilmIds, filmId))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
+        }
+
+        public string GetItemsAsString() => CollectionHelper.ToString(_availableFilmIds);
+
+        public void UpdateInfo(string name, string address, string contactPhone,
+            string contactEmail, string managerName)
+        {
+            ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
+
+            Name = name;
+            Address = address;
+            ContactPhone = contactPhone;
+            ContactEmail = contactEmail;
+            ManagerName = managerName;
+
+            MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Cinema Id: {this.Id} \n" +
-                   $"Cinema name: {this.CinemaName} \n" +
-                   $"Cinema adress: {this.Adress} \n" +
-                   $"Cinema contact number: {this.ContactNumber} \n" +
-                   $"Cinema contact email: {this.ContactEmail} \n" +
-                   $"Cinemaa manager name: {this.ManagerName} \n" +
-                   $"Cinema avalible films: {this.GetAllAvalibleFilmId()} \n" +
-                   $"Cinema rating: {this.Rating} \n" +
-                   $"Cinema customers rated: {this.CustomersRated} \n" +
-                   $"updated_at: {this.UpdatedAt} \n" +
-                   $"created_at: {this.CreatedAt} \n";
+            return $"Cinema: {Name}\n" +
+                   $"Address: {Address}\n" +
+                   $"Contact: {ContactPhone} | {ContactEmail}\n" +
+                   $"Manager: {ManagerName}\n" +
+                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Available Films: {GetItemsAsString()}\n" +
+                   $"ID: {Id}";
         }
-
-        public void UpdateGlobalInfo
-        (
-            string cinemaName,
-            string adress,
-            string contactNumber,
-            string contactEmail,
-            string managerName
-        )
-        {
-            this.CinemaName = cinemaName;
-            this.Adress = adress;
-            this.ContactNumber = contactNumber;
-            this.ContactEmail = contactEmail;
-            this.ManagerName = managerName;
-
-            this.MarkAsUpdated();
-        }
-
     }
 }

@@ -1,146 +1,128 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Project.Entities;
+﻿using Project.Entities;
 using Project.Interfaces;
 using Project.Utils;
 
 namespace Project.Models
 {
-    public class Auditorium : BaseEntity, IRating
+    public class Auditorium : BaseEntity, IRatable, IListManageable<string>
     {
-        public string Id { get; private set; }
         public string CinemaId { get; private set; }
-        public string AuditoriumName { get; private set; }
+        public string Name { get; private set; }
         public uint RoomNumber { get; private set; }
-        public uint Rows {  get; private set; }
+        public uint Rows { get; private set; }
         public uint SeatsPerRow { get; private set; }
-        public uint MaxCapacity { get; private set; }
-        public List<string> Features { get; private set; } = [];
-        public double Rating { get; private set; } = 0;
-        public uint CustomersRated { get; private set; } = 0;
+        public uint Capacity => Rows * SeatsPerRow;
 
-        public void UpdateRating(uint mark)
+        public double Rating { get; private set; }
+        public uint TotalRatings { get; private set; }
+
+        private readonly List<string> _features;
+        public IReadOnlyList<string> Features => _features.AsReadOnly();
+        public IReadOnlyList<string> Items => Features;
+
+        public Auditorium(string cinemaId, string name, uint roomNumber, uint rows, uint seatsPerRow) : base()
         {
-            Rating = RatingHandler.CalculateRating(CustomersRated, Rating, mark);
-            CustomersRated++;
+            ValidateAuditoriumData(cinemaId, name, roomNumber, rows, seatsPerRow);
 
-            this.MarkAsUpdated();
+            CinemaId = cinemaId;
+            Name = name;
+            RoomNumber = roomNumber;
+            Rows = rows;
+            SeatsPerRow = seatsPerRow;
+            _features = [];
         }
 
-        public Auditorium()
+        public Auditorium(string id, string cinemaId, string name, uint roomNumber,
+            uint rows, uint seatsPerRow, List<string> features, double rating,
+            uint totalRatings, DateTime createdAt, DateTime updatedAt)
+            : base(id, createdAt, updatedAt)
         {
-            throw new NotImplementedException("Cannot create an epty Auditorium obj");
+            ValidateAuditoriumData(cinemaId, name, roomNumber, rows, seatsPerRow);
+
+            CinemaId = cinemaId;
+            Name = name;
+            RoomNumber = roomNumber;
+            Rows = rows;
+            SeatsPerRow = seatsPerRow;
+            _features = features ?? [];
+            Rating = rating;
+            TotalRatings = totalRatings;
         }
 
-        public Auditorium
-        (
-            string cinemaId, 
-            string auditoriumName, 
-            uint roomNumber, 
-            uint rows, 
-            uint seatsPerRow 
-        )
+        private static void ValidateAuditoriumData(string cinemaId, string name, uint roomNumber, uint rows, uint seatsPerRow)
         {
-            this.Id = IdHandler.CreateId();
-            this.CinemaId = cinemaId;
-            this.AuditoriumName = auditoriumName;
-            this.RoomNumber = roomNumber;
-            this.Rows = rows;
-            this.SeatsPerRow = seatsPerRow;
-            this.MaxCapacity = rows * seatsPerRow;
+            if (string.IsNullOrWhiteSpace(cinemaId))
+                throw new ArgumentException("Cinema ID is required", nameof(cinemaId));
+
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Auditorium name is required", nameof(name));
+
+            if(roomNumber == 0)
+                throw new ArgumentException("Room number cannot be 0", nameof(name));
+
+            if (rows == 0 || seatsPerRow == 0)
+                throw new ArgumentException("Rows and seats per row must be greater than 0");
         }
 
-        public Auditorium
-(           string id,
-            string cinemaId,
-            string auditoriumName,
-            uint roomNumber,
-            uint rows,
-            uint seatsPerRow,
-            double rating,
-            uint customersRated,
-            List<string> features,
-            DateTime updatedAt,
-            DateTime createdAt
-)
+        public void AddRating(uint rating)
         {
-            this.Id = id;
-            this.CinemaId = cinemaId;
-            this.AuditoriumName = auditoriumName;
-            this.RoomNumber = roomNumber;
-            this.Rows = rows;
-            this.SeatsPerRow = seatsPerRow;
-            this.MaxCapacity = rows * seatsPerRow;
-            this.Rating = rating;
-            this.CustomersRated = customersRated;
-            this.Features = features;
-            this.UpdatedAt = updatedAt;
-            this.CreatedAt = createdAt;
+            if (rating < 1 || rating > 5)
+                throw new ArgumentException("Rating must be between 1 and 5");
 
+            Rating = RatingCalculator.CalculateNewRating(TotalRatings, Rating, rating);
+            TotalRatings++;
+
+            MarkAsUpdated();
         }
 
-        public bool AddFeature(string feature)
+        public bool AddItem(string feature)
         {
-            if (!ArrayHandler.AddUniqueStringToMax5NlementsArray(this.Features, feature, 5))
+            if (CollectionHelper.AddUniqueItem(_features, feature, 5))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
         }
 
-        public string GetAllFeatures()
+        public bool RemoveItem(string feature)
         {
-            return ArrayHandler.StringArrayToString(this.Features);
-        }
-
-        public bool DeleteFeature(string feature)
-        {
-            if (!ArrayHandler.DeleteElFromStringArray(this.Features, feature))
+            if (CollectionHelper.RemoveItem(_features, feature))
             {
-                return false;
+                MarkAsUpdated();
+                return true;
             }
 
-            this.MarkAsUpdated();
-            return true;
+            return false;
+        }
+
+        public string GetItemsAsString() => CollectionHelper.ToString(_features);
+
+        public void UpdateLayout(string name, uint roomNumber, uint rows, uint seatsPerRow)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name is required", nameof(name));
+
+            if (rows == 0 || seatsPerRow == 0)
+                throw new ArgumentException("Rows and seats per row must be greater than 0");
+
+            Name = name;
+            RoomNumber = roomNumber;
+            Rows = rows;
+            SeatsPerRow = seatsPerRow;
+
+            MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Auditorium Id: {this.Id} \n" +
-                   $"Cinema Id: {this.CinemaId} \n" +
-                   $"Auditorium Name: {this.AuditoriumName} \n" +
-                   $"Room number: {this.RoomNumber} \n" +
-                   $"Rows: {this.Rows} \n" +
-                   $"Seats per row: {this.SeatsPerRow} \n" +
-                   $"Max capacity: {this.MaxCapacity} \n" +
-                   $"Rating: {this.Rating} \n" +
-                   $"Customers rated: {this.CustomersRated} \n" +
-                   $"Features: {this.GetAllFeatures()} \n" +
-                   $"updated_at: {this.UpdatedAt} \n" +
-                   $"created_at: {this.CreatedAt} \n";
-        }
-
-        public void UpdateGlobalInfo
-        (
-            string auditoriumName,
-            uint roomNumber,
-            uint rows,
-            uint seatsPerRow
-        )
-        {
-            this.AuditoriumName = auditoriumName;
-            this.RoomNumber = roomNumber;
-            this.Rows = rows;
-            this.SeatsPerRow = seatsPerRow;
-            this.MaxCapacity = rows * seatsPerRow;
-
-            this.MarkAsUpdated();
+            return $"Auditorium: {Name} (Room {RoomNumber})\n" +
+                   $"Capacity: {Capacity} seats ({Rows}x{SeatsPerRow})\n" +
+                   $"Features: {GetItemsAsString()}\n" +
+                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Cinema ID: {CinemaId}\n" +
+                   $"ID: {Id}";
         }
     }
 }

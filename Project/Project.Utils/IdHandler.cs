@@ -1,11 +1,7 @@
 ﻿namespace Project.Utils
 {
-    public static class IdHandler
+    public static class IdGenerator
     {
-        public static string CreateId()
-        {
-            var dateNow = DateTime.Now;
-            return dateNow.ToString("yyyyMMddHHmmssfff");
-        }
+        public static string Generate() => DateTime.Now.ToString("yyyyMMddHHmmssfff");
     }
 }

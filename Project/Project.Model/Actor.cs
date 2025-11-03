@@ -4,58 +4,48 @@ namespace Project.Models
 {
     public class Actor : PersonEntity
     {
-        public string Biography { get; private set; }
+        public string Biography { get; private set; } = string.Empty;
         public double Popularity { get; private set; }
 
-        public Actor()
+        public Actor(string firstName, string lastName, string nationality,
+            DateTime birthDate, string profileImageUrl, string biography, double popularity)
+            : base(firstName, lastName, nationality, birthDate, profileImageUrl)
         {
-            throw new NotImplementedException("Cannot create an epty Actor obj");
+            SetBiography(biography);
+            SetPopularity(popularity);
         }
 
-        public Actor
-        (
-            string firstName,
-            string lastName,
-            string nationality,
-            DateTime birthDate,
-            string previewImgUrl,
-            string biography,
-            double popularity
-        ) : base(firstName, lastName, nationality, birthDate, previewImgUrl)
+        public Actor(string id, string firstName, string lastName, string nationality,
+            DateTime birthDate, string profileImageUrl, string biography, double popularity,
+            DateTime createdAt, DateTime updatedAt)
+            : base(id, firstName, lastName, nationality, birthDate, profileImageUrl, createdAt, updatedAt)
         {
-           this.Biography = biography;
-           this.Popularity = popularity;
+            SetBiography(biography, false);
+            SetPopularity(popularity, false);
         }
 
-        public Actor
-        (
-            string id,
-            string firstName,
-            string lastName,
-            string nationality,
-            DateTime birthDate,
-            string previewImgUrl,
-            string biography,
-            double popularity,
-            DateTime updatedAt,
-            DateTime createdAt
-        ) : base(id, firstName, lastName, nationality, birthDate, previewImgUrl, updatedAt, createdAt)
+        public void SetBiography(string biography, bool markAsUpdated = true)
         {
-            this.Biography = biography;
-            this.Popularity = popularity;
+            Biography = biography ?? throw new ArgumentNullException(nameof(biography));
+            if(markAsUpdated) MarkAsUpdated();
+        }
+
+        public void SetPopularity(double popularity, bool markAsUpdated = true)
+        {
+            if (popularity < 0 || popularity > 100)
+                throw new ArgumentException("Popularity must be between 0 and 100");
+
+            Popularity = popularity;
+            if (markAsUpdated) MarkAsUpdated();
         }
 
         public override string ToString()
         {
-            return $"Actor id: {this.Id} \n" +
-                   $"Actor name/surname: {this.FirstName} / {this.LastName} \n" +
-                   $"Actor nationality: {this.Nationality} \n" +
-                   $"Actor birth date: {this.BirthDate} \n" +
-                   $"Actor biography: {this.Biography} \n" +
-                   $"Actor imgUrl: {this.PreviewImgUrl} \n" +
-                   $"Actor popularity: {this.Popularity} \n" +
-                   $"Actor updated_at {this.UpdatedAt} \n" +
-                   $"Actor created_at: {this.CreatedAt} \n";
+            return $"Actor: {FullName} ({Age} years)\n" +
+                   $"Nationality: {Nationality}\n" +
+                   $"Biography: {Biography}...\n" +
+                   $"Popularity: {Popularity:F1}\n" +
+                   $"ID: {Id}";
         }
     }
 }
