@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Theatre
+    public class Theater
     {
         public string Name { get; set; }
         public Address Address { get; set; }
+        public List<Hall> Halls { get; set; }
 
-        public Theatre() : this(string.Empty, new Address()) { }
-        public Theatre(string name, Address address)
+        public Theater() : this(string.Empty, new Address(), new List<Hall>()) { }
+        public Theater(string name, Address address, List<Hall> halls)
         {
             Name = name;
             Address = address;
+            Halls = halls;
         }
     }
 }

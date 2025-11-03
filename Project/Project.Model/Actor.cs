@@ -6,17 +6,20 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class Actor : Person
+    public class Actor : Person
     {
-        public string role { get; set; }
+        public decimal Salary { get; set; }
+        public List<Play> Plays { get; set; }
 
         public Actor() : base(string.Empty, string.Empty) 
         {
-            role = string.Empty;
+            Salary = default;
+            Plays = new List<Play>();
         }
-        public Actor(string firstName, string lastName, string role) : base(firstName, lastName)
+        public Actor(string firstName, string lastName, decimal salary, List<Play> plays) : base(firstName, lastName)
         {
-            this.role = role;
+            Salary = salary;
+            Plays = plays;
         }
     }
 }
