@@ -10,5 +10,7 @@ namespace RestaurantManagement.Models
         public required string Email { get; set; }
         public required DateTime DateOfBirth { get; set; }
         public required IAddress Address { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
+
     }
 }

@@ -17,4 +17,5 @@ namespace RestaurantManagement.Models
             return $"{FirstName} {LastName} ({EmployeeType})";
         }
     }
+
 }

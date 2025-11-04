@@ -1,7 +1,7 @@
 ﻿using RestaurantManagement.Models;
 using RestaurantManagement.Models.Enums;
-
 namespace RestaurantManagement.ConsoleApp
+
 {
     class Program
     {
@@ -177,3 +177,213 @@ namespace RestaurantManagement.ConsoleApp
         }
     }
 }
+/*
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using RestaurantManagement.Models;
+using RestaurantManagement.Models.Enums;
+
+namespace RestaurantManagement
+{
+    class Program
+    {
+        static List<Employee> employees = new();
+        static List<Reservation> reservations = new();
+
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("=== Restaurant Management ===");
+                Console.WriteLine("1. Add employee");
+                Console.WriteLine("2. Remove employee");
+                Console.WriteLine("3. List employees");
+                Console.WriteLine("4. Add reservation");
+                Console.WriteLine("5. Remove reservation");
+                Console.WriteLine("6. List reservations");
+                Console.WriteLine("0. Exit");
+                Console.Write("Choose option: ");
+
+                string option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1": AddEmployee(); break;
+                    case "2": RemoveEmployee(); break;
+                    case "3": ShowEmployees(); break;
+                    case "4": AddReservation(); break;
+                    case "5": RemoveReservation(); break;
+                    case "6": ShowReservations(); break;
+                    case "0": return;
+                    default: Console.WriteLine("Invalid option!"); break;
+                }
+
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
+            }
+        }
+
+        static void AddEmployee()
+        {
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+
+            Console.Write("Employee type (Waiter, Chef, Manager, Cleaner, Delivery): ");
+            string typeInput = Console.ReadLine();
+            if (!Enum.TryParse(typeInput, true, out EmployeeType type))
+            {
+                Console.WriteLine("Invalid type.");
+                return;
+            }
+
+            Console.Write("Salary: ");
+            if (!int.TryParse(Console.ReadLine(), out int salary))
+            {
+                Console.WriteLine("Invalid salary input.");
+                return;
+            }
+
+            Console.Write("Phone number: ");
+            string phoneNumber = Console.ReadLine();
+
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+
+            Console.Write("Date of birth (yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
+            {
+                Console.WriteLine("Invalid date input.");
+                return;
+            }
+
+            // Dane adresowe
+            Console.Write("Country: ");
+            string country = Console.ReadLine();
+
+            Console.Write("Zip code: ");
+            string zipCode = Console.ReadLine();
+
+            Console.Write("City: ");
+            string city = Console.ReadLine();
+
+            Console.Write("Street: ");
+            string street = Console.ReadLine();
+
+            var address = new Address(country, zipCode, city, street);
+
+            var employee = new Employee
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                EmployeeType = type,
+                Salary = salary,
+                HiredOn = DateTime.Now,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                DateOfBirth = dateOfBirth,
+                Address = address
+            };
+
+            employees.Add(employee);
+            Console.WriteLine(" Employee added!");
+        }
+
+        static void RemoveEmployee()
+        {
+            Console.Write("Enter last name to remove: ");
+            string lastName = Console.ReadLine();
+
+            var emp = employees.FirstOrDefault(e => e.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+            if (emp != null)
+            {
+                emp.FiredOn = DateTime.Now;
+                employees.Remove(emp);
+                Console.WriteLine(" Employee removed!");
+            }
+            else
+                Console.WriteLine("Employee not found!");
+        }
+
+        static void ShowEmployees()
+        {
+            if (!employees.Any())
+            {
+                Console.WriteLine("No employees found.");
+                return;
+            }
+
+            Console.WriteLine("\nCurrent employees:");
+            foreach (var e in employees)
+            {
+                Console.WriteLine($"- {e}, Salary: {e.Salary}, Hired: {e.HiredOn:d}");
+                Console.WriteLine($"  Address: {e.Address}");
+                Console.WriteLine($"  Email: {e.Email}, Phone: {e.PhoneNumber}");
+                Console.WriteLine();
+            }
+        }
+
+        static void AddReservation()
+        {
+            Console.Write("Customer name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Number of people: ");
+            if (!int.TryParse(Console.ReadLine(), out int count))
+            {
+                Console.WriteLine("Invalid number.");
+                return;
+            }
+
+            Console.Write("Date (yyyy-MM-dd HH:mm): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            {
+                Console.WriteLine("Invalid date format.");
+                return;
+            }
+
+            reservations.Add(new Reservation
+            {
+                CustomerName = name,
+                NumberOfPeople = count,
+                Date = date
+            });
+
+            Console.WriteLine("✅ Reservation added!");
+        }
+
+        static void RemoveReservation()
+        {
+            Console.Write("Enter customer name to remove: ");
+            string name = Console.ReadLine();
+
+            var res = reservations.FirstOrDefault(r => r.CustomerName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (res != null)
+            {
+                reservations.Remove(res);
+                Console.WriteLine("❌ Reservation removed!");
+            }
+            else
+                Console.WriteLine("Reservation not found!");
+        }
+
+        static void ShowReservations()
+        {
+            if (!reservations.Any())
+            {
+                Console.WriteLine("No reservations found.");
+                return;
+            }
+
+            Console.WriteLine("\nReservations:");
+            foreach (var r in reservations)
+                Console.WriteLine($"- {r}");
+        }
+    }
+}
+*/
