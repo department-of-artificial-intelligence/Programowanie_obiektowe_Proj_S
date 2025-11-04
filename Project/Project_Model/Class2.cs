@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace Project_Model
 {
     internal class Teacher{
-
+       //dasdasdsadas
     }
 }
