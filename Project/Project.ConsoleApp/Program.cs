@@ -1,4 +1,4 @@
-﻿using RestaurantManagement.Models;
+﻿/*using RestaurantManagement.Models;
 using RestaurantManagement.Models.Enums;
 namespace RestaurantManagement.ConsoleApp
 
@@ -177,7 +177,7 @@ namespace RestaurantManagement.ConsoleApp
         }
     }
 }
-/*
+*/
 
 using System;
 using System.Collections.Generic;
@@ -386,4 +386,3 @@ namespace RestaurantManagement
         }
     }
 }
-*/
