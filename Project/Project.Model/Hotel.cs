@@ -5,7 +5,7 @@
         public required string Name { get; set; }
         public required string Address { get; set; }
 
-        public Hotel() { }
+        public Hotel() { }//dwadawdawd
 
     }
 }
