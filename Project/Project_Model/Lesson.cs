@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 namespace Project_Model
 {
     internal class Lesson{
-        public string subject {  get; set; }
+        public int Id {  get; set; }
+        public DateTime Date {  get; set; }
+        public int DurationMinutes { get; set; }
+
+        public bool Paid { get; set; }
+
     }
 }

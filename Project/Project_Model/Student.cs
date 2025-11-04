@@ -8,7 +8,8 @@ namespace Project_Model
 {
     public class Student:Person{
         public int Id { get; set; }
-        public List<string>Lekcje=new List<string>();
+        public string Year {  get; set; }
+        public List<Lesson> Lekcje { get; set; } =new List<Lesson>();
 
     }
 }
