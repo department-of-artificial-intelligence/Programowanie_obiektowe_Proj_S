@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Tr
+    public class Exercise
     {
-        public required int Person_id { get; set; }
-        public required string First_name { get; set; }
-        public required string Last_name { get; set; }
-        public required string Age { get; set; }
-        public required string Email { get; set; }
-        public required string Phone { get; set; }
-
-
+        public required string Name { get; set; }
+        public required string Series { get; set; }
+        public required string Rep { get; set; }
+        public required string Treining_load { get; set; }
+        public required string Break { get; set; }
 
     }
 }

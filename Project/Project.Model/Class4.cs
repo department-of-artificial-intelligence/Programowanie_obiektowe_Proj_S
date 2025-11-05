@@ -13,7 +13,7 @@ namespace Project.Model
         public required float Weight { get; set; }
         public required float Height { get; set; }
         public required float Age { get; set; }
-        public List<string> Plan { get; set; } = new List<string>();
+        public List<Plan> Plan { get; set; } = new List<Plan>();
         public List<string> History { get; set; } = new List<string>();
 
     }

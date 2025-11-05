@@ -10,7 +10,7 @@ namespace Project.Model
     {
         public required string Specialization { get; set; }
         public required int Experience { get; set; }
-        public List<string> Clients { get; set; } = new List<string>();
+        public List<Client> Clients { get; set; } = new List<Client>();
 
     }
 }
