@@ -19,6 +19,13 @@ namespace Project.Model
         public required DateTime DateOrder { get; set; }
 
 
+        public required float Price { get; set; }
+
+
+        public required string Delivery { get; set; }
+
+
+
 
         
         public required int CustomerId { get; set; }
@@ -30,15 +37,35 @@ namespace Project.Model
 
 
 
-        public Order(Guid _orderId, string _ordernumber, int _numberOfProducts, DateTime _dateOrder)
+
+
+
+        private Order() { }
+
+        public Order(Guid _orderId, string _ordernumber, int _numberOfProducts, DateTime _dateOrder, float _price, string _delivery)
         {
             OrderId = _orderId;
             OrderNumber = _ordernumber;
             NumberOfProducts = _numberOfProducts;
             DateOrder = _dateOrder;
+            Price = _price;
+            Delivery = _delivery;
 
 
         }
+
+
+        public Potwierdźzamowienie() { }
+
+
+        public Anulujzamowienie() { }
+
+
+        public 
+
+
+
+
 
     }
 }
