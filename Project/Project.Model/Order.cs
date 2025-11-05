@@ -7,65 +7,86 @@ using System.Xml.Schema;
 
 namespace Project.Model
 {
+
     public class Order
     {
+        public int Id { get; set; }
+        public DateTime DatePlaced { get; set; }
+        public OrderStatus Status { get; set; }
+        public decimal TotalValue { get; set; }
 
-        public required Guid OrderId { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
 
-        public required string OrderNumber { get; set; }
+        public int StoreId { get; set; }
+        public Store FulfillingStore { get; set; }
 
-        public required int NumberOfProducts { get; set; }
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
-        public required DateTime DateOrder { get; set; }
+       
 
-
-        public required float Price { get; set; }
-
-
-        public required string Delivery { get; set; }
-
-
-
-
-        
-        public required int CustomerId { get; set; }
-
-        public required List<OrderItem> OrderItems { get; set; }
-
-
-        public string CustomerName { get; set; }
-
-
-
-
-
-
-        private Order() { }
-
-        public Order(Guid _orderId, string _ordernumber, int _numberOfProducts, DateTime _dateOrder, float _price, string _delivery)
+        public decimal CalculateTotalValue()
         {
-            OrderId = _orderId;
-            OrderNumber = _ordernumber;
-            NumberOfProducts = _numberOfProducts;
-            DateOrder = _dateOrder;
-            Price = _price;
-            Delivery = _delivery;
+            
+            decimal total = this.OrderItems.Sum(item => item.CalculateItemTotal());
 
-
+            this.TotalValue = total;
+            return total;
         }
 
+        public void AddItem(Product product, int quantity)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product), "Produkt nie może być pusty.");
+            }
+            if (quantity <= 0)
+            {
+                throw new ArgumentException("Ilość musi być dodatnia.", nameof(quantity));
+            }
 
-        public Potwierdźzamowienie() { }
+            
+            var existingItem = this.OrderItems.FirstOrDefault(item => item.ProductId == product.Id);
 
+            if (existingItem != null)
+            {
+                
+                existingItem.Quantity += quantity;
+            }
+            else
+            {
+                
+                var newItem = new OrderItem
+                {
+                    Order = this,
+                    OrderId = this.Id,
+                    Product = product,
+                    ProductId = product.Id,
+                    Quantity = quantity,
+                    PriceAtTimeOfPurchase = product.Price 
+                };
+                this.OrderItems.Add(newItem);
+            }
 
-        public Anulujzamowienie() { }
+            
+            this.CalculateTotalValue();
+        }
 
+        public void UpdateStatus(OrderStatus newStatus)
+        {
+            this.Status = newStatus;
+        }
 
-        public 
+        
 
-
-
-
-
+        public override string ToString()
+        {
+            return $"Zamówienie #{Id} [Status: {Status}] - {DatePlaced:yyyy-MM-dd}";
+        }
     }
+
+
+
+
+
 }
