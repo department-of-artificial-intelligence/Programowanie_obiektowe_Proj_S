@@ -1,11 +1,15 @@
-﻿namespace Project.Model
+﻿using System.Collections.Generic;
+
+namespace SiecHoteli
 {
     public class Hotel
     {
-        public required string Name { get; set; }
-        public required string Address { get; set; }
+        public string Nazwa { get; set; } = string.Empty;
+        public string Miasto { get; set; } = string.Empty;
+        public List<Pracownik> Pracownicy { get; set; } = new();
+        public List<Pokoj> Pokoje { get; set; } = new();
+        public List<Rezerwacja> Rezerwacje { get; set; } = new();
 
-        public Hotel() { }//dwadawdawd
-
+        public override string ToString() => $"{Nazwa} ({Miasto})";
     }
 }
