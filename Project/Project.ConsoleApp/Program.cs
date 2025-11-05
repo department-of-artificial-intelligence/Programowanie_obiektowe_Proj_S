@@ -178,7 +178,7 @@ namespace RestaurantManagement.ConsoleApp
     }
 }
 */
-
+#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,15 +197,15 @@ namespace RestaurantManagement
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("=== Restaurant Management ===");
-                Console.WriteLine("1. Add employee");
-                Console.WriteLine("2. Remove employee");
-                Console.WriteLine("3. List employees");
-                Console.WriteLine("4. Add reservation");
-                Console.WriteLine("5. Remove reservation");
-                Console.WriteLine("6. List reservations");
-                Console.WriteLine("0. Exit");
-                Console.Write("Choose option: ");
+                Console.WriteLine("=== Sieć Restauracji ===");
+                Console.WriteLine("1. Dodaj pracownika");
+                Console.WriteLine("2. Usun pracownika");
+                Console.WriteLine("3. Lista pracowników");
+                Console.WriteLine("4. Dodaj rezerwacje");
+                Console.WriteLine("5. Usuń rezerwacje");
+                Console.WriteLine("6. Lista rezerwacji");
+                Console.WriteLine("0. Wyjście");
+                Console.Write("Wybierz opcje: ");
 
                 string option = Console.ReadLine();
 
@@ -218,61 +218,82 @@ namespace RestaurantManagement
                     case "5": RemoveReservation(); break;
                     case "6": ShowReservations(); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid option!"); break;
+                    default: Console.WriteLine("Niepoprawna opcja!"); break;
                 }
 
-                Console.WriteLine("\nPress Enter to continue...");
+                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
                 Console.ReadLine();
             }
         }
 
         static void AddEmployee()
         {
-            Console.Write("First name: ");
+            Console.Write("Imię: ");
             string firstName = Console.ReadLine();
 
-            Console.Write("Last name: ");
+            Console.Write("Nazwisko: ");
             string lastName = Console.ReadLine();
 
-            Console.Write("Employee type (Waiter, Chef, Manager, Cleaner, Delivery): ");
+            Console.Write("Stanowisko pracownika (Kelner, Szef, Kucharz, Menadżer, Barman, Host, Sprzątaczka, Dostawca): ");
             string typeInput = Console.ReadLine();
             if (!Enum.TryParse(typeInput, true, out EmployeeType type))
             {
-                Console.WriteLine("Invalid type.");
+                Console.WriteLine("Nieprawidłowy format.");
                 return;
             }
 
-            Console.Write("Salary: ");
+            Console.Write("Wypłata: ");
             if (!int.TryParse(Console.ReadLine(), out int salary))
             {
-                Console.WriteLine("Invalid salary input.");
+                Console.WriteLine("Nieprawidłowy format");
                 return;
             }
 
-            Console.Write("Phone number: ");
+            Console.Write("Numer telefonu: ");
             string phoneNumber = Console.ReadLine();
+            if(phoneNumber.Length !=9)
+            {
+                Console.WriteLine("Nieprawidłowy format daty");
+                return;
+            }
+              
 
             Console.Write("Email: ");
             string email = Console.ReadLine();
-
-            Console.Write("Date of birth (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
+            if (!email.Contains("@"))
             {
-                Console.WriteLine("Invalid date input.");
+                Console.WriteLine("Nieprawidłowy format daty");
                 return;
             }
 
-            // Dane adresowe
-            Console.Write("Country: ");
+            Console.Write("Data urodzenia (yyyy-mm-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
+            {
+                Console.WriteLine("Nieprawidłowy format daty");
+                return;
+            } 
+
+            Console.Write("Państwo: ");
             string country = Console.ReadLine();
 
-            Console.Write("Zip code: ");
+            Console.Write("Kod pocztowy: ");
             string zipCode = Console.ReadLine();
+            if (zipCode.Length != 6)
+               
+            {
+                Console.WriteLine("Nieprawidłowy format kodu");
+                return;
+            }
+            if (!zipCode.Contains("-"))
+            {
+                Console.WriteLine("Nieprawidłowy format kodu");
+                return;
+            }
 
-            Console.Write("City: ");
+            Console.Write("Miasto: ");
             string city = Console.ReadLine();
 
-            Console.Write("Street: ");
+            Console.Write("Ulica: ");
             string street = Console.ReadLine();
 
             var address = new Address(country, zipCode, city, street);
@@ -291,12 +312,12 @@ namespace RestaurantManagement
             };
 
             employees.Add(employee);
-            Console.WriteLine(" Employee added!");
+            Console.WriteLine("Pracownik dodany!");
         }
 
         static void RemoveEmployee()
         {
-            Console.Write("Enter last name to remove: ");
+            Console.Write("Dodaj nazwisko, aby usunąć ");
             string lastName = Console.ReadLine();
 
             var emp = employees.FirstOrDefault(e => e.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
@@ -304,46 +325,46 @@ namespace RestaurantManagement
             {
                 emp.FiredOn = DateTime.Now;
                 employees.Remove(emp);
-                Console.WriteLine(" Employee removed!");
+                Console.WriteLine("Pracownik usunięty!");
             }
             else
-                Console.WriteLine("Employee not found!");
+                Console.WriteLine("Nieznaleziono pracownika!");
         }
 
         static void ShowEmployees()
         {
             if (!employees.Any())
             {
-                Console.WriteLine("No employees found.");
+                Console.WriteLine("Nieznaleziono pracownika");
                 return;
             }
 
-            Console.WriteLine("\nCurrent employees:");
+            Console.WriteLine("\nAktualni pracownicy:");
             foreach (var e in employees)
             {
-                Console.WriteLine($"- {e}, Salary: {e.Salary}, Hired: {e.HiredOn:d}");
-                Console.WriteLine($"  Address: {e.Address}");
-                Console.WriteLine($"  Email: {e.Email}, Phone: {e.PhoneNumber}");
+                Console.WriteLine($"- {e}, Pensja: {e.Salary}, Zatrudniony/a: {e.HiredOn:d}");
+                Console.WriteLine($"  Adres: {e.Address}");
+                Console.WriteLine($"  Email: {e.Email}, Numer telefonu: {e.PhoneNumber}");
                 Console.WriteLine();
             }
         }
 
         static void AddReservation()
         {
-            Console.Write("Customer name: ");
+            Console.Write("Imię klienta: ");
             string name = Console.ReadLine();
 
-            Console.Write("Number of people: ");
+            Console.Write("Liczba osób: ");
             if (!int.TryParse(Console.ReadLine(), out int count))
             {
-                Console.WriteLine("Invalid number.");
+                Console.WriteLine("Niepoprawny numer");
                 return;
             }
 
-            Console.Write("Date (yyyy-MM-dd HH:mm): ");
+            Console.Write("Data (yyyy-mm-dd HH:mm): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime date))
             {
-                Console.WriteLine("Invalid date format.");
+                Console.WriteLine("Niepoprawny format daty");
                 return;
             }
 
@@ -354,33 +375,33 @@ namespace RestaurantManagement
                 Date = date
             });
 
-            Console.WriteLine("✅ Reservation added!");
+            Console.WriteLine("Rezerwacja dodana");
         }
 
         static void RemoveReservation()
         {
-            Console.Write("Enter customer name to remove: ");
+            Console.Write("Wpisz imię klienta, aby usunąć: ");
             string name = Console.ReadLine();
 
             var res = reservations.FirstOrDefault(r => r.CustomerName.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (res != null)
             {
                 reservations.Remove(res);
-                Console.WriteLine("❌ Reservation removed!");
+                Console.WriteLine("Rezerwacja usunięta!");
             }
             else
-                Console.WriteLine("Reservation not found!");
+                Console.WriteLine("Brak rezerwacji");
         }
 
         static void ShowReservations()
         {
             if (!reservations.Any())
             {
-                Console.WriteLine("No reservations found.");
+                Console.WriteLine("Brak rezerwacji");
                 return;
             }
 
-            Console.WriteLine("\nReservations:");
+            Console.WriteLine("\nRezerwacje:");
             foreach (var r in reservations)
                 Console.WriteLine($"- {r}");
         }

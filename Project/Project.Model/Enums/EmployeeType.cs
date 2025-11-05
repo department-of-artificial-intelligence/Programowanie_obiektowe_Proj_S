@@ -2,14 +2,23 @@
 {
     public enum EmployeeType
     {
-        Waiter,
+        /*Waiter,
         Chef, 
         Manager,
         Bartender,
         Host,
         Cleaner,
         DeliveryDriver,
-        Cashier,
         Other
+        */
+        Kelner,
+        Szef,
+        Kucharz,
+        Menadżer,
+        Barman,
+        Host,
+        Sprzątaczka,
+        Dostawca,
+        Inne
     }
 }
