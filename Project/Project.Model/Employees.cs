@@ -1,6 +1,6 @@
 ﻿namespace SiecHoteli
 {
-    public class Pracownik
+    public class Employees
     {
         public int Id { get; set; }
         public string Imie { get; set; } = string.Empty;

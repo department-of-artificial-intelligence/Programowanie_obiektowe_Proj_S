@@ -36,7 +36,7 @@ namespace SiecHoteli
                 }
             }
         }
-
+        
         static void DodajHotel()
         {
             Console.Write("Podaj nazwę hotelu: ");
@@ -61,7 +61,7 @@ namespace SiecHoteli
             string stanowisko = Console.ReadLine();
 
             int id = hotel.Pracownicy.Count + 1;
-            hotel.Pracownicy.Add(new Pracownik
+            hotel.Pracownicy.Add(new Employees
             {
                 Id = id,
                 Imie = imie ?? string.Empty,
@@ -90,7 +90,7 @@ namespace SiecHoteli
                 return;
             }
 
-            hotel.Pokoje.Add(new Pokoj { Numer = numer, LiczbaMiejsc = miejsca });
+            hotel.Pokoje.Add(new Room { Numer = numer, LiczbaMiejsc = miejsca });
             Console.WriteLine("✅ Pokój dodany!");
         }
 
@@ -106,7 +106,7 @@ namespace SiecHoteli
                 return;
             }
 
-            Pokoj pokoj = hotel.Pokoje.Find(p => p.Numer == numer);
+            Room pokoj = hotel.Pokoje.Find(p => p.Numer == numer);
             if (pokoj == null || !pokoj.Dostepny)
             {
                 Console.WriteLine("❌ Pokój niedostępny!");
@@ -133,7 +133,7 @@ namespace SiecHoteli
             }
 
             int id = hotel.Rezerwacje.Count + 1;
-            hotel.Rezerwacje.Add(new Rezerwacja
+            hotel.Rezerwacje.Add(new Reservation
             {
                 Id = id,
                 ImieKlienta = imie ?? string.Empty,

@@ -1,6 +1,6 @@
 ﻿namespace SiecHoteli
 {
-    public class Pokoj
+    public class Room
     {
         public int Numer { get; set; }
         public int LiczbaMiejsc { get; set; }

@@ -2,12 +2,12 @@
 
 namespace SiecHoteli
 {
-    public class Rezerwacja
+    public class Reservation
     {
         public int Id { get; set; }
         public string ImieKlienta { get; set; } = string.Empty;
         public string NazwiskoKlienta { get; set; } = string.Empty;
-        public Pokoj Pokoj { get; set; } = new Pokoj();
+        public Room Pokoj { get; set; } = new Room();
         public DateTime DataOd { get; set; }
         public DateTime DataDo { get; set; }
 
