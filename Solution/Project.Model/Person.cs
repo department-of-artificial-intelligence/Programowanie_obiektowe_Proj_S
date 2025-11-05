@@ -1,8 +1,36 @@
-﻿namespace Project.Model
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project.Model
 {
-    public class Person
+    public abstract class Person
     {
-        public required string FirstName {  get; set; }
+        public required int Id { get; set;} 
+        public required string FirstName { get; set; }
         public required string LastName { get; set; }
+        public required DateOnly DateOfBirth { get; set; }
+        public required string Address { get; set; }
+        public required int PhoneNumber { get; set; }
+        public required string Email { get; set; }
+
+        public int Age
+        {
+            get
+            {
+                int age = DateTime.Now.Year - DateOfBirth.Year;
+                if(DateTime.Now.DayOfYear < DateOfBirth.DayOfYear)
+                {
+                    age--;
+                }
+                return age;
+            }
+        }
+
+
+
+
     }
 }
