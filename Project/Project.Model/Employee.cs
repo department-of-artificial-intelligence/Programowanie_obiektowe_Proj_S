@@ -15,22 +15,22 @@ namespace Project.Model
 
         public string LastName { get; set; }
 
-        public Employeeposition Position { get; set; }
+        public EmployeePosition Position { get; set; }
 
         public decimal Salary { get; set; }
 
         public int StoreId { get; set; }
 
-        public string StorePlace { get; set; }
+        public string WorkPlace { get; set; }
 
 
 
 
 
-        public Employee() :base() { }
+        private Employee() :base() { }
 
 
-        public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string storePlace)
+        public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string workPlace)
         {
             Id = id;
             FirstName = firstName;
@@ -38,20 +38,20 @@ namespace Project.Model
             Position = position;
             Salary = salary;
             StoreId = storeId;
-            StorePlace = storePlace;
+            WorkPlace = workPlace;
         }
 
 
 
         public void ChangePosition(int id, EmployeePosition position)
         {
-            if(id > 0 && id != null)
+            if(id >= 0 )
             {
                 this.Position = position;
             }
             else
             {
-                this.Position = null;
+                this.Position = 0;
             }
 
 

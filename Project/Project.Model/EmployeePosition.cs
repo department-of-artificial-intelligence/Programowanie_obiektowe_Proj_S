@@ -3,11 +3,12 @@
 
     public enum EmployeePosition
     {
+        Brak_pozycji,
         Sprzedawca,
         Magazynier,
         Technik,
         Sprzątacz,
-        Kierownik
+        Kierownik,
         Menadżer,
 
     }
