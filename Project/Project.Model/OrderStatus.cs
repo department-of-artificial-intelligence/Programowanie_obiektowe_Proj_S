@@ -3,11 +3,11 @@
 
     public enum OrderStatus
     {
-        Przyjęte,
-        W_trakcie_realizacji,
-        Wysłane,
-        Anulowane,
-        Zrealizowane,
+        Aproved,
+        In_Order,
+        Cancelled,
+        Completed
+
 
     }
 }
