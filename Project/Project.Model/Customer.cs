@@ -35,14 +35,8 @@ namespace Project.Model
         
         public Customer(int customerId, string customerFirstName, string customerLastName, string customerEmail, int customerPhone, string customerCity, string customerRegion, string customerPostalCode)
         {
-            if(customerId >= 0) { 
-                CustomerId = customerId;
-            }
-            else
-            {
-                CustomerId = 0;
-            }
-            
+            if(customerId < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(customerId));
+
 
             CustomerFirstName = customerFirstName;
             CustomerLastName = customerLastName;

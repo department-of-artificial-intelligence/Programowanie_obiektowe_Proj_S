@@ -9,19 +9,19 @@ namespace Project.Model
     public class Employee
     {
 
-        public int Id { get; set; }
+        public required int Id { get; set; }
 
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
 
-        public EmployeePosition Position { get; set; }
+        public required EmployeePosition Position { get; set; }
 
-        public decimal Salary { get; set; }
+        public required decimal Salary { get; set; }
 
-        public int StoreId { get; set; }
+        public required int StoreId { get; set; }
 
-        public string WorkPlace { get; set; }
+        public required string WorkPlace { get; set; }
 
 
 
@@ -32,7 +32,7 @@ namespace Project.Model
 
         public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string workPlace)
         {
-            Id = id;
+            if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
             FirstName = firstName;
             LastName = lastName;
             Position = position;
@@ -45,14 +45,9 @@ namespace Project.Model
 
         public void ChangePosition(int id, EmployeePosition position)
         {
-            if(id >= 0 )
-            {
-                this.Position = position;
-            }
-            else
-            {
-                this.Position = 0;
-            }
+            if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
+
+            Position = position;
 
 
         }

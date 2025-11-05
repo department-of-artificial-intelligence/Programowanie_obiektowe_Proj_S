@@ -8,14 +8,14 @@ namespace Project.Model
 {
     public class Store
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string PostalCode { get; set; }
-        public string Country { get; set; }
-        public string PhoneNumber { get; set; }
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Address { get; set; }
+        public required string City { get; set; }
+        public required string Region { get; set; }
+        public required string PostalCode { get; set; }
+        public required string Country { get; set; }
+        public required string PhoneNumber { get; set; }
 
         public List<Employee> Employees { get; set; } = new List<Employee>();
         public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>();
