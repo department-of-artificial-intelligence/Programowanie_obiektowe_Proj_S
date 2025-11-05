@@ -62,7 +62,7 @@ namespace Project.Model
     
         public void ChangeStore(int id,  int storeId)
         {
-            if (id > 0 && id != null)
+            if (id > 0)
             {
                 this.StoreId = storeId;
             }
