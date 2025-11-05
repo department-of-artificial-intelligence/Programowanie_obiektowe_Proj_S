@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Project_Model
 {
-    internal class Lesson{
+    public class Lesson{
         public int Id {  get; set; }
         public DateTime Date {  get; set; }
         public int DurationMinutes { get; set; }
-
         public bool Paid { get; set; }
 
     }
