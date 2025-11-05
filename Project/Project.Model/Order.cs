@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
@@ -8,7 +9,20 @@ using System.Xml.Schema;
 namespace Project.Model
 {
 
-    public class Order
+
+    public interface IOrders
+    {
+        decimal CalculateTotalValue();
+
+        void AddItem(Product product, int quantity);
+
+        void UpdateStatus(OrderStatus newStatus);
+
+
+    }
+
+
+    internal class Order: IOrders
     {
         public int Id { get; set; }
         public DateTime DatePlaced { get; set; }
