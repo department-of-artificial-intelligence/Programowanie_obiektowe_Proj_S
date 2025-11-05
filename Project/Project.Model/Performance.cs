@@ -10,8 +10,9 @@ namespace Project.Model
     {
         public Play Play { get; set; }
         public Hall Hall { get; set; }
-        public DateTime ShowTime { get; set; }
+        public DateTime ShowTime { get; set; } // powinny być 2 daty, początkowa i końcowa
         public List<Ticket> Tickets { get; set; }
+        // status też jak w ticket? np. playing/planned/played/canceled
 
         public Performance() : this(new Play(), new Hall(), new DateTime(), new List<Ticket>()) { }
         public Performance(Play play, Hall hall, DateTime showTime, List<Ticket> tickets)

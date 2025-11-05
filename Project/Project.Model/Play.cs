@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Play
+    public class Play // zależność? - - -> Performance
     {
         public string Title { get; set; }
         public Director Director { get; set; }

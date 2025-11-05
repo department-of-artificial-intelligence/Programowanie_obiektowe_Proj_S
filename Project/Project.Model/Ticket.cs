@@ -10,7 +10,7 @@ namespace Project.Model
     {
         public int TicketId { get; set; }
         public decimal Price { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } // na enum
         public Customer Customer { get; set; }
         public Performance Performance { get; set; }
         public Seat Seat { get; set; }
