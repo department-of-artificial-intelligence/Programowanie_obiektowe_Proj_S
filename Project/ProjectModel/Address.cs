@@ -23,7 +23,7 @@ namespace Project.Model
         }
         public Address() : this(string.Empty, string.Empty, string.Empty, 0) { }
 
-        public void display_Address()
+        public void DisplayAddress()
         {
             Console.WriteLine($"Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}");
         }

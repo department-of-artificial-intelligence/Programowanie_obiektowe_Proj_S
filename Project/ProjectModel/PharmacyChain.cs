@@ -6,24 +6,18 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class PharmacyChain
+    public class PharmacyChain : IPharmacyChain
     {
-        public List<Pharmacy> _apteki { get; set; }
+        private readonly IPharmaciesSource _source;
 
-        public PharmacyChain(List<Pharmacy> apteki)
+        public PharmacyChain(IPharmaciesSource source)
         {
-            _apteki = new List<Pharmacy>();
-            if(apteki != null)
-            {
-                foreach(Pharmacy apteka in apteki)
-                {
-                    _apteki.Add(apteka);
-                }
-            }
+            _source = source;
         }
-        public void wyswietlSiecAptek()
+        public void displayAllPharmacies()
         {
-            foreach(Pharmacy a in _apteki)
+            var pharmacies = _source.AllPharmacies();
+            foreach(Pharmacy a in pharmacies)
             {
                 Console.WriteLine($"{a},\n");
             }

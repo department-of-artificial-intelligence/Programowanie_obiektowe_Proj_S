@@ -8,19 +8,23 @@ namespace Project.Model
 {
     public class Pharmacy
     {
-        public int Id_Apteki { get; set; }
-        public string Nazwa_Apteki { get; set; }
+        public IEmployeeManager EmployeeManager { get; private set; }
+        public IDrugManager DrugManager { get; private set; }
+        public Address Address { get; private set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
 
-        public Pharmacy(int id_Apteki, string nazwa_Apteki)
+        public Pharmacy(int id, string nazwa, Address address, IEmployeeManager employeeManager, IDrugManager drugManager)
         {
-            Id_Apteki = id_Apteki;
-            Nazwa_Apteki = nazwa_Apteki;
+            Id = id;
+            Name = nazwa;
+            Address = address;
+            EmployeeManager = employeeManager;
+            DrugManager = drugManager;
         }
-        public Pharmacy() : this(0, string.Empty) { }
-
-        public void displayName()
+        public override string ToString()
         {
-            Console.WriteLine($"Id: {Id_Apteki}, Nazwa {Nazwa_Apteki}");
+            return $"Apteka -- Id: {Id}, Nazwa: {Name}";
         }
 
     }
