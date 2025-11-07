@@ -1,6 +1,6 @@
 ﻿namespace Project.Model.Abstract
 {
-    internal interface IResident
+    public interface IResident
     {
         public Person Person { get; }
     }

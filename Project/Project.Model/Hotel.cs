@@ -1,8 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Project.Model.Abstract;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Model
 {
-    public record Hotel
+    public record Hotel : IContainsResidents, IContainsCurrentResidents
     {
         public Guid Guid { get; set; } = Guid.NewGuid();
 
@@ -13,7 +14,11 @@ namespace Project.Model
         public required Manager Manager { get; set; }
 
         public required IEnumerable<HotelRoom> Rooms { get; set; }
-    
+
+        public IEnumerable<IResident> AllResidents => this.Rooms.SelectMany(x => x.AllResidents);
+
+        public IEnumerable<Resident> Residents => this.Rooms.SelectMany(x => x.Residents);
+
         public Hotel() { }
 
         [SetsRequiredMembers]

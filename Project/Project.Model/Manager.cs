@@ -14,6 +14,6 @@ namespace Project.Model
         public Manager(Person person) => this.Person = person;
 
         [SetsRequiredMembers]
-        public Manager(string firstName, string lastName) => this.Person = new Person(firstName, lastName);
+        public Manager(string firstName, string lastName, DateTime dateOfBirth) => this.Person = new Person(firstName, lastName, dateOfBirth);
     }
 }

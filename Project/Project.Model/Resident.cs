@@ -17,6 +17,7 @@ namespace Project.Model
         public Resident(Person person, DateTime residentFrom) => (this.Person, this.ResidentFrom) = (person, residentFrom);
 
         [SetsRequiredMembers]
-        public Resident(string firstName, string lastName, DateTime residentFrom) => (this.Person, this.ResidentFrom) = (new Person(firstName, lastName), residentFrom);
+        public Resident(string firstName, string lastName, DateTime dateOfBirth, DateTime residentFrom)
+            => (this.Person, this.ResidentFrom) = (new Person(firstName, lastName, dateOfBirth), residentFrom);
     }
 }
