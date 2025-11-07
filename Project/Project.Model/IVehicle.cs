@@ -11,9 +11,9 @@ namespace Project.Model
     public interface IVehicle
     {
         int Id { get; set; }
-        int VinNumber { get; set; }
+        string VinNumber { get; set; }
         int ProductionYear { get; set; }
-        int EngineSize { get; set; }
+        float EngineSize { get; set; }
         int Mileage { get; set; }
         string Brand { get; set; }
         string Model { get; set; }

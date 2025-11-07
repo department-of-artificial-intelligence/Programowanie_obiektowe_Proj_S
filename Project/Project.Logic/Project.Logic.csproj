@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -8,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Abstractions\Project.Abstractions.csproj" />
+    <ProjectReference Include="..\Project.Model\Project.Model.csproj" />
   </ItemGroup>
 
 </Project>

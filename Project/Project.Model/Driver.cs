@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Driver
+    public class Driver : IClassWithIEnum
     {
         public int Id { get; set; }
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Vehicle? AssignedVehicle { get; private set; }
 
         public Driver(int id, string firstName, string lastName)
         {
-            this.Id = id ;
-            this.FirstName = firstName ;
-            this.LastName = lastName ;
+            Id = id ;
+            FirstName = firstName ;
+            LastName = lastName ;
         }
 
         public void AssignVehicle(Vehicle vehicle)
@@ -45,6 +46,11 @@ namespace Project.Model
         public override string ToString()
         {
             return $"{FirstName} {LastName}, ID: {Id}. Is available? - {IsAvailable}";
+        }
+
+        public void Print()
+        {
+            throw new NotImplementedException();
         }
     }
 }

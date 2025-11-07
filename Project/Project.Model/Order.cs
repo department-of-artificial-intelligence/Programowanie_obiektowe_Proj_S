@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Project.Abstractions;
+using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,17 +21,17 @@ namespace Project.Model
 
         public Order(int id, string loadDesc, string loadingAddress, string unloadingAddress)
         {
-            this.Id = id;   
-            this.LoadingDescription = loadDesc;
-            this.LoadingAddress = loadingAddress;
-            this.UnloadingAdress = unloadingAddress;
+            Id = id;   
+            LoadingDescription = loadDesc;
+            LoadingAddress = loadingAddress;
+            UnloadingAdress = unloadingAddress;
         }
 
         public void AssignOrder(Driver driver)
         {
             if(Status != OrderStatus.Pending)
             {
-                Console.WriteLine("ERROR - Order {Id} cannot be assigned. Only 'pending' orders can be assigned.");
+                Console.WriteLine($"ERROR - Order {Id} cannot be assigned. Only 'pending' orders can be assigned.");
                 return;
             }
             if(!driver.IsAvailable || driver.AssignedVehicle == null)
@@ -37,9 +39,9 @@ namespace Project.Model
                 Console.WriteLine($"ERROR - Driver: {driver.FirstName} {driver.LastName} is not available now.");
                 return;
                 }
-                this.AssignedDriver = driver;
-                this.AssignedVehicle = driver.AssignedVehicle;
-                this.Status = OrderStatus.InProgress;
+                AssignedDriver = driver;
+                AssignedVehicle = driver.AssignedVehicle;
+                Status = OrderStatus.InProgress;
                 Console.WriteLine($"Order {Id} has been assigned to driver {driver.FirstName} {driver.LastName} and is now in progress.");
         }
 
@@ -49,6 +51,11 @@ namespace Project.Model
                    $"Loading Address: {LoadingAddress}\n" +
                    $"Unloading address: {UnloadingAdress}\n" +
                    $"Loading description: {LoadingDescription}";
+        }
+
+        public void Print()
+        {
+            throw new NotImplementedException();
         }
     }
 }
