@@ -5,7 +5,7 @@ namespace Project.ConsoleApp
 {
     internal class Program
     {
-        private static Hotel m_hotel = new Hotel()
+        private static Hotel s_hotel = new Hotel()
         {
             Address = "12 Kitten st. Catshington DC",
             Manager = new Manager() { Person = new Person("Senior", "Kitten", DateTime.Now) },
@@ -40,10 +40,10 @@ namespace Project.ConsoleApp
         private static void Main()
         {
             var ageReportGenerator = new AverageAgeReportGenerator();
-            var ageReport = ageReportGenerator.GenerateReport(m_hotel);
+            var ageReport = ageReportGenerator.GenerateReport(s_hotel);
 
             var resideReportGenerator = new AverageDaysResideReportGenerator();
-            var resideReport = resideReportGenerator.GenerateReport(m_hotel);
+            var resideReport = resideReportGenerator.GenerateReport(s_hotel);
 
             Console.WriteLine(ageReport);
             Console.WriteLine(resideReport);
