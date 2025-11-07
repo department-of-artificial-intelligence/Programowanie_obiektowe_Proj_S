@@ -27,10 +27,10 @@ namespace Project.Model
 
         public List<Treatment> Treatments { get; set; } = new();
 
-        public override string ToString()
-        {
-            return $"{Data:d} - {Description} {Status}, Cost: {TotalCost:C}";
-        }
+       // public override string ToString()
+       // {
+        //    return $"{Data:d} - {Description} {Status}, Cost: {TotalCost:C}";
+       // }
 
 
 

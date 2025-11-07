@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,7 @@ namespace Project.Model
         public override string ToString()
         {
             var weightStr = WeightKg.HasValue ? $"{WeightKg.Value} kg" : "brak wagi";
+
             return $"{Name} ({Species ?? "gatunek nieznany"}{(Breed != null ? ", " + Breed : "")}), " + $"Wiek: {Age} lat, Waga: {weightStr}";
 
         }

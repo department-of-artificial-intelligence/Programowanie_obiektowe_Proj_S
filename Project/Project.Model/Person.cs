@@ -20,5 +20,12 @@ namespace Project.ConsoleApp
         public abstract void UpdateContactInfo(string phone, string email);
 
         public int GetId() => Id;
+
+
+
+
+
+
+
     }
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
+namespace Project.Logic
 {
-    public interface IGeneral
+    internal class clasa_od_segregacji_do_porawy
     {
-        int Id { get; set; }
     }
 }

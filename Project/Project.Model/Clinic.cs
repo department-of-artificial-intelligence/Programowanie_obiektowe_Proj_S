@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Clinic
+    public class Clinic 
     {
         public int Id {  get; set; }
         public required string Name { get; set; }
