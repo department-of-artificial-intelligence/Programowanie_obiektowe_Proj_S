@@ -1,4 +1,5 @@
-﻿using Project.Model;
+﻿using Project.Extensions;
+using Project.Model;
 using Project.Reports.Generators;
 
 namespace Project.ConsoleApp
