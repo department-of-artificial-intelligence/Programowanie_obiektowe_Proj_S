@@ -20,6 +20,7 @@ namespace Biura.model
             Cost = cost;
             Persons = persons;
         }
+
         public override string ToString()
         {
             return $"{Location} in {Date} will cost {Cost} per person for {Persons} people totaling {Cost*Persons}";

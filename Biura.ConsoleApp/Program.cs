@@ -2,18 +2,8 @@
 //Console.WriteLine("Hello, World!");
 using Biura.model;
 
-
-List<Client> clients = new List<Client>();
+Biuro tplanetpl = new Biuro("travel", "Czestochowa", new Person("Robert", "Dymski", 32));
 List<Excursion> excursions = new List<Excursion>();
-void ListClients()
-{
-    Console.WriteLine($"List contains {clients.Count} clients");
-    foreach (Client client in clients)
-    {
-        Console.WriteLine(client);
-    }
-}
-
 void ListExcursions()
 {
     Console.WriteLine($"List contains {excursions.Count} excursions");
@@ -23,28 +13,18 @@ void ListExcursions()
     }
 }
 
-void AddNewClient(Person p, DateTime cd)
-{
-    Client c = new Client(p,cd);
-    clients.Add(c);
-}
-
 Person p1 = new Person("Jan", "Kowalski", 32);
 Person p2 = new Person("Kamil", "Królikowski", 20);
 Person p3 = new Person("Igor", "Kowalczyk", 23);
 
-Biuro biuro = new Biura.model.Biuro("wyczieczki.pl", "główna", p1);
-
-Excursion e1 = new Excursion("Afryka", DateTime.Now, 3245.23f, 2);
-
 DateTime d1 = new DateTime(2020, 12, 23);
+Excursion e1 = new Excursion("Afryka", DateTime.Now, 3245.23f, 2);
+Excursion e2 = new Excursion("Zabrze", DateTime.Today, 324f, 3);
+Excursion e3 = new Excursion("Monachium", d1, 4548f, 4);
 
+Client c = new Client(p1, DateTime.Now);
 Client c1 = new Client(p2, DateTime.Now);
-Client c2 = new Client(p3, d1);
 
-
-clients.Add(c1);
-clients.Add(c2);
 
 excursions.Add(e1);
 
@@ -55,10 +35,13 @@ c1.ShowBookedTrip();
 c1.TripBooked = e1;
 c1.ShowBookedTrip();
 
-Console.WriteLine(biuro);
+Console.WriteLine(tplanetpl);
 
-ListClients();
+tplanetpl.ListClients();
 ListExcursions();
 
-AddNewClient(p1, DateTime.Now);
-ListClients();
+tplanetpl.AddCLient(c1);
+tplanetpl.AddClient(new Client("Karol", "Nowak", 32, DateTime.Now));
+tplanetpl.AddClient(new Client(p3, d1));
+tplanetpl.AddClient(p2);
+tplanetpl.ListClients();
