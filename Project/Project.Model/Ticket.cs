@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Ticket: Concert
+    public class Ticket
     {
         public int Id { get; set; }
         public float Price { get; set; }
@@ -25,6 +25,13 @@ namespace Project.Model
 
         public char Sector {  get; set; }
         public int Seat_Number { get; set; }
+
+        public Ticket() 
+        {
+            Concert = new Concert();
+            Concert.TicketsSold += 1;
+        }
+        public Ticket() { }
 
 
 

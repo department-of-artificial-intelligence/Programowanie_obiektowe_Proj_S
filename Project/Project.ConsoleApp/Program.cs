@@ -17,7 +17,7 @@ Concert c1 = new Concert() { Artist = a1, Venue = v4 };
 Concert c2 = new Concert() { Artist = a2, Venue = v2 };
 Concert c3 = new Concert() { Artist = a3, Venue = v3 };
 
-Festival f1 = new Festival() {Name ="Festiwal", Artists = [ a1, a2, a3], Venue = v1 };
+Festival f1 = new Festival() {Name ="Festiwal", Artists = [a1, a2, a3], Venue = v1 };
 
 //Console.WriteLine(v1);
 //Console.WriteLine(a2);
@@ -31,5 +31,6 @@ Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 40, T
 
 Console.WriteLine(p1);
 
+Console.WriteLine(c1.TicketsSold);
 
-var name = Console.ReadLine();
+//Console.ReadKey();

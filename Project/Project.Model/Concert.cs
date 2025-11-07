@@ -1,16 +1,13 @@
 namespace Project.Model;
 
-public class Concert
+public class Concert: Event
 {
-    public int Id { get; set; }
+    
     public Artist Artist { get; set; }
-    public Venue Venue { get; set; }
-    public DateTime Date { get; set; }
 
-    static int Tickets_Sold { get; set; } = 0;
 
     public override string ToString()
     {
-        return $"{Artist} - {Venue}";
+        return $"{Artist} - {Venue} - {Date}";
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Person: Ticket
+    public class Person
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
