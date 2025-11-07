@@ -28,11 +28,6 @@ namespace Project.Model
             Age = Console.ReadLine();
 
         }
-
-        public void SearchEmployee()
-        {
-
-        }
     }
 
     

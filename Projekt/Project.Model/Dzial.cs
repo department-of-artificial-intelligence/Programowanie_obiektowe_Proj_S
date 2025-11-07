@@ -10,6 +10,6 @@ namespace Project.Model
     public class Dzial
     {
         public string NazwaDzialu {  get; set; }
-        public List<Pracownik> ListaPracowniko { get; set; } = new List<Pracownik>();
+        public List<Pracownik> ListaPracownikow { get; set; } = new List<Pracownik>();
     }
 }

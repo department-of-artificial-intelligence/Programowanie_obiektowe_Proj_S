@@ -51,7 +51,5 @@ namespace Project.Model
             return $"Email: {Email} | Telefon: {Telefon} | Adres: {Adres.Miasto}, {Adres.Ulica}"
         }
        
-        }
-
-    
+   }    
 }

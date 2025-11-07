@@ -9,7 +9,7 @@ namespace Project.Model
 {
     public interface Ipracujacy
     {
-        Stanowisko StanowiskoPracy { get; set; }
+        public string StanowiskoPracy { get; set; }
         List<Projekt> ListaProjektow {  get; set; }
 
         void PassedProjects();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Pracodawca : Osoba
+    public class Pracodawca : Osoba : IWyszukiwaniePracownikow
     {
 
         public List<Dzial> ListaDzialow {  get; set; } = new List<Dzial>();
@@ -38,10 +38,29 @@ namespace Project.Model
                 {
                     foreach(Projekt proj in prac.ListaProjektow)
                     {
-                        Console.WriteLine($"Projekt: '{proj.Name}', Ocena: {proj.Ocena}")
+                        Console.WriteLine($"Projekt: '{proj.Name}', Ocena: {proj.Ocena}, Właściciel: {proj.Wlasciciel}")
                     }
                 }
             }
+        }
+
+
+        public Pracownik FindBestEmployeeByProjectGrade()
+        {
+             if(ListaPracownikow == null || !ListaPracownikow.Any())
+             {
+                 Console.WriteLine("Blad wyszukiwania, brak pracownikow");
+                 return null;
+             }
+
+             var bestEmployee = ListaPracownikow
+                 .Where(prac => prac.ListaProjektow != null && prac.ListaPracownikow.Any())
+                 .OrderByDescending(prac => prac.ListaProjektow.Avarage(proj => proj.Ocena)
+                 )
+                 .FirstOrDefault();
+
+             return bestEmployee;
+        
         }
 
         public void DoMeeting()

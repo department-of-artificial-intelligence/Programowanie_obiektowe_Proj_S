@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public abstract class Osoba()
+    public abstract class Osoba
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
