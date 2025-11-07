@@ -1,4 +1,6 @@
-﻿namespace Project.Model;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Project.Model;
 
 public class Author : BaseEntity<int>
 {
@@ -7,10 +9,15 @@ public class Author : BaseEntity<int>
 
     public DateTime BirthDay { get; set; }
 
-    public Author(string firstName, string lastName, DateTime birthDay)
-    {
+    [SetsRequiredMembers]
+    public Author(int id, string firstName, string lastName, DateTime birthDay) : base(id) { 
         FirstName = firstName;
         LastName = lastName;
         BirthDay = birthDay;
+    }
+
+    public override string ToString()
+    {
+        return $"Author: {FirstName}/{LastName}/{BirthDay}";
     }
 }

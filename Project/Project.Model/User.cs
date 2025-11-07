@@ -1,4 +1,6 @@
-﻿namespace Project.Model;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Project.Model;
 
 public class User : BaseEntity<int>
 {
@@ -6,9 +8,15 @@ public class User : BaseEntity<int>
     public required string Username { get; set; }
     public required string HashPassword { get; set; }
 
-    public User(string username, string hashPassword)
+    [SetsRequiredMembers]
+    public User(int id, string username, string hashPassword) : base(id)
     {
         Username = username;
         HashPassword = hashPassword;
+    }
+
+    public override string ToString()
+    {
+        return $"User: {Username}";
     }
 }
