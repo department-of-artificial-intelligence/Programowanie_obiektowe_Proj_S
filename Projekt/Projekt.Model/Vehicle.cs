@@ -16,7 +16,8 @@ namespace Projekt.Model
         public int Rocznik { get; set; }
         public string Paliwo { get; set; }
         public string Tablica { get; set; }
-
+        public Kierowca PrzypisanyKierwoca { get; set; }
+        public List<WpisSerwisowy> HistoriaSerwisowa { get; set; }
         public Vehicle(string marka, string model, int przebieg, double silnik, int rocznik, string paliwo, string tablica)
         {
             Marka = marka;
@@ -26,6 +27,7 @@ namespace Projekt.Model
             Rocznik = rocznik;
             Paliwo = paliwo;
             Tablica = tablica;
+            HistoriaSerwisowa = new List<WpisSerwisowy>();
         }
         public override string ToString()
         {
