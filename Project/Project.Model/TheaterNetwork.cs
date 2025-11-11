@@ -10,58 +10,38 @@ namespace Project.Model
 {
     public class TheaterNetwork
     {
+        public required string Name { get; set; }
+        public List<Theater> Theaters { get; private set; }
         
-        public string Name { get; set; }
-        public List<Theater> Theaters { get; set; }
-        
-        public TheaterNetwork() : this(string.Empty, new List<Theater>()) { }
-        public TheaterNetwork(string name, List<Theater> theaters)
+        public TheaterNetwork(string name)
         {
             Name = name;
-            Theaters = theaters ?? new List<Theater>();
+            Theaters = new List<Theater>();
         }
         
-        public bool AddTheater(Theater theater)
+        public bool AddTheater(int theaterId, string name, string country, string city, string street, string postalCode)
         {
-            if (theater is null) return false;
+            if (theaterId <= 0 || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street) || string.IsNullOrWhiteSpace(postalCode)) return false;
+            Theater theater = new Theater(theaterId, name, country, city, street, postalCode);
             Theaters.Add(theater);
             return true;
         }
-        public bool AddTheater(string name, Address address, List<Hall> halls)
+        public bool DeleteTheater(int theaterId)
         {
-            if (string.IsNullOrWhiteSpace(name) || address is null || halls is null) return false;
-            Theater theater = new Theater(name, address, halls);
-            Theaters.Add(theater);
-            return true;
-        }
-        public bool DeleteTheater(Theater theater)
-        {
-            if (theater is null || Theaters.Count == 0) return false;
-            return Theaters.Remove(theater);
-        }
-        public bool DeleteTheater(string name, Address address, List<Hall> halls)
-        {
-            if (string.IsNullOrWhiteSpace(name) || address is null || halls is null || Theaters.Count == 0) return false;
-
-            var theater = Theaters.FirstOrDefault(t =>
-                t.Name == name &&
-                address.Equals(t.Address) &&
-                halls.Equals(t.Halls)
-            );
-
+            if (Theaters.Count == 0 || theaterId <= 0) return false;
+            var theater = Theaters.FirstOrDefault(t => t.TheaterId == theaterId);
             if (theater is null) return false;
-
             return Theaters.Remove(theater);
         }
         public void DeleteAllTheaters()
         {
             Theaters.Clear();
         }
-        public string GetTheaters() //placeholder?
+        public string GetTheaters() //placeholder
         {
             return string.Join("\n", Theaters);
         }
-        public override string ToString() //placeholder?
+        public override string ToString() //placeholder
         {
             string s = base.ToString() + "Sieć teatrów: Name\n" + string.Join("", Theaters.Select(t => "- " + t));
             return s;

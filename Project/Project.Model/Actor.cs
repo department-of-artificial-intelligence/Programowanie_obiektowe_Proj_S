@@ -11,11 +11,6 @@ namespace Project.Model
         public decimal Salary { get; set; }
         public List<Play> Plays { get; set; }
 
-        public Actor() : base(string.Empty, string.Empty) 
-        {
-            Salary = default;
-            Plays = new List<Play>();
-        }
         public Actor(string firstName, string lastName, decimal salary, List<Play> plays) : base(firstName, lastName)
         {
             Salary = salary;

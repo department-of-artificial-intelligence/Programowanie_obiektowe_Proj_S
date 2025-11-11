@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model
+﻿public enum PerformanceStatus
 {
-    enum status
-    {
-    }
+    Scheduled,
+    Canceled,
+    Finished
+}
+
+public enum TicketStatus
+{
+    Available,
+    Reserved,
+    Sold
 }

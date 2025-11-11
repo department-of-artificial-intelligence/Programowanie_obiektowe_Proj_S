@@ -10,13 +10,12 @@ namespace Project.Model
     {
         public int TicketId { get; set; }
         public decimal Price { get; set; }
-        public string Status { get; set; } // na enum
-        public Customer Customer { get; set; }
-        public Performance Performance { get; set; }
-        public Seat Seat { get; set; }
+        public TicketStatus Status { get; set; }
+        public Customer Customer { get; private set; }
+        public Performance Performance { get; private set; }
+        public Seat Seat { get; private set; }
 
-        public Ticket() : this(default, default, string.Empty, new Customer(), new Performance(), new Seat()) { }
-        public Ticket(int ticketId, decimal price, string status, Customer customer, Performance performance, Seat seat)
+        public Ticket(int ticketId, decimal price, TicketStatus status, Customer customer, Performance performance, Seat seat)
         {
             TicketId = ticketId;
             Price = price;

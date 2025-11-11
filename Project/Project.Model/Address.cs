@@ -13,7 +13,6 @@ namespace Project.Model
         public string Street { get; set; }
         public string PostalCode { get; set; }
         
-        public Address() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
         public Address(string country, string city, string street, string postalCode)
         {
             Country = country;

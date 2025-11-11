@@ -12,7 +12,7 @@ namespace Project.Model
         public Director Director { get; set; }
         public List<Actor> Actors { get; set; }
 
-        public Play() : this(string.Empty, new Director(), new List<Actor>()) { }
+        //public Play() : this(string.Empty, new Director(), new List<Actor>()) { }
         public Play(string title, Director director, List<Actor> actors)
         {
             Title = title;

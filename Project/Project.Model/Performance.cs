@@ -8,18 +8,23 @@ namespace Project.Model
 {
     public class Performance
     {
+        public int PerformanceId { get; set; }
         public Play Play { get; set; }
         public Hall Hall { get; set; }
-        public DateTime ShowTime { get; set; } // powinny być 2 daty, początkowa i końcowa
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public PerformanceStatus Status { get; set; }
         public List<Ticket> Tickets { get; set; }
-        // status też jak w ticket? np. playing/planned/played/canceled
 
-        public Performance() : this(new Play(), new Hall(), new DateTime(), new List<Ticket>()) { }
-        public Performance(Play play, Hall hall, DateTime showTime, List<Ticket> tickets)
+        //public Performance() : this(default, new Play(), new Hall(), new DateTime(), new DateTime(), new List<Ticket>()) { }
+        public Performance(int performanceId, Play play, Hall hall, DateTime startTime, DateTime endTime, PerformanceStatus status, List<Ticket> tickets)
         {
+            PerformanceId = performanceId;
             Play = play;
             Hall = hall;
-            ShowTime = showTime;
+            StartTime = startTime;
+            EndTime = endTime;
+            Status = status;
             Tickets = tickets;
         }
     }

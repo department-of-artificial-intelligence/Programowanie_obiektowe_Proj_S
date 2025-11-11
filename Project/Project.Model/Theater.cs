@@ -8,30 +8,42 @@ namespace Project.Model
 {
     public class Theater
     {
-        public string Name { get; set; } // czy potrzebne skoro ta sama sieć?
-        public Address Address { get; set; }
-        public List<Hall> Halls { get; set; }
+        public int TheaterId { get; set; }
+        public string Name { get; set; }
+        public Address Address { get; private set; }
+        public List<Hall> Halls { get; private set; }
 
-        public Theater() : this(string.Empty, new Address(), new List<Hall>()) { }
-        public Theater(string name, Address address, List<Hall> halls)
+        public Theater(int theaterId, string name, string country, string city, string street, string postalCode)
         {
+            TheaterId = theaterId;
             Name = name;
-            Address = address;
-            Halls = halls ?? new List<Hall>();
+            Address = new Address(country, city, street, postalCode);
+            Halls = new List<Hall>();
         }
 
-        public bool AddHall(Hall hall)
+        public bool AddHall(int hallId)
         {
+            if (hallId <= 0) return false;
+            Hall hall = new Hall(hallId);
+            Halls.Add(hall);
+            return true;
+        }
+        public bool DeleteHall(int hallId)
+        {
+            if (Halls.Count == 0 || hallId <= 0) return false;
+            var hall = Halls.FirstOrDefault(t => t.HallId == hallId);
             if (hall is null) return false;
-            Halls.Add(hall);
-            return true;
+            return Halls.Remove(hall);
         }
-        public bool AddTheater(int hallNumber, List<Seat> seats, List<Performance> performances) //todo
+        public void DeleteAllHalls()
         {
-            if (hallNumber <= 0 || seats is null || performances is null) return false;
-            Hall hall = new Hall(hallNumber, seats, performances);
-            Halls.Add(hall);
-            return true;
+            Halls.Clear();
         }
+        public string GetHalls() //placeholder
+        {
+            return string.Join("\n", Halls);
+        }
+
+        //change Address
     }
 }

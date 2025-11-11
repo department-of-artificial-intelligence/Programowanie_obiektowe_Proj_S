@@ -9,15 +9,29 @@ namespace Project.Model
 {
     public class Customer : Person
     {
-        public List<Ticket> Tickets { get; set; }
+        public required int CustomerId { get; set; }
+        public List<Ticket> Tickets { get; private set; }
 
-        public Customer() : base(string.Empty, string.Empty)
+        public Customer(string firstName, string lastName, int customerId) : base(firstName, lastName)
         {
+            CustomerId = customerId;
             Tickets = new List<Ticket>();
         }
-        public Customer(string firstName, string lastName, List<Ticket> tickets) : base(firstName, lastName)
+
+        public bool AddTicket(Ticket ticket)
         {
-            Tickets = tickets;
+            if (ticket == null || Tickets.Contains(ticket)) return false;
+            Tickets.Add(ticket);
+            return true;
+        }
+        public bool RemoveTicket(Ticket ticket)
+        {
+            if (Tickets.Count == 0 || ticket is null) return false;
+            return Tickets.Remove(ticket);
+        }
+        public void RemoveAllTickets()
+        {
+            Tickets.Clear();
         }
     }
 }

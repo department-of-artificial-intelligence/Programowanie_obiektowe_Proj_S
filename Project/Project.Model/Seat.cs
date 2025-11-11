@@ -8,18 +8,22 @@ namespace Project.Model
 {
     public class Seat
     {
-        public int SeatId { get; set; }
         public int RowNumber { get; set; }
         public int SeatNumber { get; set; }
-        public Ticket Ticket { get; set; }
+        public Ticket? Ticket { get; private set; }
 
-        public Seat() : this(default, default, default, new Ticket()) { }
-        public Seat(int seatId, int rowNumber, int seatNumber, Ticket ticket)
+        public Seat(int rowNumber, int seatNumber)
         {
-            SeatId = seatId;
             RowNumber = rowNumber;
             SeatNumber = seatNumber;
+            Ticket = null;
+        }
+
+        public bool AssignTicket(Ticket ticket)
+        {
+            if (ticket == null) return false;
             Ticket = ticket;
+            return true;
         }
     }
 }
