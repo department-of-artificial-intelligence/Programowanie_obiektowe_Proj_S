@@ -15,10 +15,15 @@ namespace Projekt.Model
         public string Model { get; set; }
         public int Year { get; set; }
         private string RegistrationNumber { get; set; }
-        public int Mileage { get; set; }
         public decimal DailyRate { get; set; }
         public CarStatus Status { get; set; }
         public int CurrentBranchId { get; set; }
         public virtual Branch CurrentBranch { get; set; }
+
+
+        public override string ToString()
+        {
+            return $"[{Id}] {Marka} {Model} {Year} ({RegistrationNumber}) - Status: {Status} -MiejscePobytu: {CurrentBranch}";
+        }
     }
 }

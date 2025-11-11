@@ -16,7 +16,7 @@ namespace Projekt.Model
         
         public int CarId {  get; set; }
         public virtual Car Car { get; set; }
-        public int PickupBranchId { get; set; } //Gdzie auto stoi
+        public int PickupBranchId { get; set; } 
         public virtual Branch PickupBranch { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -24,6 +24,11 @@ namespace Projekt.Model
         public decimal TotalCost {  get; set; }
         public RentalStatus Status { get; set; }
 
+        public override string ToString()
+        {
+            string status = (ActualReturnDate == null) ? "W TOKU" : "Zakończone";
+            return $"[Wypożyczenie #{Id}] Pojazd: {CarId}, Klient: {CustomerId}, Data: {StartDate.ToShortDateString()} - {status}";
+        }
     }
 }
 
