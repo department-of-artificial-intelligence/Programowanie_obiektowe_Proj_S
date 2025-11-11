@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
-    public class WpisSerwisowy
+    public class Service
     {
         public DateTime Data { get; set; }
         public string Opis { get; set; }
         public double Koszt { get; set; }
 
-        public WpisSerwisowy(string opis, double koszt)
+        public Service(string opis, double koszt)
         {
             Data = DateTime.Now;
             Opis = opis;
