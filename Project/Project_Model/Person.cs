@@ -27,6 +27,7 @@ namespace Project_Model
             Last_Name = last_Name;
             Phone_Number = phone_Number;
             Email = email;
+
         }
     }
 }
