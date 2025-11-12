@@ -1,4 +1,5 @@
 ﻿using RestaurantManagement.Models.Enums;
+using RestaurantNetwork.Model;
 using System.Security.Cryptography.X509Certificates;
 
 namespace RestaurantManagement.Models
@@ -14,6 +15,7 @@ namespace RestaurantManagement.Models
         public required List<MenuItem> Menu { get; set; }
         public required List<Employee> Employees { get; set; }
         public required List<Person> Clients { get; set; }
+        public  List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
 
         //GetEmployeesByType

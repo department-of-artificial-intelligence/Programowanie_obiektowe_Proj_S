@@ -1,15 +1,19 @@
 ﻿#nullable disable
+using RestaurantManagement.Models;
+using RestaurantManagement.Models.Enums;
+using RestaurantNetwork.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RestaurantManagement.Models;
-using RestaurantManagement.Models.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RestaurantManagement
 {
     class Program
     {
         static List<Restaurant> restaurants = new(); // lista restauracji bo jest ich wiecej
+
+
 
         static void Main(string[] args)
         {
@@ -95,14 +99,16 @@ namespace RestaurantManagement
                 ClosingHours = closing,
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>()
+                Clients = new List<Person>(),
+                Reservations = new List<Reservation>() // <-- bardzo ważne
             };
+
 
             restaurants.Add(restaurant);
             Console.WriteLine("Dodano restaurację!");
         }
 
-        static void ShowRestaurants() // <-- dodane
+        static void ShowRestaurants()
         {
             if (!restaurants.Any())
             {
@@ -111,14 +117,14 @@ namespace RestaurantManagement
             }
 
             Console.WriteLine("\nLista restauracji:");
-            foreach (var restaurant in restaurants)
+            for (int i = 0; i < restaurants.Count; i++)
             {
-                Console.WriteLine($"{restaurant.Name} ({restaurant.Address.City})");
+                Console.WriteLine($"{i + 1}. {restaurants[i].Name} ({restaurants[i].Address.City})");
             }
-
         }
 
-        static void ManageRestaurant() // <-- dodane
+
+        static void ManageRestaurant()
         {
             if (!restaurants.Any())
             {
@@ -128,7 +134,7 @@ namespace RestaurantManagement
 
             ShowRestaurants();
 
-            Console.Write("\nWybierz numer restauracji: ");
+            Console.Write("\nWybierz restaurację: ");
             if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > restaurants.Count)
             {
                 Console.WriteLine("Niepoprawny wybór.");
@@ -138,9 +144,150 @@ namespace RestaurantManagement
             var selected = restaurants[choice - 1];
             Console.WriteLine($"\nWybrano restaurację: {selected.Name}");
 
-            ManageEmployees(selected); // <-- dodane
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"=== Zarządzanie restauracją: {selected.Name} ===");
+                Console.WriteLine("1. Zarządzaj pracownikami");
+                Console.WriteLine("2. Zarządzaj rezerwacjami");
+                Console.WriteLine("0. Powrót");
+                Console.Write("Wybierz opcję: ");
+
+                string option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        ManageEmployees(selected); // Podmenu dla pracowników
+                        break;
+                    case "2":
+                        ManageReservations(selected); // Podmenu dla rezerwacji
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Niepoprawna opcja!");
+                        break;
+                }
+
+                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
+                Console.ReadLine();
+            }
         }
 
+
+        static void ManageReservations(Restaurant restaurant) // <-- dodane
+
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"=== Zarządzanie restauracją: {restaurant.Name} ===");
+                Console.WriteLine("1. Dodaj rezerwację");
+                Console.WriteLine("2. Usuń rezerwację");
+                Console.WriteLine("3. Lista rezerwacji");
+                Console.WriteLine("0. Powrót");
+                Console.Write("Wybierz opcję: ");
+
+                string option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1": AddReservation(restaurant); break;
+                    case "2": RemoveReservation(restaurant); break;
+                    case "3": ShowReservation(restaurant); break;
+                    case "0": return;
+                    default: Console.WriteLine("Niepoprawna opcja!"); break;
+                }
+
+                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
+                Console.ReadLine();
+            }
+        }
+
+        static void AddReservation(Restaurant restaurant)
+        {
+            Console.Write("Nazwisko: ");
+            string customerName = Console.ReadLine();
+
+            Console.Write("Liczba osób: ");
+            if (!int.TryParse(Console.ReadLine(), out int numberOfPeople) || numberOfPeople <= 0)
+            {
+                Console.WriteLine("Nieprawidłowa liczba osób!");
+                return;
+            }
+
+            Console.Write("Numer telefonu: ");
+            string phoneNumber = Console.ReadLine();
+            if (phoneNumber.Length != 9)
+            {
+                Console.WriteLine("Nieprawidłowy format numeru telefonu");
+                return;
+            }
+
+            Console.Write("Data (yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            {
+                Console.WriteLine("Nieprawidłowa data!");
+                return;
+            }
+
+            Console.Write("Godzina rezerwacji (HH:mm): ");
+            if (!TimeOnly.TryParse(Console.ReadLine(), out TimeOnly time))
+            {
+                Console.WriteLine("Nieprawidłowa godzina!");
+                return;
+            }
+
+            var reservation = new Reservation
+            {
+                CustomerName = customerName,
+                NumberOfPeople = numberOfPeople,
+                PhoneNumber = phoneNumber,
+                Date = date,
+                Time = time
+            };
+
+            restaurant.Reservations.Add(reservation);
+            Console.WriteLine("Rezerwacja dodana!");
+        }
+
+        static void RemoveReservation(Restaurant restaurant)
+        {
+            Console.Write("Podaj nazwisko do usunięcia: ");
+            string nameToRemove = Console.ReadLine();
+
+            var res = restaurant.Reservations.FirstOrDefault(r =>
+                       r.CustomerName.Equals(nameToRemove, StringComparison.OrdinalIgnoreCase));
+
+            if (res != null)
+            {
+                restaurant.Reservations.Remove(res);
+                Console.WriteLine("Rezerwacja usunięta!");
+            }
+            else
+            {
+                Console.WriteLine("Nie znaleziono rezerwacji!");
+            }
+        }
+
+        static void ShowReservation(Restaurant restaurant)
+        {
+            if (!restaurant.Reservations.Any())
+            {
+                Console.WriteLine("Brak rezerwacji w tej restauracji.");
+                return;
+            }
+
+            Console.WriteLine($"\nRezerwacje w restauracji {restaurant.Name}:");
+            foreach (var r in restaurant.Reservations)
+            {
+                Console.WriteLine($"- {r.CustomerName}, {r.NumberOfPeople} osób, {r.Date:yyyy-MM-dd} {r.Time:HH:mm}, Tel: {r.PhoneNumber}");
+            }
+        }
+
+
+        //
         static void ManageEmployees(Restaurant restaurant) // <-- dodane
         {
             while (true)
@@ -167,6 +314,56 @@ namespace RestaurantManagement
                 Console.WriteLine("\nKliknij Enter, aby kontynuować...");
                 Console.ReadLine();
             }
+            static void ManageRestaurant()
+{
+    if (!restaurants.Any())
+    {
+        Console.WriteLine("Brak restauracji do zarządzania.");
+        return;
+    }
+
+    ShowRestaurants();
+
+    Console.Write("\nWybierz restaurację: ");
+    if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > restaurants.Count)
+    {
+        Console.WriteLine("Niepoprawny wybór.");
+        return;
+    }
+
+    var selected = restaurants[choice - 1];
+    
+    while (true)
+    {
+        Console.Clear();
+        Console.WriteLine($"=== Zarządzanie restauracją: {selected.Name} ===");
+        Console.WriteLine("1. Zarządzaj pracownikami");
+        Console.WriteLine("2. Zarządzaj rezerwacjami");
+        Console.WriteLine("0. Powrót");
+        Console.Write("Wybierz opcję: ");
+
+        string option = Console.ReadLine();
+
+        switch (option)
+        {
+            case "1":
+                ManageEmployees(selected);
+                break;
+            case "2":
+                ManageReservations(selected);
+                break;
+            case "0":
+                return;
+            default:
+                Console.WriteLine("Niepoprawna opcja!");
+                break;
+        }
+
+        Console.WriteLine("\nKliknij Enter, aby kontynuować...");
+        Console.ReadLine();
+    }
+}
+
         }
 
         static void AddEmployee(Restaurant restaurant) 
@@ -304,4 +501,7 @@ namespace RestaurantManagement
             }
         }
     }
+
+
+//sortowanie jakiejs listy
 }
