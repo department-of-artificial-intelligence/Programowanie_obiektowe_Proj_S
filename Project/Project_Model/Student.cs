@@ -6,10 +6,21 @@ using System.Threading.Tasks;
 
 namespace Project_Model
 {
-    public class Student:Person{
-        public required int Id { get; set; }
-        public required string Year {  get; set; }
-        public List<Lesson> Lessons { get; set; } = new List<Lesson>();
+    public class Student:User{
+        public string EducationalLevel {  get; set; }
+        public List<Subject> Interests { get; set; } = new List<Subject>();
 
+        public Student()
+           : base(0, string.Empty, string.Empty, string.Empty)
+        {
+            EducationalLevel = string.Empty;
+            Interests = new List<Subject>();
+        }
+        public Student(int id, string firstName, string lastName, string email, string educationalLevel)
+            :base(id, firstName, lastName, email) {  
+            EducationalLevel = educationalLevel;
+        }
+        public override string ToString()
+            => $"{base.ToString()}, Poziom: {EducationalLevel}";
     }
 }
