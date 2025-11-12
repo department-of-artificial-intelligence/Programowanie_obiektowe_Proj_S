@@ -25,7 +25,7 @@ namespace Project.Model
 
         public void DisplayAddress()
         {
-            Console.WriteLine($"Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}");
+            Console.WriteLine($"Adres Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}");
         }
     }
 }

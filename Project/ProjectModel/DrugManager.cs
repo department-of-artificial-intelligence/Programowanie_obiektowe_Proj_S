@@ -17,10 +17,11 @@ namespace Project.Model
         public void DisplayDrugs()
         {
             var lista = _source.AllDrugs();
-            foreach(var d in lista)
+            foreach(var drug in lista)
             {
-                Console.WriteLine(d);
+                Console.WriteLine(drug);
             }
+            
         }
         public bool AddDrug()
         {
@@ -65,6 +66,10 @@ namespace Project.Model
             }
             _source.DeleteDrug(nazwa);
             return true;
+        }
+        public void sortByFirstLetter()
+        {
+            var lista = _source.AllDrugs();
         }
     }
 }
