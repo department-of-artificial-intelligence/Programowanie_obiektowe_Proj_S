@@ -8,12 +8,9 @@ namespace Projekt.Model
 {
     public class Rental
     {
-        //Wypozyczenie auta
         public int Id {  get; set; }
         public int CustomerId {  get; set; }
-
         public virtual Customer Customer { get; set; }
-        
         public int CarId {  get; set; }
         public virtual Car Car { get; set; }
         public int PickupBranchId { get; set; } 
