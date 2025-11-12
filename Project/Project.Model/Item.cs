@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Product
+    public class Item
     {
 
         public required int Id { get; set; }
@@ -19,7 +19,7 @@ namespace Project.Model
 
 
 
-        public Product(int id, string name, string description, Category category)
+        public Item(int id, string name, string description, Category category)
         {
             if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
 
@@ -27,5 +27,30 @@ namespace Project.Model
             Description = description;
             Category = category;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

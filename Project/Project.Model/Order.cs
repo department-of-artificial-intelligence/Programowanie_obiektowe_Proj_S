@@ -14,7 +14,7 @@ namespace Project.Model
     {
         decimal CalculateTotalValue();
 
-        void AddItem(Product product, int quantity);
+        void AddItem(Item item, int quantity);
 
         void UpdateStatus(OrderStatus newStatus);
 
@@ -22,20 +22,20 @@ namespace Project.Model
     }
 
 
-    internal class Order: IOrders
+    public class Order: IOrders
     {
-        public int Id { get; set; }
-        public DateTime DatePlaced { get; set; }
-        public OrderStatus Status { get; set; }
-        public decimal TotalValue { get; set; }
+        public required int Id { get; set; }
+        public required DateTime DatePlaced { get; set; }
+        public required OrderStatus Status { get; set; }
+        public required decimal TotalValue { get; set; }
 
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public required int CustomerId { get; set; }
+        public required Customer Customer { get; set; }
 
-        public int StoreId { get; set; }
-        public Store FulfillingStore { get; set; }
+        public required int StoreId { get; set; }
+        public required Store FulfillingStore { get; set; }
 
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public required List<Item> OrderItems { get; set; } = new List<Item>();
 
        
 
@@ -48,11 +48,11 @@ namespace Project.Model
             return total;
         }
 
-        public void AddItem(Product product, int quantity)
+        public void AddItem(Item item, int quantity)
         {
-            if (product == null)
+            if(item) == null)
             {
-                throw new ArgumentNullException(nameof(product), "Produkt nie może być pusty.");
+                throw new ArgumentNullException(nameof(item), "Produkt nie może być pusty.");
             }
             if (quantity <= 0)
             {
@@ -60,7 +60,7 @@ namespace Project.Model
             }
 
             
-            var existingItem = this.OrderItems.FirstOrDefault(item => item.ProductId == product.Id);
+            var existingItem = this.OrderItems.FirstOrDefault(item => item.Id == item.Id);
 
             if (existingItem != null)
             {

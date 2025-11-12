@@ -38,13 +38,13 @@ namespace Project.Model
             if(customerId < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(customerId));
 
 
-            CustomerFirstName = customerFirstName;
-            CustomerLastName = customerLastName;
-            CustomerEmail = customerEmail;
+            CustomerFirstName = customerFirstName ?? "";
+            CustomerLastName = customerLastName ?? "";
+            CustomerEmail = customerEmail ?? "";
             CustomerPhone = customerPhone;
-            CustomerCity = customerCity;
-            CustomerRegion = customerRegion;
-            CustomerPostalCode = customerPostalCode;
+            CustomerCity = customerCity ?? "";
+            CustomerRegion = customerRegion ?? "";
+            CustomerPostalCode = customerPostalCode ?? "";
 
         }
 
