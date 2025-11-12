@@ -19,5 +19,21 @@ namespace Project.Model
             Salary = salary;
             Plays = plays;
         }
+
+        public bool AddPlay(Play play) //WIP
+        {
+            if (play is null || Plays.Contains(play)) return false;
+            Plays.Add(play);
+            return true;
+        }
+        public bool RemovePlay(Play play) //WIP
+        {
+            if (Plays.Count == 0 || play is null) return false;
+            return Plays.Remove(play);
+        }
+        public void RemoveAllPlays() //WIP
+        {
+            Plays.Clear();
+        }
     }
 }
