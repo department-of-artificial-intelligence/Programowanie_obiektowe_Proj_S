@@ -7,21 +7,32 @@ using System.Threading.Tasks;
 namespace Project_Model
 {
     public class Lesson{
-        public int Id {  get; set; }
-        public DateTime Date {  get; set; }
-        public int DurationMinutes { get; set; }
-        public bool Paid { get; set; }
-        public Lesson(){
-            Id= 0;
-            Date= DateTime.MinValue;
-            DurationMinutes= 0;
-            Paid= false;
+        public int Id { get; set; }
+        public Tutor Tutor { get; set; }
+        public Student Student { get; set; }
+        public Subject Subject { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public TimeSpan Duration {  get; set; }
+
+        public Lesson()
+        {
+            Id = 0;
+            Tutor = null;
+            Student = null;
+            Subject=null;
+            StartDateTime= DateTime.MinValue;
+            Duration = TimeSpan.Zero;
         }
-        public Lesson(int id, DateTime date, int durationMinutes, bool paid){
-            Id= id;
-            Date= date;
-            DurationMinutes= durationMinutes;
-            Paid= paid;
+        public Lesson(int id, Tutor tutor, Student student, Subject subject, TimeSlot slot)
+        {
+            Id = id;
+            Tutor = tutor;
+            Student = student;
+            Subject = subject;
+            StartDateTime=slot.StartDateTime;   
+            Duration = slot.Duration;
         }
+        public override string ToString()
+            => $"Lekcja ID {Id}: {Subect.Name}, {Tutor.FirstName}, --> {Student.FirstName}, {StartDateTime:dd-MM HH:mm}";
     }
 }
