@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Projekt.Model
 {
-    //Odział
     public class Branch
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public AddressFamily BrachAddress {  get; set; }
+
+        public string Address { get; set; }
+
         public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
         public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
     }
