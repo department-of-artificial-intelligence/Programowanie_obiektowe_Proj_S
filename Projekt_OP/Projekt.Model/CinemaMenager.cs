@@ -17,23 +17,39 @@ namespace Projekt.Model
 
         public void AddCinema(Cinema cinema)
         {
-            Console.WriteLine("Podaj Nazwe Kina : ");
-            string  Name = Console.ReadLine();
-
-            _cinemas.Add(new Cinema { CinemaName = Name });
-            Console.WriteLine("Kino Dodane Pomyslnie");
+            _cinemas.Add(cinema);
         }
 
         public void AddFilm(Film film)
         {
-            Console.WriteLine("Podaj Tytul Filmu : ");
-            string Title = Console.ReadLine();
-
-            _films.Add(new Film { Title = Title });
-            Console.WriteLine("Film Dodany Pomyslnie");
+            _films.Add(film);
         }
 
+        public void DisplayCinemas()
+        {
+            Console.WriteLine("\n ---Lista Kin--- ");
+            if (_cinemas.Count == 0)
+            { 
+                Console.WriteLine("Brak Kin w Systemie!");
+            }
 
+            foreach (var c in _cinemas)
+            {
+                Console.WriteLine(c.ToString());
+            }
+        }
 
+        public void DisplayFilms()
+        {
+            Console.WriteLine("\n ---Lista Filmow--- ");
+            if (_films.Count == 0)
+            {
+                Console.WriteLine("Brak Filomow w Systemie!");
+            }
+            foreach (var f in _films)
+            {
+                Console.WriteLine(f.ToString());
+            }
+        }
     }
 }
