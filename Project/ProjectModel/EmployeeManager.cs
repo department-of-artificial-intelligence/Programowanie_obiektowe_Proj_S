@@ -10,7 +10,7 @@ namespace Project.Model
     {
         private readonly ISourceEmployee _source;
 
-        public EmployeeManager(ISourceEmployee source)
+        public EmployeeManager(ISourceEmployee source) 
         {
             _source = source;
         }
@@ -41,15 +41,10 @@ namespace Project.Model
                 return false;
             }
             Employee nowy = new(new_id, imie, nazw, stanowisko);
-            if (_source.AddEmployee(nowy))
-            {
-                Console.WriteLine("Pomyślnie dodano pracownika");
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            _source.AddEmployee(nowy);
+            _source.sortEmployees();
+            Console.WriteLine($"Dodany Pracownik: {nowy}");
+            return true;
         }
         public bool DeleteEmployee()
         {
@@ -57,15 +52,11 @@ namespace Project.Model
             if(!int.TryParse(Console.ReadLine(), out int id))
             {
                 Console.WriteLine("Nie podales liczby!!");
-            }
-            if (_source.DeleteEmployee(id))
-            {
-                Console.WriteLine("Pomyślnie usunięto pracownika");
-                return true;
-            }
-            else
-            {
                 return false;
+            }else
+            {
+                _source.DeleteEmployee(id);
+                return true;
             }
         }
     }

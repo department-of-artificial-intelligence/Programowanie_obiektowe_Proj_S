@@ -11,6 +11,8 @@ namespace Project.Model
         List<Employee> AllEmployees();
         bool AddEmployee(Employee employee);
         bool DeleteEmployee(int id);
+
+        bool sortEmployees();
     }
     public interface IEmployeeManager
     {
@@ -22,10 +24,6 @@ namespace Project.Model
     public interface IPharmaciesSource
     {
         List<Pharmacy> AllPharmacies();
-    }
-    public interface IPharmacyChain
-    {
-        void displayAllPharmacies();
     }
     //------------------------------Interfejsy do klasy PharmacyChain
     public interface IDrugsSource
@@ -39,5 +37,8 @@ namespace Project.Model
         void DisplayDrugs();
         bool AddDrug();
         bool DeleteDrug();
+
+        void sortByFirstLetter();
+        void sortByTypeOfDrug();
     }
 }

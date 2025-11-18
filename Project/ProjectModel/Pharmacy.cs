@@ -8,8 +8,8 @@ namespace Project.Model
 {
     public class Pharmacy
     {
-        public IEmployeeManager EmployeeManager { get; private set; }
-        public IDrugManager DrugManager { get; private set; }
+        public IEmployeeManager Employees { get; private set; }
+        public IDrugManager Drugs { get; private set; }
         public Address Address { get; private set; }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,8 +19,8 @@ namespace Project.Model
             Id = id;
             Name = nazwa;
             Address = address;
-            EmployeeManager = employeeManager;
-            DrugManager = drugManager;
+            Employees = employeeManager;
+            Drugs = drugManager;
         }
         public override string ToString()
         {

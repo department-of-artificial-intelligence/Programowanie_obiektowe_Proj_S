@@ -33,5 +33,10 @@ namespace Project.Model
             }
             return false;
         }
+        public bool sortEmployees()
+        {
+            Employees = Employees.OrderBy(emp => emp.Id).ToList();
+            return true;
+        }
     }
 }

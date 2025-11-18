@@ -36,16 +36,13 @@ namespace Project.Model
             */
             Console.Write("Podaj nazwe dodawanego leku: ");
             string? nazwa = Console.ReadLine();
-            Console.Write("Podaj typ dodawanego leku: ");
+            Console.Write("Podaj typ dodawanego leku: ");                              
             string? typ = Console.ReadLine();
             Console.Write("Podaj cene leku - musi to byc liczba: ");
-            if(!double.TryParse(Console.ReadLine(), out double cena))
-            {
-                Console.WriteLine("Nie podales liczby, wpisales jakis znak albo jakie slowo/slowa");
-                return false;
-            }
+            string? cena = Console.ReadLine();
+            Console.Write("Podaj opis leku: ");
             string? opis = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(opis))
+            if(string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis))
             {
                 Console.WriteLine("Nie wpisales ktorejs z danych leku");
                 return false;
@@ -70,6 +67,22 @@ namespace Project.Model
         public void sortByFirstLetter()
         {
             var lista = _source.AllDrugs();
+            var pogrupowane = lista.GroupBy(x => x.Name[0]).OrderBy(x => x.Key);
+            foreach(var group in pogrupowane)
+            {
+                string polaczone = string.Join(", ", group.Select(x => x.Name));
+                Console.WriteLine($"{group.Key}: {polaczone}");
+            }
+        }
+        public void sortByTypeOfDrug()
+        {
+            var lista = _source.AllDrugs();
+            var pogrupowane = lista.GroupBy(x => x.TypeOfMedicine);
+            foreach (var group in pogrupowane)
+            {
+                string polaczone = string.Join(", ", group.Select(x => x.Name));
+                Console.WriteLine($"{group.Key}: {polaczone}");
+            }
         }
     }
 }
