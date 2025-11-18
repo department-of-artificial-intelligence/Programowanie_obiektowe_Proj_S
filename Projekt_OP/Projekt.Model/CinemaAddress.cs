@@ -29,7 +29,15 @@ namespace Projekt.Model
             _country = string.Empty;
 
         }
-
+        
+        public CinemaAddress(string ZipCode, string Street, int Number, string City, string Country) 
+        {
+            _zipCode = ZipCode;
+            _street = Street;
+            _number = Number;
+            _city = City;
+            _country = Country;
+        }
 
     }
 }

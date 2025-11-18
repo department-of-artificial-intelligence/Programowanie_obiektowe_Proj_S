@@ -8,17 +8,21 @@ namespace Projekt.Model
 {
     public class Cinema
     {
-        public required int _cinemaID;
-        public required string _cinemaName;
+        public int _cinemaID;
+        public string _cinemaName;
+        public List<Hall> _hall;
 
         public int CinemaID { get { return _cinemaID; } set { _cinemaID = value; } }
 
         public string CinemaName { get { return _cinemaName; } set { _cinemaName = value; } }
 
+        public List<Hall> Hall { get { return _hall; } set { _hall = value; } }
+
         public Cinema() 
         {
             this._cinemaID = 0;
             this._cinemaName = string.Empty;
+            this._hall = new List<Hall>();
 
         }
         
@@ -27,6 +31,7 @@ namespace Projekt.Model
         {
             _cinemaID = CinemaID;
             _cinemaName = CinemaName;
+            _hall = new List<Hall>();
         }
 
 
