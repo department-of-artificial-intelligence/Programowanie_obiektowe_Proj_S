@@ -17,7 +17,7 @@ namespace Projekt.Model
 
         public override string ToString()
         {
-            return $"[{Id}] {FirstName} {LastName}";
+            return $"[{Id}] {FirstName} {LastName} ";
         }
     }
 }
