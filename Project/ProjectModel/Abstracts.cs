@@ -29,6 +29,11 @@ namespace Project.Model
     public interface IDrugsSource
     {
         List<Drug> AllDrugs();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="drug"></param>
+        /// <returns></returns>
         bool AddDrug(Drug drug);
         bool DeleteDrug(string name);
     }
@@ -37,7 +42,6 @@ namespace Project.Model
         void DisplayDrugs();
         bool AddDrug();
         bool DeleteDrug();
-
         void sortByFirstLetter();
         void sortByTypeOfDrug();
     }

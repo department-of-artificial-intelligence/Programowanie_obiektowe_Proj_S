@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class PharmacyChain : IPharmacyChain
+    public class PharmacyChain
     {
         private readonly IPharmaciesSource _source;
 

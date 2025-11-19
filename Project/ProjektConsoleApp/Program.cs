@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Project.Model;
+﻿using Project.Model;
 using System.Runtime.Loader;
 void whatsNext()
 {
@@ -114,7 +113,7 @@ List<Pharmacy> pharmacies = new List<Pharmacy>()
 IPharmaciesSource source = new PharmaciesInMemory(pharmacies);
 PharmacyChain all_pharmacies = new PharmacyChain(source);
 bool start_program = true;
-while(start_program)
+while (start_program)
 {
     Console.Clear();
     Console.WriteLine($"Witamy w systemie do zarzadzania siecią aptek aktualnie posiadamy {pharmacies.Count()} aptek.");
@@ -131,7 +130,7 @@ while(start_program)
     }
     Pharmacy? choosed = null;
     choosed = pharmacies.FirstOrDefault(x => x.Id == numer)!;
-    if(choosed == null)
+    if (choosed == null)
     {
         Console.Clear();
         Console.WriteLine("Nie znaleziono apteki o takim Id. Sproboj ponownie");
@@ -166,7 +165,7 @@ while(start_program)
                 {
                     Console.Clear();
                     sekcjaPracownicy();
-                    if(!int.TryParse(Console.ReadLine(), out int wybor1))
+                    if (!int.TryParse(Console.ReadLine(), out int wybor1))
                     {
                         Console.WriteLine("Nie wpisałeś cyfry");
                         Console.WriteLine("Nacisnij enter aby kontynuoowac");
@@ -181,7 +180,7 @@ while(start_program)
                             Console.ReadKey();
                             break;
                         case 2:
-                            if(!choosed.Employees.AddEmployee())
+                            if (!choosed.Employees.AddEmployee())
                             {
                                 Console.WriteLine("Wystapil blad podczas dodawania nowego pracownika\n" +
                                     "Nacisnij enter aby kontynuoowac");
@@ -317,4 +316,3 @@ while(start_program)
         }
     }
 }
-

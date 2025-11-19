@@ -17,11 +17,11 @@ namespace Project.Model
         public void DisplayDrugs()
         {
             var lista = _source.AllDrugs();
-            foreach(var drug in lista)
+            foreach (var drug in lista)
             {
                 Console.WriteLine(drug);
             }
-            
+
         }
         public bool AddDrug()
         {
@@ -36,13 +36,13 @@ namespace Project.Model
             */
             Console.Write("Podaj nazwe dodawanego leku: ");
             string? nazwa = Console.ReadLine();
-            Console.Write("Podaj typ dodawanego leku: ");                              
+            Console.Write("Podaj typ dodawanego leku: ");
             string? typ = Console.ReadLine();
             Console.Write("Podaj cene leku - musi to byc liczba: ");
             string? cena = Console.ReadLine();
             Console.Write("Podaj opis leku: ");
             string? opis = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis))
+            if (string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis))
             {
                 Console.WriteLine("Nie wpisales ktorejs z danych leku");
                 return false;
@@ -56,7 +56,7 @@ namespace Project.Model
         {
             Console.WriteLine("Podaj nazwe leku do usuniecia: ");
             string? nazwa = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(nazwa))
+            if (string.IsNullOrWhiteSpace(nazwa))
             {
                 Console.WriteLine("Nie wpisales nic!");
                 return false;
@@ -68,7 +68,7 @@ namespace Project.Model
         {
             var lista = _source.AllDrugs();
             var pogrupowane = lista.GroupBy(x => x.Name[0]).OrderBy(x => x.Key);
-            foreach(var group in pogrupowane)
+            foreach (var group in pogrupowane)
             {
                 string polaczone = string.Join(", ", group.Select(x => x.Name));
                 Console.WriteLine($"{group.Key}: {polaczone}");
