@@ -59,7 +59,7 @@ namespace Project.Model
         }
 
         
-        public int GetStockLevel(Item item)
+        public void GetStockLevel(Item item)
         {
             if (item == null)
             {
@@ -70,7 +70,7 @@ namespace Project.Model
             var inventoryItem = this.Inventory.FirstOrDefault(item => item.Id == item.Id);
 
 
-            return inventoryItem;
+            
         }
 
         

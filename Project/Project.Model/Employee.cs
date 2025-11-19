@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Employee
+    public class Employee: Person
     {
 
         public required int Id { get; set; }
 
-        public required string FirstName { get; set; }
-
-        public required string LastName { get; set; }
 
         public required EmployeePosition Position { get; set; }
 
@@ -27,10 +24,10 @@ namespace Project.Model
 
 
 
-        private Employee() :base() { }
+        private Employee() : base() { }
 
 
-        public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string workPlace)
+        public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string workPlace) : base(firstName, lastName)
         {
             if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
             FirstName = firstName;

@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class Customer
+    internal class Customer: Person
     {
 
         public required int CustomerId { get; set; }
-
-        public required string CustomerFirstName { get; set; }
-
-        public required string CustomerLastName { get; set; }
 
         public required string CustomerEmail { get; set; }
 
@@ -33,13 +29,12 @@ namespace Project.Model
         public Customer() : base() { }
 
         
-        public Customer(int customerId, string customerFirstName, string customerLastName, string customerEmail, int customerPhone, string customerCity, string customerRegion, string customerPostalCode)
+        public Customer(int customerId, string customerFirstName, string customerLastName, string customerEmail, int customerPhone, string customerCity, string customerRegion, string customerPostalCode): base(customerFirstName, customerLastName)
         {
             if(customerId < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(customerId));
 
 
-            CustomerFirstName = customerFirstName ?? "";
-            CustomerLastName = customerLastName ?? "";
+            
             CustomerEmail = customerEmail ?? "";
             CustomerPhone = customerPhone;
             CustomerCity = customerCity ?? "";
