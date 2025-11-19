@@ -13,19 +13,11 @@ namespace Project.Model
         public Director Director { get; set; }
         public List<Actor> Actors { get; set; }
 
-        public Play(string title, Director director, List<Actor> actors)
+        public Play(string title, Director director, List<Actor>? actors)
         {
             Title = title;
             Director = director;
-            Actors = actors;
-        }
-
-        public bool AssignDirector(Director director)
-        {
-            if (director == null) return false;
-            Director = director;
-            if (!director.Plays.Contains(this)) director.AddPlay(this);
-            return true;
+            Actors = actors ?? new List<Actor>();
         }
 
         public bool AddActor(Actor actor)
