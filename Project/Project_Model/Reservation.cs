@@ -24,7 +24,7 @@ namespace Project_Model
             Id = id;
             Lesson = lesson;
             CreationDate = DateTime.Now;
-            Status = ReservationStatuses.Pending;
+            //Status = ReservationStatuses.Pending;
         }
     }
 }

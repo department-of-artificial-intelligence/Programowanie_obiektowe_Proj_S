@@ -14,7 +14,7 @@ namespace Project_Model
         public DateTime StartDateTime { get; set; }
         public TimeSpan Duration {  get; set; }
 
-        public Lesson()
+        /*public Lesson()
         {
             Id = 0;
             Tutor = null;
@@ -22,7 +22,7 @@ namespace Project_Model
             Subject=null;
             StartDateTime= DateTime.MinValue;
             Duration = TimeSpan.Zero;
-        }
+        }*/
         public Lesson(int id, Tutor tutor, Student student, Subject subject, TimeSlot slot)
         {
             Id = id;
@@ -30,9 +30,9 @@ namespace Project_Model
             Student = student;
             Subject = subject;
             StartDateTime=slot.StartDateTime;   
-            Duration = slot.Duration;
+            //Duration = slot.Duration;
         }
         public override string ToString()
-            => $"Lekcja ID {Id}: {Subect.Name}, {Tutor.FirstName}, --> {Student.FirstName}, {StartDateTime:dd-MM HH:mm}";
+            => $"Lekcja ID {Id}: {Subject.Name}, {Tutor.FirstName}, --> {Student.FirstName}, {StartDateTime:dd-MM HH:mm}";
     }
 }

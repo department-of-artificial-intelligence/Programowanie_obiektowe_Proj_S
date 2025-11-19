@@ -13,13 +13,13 @@ namespace Project_Model
         public string LastName { get; set; }
         public string Email { get; set; }
 
-        public Person() { 
+        public User() { 
             Id=0; 
             FirstName=string.Empty; 
             LastName=string.Empty; 
             Email=string.Empty;
         }
-        public Person(int id, string firstName, string lastName, string email){
+        public User(int id, string firstName, string lastName, string email){
             Id=id;
             FirstName=firstName;
             LastName=lastName;
