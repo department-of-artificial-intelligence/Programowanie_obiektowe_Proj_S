@@ -1,12 +1,11 @@
 ﻿using Project.Model.Abstract;
 using System.Diagnostics.CodeAnalysis;
+using Project.Model.Utils;
 
 namespace Project.Model
 {
-    public record Hotel : IContainsResidents, IContainsCurrentResidents
+    public record Hotel : IdentifiableEntity<ulong>, IContainsResidents, IContainsCurrentResidents
     {
-        public Guid Guid { get; set; } = Guid.NewGuid();
-
         public required string Name { get; set; }
 
         public required string Address { get; set; }
@@ -19,19 +18,11 @@ namespace Project.Model
 
         public IEnumerable<Resident> Residents => this.Rooms.SelectMany(x => x.Residents);
 
-        public Hotel() { }
+        public Hotel() : base(UlongIdGenerator.GenerateId()) { }
 
         [SetsRequiredMembers]
-        public Hotel(Guid guid, string name, string address, Manager manager, IEnumerable<HotelRoom> rooms)
-        {
-            Name = name;
-            Address = address;
-            Manager = manager;
-            Rooms = rooms;
-            Guid = guid;
-        }
-
-        [SetsRequiredMembers]
-        public Hotel(string name, string address, Manager manager, IEnumerable<HotelRoom> rooms) : this(Guid.NewGuid(), name, address, manager, rooms) { }
+        public Hotel(string name, string address, Manager manager, IEnumerable<HotelRoom> rooms)
+            : base(UlongIdGenerator.GenerateId())
+            => (this.Name, this.Address, this.Manager, this.Rooms) = (name, address, manager, rooms);
     }
 }

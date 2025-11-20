@@ -1,19 +1,23 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Project.Model.Abstract;
+using Project.Model.Utils;
 
 namespace Project.Model
 {
-    public record Manager
+    public record Manager : IdentifiableEntity<ulong>
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         public required Person Person { get; set; }
 
-        public Manager() { }
+        public Manager() : base(UlongIdGenerator.GenerateId()) { }
 
         [SetsRequiredMembers]
-        public Manager(Person person) => this.Person = person;
+        public Manager(Person person)
+            : base(UlongIdGenerator.GenerateId())
+            => this.Person = person;
 
         [SetsRequiredMembers]
-        public Manager(string firstName, string lastName, DateTime dateOfBirth) => this.Person = new Person(firstName, lastName, dateOfBirth);
+        public Manager(string firstName, string lastName, DateTime dateOfBirth)
+            : base(UlongIdGenerator.GenerateId())
+            => this.Person = new Person(firstName, lastName, dateOfBirth);
     }
 }

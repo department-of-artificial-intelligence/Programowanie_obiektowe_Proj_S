@@ -1,21 +1,24 @@
-﻿using Project.Model.Abstract;
+﻿using Project.Extensions;
+using Project.Model.Abstract;
 
 using GeneratedReport = Project.Reports.Generators.AverageAgeReportGenerator.AverageAgeReportDetails;
 
 namespace Project.Reports.Generators
 {
-    public class AverageAgeReportGenerator : IReportGenerator<IContainsResidents, GeneratedReport>
+    public class AverageAgeReportGenerator : IReportGenerator<GeneratedReport, IContainsResidents>
     {
         public Report<GeneratedReport> GenerateReport(IContainsResidents entity)
         {
             var averageAge = entity.AllResidents
-                .Select(x => (DateTime.Now - x.Person.DateOfBirth).TotalDays)
+                .Select(x => x.Person.DateOfBirth.YearsBetween(DateTime.Now))
                 .Average();
-            
-            return new Report<GeneratedReport>(new GeneratedReport()
+
+            var reportDetails = new GeneratedReport()
             {
-                AverageAge = (int) Math.Floor(averageAge / 365.25)
-            });
+                AverageAge = (int) averageAge
+            };
+            
+            return new Report<GeneratedReport>(reportDetails);
         }
 
         public record AverageAgeReportDetails

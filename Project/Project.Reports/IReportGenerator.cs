@@ -1,6 +1,6 @@
 ﻿namespace Project.Reports
 {
-    public interface IReportGenerator<TEntity, TReportEntity>
+    public interface IReportGenerator<TReportEntity, in TEntity>
     {
         public Report<TReportEntity> GenerateReport(TEntity entity);
     }

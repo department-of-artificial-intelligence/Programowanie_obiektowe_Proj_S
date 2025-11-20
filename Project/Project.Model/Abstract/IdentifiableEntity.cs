@@ -4,6 +4,6 @@
     {
         public T Id { get; set; }
 
-        public IdentifiableEntity(T id) => this.Id = id;
+        protected IdentifiableEntity(T id) => this.Id = id;
     }
 }

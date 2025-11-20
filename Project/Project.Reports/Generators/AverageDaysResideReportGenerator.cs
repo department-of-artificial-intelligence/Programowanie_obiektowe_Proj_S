@@ -4,7 +4,7 @@ using GeneratedReport = Project.Reports.Generators.AverageDaysResideReportGenera
 
 namespace Project.Reports.Generators
 {
-    public class AverageDaysResideReportGenerator : IReportGenerator<IContainsCurrentResidents, GeneratedReport>
+    public class AverageDaysResideReportGenerator : IReportGenerator<GeneratedReport, IContainsCurrentResidents>
     {
         public Report<GeneratedReport> GenerateReport(IContainsCurrentResidents entity)
         {
@@ -12,10 +12,12 @@ namespace Project.Reports.Generators
                 .Select(x => (DateTime.Now - x.ResidentFrom).TotalDays)
                 .Average();
 
-            return new Report<GeneratedReport>(new GeneratedReport()
+            var reportDetails = new GeneratedReport()
             {
-                AverageDaysReside = (int) Math.Floor(averageAge)
-            });
+                AverageDaysReside = (int)Math.Floor(averageAge)
+            };
+            
+            return new Report<GeneratedReport>(reportDetails);
         }
 
         public record AverageDaysResideReportDetails

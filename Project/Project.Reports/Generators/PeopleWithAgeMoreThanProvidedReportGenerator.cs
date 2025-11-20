@@ -1,12 +1,13 @@
 ﻿using Project.Model;
 using Project.Model.Abstract;
 using System.Diagnostics.CodeAnalysis;
+
 using GeneratedReport = Project.Reports.Generators.PeopleWithAgeMoreThanProvidedReportGenerator.PeopleWithAgeMoreThanProvidedReport;
 
 namespace Project.Reports.Generators
 {
     // short version of the old name
-    public class PeopleWithAgeMoreThanProvidedReportGenerator : IReportGenerator<IContainsResidents, GeneratedReport>
+    public class PeopleWithAgeMoreThanProvidedReportGenerator : IReportGenerator<GeneratedReport, IContainsResidents>
     {
         public required int Age { get; init; }
 
@@ -20,14 +21,16 @@ namespace Project.Reports.Generators
 
         public Report<GeneratedReport> GenerateReport(IContainsResidents entity)
         {
-            //var people = entity.AllResidents
-            //    .Select(x => x.Person)
-            //    .Where(x => xs)
+            var people = entity.AllResidents
+                .Select(x => x.Person)
+                .Where(x => x.DateOfBirth <= DateTime.Now.AddYears(-this.Age));
 
-            return new Report<GeneratedReport>(new PeopleWithAgeMoreThanProvidedReport()
+            var reportDetails = new GeneratedReport()
             {
-                People = []
-            });
+                People = people.ToList()
+            };
+
+            return new Report<GeneratedReport>(reportDetails);
         }
 
         public record PeopleWithAgeMoreThanProvidedReport
