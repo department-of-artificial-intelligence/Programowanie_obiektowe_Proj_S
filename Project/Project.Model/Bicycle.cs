@@ -6,30 +6,43 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
+    public enum BicycleStatus
+    {
+        Available,
+        Rented,
+        Maintenance
+    }
     internal class Bicycle
     {
         public int Id {  get; set; }
         public string Model { get; set; }
-        public bool Isavailable {  get; set; }
         public string Type { get; set; }
-        public int Price {  get; set; }
-        public Station CurrentStation { get; internal set; }
+        public int Price { get; set; }
+        public Station? CurrentStation { get; internal set; }
+        public BicycleStatus Status { get; private set; } = BicycleStatus.Available;
+        
 
         public void Rent()
         {
-            if (Isavailable != true)
-                throw new Exception("Bycicle is not available at the moment");
-            Isavailable = false;
+            if (Status != BicycleStatus.Available)
+            {
+                throw new InvalidOperationException($"Bicycle ID {Id} is not available. Current status: {Status}");
+            }
+
+            Status = BicycleStatus.Rented;
+            CurrentStation = null;
         }
 
         public void Return(Station station)
         {
-            Isavailable = true;
-            CurrentStation = station;
+            Status = BicycleStatus.Available;
+            CurrentStation = station; 
         }
 
-        public void ShowInfo() {
-            Console.WriteLine($"ID: {Id}, Model: {Model}, Avaialable: {Isavailable}, Type of bycicle: {Type} Price per hour: {Price}");
+        public override string ToString()
+        {
+            
+            return $"ID: {Id}, {Model} ({Type}) - {Price} EUR/hour";
         }
     }
 }
