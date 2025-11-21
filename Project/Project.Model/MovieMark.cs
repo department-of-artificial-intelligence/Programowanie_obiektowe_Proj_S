@@ -6,9 +6,9 @@ namespace Project.Model;
 // Enum for MovieList.cs to identify Movie type for user as Favorite, Watched, WatchLater 
 public class MovieMark : BaseEntity<int>
 {
-    public User User { get; set; }
-    public Movie Movie { get; set; }
-    public MovieMarkType Type { get; set; }
+    public required User User { get; set; }
+    public required Movie Movie { get; set; }
+    public required MovieMarkType Type { get; set; }
 
     [SetsRequiredMembers]
     public MovieMark(int id, User user, Movie movie, MovieMarkType type) : base(id)
