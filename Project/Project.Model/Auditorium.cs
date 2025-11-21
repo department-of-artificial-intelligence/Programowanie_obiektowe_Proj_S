@@ -120,7 +120,7 @@ namespace Project.Models
             return $"Auditorium: {Name} (Room {RoomNumber})\n" +
                    $"Capacity: {Capacity} seats ({Rows}x{SeatsPerRow})\n" +
                    $"Features: {GetItemsAsString()}\n" +
-                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Rating: {Rating} ({TotalRatings} ratings)\n" +
                    $"Cinema ID: {CinemaId}\n" +
                    $"ID: {Id}";
         }

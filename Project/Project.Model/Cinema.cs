@@ -122,7 +122,7 @@ namespace Project.Models
                    $"Address: {Address}\n" +
                    $"Contact: {ContactPhone} | {ContactEmail}\n" +
                    $"Manager: {ManagerName}\n" +
-                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Rating: {Rating} ({TotalRatings} ratings)\n" +
                    $"Available Films: {GetItemsAsString()}\n" +
                    $"ID: {Id}";
         }

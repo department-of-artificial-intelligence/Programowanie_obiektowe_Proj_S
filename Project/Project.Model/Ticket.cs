@@ -106,9 +106,9 @@ namespace Project.Models
         public override string ToString()
         {
             return $"Ticket: {Type}\n" +
-                   $"Seat: {SeatId} | Price: {FinalPrice:C}\n" +
+                   $"Seat: {SeatId} | Price: {FinalPrice}\n" +
                    $"Film: {FilmId} | Auditorium: {AuditoriumId}\n" +
-                   $"Discount: {(Discount > 0 ? $"{Discount:C}" : "None")}\n" +
+                   $"Discount: {(Discount > 0 ? $"{Discount}" : "None")}\n" +
                    $"ID: {Id}";
         }
     }

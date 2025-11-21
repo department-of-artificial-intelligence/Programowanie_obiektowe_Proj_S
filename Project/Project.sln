@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Entities", "Entitie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Interfaces", "Project.Interfaces\Project.Interfaces.csproj", "{3A7608C7-6DE1-40B2-93BA-787473B26A91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Rapport", "Project.Rapport\Project.Rapport.csproj", "{FEF89185-4A52-4F96-B9BE-23C73E1985F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Logic", "Project.Rapport\Project.Logic.csproj", "{FEF89185-4A52-4F96-B9BE-23C73E1985F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

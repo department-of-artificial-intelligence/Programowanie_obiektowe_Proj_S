@@ -133,7 +133,7 @@ namespace Project.Models
                    $"Director: {Director} | Genre: {Genre}\n" +
                    $"Duration: {DurationMinutes} minutes\n" +
                    $"Age Restriction: {(HasAgeRestriction ? "Yes" : "No")}\n" +
-                   $"Rating: {Rating:F1} ({TotalRatings} ratings)\n" +
+                   $"Rating: {Rating} ({TotalRatings} ratings)\n" +
                    $"Actors: {GetItemsAsString()}\n" +
                    $"ID: {Id}";
         }

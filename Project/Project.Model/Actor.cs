@@ -44,7 +44,7 @@ namespace Project.Models
             return $"Actor: {FullName} ({Age} years)\n" +
                    $"Nationality: {Nationality}\n" +
                    $"Biography: {Biography}...\n" +
-                   $"Popularity: {Popularity:F1}\n" +
+                   $"Popularity: {Popularity}\n" +
                    $"ID: {Id}";
         }
     }

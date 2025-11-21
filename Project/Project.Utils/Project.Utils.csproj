@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Project.Utils">
+      <HintPath>obj\Debug\net8.0\Project.Utils.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

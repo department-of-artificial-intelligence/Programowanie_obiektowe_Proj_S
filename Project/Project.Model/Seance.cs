@@ -110,9 +110,9 @@ namespace Project.Models
 
         public override string ToString()
         {
-            return $"Seance: {StartTime:g} - {EndTime:t}\n" +
+            return $"Seance: {StartTime} - {EndTime}\n" +
                    $"Film: {FilmId} | Auditorium: {AuditoriumId}\n" +
-                   $"Price: {Price:C} | Occupied Seats: {_occupiedSeatIds.Count}\n" +
+                   $"Price: {Price} | Occupied Seats: {_occupiedSeatIds.Count}\n" +
                    $"ID: {Id}";
         }
     }
