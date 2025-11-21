@@ -6,7 +6,6 @@ using GeneratedReport = Project.Reports.Generators.PeopleWithAgeMoreThanProvided
 
 namespace Project.Reports.Generators
 {
-    // short version of the old name
     public class PeopleWithAgeMoreThanProvidedReportGenerator : IReportGenerator<GeneratedReport, IContainsResidents>
     {
         public required int Age { get; init; }
@@ -35,7 +34,7 @@ namespace Project.Reports.Generators
 
         public record PeopleWithAgeMoreThanProvidedReport
         {
-            public List<Person> People { get; init; }
+            public required List<Person> People { get; init; }
         }
     }
 }
