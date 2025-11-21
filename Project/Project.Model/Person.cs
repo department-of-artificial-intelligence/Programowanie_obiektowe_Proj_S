@@ -15,7 +15,16 @@ namespace Project.Model
 
         public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-       
+        public Person()
+        {
+            Tickets = new List<Ticket>();
+        }
+        public Person(string  firstName, string lastName, int age)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+        }
 
         public override string ToString()
         {

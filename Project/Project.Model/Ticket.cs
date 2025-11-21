@@ -28,10 +28,11 @@ namespace Project.Model
 
         public Ticket() 
         {
+            Seat_Number = 0;
             Concert = new Concert();
             Concert.TicketsSold += 1;
         }
-        public Ticket() { }
+        
 
 
 
