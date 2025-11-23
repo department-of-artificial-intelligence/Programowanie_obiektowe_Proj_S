@@ -27,8 +27,8 @@ public class Program
 
         var oddzialCzew = new Branch
         {
-            Id = nextBranchId++
-            Name = "Częstochowa Centrum"
+            Id = nextBranchId++,
+            Name = "Częstochowa Centrum",
             Address = "ul. Warszawska 31"
         };
         var oddzialWawa = new Branch
@@ -47,8 +47,8 @@ public class Program
 
         //Samochody
 
-        var car1 = new Car 
-        { 
+        var car1 = new Car
+        {
             Id = nextCarId++,
             Marka = "Toyota",
             Model = "Yaris",
@@ -57,10 +57,10 @@ public class Program
             DailyRate = 100,
             Status = CarStatus.Available,
             CurrentBranchId = oddzialWawa.Id,
-            CurrentBranch = oddzialWawa 
+            CurrentBranch = oddzialWawa
         };
-        var car2 = new Car 
-        { 
+        var car2 = new Car
+        {
             Id = nextCarId++,
             Marka = "Skoda",
             Model = "Octavia",
@@ -71,8 +71,8 @@ public class Program
             CurrentBranchId = oddzialKrk.Id,
             CurrentBranch = oddzialKrk
         };
-        var car3 = new Car 
-        { 
+        var car3 = new Car
+        {
             Id = nextCarId++,
             Marka = "Ford",
             Model = "Mondeo",
@@ -81,10 +81,10 @@ public class Program
             DailyRate = 180,
             Status = CarStatus.Rented,
             CurrentBranchId = oddzialWawa.Id,
-            CurrentBranch = oddzialWawa 
+            CurrentBranch = oddzialWawa
         };
-        var car4 = new Car 
-        { 
+        var car4 = new Car
+        {
             Id = nextCarId++,
             Marka = "BMW",
             Model = "X5",
@@ -93,7 +93,7 @@ public class Program
             DailyRate = 300,
             Status = CarStatus.InService,
             CurrentBranchId = oddzialKrk.Id,
-            CurrentBranch = oddzialKrk 
+            CurrentBranch = oddzialKrk
         };
         var car5 = new Car
         {
@@ -118,40 +118,40 @@ public class Program
         //Klient
 
         var cust1 = new Customer
-        { 
+        {
             Id = nextCustomerId++,
             FirstName = "Jan",
             LastName = "Kowalski",
             PhoneNumber = "111222333",
-            DateOfBirth = new DateTime(1990, 5, 15) 
+            DateOfBirth = new DateTime(1990, 5, 15)
         };
         var cust2 = new Customer
-        { 
+        {
             Id = nextCustomerId++,
             FirstName = "Anna",
             LastName = "Nowak",
             PhoneNumber = "444555666",
-            DateOfBirth = new DateTime(1985, 10, 2) 
+            DateOfBirth = new DateTime(1985, 10, 2)
         };
         BazaKlientow.AddRange(new[] { cust1, cust2 });
-        
+
         //Sprzedawcy
 
-        var emp1 = new Employee 
-        { 
+        var emp1 = new Employee
+        {
             Id = nextEmployeeId++,
             FirstName = "Piotr",
             LastName = "Zieliński",
             BranchId = oddzialWawa.Id,
             Branch = oddzialWawa
         };
-        var emp2 = new Employee 
-        { 
+        var emp2 = new Employee
+        {
             Id = nextEmployeeId++,
             FirstName = "Ewa",
             LastName = "Wiśniewska",
             BranchId = oddzialKrk.Id,
-            Branch = oddzialKrk 
+            Branch = oddzialKrk
         };
         var emp3 = new Employee
         {
@@ -165,7 +165,7 @@ public class Program
         oddzialWawa.Employees.Add(emp1);
         oddzialKrk.Employees.Add(emp2);
         oddzialCzew.Employees.Add(emp3);
-        
+
         //Wypozyczenie
 
         var rental1 = new Rental
@@ -262,7 +262,7 @@ public class Program
 
         Console.WriteLine($"\nDostępne samochody w {oddzial.Name}:");
         var dostepneAuta = oddzial.Cars.Where(c => c.Status == CarStatus.Available).ToList();
-        
+
         if (!dostepneAuta.Any())
         {
             Powiadomienie("Niestety, brak dostępnych aut w tym oddziale.");
@@ -353,5 +353,160 @@ public class Program
         klient.RentalHistory.Add(noweWypozyczenie);
 
         Powiadomienie($"\nSUKCES! Samochód {samochod.Marka} został wypożyczony.");
+    }
+    static void ZwrocSamochod()
+    {
+        Console.Clear();
+        Console.WriteLine("--- ⬅️ Zwrot samochodu ---");
+
+        var aktywneWypozyczenia = BazaWypozyczen
+            .Where(r => r.Status == RentalStatus.Active)
+            .ToList();
+
+        if (!aktywneWypozyczenia.Any())
+        {
+            Powiadomienie("Brak aktywnych wypożyczeń do zwrotu.");
+            return;
+        }
+
+        Console.WriteLine("Trwające wypożyczenia:");
+        foreach (var r in aktywneWypozyczenia)
+        {
+            Console.WriteLine(r.ToString());
+        }
+
+        Console.Write("\nPodaj ID wypożyczenia, które chcesz zakończyć: ");
+        int idWypozyczenia;
+        if (!int.TryParse(Console.ReadLine(), out idWypozyczenia))
+        {
+            Powiadomienie("Błędne ID. Anulowano.");
+            return;
+        }
+
+        var rental = aktywneWypozyczenia.FirstOrDefault(r => r.Id == idWypozyczenia);
+        if (rental == null)
+        {
+            Powiadomienie("Nie znaleziono aktywnego wypożyczenia o tym ID.");
+            return;
+        }
+
+        Console.WriteLine("\nDo którego oddziału zwracasz samochód?");
+        PokazOddzialy(false);
+        Console.Write("Podaj ID oddziału zwrotu: ");
+        int idOddzialuZwrotu;
+        if (!int.TryParse(Console.ReadLine(), out idOddzialuZwrotu))
+        {
+            Powiadomienie("Błędne ID. Anulowano.");
+            return;
+        }
+        var oddzialZwrotu = BazaOddzialow.FirstOrDefault(b => b.Id == idOddzialuZwrotu);
+        if (oddzialZwrotu == null)
+        {
+            Powiadomienie("Nie ma takiego oddziału. Anulowano.");
+            return;
+        }
+
+        rental.Status = RentalStatus.Completed;
+        rental.ActualReturnDate = DateTime.Now;
+
+        var samochod = rental.Car;
+        samochod.Status = CarStatus.Available;
+        samochod.CurrentBranchId = oddzialZwrotu.Id;
+        samochod.CurrentBranch = oddzialZwrotu;
+
+        var oddzialOdbioru = rental.PickupBranch;
+        if (oddzialOdbioru.Id != oddzialZwrotu.Id)
+        {
+            oddzialOdbioru.Cars.Remove(samochod);
+            oddzialZwrotu.Cars.Add(samochod);
+            Console.WriteLine($"Samochód przeniesiony z {oddzialOdbioru.Name} do {oddzialZwrotu.Name}.");
+        }
+
+        if (rental.ActualReturnDate > rental.EndDate)
+        {
+            Console.WriteLine("ZWROT PO TERMINIE! Należy naliczyć dodatkowe opłaty.");
+        }
+
+        Powiadomienie($"\nSUKCES! Samochód {samochod.Marka} zwrócony do {oddzialZwrotu.Name}.");
+    }
+
+    static void PokazWszystkieSamochody(bool czekaj = true)
+    {
+        Console.Clear();
+        Console.WriteLine("--- 📋 Lista wszystkich samochodów ---");
+        foreach (var auto in BazaSamochodow)
+        {
+            Console.WriteLine(auto.ToString());
+        }
+        if (czekaj) CzekajNaEnter();
+    }
+
+    static void PokazDostepneSamochody(bool czekaj = true)
+    {
+        Console.Clear();
+        Console.WriteLine("--- ✅ Lista dostępnych samochodów ---");
+        var dostepne = BazaSamochodow.Where(c => c.Status == CarStatus.Available);
+
+        if (!dostepne.Any())
+        {
+            Console.WriteLine("Brak dostępnych samochodów.");
+        }
+
+        foreach (var auto in dostepne)
+        {
+            Console.WriteLine(auto.ToString());
+        }
+        if (czekaj) CzekajNaEnter();
+    }
+
+    static void PokazOddzialy(bool czekaj = true)
+    {
+        Console.Clear();
+        Console.WriteLine("--- 🏢 Lista oddziałów ---");
+        foreach (var oddzial in BazaOddzialow)
+        {
+            Console.WriteLine($"[{oddzial.Id}] {oddzial.Name} ({oddzial.Address}) - Aut: {oddzial.Cars.Count}, Prac: {oddzial.Employees.Count}");
+        }
+        if (czekaj) CzekajNaEnter();
+    }
+
+    static void PokazKlientow(bool czekaj = true)
+    {
+        Console.Clear();
+        Console.WriteLine("--- 🧍 Lista klientów ---");
+        foreach (var klient in BazaKlientow)
+        {
+            Console.WriteLine(klient.ToString());
+        }
+        if (czekaj) CzekajNaEnter();
+    }
+
+    static void PokazHistorie(bool czekaj = true)
+    {
+        Console.Clear();
+        Console.WriteLine("--- 🧾 Historia wszystkich wypożyczeń ---");
+        if (!BazaWypozyczen.Any())
+        {
+            Console.WriteLine("Brak wpisów w historii.");
+        }
+
+        foreach (var rental in BazaWypozyczen.OrderByDescending(r => r.StartDate))
+        {
+            Console.WriteLine(rental.ToString());
+        }
+        if (czekaj) CzekajNaEnter();
+    }
+
+    static void CzekajNaEnter()
+    {
+        Console.WriteLine("\nNaciśnij Enter, aby wrócić do menu...");
+        Console.ReadLine();
+    }
+
+    static void Powiadomienie(string wiadomosc)
+    {
+        Console.WriteLine(wiadomosc);
+        Console.WriteLine("Naciśnij Enter, aby kontynuować...");
+        Console.ReadLine();
     }
 }
