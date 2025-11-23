@@ -15,13 +15,13 @@ public class Program
     static int nextEmployeeId = 1;
     static int nextRentalId = 1;
 
-    public void Main()
+    static void Main(string[] args)
     {
         InicjalizujDane();
 
         MenuGlowne();
     }
-    public void InicjalizujDane()
+    static void InicjalizujDane()
     {
         //Oddziały
 
