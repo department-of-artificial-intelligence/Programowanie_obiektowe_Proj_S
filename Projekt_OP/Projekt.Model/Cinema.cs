@@ -8,9 +8,9 @@ namespace Projekt.Model
 {
     public class Cinema
     {
-        public int _cinemaID;
-        public string _cinemaName;
-        public List<Hall> _hall;
+        private int _cinemaID;
+        private string _cinemaName;
+        private List<Hall> _hall;
 
         public int CinemaID { get { return _cinemaID; } set { _cinemaID = value; } }
 
@@ -20,27 +20,24 @@ namespace Projekt.Model
 
         public Cinema() 
         {
-            this._cinemaID = 0;
-            this._cinemaName = string.Empty;
-            this._hall = new List<Hall>();
+            _cinemaID = 0;
+            _cinemaName = string.Empty;
+            _hall = new List<Hall>();
 
         }
         
 
-        public Cinema(int CinemaID,string CinemaName) 
+        public Cinema(int CinemaID,string CinemaName,List<Hall> Hall ) 
         {
             _cinemaID = CinemaID;
             _cinemaName = CinemaName;
-            _hall = new List<Hall>();
+            _hall = Hall;
         }
 
 
         public override string ToString()
         {
-            return $"Kino: {_cinemaName} - {_cinemaID}\n";
+            return $"Kino: {CinemaName} - {CinemaID}\n";
         }
-
-
-
     }
 }

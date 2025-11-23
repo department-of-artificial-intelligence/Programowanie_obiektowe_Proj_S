@@ -8,13 +8,12 @@ namespace Projekt.Model
 {
     public class Hall
     {
-        public int _number;
-        public int _seats;
-        public Cinema _cinema; 
+        private int _number;
+        private int _seats;
+        private Cinema _cinema; 
 
         public int Number { get { return _number; } set { _number = value; } }
         public int Seats { get { return _seats; } set { _seats = value; } }
-
         public Cinema Cinema { get { return _cinema; } set { _cinema = value; } }
 
         public Hall(int number, int seats)

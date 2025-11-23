@@ -8,11 +8,11 @@ namespace Projekt.Model
 {
     public class CinemaAddress
     {
-        public string _zipCode;
-        public string _street;
-        public int _number;
-        public string _city;
-        public string _country;
+        private string _zipCode;
+        private string _street;
+        private int _number;
+        private string _city;
+        private string _country;
 
         public string ZipCode { get { return _zipCode; } set { _zipCode = value; } }
         public string City { get { return _city; } set { _city = value; } }
