@@ -8,23 +8,22 @@ namespace Projekt.Model
 {
     public class Hall
     {
-        private int _number;
-        private int _seats;
-        private Cinema _cinema; 
-
-        public int Number { get { return _number; } set { _number = value; } }
-        public int Seats { get { return _seats; } set { _seats = value; } }
-        public Cinema Cinema { get { return _cinema; } set { _cinema = value; } }
-
-        public Hall(int number, int seats)
+        public int Number { get; private set; }
+        public int Seats { get; private set; }
+        public List<Film> _films;
+        public IReadOnlyList<Film> Films => _films.AsReadOnly();
+        
+        
+        public Hall(int number, int seats,List<Film> films)
         {
-            _number = number;
-            _seats = seats;
+            Number = number;
+            Seats = seats;
+            _films = films ?? new List<Film>();
         }
 
         public override string ToString()
         {
-            return $"Sala nr: {_number}. Liczba miejsc: {_seats} Kino: {_cinema}";
+            return $"Sala nr: {Number}. Liczba miejsc: {Seats}";
         }
     }
 }

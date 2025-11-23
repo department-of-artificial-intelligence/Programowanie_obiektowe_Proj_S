@@ -8,35 +8,33 @@ namespace Projekt.Model
 {
     public class Film
     {
-        public int _iD;
-        public string _title;
-        public int _timeMin;
-        public string _genre;
-
-        public int ID { get { return _iD; } set { _iD = value; } }
-        public string Title { get { return _title; } set { _title = value; } }
-        public int TimeMin { get { return _timeMin; } set { _timeMin = value; } }
-        public string Genre { get { return _genre; } set { _genre = value; } }
+        public int ID { get;  set; }
+        public string Title { get; private set; }
+        public int TimeMin { get; private set; }
+        public string Genre { get; private set; }
+        public List<Hall> Hall { get; private set; }
 
         public Film()
         {
-            _iD = 0;
-            _title = string.Empty;
-            _timeMin = 0;
-            _genre = string.Empty;
+            ID = 0;
+            Title = string.Empty;
+            TimeMin = 0;
+            Genre = string.Empty;
+            Hall = new List<Hall>();
         }
 
-        public Film(int ID, string Title, int Time, string Genre)
+        public Film(int iD, string title, int time, string genre, List<Hall> hall)
         {
-            _iD = ID;
-            _title = Title;
-            _timeMin = Time;
-            _genre = Genre;
+            ID = iD;
+            Title = title;
+            TimeMin = time;
+            Genre = genre;
+            Hall = hall;
         }
 
         public override string ToString()
         {
-            return $"Film: {_title} - {_iD} - {_timeMin} min - {_genre}\n";
+            return $"Film: {Title} | ID:{ID} | CzasTrwania:{TimeMin} min | Gatunek {Genre} | {Hall}\n";//dopracowac wyswietlanie sie sali w kinie jesli to mozliwe 
         }
     }
 }

@@ -8,26 +8,23 @@ namespace Projekt.Model
 {
     public class CinemaAddress
     {
-        private string _city;
-        private string _street;
-        private int _number;
-        public string City { get { return _city; } set { _city = value; } }
-        public string Street { get { return _street; } set { _street = value; } }
-        public int Number { get { return _number; } set { _number = value; } }
+        private string City { get; set; }
+        private string Street { get; set; }
+        private int Number { get; set; }
 
         public CinemaAddress() 
         {
-            _street = string.Empty;
-            _number = 0;
-            _city = string.Empty;
+            Street = string.Empty;
+            Number = 0;
+            City = string.Empty;
 
         }
         
-        public CinemaAddress(string City,string Street, int Number) 
+        public CinemaAddress(string city,string street, int number) 
         {
-            _street = Street;
-            _number = Number;
-            _city = City;
+            Street = street;
+            Number = number;
+            City = city;
         }
 
     }

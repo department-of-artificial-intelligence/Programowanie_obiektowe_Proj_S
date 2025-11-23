@@ -8,49 +8,41 @@ namespace Projekt
 {
     class Program
     {
+
+        static void DisplayMainMenu(ConsoleView view)
+        {
+            Console.WriteLine("\n==== GŁÓWNE MENU ZARZĄDZANIA KINAMI ====");
+            Console.WriteLine("1. Wyświetl listę wszystkich kin");
+            Console.WriteLine("2. Wyświetl szczegóły kina (wyszukaj po ID)");
+            Console.WriteLine("3. Wyświetl listę wszystkich pracowników");
+            Console.WriteLine("4. Wyświetl listę wszystkich filmów");
+            Console.WriteLine("0. Wyjdź z programu");
+            Console.WriteLine("------------------------------------------");
+        }
         static void Main(string[] args)
         {
-            bool isRunning = true;
-
-            Console.WriteLine(" Witamy w Systemie Zarzadzania Kinami! ");
-            Console.WriteLine("---------------------------------------");
-
-            List<Hall> sale1 = new List<Hall>()
+            List<Employee> pracownicyALL = new List<Employee>()
             {
-                new Hall(1,20),
-                new Hall(2,20),
-                new Hall(3,20)
-            };
-            List<Employee> pracownicy1 = new List<Employee>()
-            {
-                new Employee(1,"Olek","Wyrazik"),
-                new Employee(2,"Mateusz","Szczepanik"),
-                new Employee(3,"Kacper","Marek"),
-                new Employee(4,"Norbert","Cwiklinski")
+                new Employee(1,"Olek","Wyrazik"), new Employee(2,"Mateusz","Szczepanik"),
+                new Employee(3,"Kacper","Marek"), new Employee(4,"Norbert","Cwiklinski"),
+                new Employee(5, "Robert", "Lewandowski"), new Employee(6, "Wojciech", "Szczęsny"),
             };
 
-            List<Cinema> Kina = new List<Cinema>()
+            List<Film> filmyALL = new List<Film>()
             {
-                new Cinema(1,"Kino1",new CinemaAddress("Czestochowa","Cukierkowa", 12),sale1,pracownicy1)
+                new Film (1,"Auta",120,"Bajka"), new Film (2,"Szybcy I Wsciekli",180,"Akcja"),
+                new Film (3,"Chuucky",100,"Horror"), new Film (4,"Jak Wytresowac Smoka",120,"Bajka"),
+                new Film (5,"Szklana pułapka",180,"Akcja"), new Film (6,"Obecnosc",100,"Horror"),
             };
-            
-            CinemaMenager menager = new CinemaMenager(Kina);
-            menager.DisplayCinemas();
-
-
-            Console.Write("Podaj ID: ");
-            string? Input = Console.ReadLine();
-            if(!int.TryParse(Input, out int ID))
+            List<Hall> saleInit = new List<Hall>()
             {
-                Console.WriteLine("Nie Podałes Cyfry");
-            }
-            Cinema? wybraneKino = Kina.FirstOrDefault(x => x.CinemaID == ID);
-            Console.WriteLine(wybraneKino);
+                // Zakładamy, że klasy Hall i Film zostały ulepszone i nie mają problemów z relacjami.
+                new Hall(1, 20, filmyALL.Take(3).ToList()),
+                new Hall(2, 20, filmyALL.Skip(3).ToList()),
+            };
 
 
 
-
-            
 
 
         }

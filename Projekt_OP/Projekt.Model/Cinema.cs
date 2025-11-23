@@ -8,47 +8,36 @@ namespace Projekt.Model
 {
     public class Cinema
     {
-        private int _cinemaID;
-        private string _cinemaName;
-        private List<Hall> _hall;
-        private CinemaAddress _address;
-        private List<Employee> _employees;
-
-        public int CinemaID { get { return _cinemaID; } set { _cinemaID = value; } }
-
-        public string CinemaName { get { return _cinemaName; } set { _cinemaName = value; } }
-
-        public List<Hall> Hall { get { return _hall; } set { _hall = value; } }
-
-        public CinemaAddress Address { get { return _address; } set { _address = value; } }
-
-        public List<Employee> Empolyees { get { return _employees; } set { _employees = value; }  }
+        public int CinemaID { get;  set; }
+        public string CinemaName { get; private set; }
+        public List<Hall> Hall { get; private set; }
+        public CinemaAddress Address { get; private set; }
+        public List<Employee> Employees { get; private set; }
 
         public Cinema() 
         {
-            _cinemaID = 0;
-            _cinemaName = string.Empty;
-            _address = new CinemaAddress();
-            _hall = new List<Hall>();
-            _employees = new List<Employee>();
+            CinemaID = 0;
+            CinemaName = string.Empty;
+            Address = new CinemaAddress();
+            Hall = new List<Hall>();
+            Employees = new List<Employee>();
 
         }
         
 
-        public Cinema(int CinemaID,string CinemaName,CinemaAddress Address,List<Hall> Hall,List<Employee> Employees) 
+        public Cinema(int cinemaID,string cinemaName,CinemaAddress address,List<Hall> hall,List<Employee> employees) 
         {
-            this.CinemaID = CinemaID;
-            this.CinemaName = CinemaName;
-            this.Address = Address;
-            this.Hall = Hall;
-            this._employees  = Employees;
+            CinemaID = cinemaID;
+            CinemaName = cinemaName;
+            Address = address;
+            Hall = hall;
+            Employees  = employees;
         }
 
 
         public override string ToString()
         {
-            return $"|Kino: {CinemaName}--IDKina: {CinemaID}|\n" +
-                $"------------------------------------------------";
+            return $"Kino: {CinemaName} | IDKina:{CinemaID}|\n";
         }
     }
 }
