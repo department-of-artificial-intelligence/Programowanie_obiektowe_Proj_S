@@ -29,7 +29,14 @@ namespace Projekt.Model
 
         public Employee GetByID(int id)
         {
-            return _employees.FirstOrDefault(x => x.ID == id)!;
+            if (id <= _employees.Count() && id > 0)
+            {
+                return _employees.FirstOrDefault(x => x.ID == id)!;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Nie ma pracownika o takim ID");
+            }
         }
 
         public Employee GetByName(string name)

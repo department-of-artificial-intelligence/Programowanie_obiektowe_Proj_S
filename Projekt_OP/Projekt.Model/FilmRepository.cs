@@ -29,7 +29,14 @@ namespace Projekt.Model
 
         public Film GetByID(int id) 
         {
-            return _films.FirstOrDefault(x => x.ID == id);
+            if (id <= _cinemas.Count() && id > 0)
+            {
+                return _films.FirstOrDefault(x => x.ID == id);
+            }
+            else 
+            {
+                throw new ArgumentOutOfRangeException("Nie ma filmu o takim ID");
+            }
         }
 
         public Film GetByName(string title) 

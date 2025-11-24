@@ -97,7 +97,7 @@ namespace Projekt
 
                 int choice = view.GetIDInput("Wybierz Opcje:");
 
-                switch (choice) 
+                switch (choice)
                 {
                     case 1:
                         Console.Clear();
@@ -107,12 +107,23 @@ namespace Projekt
                         break;
                     case 2:
                         Console.Clear();
-                        int id = view.GetIDInput("Wpisz ID: ");
-                        Cinema cinema = cinemaRepository.GetByID(id);
-                        view.DisplayCinemaByID(cinema);
-                        Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                        Console.ReadLine();
+                        try
+                        {
+                            int id = view.GetIDInput("Wpisz ID: ");
+                            Cinema cinema = cinemaRepository.GetByID(id);
+                            view.DisplayCinemaByID(cinema);
+                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Wystapil blad: {ex.Message}");
+                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                            break;
+                        }
                         break;
+                
                     case 3:
                         Console.Clear();
                         view.DisplayEmployees(employeeRepository.GetAll());
@@ -121,11 +132,21 @@ namespace Projekt
                         break;
                     case 4:
                         Console.Clear();
-                        int idE = view.GetIDInput("Wpisz ID: ");
-                        Employee employeePoId = employeeRepository.GetByID(idE);
-                        view.DisplayEmployeeByID(employeePoId);
-                        Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                        Console.ReadLine();
+                        try
+                        {
+                            int idE = view.GetIDInput("Wpisz ID: ");
+                            Employee employeePoId = employeeRepository.GetByID(idE);
+                            view.DisplayEmployeeByID(employeePoId);
+                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Wystapil blad: {ex.Message}");
+                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                            break;
+                        }
                         break;
                     case 5:
                         Console.Clear();
@@ -135,11 +156,21 @@ namespace Projekt
                         break;
                     case 6:
                         Console.Clear();
-                        int idF = view.GetIDInput("Wpisz ID: ");
-                        Film FilmPoID = filmRepository.GetByID(idF);
-                        view.DisplayFilmByID(FilmPoID);
-                        Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                        Console.ReadLine();
+                        try
+                        {
+                            int idF = view.GetIDInput("Wpisz ID: ");
+                            Film FilmPoID = filmRepository.GetByID(idF);
+                            view.DisplayFilmByID(FilmPoID);
+                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Wystapil blad: {ex.Message}");
+                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                            Console.ReadLine();
+                            break;
+                        }
                         break;
 
                     case 0:
@@ -147,6 +178,8 @@ namespace Projekt
                         break;
                     default:
                         Console.WriteLine("Nieprawidłowy wybór. Spróbuj ponownie.");
+                        Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                        Console.ReadLine();
                         break;
 
 

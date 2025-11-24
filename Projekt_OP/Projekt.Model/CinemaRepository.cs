@@ -26,7 +26,14 @@ namespace Projekt.Model
 
         public Cinema GetByID(int id) 
         {
-            return _cinemas.FirstOrDefault(x=> x.CinemaID == id )!;
+            if (id <= _cinemas.Count() && id > 0)
+            {
+                return _cinemas.FirstOrDefault(x => x.CinemaID == id)!;
+            }
+            else 
+            {
+                throw new ArgumentOutOfRangeException("Nie ma kina o takim ID!");
+            }
         }
 
         public IReadOnlyList<Cinema> GetAll()

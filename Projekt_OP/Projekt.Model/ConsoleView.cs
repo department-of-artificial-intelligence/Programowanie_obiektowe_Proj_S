@@ -18,6 +18,7 @@ namespace Projekt.Model
         }
 
 
+
         public void DisplayCinemas(IReadOnlyList<Cinema> cinemas)
         {
             Console.WriteLine("\n---Lista Kin--- ");
@@ -103,15 +104,17 @@ namespace Projekt.Model
 
         public int GetIDInput(string info) 
         {
-            Console.Write(info);
-            string input = Console.ReadLine();
+                Console.Write(info);
+                string input = Console.ReadLine();
 
-            if (int.TryParse(input, out int id))
-            {
-                return id;
-            }
-
-            return -1;
+                if (int.TryParse(input, out int id))
+                {
+                    return id;
+                }
+                else
+                {
+                    throw new FormatException("Nieprawidlowy format ID. Prosze wprowadzic liczbe calkowita.");
+                }
         }
 
         public string GetInput(string info) 
