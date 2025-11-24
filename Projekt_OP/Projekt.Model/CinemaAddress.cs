@@ -8,9 +8,9 @@ namespace Projekt.Model
 {
     public class CinemaAddress
     {
-        private string City { get; set; }
-        private string Street { get; set; }
-        private int Number { get; set; }
+        public string City { get; private set; }
+        public string Street { get; private set; }
+        public int Number { get; private set; }
 
         public CinemaAddress() 
         {

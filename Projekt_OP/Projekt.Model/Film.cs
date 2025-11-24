@@ -20,21 +20,19 @@ namespace Projekt.Model
             Title = string.Empty;
             TimeMin = 0;
             Genre = string.Empty;
-            Hall = new List<Hall>();
         }
 
-        public Film(int iD, string title, int time, string genre, List<Hall> hall)
+        public Film(int iD, string title, int time, string genre)
         {
             ID = iD;
             Title = title;
             TimeMin = time;
             Genre = genre;
-            Hall = hall;
         }
 
         public override string ToString()
         {
-            return $"Film: {Title} | ID:{ID} | CzasTrwania:{TimeMin} min | Gatunek {Genre} | {Hall}\n";//dopracowac wyswietlanie sie sali w kinie jesli to mozliwe 
+            return $"Film: {Title} | ID:{ID} | CzasTrwania:{TimeMin} min | Gatunek {Genre}\n";//dopracowac wyswietlanie sie sali w kinie jesli to mozliwe 
         }
     }
 }

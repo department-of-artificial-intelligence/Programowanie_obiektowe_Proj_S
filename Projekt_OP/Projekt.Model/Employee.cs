@@ -33,7 +33,7 @@ namespace Projekt.Model
 
         public override string ToString()
         {
-            return $"Pracownik: {_name} {_lastName} - {_iD}\n";
+            return $"Pracownik: {_name} {_lastName} | ID: {_iD}\n";
         }
 
     }
