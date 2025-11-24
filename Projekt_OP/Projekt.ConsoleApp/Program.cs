@@ -107,21 +107,21 @@ namespace Projekt
                         break;
                     case 2:
                         Console.Clear();
-                        try
-                        {
-                            int id = view.GetIDInput("Wpisz ID: ");
-                            Cinema cinema = cinemaRepository.GetByID(id);
-                            view.DisplayCinemaByID(cinema);
-                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Wystapil blad: {ex.Message}");
-                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                            break;
-                        }
+                            try
+                            {
+                                int id = view.GetIDInput("Wpisz ID: ");
+                                Cinema cinema = cinemaRepository.GetByID(id);
+                                view.DisplayCinemaByID(cinema);
+                                Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Wystapil blad: {ex.Message}");
+                                Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                                break;
+                            }
                         break;
                 
                     case 3:
@@ -132,21 +132,21 @@ namespace Projekt
                         break;
                     case 4:
                         Console.Clear();
-                        try
-                        {
-                            int idE = view.GetIDInput("Wpisz ID: ");
-                            Employee employeePoId = employeeRepository.GetByID(idE);
-                            view.DisplayEmployeeByID(employeePoId);
-                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Wystapil blad: {ex.Message}");
-                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                            break;
-                        }
+                            try
+                            {
+                                int idE = view.GetIDInput("Wpisz ID: ");
+                                Employee employeePoId = employeeRepository.GetByID(idE);
+                                view.DisplayEmployeeByID(employeePoId);
+                                Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Wystapil blad: {ex.Message}");
+                                Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                                break;
+                            }
                         break;
                     case 5:
                         Console.Clear();
@@ -156,21 +156,21 @@ namespace Projekt
                         break;
                     case 6:
                         Console.Clear();
-                        try
-                        {
-                            int idF = view.GetIDInput("Wpisz ID: ");
-                            Film FilmPoID = filmRepository.GetByID(idF);
-                            view.DisplayFilmByID(FilmPoID);
-                            Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Wystapil blad: {ex.Message}");
-                            Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
-                            Console.ReadLine();
-                            break;
-                        }
+                            try
+                            {
+                                int idF = view.GetIDInput("Wpisz ID: ");
+                                Film FilmPoID = filmRepository.GetByID(idF);
+                                view.DisplayFilmByID(FilmPoID);
+                                Console.WriteLine("\nNacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Wystapil blad: {ex.Message}");
+                                Console.WriteLine("Nacisnij Enter aby wrocic do menu....");
+                                Console.ReadLine();
+                                break;
+                            }
                         break;
 
                     case 0:
