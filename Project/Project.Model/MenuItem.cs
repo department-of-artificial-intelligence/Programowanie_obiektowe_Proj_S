@@ -1,28 +1,31 @@
 ﻿using System;
+using Project.Model;
 
-public class MenuItem
+public class MenuItem : IShowInfo
 {
-	public string? Name { get; set; }
-	public string? Description { get; set; }
-	public decimal? Price { get; set; }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public decimal? Price { get; set; }
 
-	public MenuItem() : this(String.Empty, String.Empty, 0) { }
+    public MenuItem() : this(0, String.Empty, 0, String.Empty) { }
 
-	public MenuItem(string name, string description, decimal price)
-	{
-		Name = name;
-		Description = description;
-		Price = price;
-	}
+    public MenuItem(int id, string name, decimal price, string description)
+    {
+        Id = id;
+        Name = name;
+        Price = price;
+        Description = description;
+    }
 
-	public void SetPrice(decimal price)
-	{
-		Price = price;
-	}
+    public void SetPrice(decimal price) => Price = price;
 
-	public void GetInfo()
-	{
-		Console.WriteLine($"Name: {Name}\nDesctription: {Description}\nPrice: {Price}");
-	}
-
+    public string GetInfo()
+    {
+        return $"---- Menu Item ----\n" +
+               $"Name: {Name}\n" +
+               $"Price: {Price} zł\n" +
+               $"Description: {Description}\n" +
+               $"-------------------";
+    }
 }
