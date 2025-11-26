@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
+namespace Project.Abstractions
 {
     public interface IOrder
     {
@@ -16,6 +16,6 @@ namespace Project.Model
         Driver? AssignedDriver { get; }
         Vehicle? AssignedVehicle { get; }
 
-        void AssignOrder(Driver driver);
+        void AssignOrder(IDriver driver);
     }
 }

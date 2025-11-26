@@ -57,32 +57,45 @@ namespace woch_lab3
         string GenerateBarCode();
     }
 
-    abstract class Item(string title, int id, string publisher, DateTime dateOfIssue)
+    abstract class Item
     {
         private int _id;
 
-        public string Title { get; set; } = title;
-
+        public string Title { get; set; }
         public int Id
         {
             get => _id;
             set
             {
                 if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "ID musi być liczbą > 0.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "ID musi być > 0.");
                 _id = value;
             }
         }
+        public string? Publisher { get; set; }
+        public DateTime DateOfIssue { get; set; }
 
-        public string? Publisher { get; set; } = publisher;
-        public DateTime DateOfIssue { get; set; } = dateOfIssue;
+        public Item()
+        {
+            Title = string.Empty;
+            Id = 1;
+            Publisher = string.Empty;
+            DateOfIssue = DateTime.MinValue;
+        }
 
-        public Item() : this(string.Empty, 1, string.Empty, DateTime.MinValue) { }
+        public Item(string title, int id, string publisher, DateTime dateOfIssue)
+        {
+            Title = title;
+            Id = id;
+            Publisher = publisher;
+            DateOfIssue = dateOfIssue;
+        }
 
         public override string ToString() => $"{Title}/{Id}/{Publisher}/{DateOfIssue}";
 
         public abstract string GenerateBarCode();
     }
+
 
 
     class Journal : Item
@@ -134,29 +147,40 @@ namespace woch_lab3
             }
         }
 
-
         public List<Author> Authors { get; set; } = new List<Author>();
+        public List<string> Categories { get; set; } = new List<string>();
 
-        public Book(): base() {
+        public Book() : base()
+        {
             this.PageCount = 0;
             this.Authors = new List<Author>();
+            this.Categories = new List<string>();
         }
-        public Book(string title, int id, string publisher, DateTime dateOfIssue, int pageCount, List<Author> authors): base(title, id, publisher, dateOfIssue)
+
+        public Book(string title, int id, string publisher, DateTime dateOfIssue, int pageCount, List<Author> authors)
+            : base(title, id, publisher, dateOfIssue)
         {
             this.PageCount = pageCount;
             this.Authors = authors;
+            this.Categories = new List<string>();
         }
 
         public void AddAuthor(Author author)
         {
-            if(author is null) throw new ArgumentNullException(nameof(author), "Autor nie może mieć wartości pustej.");
+            if (author is null) throw new ArgumentNullException(nameof(author));
             if (Authors.Contains(author)) throw new InvalidOperationException("Autor jest już na liście.");
             Authors.Add(author);
         }
 
         public void RemoveAuthor(Author author)
         {
-            if(Authors.Contains(author)) Authors.Remove(author);
+            if (Authors.Contains(author)) Authors.Remove(author);
+        }
+
+        public void AddCategory(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category)) throw new ArgumentNullException(nameof(category));
+            if (!Categories.Contains(category)) Categories.Add(category);
         }
 
         public override string ToString()
@@ -171,6 +195,7 @@ namespace woch_lab3
         }
     }
 
+
     interface IItemManagement
     {
         List<Item> Items { get; set; }
@@ -183,6 +208,8 @@ namespace woch_lab3
 
     class Catalog : IItemManagement
     {
+
+        public List<string> Categories { get; set; } = new List<string>();
         public string ThematicDepartment { get; set; }
         public List<Item> Items { get; set; } = new List<Item>();
 
@@ -192,6 +219,32 @@ namespace woch_lab3
         }
         public Catalog(string thematicDepartment, List<Item> items) : this(items) { 
             this.ThematicDepartment=thematicDepartment;
+        }
+
+        public void AddCategory(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category))
+                throw new ArgumentNullException(nameof(category), "Kategoria nie może być pusta.");
+
+            if (!Categories.Contains(category))
+                Categories.Add(category);
+        }
+
+        public void RemoveCategory(string category)
+        {
+            if (Categories.Contains(category))
+                Categories.Remove(category);
+        }
+
+        public List<Book> FilterBooksByCategory(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category))
+                throw new ArgumentNullException(nameof(category));
+
+            return Items
+                .OfType<Book>()
+                .Where(b => b.Categories.Contains(category))
+                .ToList();
         }
 
         public void AddItem(Item item)
@@ -215,7 +268,9 @@ namespace woch_lab3
 
         public string GetAllItems(string s = "")
         {
-            if (Items is null || Items.Count == 0) throw new ArgumentNullException("Brak elementów w kolekcji.");
+            if (Items == null || Items.Count == 0)
+                return "Brak elementów w katalogu.";
+
             return string.Join(s, Items);
         }
 
@@ -429,10 +484,13 @@ namespace woch_lab3
             Console.WriteLine($"{i2} \r\n  Kod kreskowy: {journalBarCode}");
             List<Item> items1 = [i1, i2, i4];
             Catalog c1 = new("Książki o programowaniu", items1);
-            c1.AddItem(new Journal("Wzorce programistyczne", 1, "ITPress", new
+            c1.AddItem(new Journal("Wzorce programistyczne", 4, "ITPress", new
             DateTime(2060, 02, 14), 1));
             Console.WriteLine(c1);
             Console.WriteLine('\n' + c1.GetAllItems("Wszystkie pozycje w katalogu:"));
+
+
+            
             Console.WriteLine("-----------------------------------------------------------");
             Console.WriteLine("Testy wyszukiwania przedmiotów");
             Console.WriteLine("-----------------------------------------------------------");
@@ -450,6 +508,8 @@ namespace woch_lab3
             Item? foundedItemByTitleOld = c1?.FindItemBy(searchedValue);
             Console.WriteLine("Wyszukanie po id (wersja 2):\n" + foundedItemByIdOld);
             Console.WriteLine("Wyszukanie po tytule (wersja 2):\n" + foundedItemByTitleOld);
+
+
             Console.WriteLine("-----------------------------------------------------------");
             Console.WriteLine("Testy dla bibliotek");
             Console.WriteLine("-----------------------------------------------------------");
@@ -461,7 +521,7 @@ namespace woch_lab3
             Catalog c2 = new("Powieści", []);
             lib1.AddCatalog(c2);
             if (c1 != null) lib1.AddCatalog(c1);
-            Item i3 = new Book("Głos większości", 4, "Nasze wersy", new
+            Item i3 = new Book("Głos większości", 5, "Nasze wersy", new
             DateTime(2061, 03, 08), 800, [a1]);
             lib1.AddItem(i3, "Powieści");
             Console.WriteLine(lib1);
@@ -472,12 +532,14 @@ namespace woch_lab3
             Console.WriteLine(foundedById);
             Console.WriteLine(foundedByTitle);
             Console.WriteLine(foundedByLambda);
+
+
             Console.WriteLine("-----------------------------------------------------------");
             Console.WriteLine("Testy dla dodawania i usuwania przedmiotów");
             Console.WriteLine("-----------------------------------------------------------");
             Catalog c3 = new("Literatura fantastyczna", []);
             Library lib2 = new("Warszawa, Marszałkowska 12", [], [c3]);
-            var bookToAdd = new Book("Lot ku centrum", 5, "Super Press", new
+            var bookToAdd = new Book("Lot ku centrum", 8, "Super Press", new
             DateTime(2060, 06, 01), 350, [a1]);
             c3.AddItem(bookToAdd);
             Console.WriteLine("Po dodaniu książki:");
@@ -485,8 +547,10 @@ namespace woch_lab3
             c3.RemoveItem(bookToAdd);
             Console.WriteLine("Po usunięciu książki:");
             Console.Write(c3.GetAllItems("Pozycje w katalogu:"));
+
+
             Console.WriteLine("-----------------------------------------------------------");
-            Console.WriteLine("Testy wyszukiwania z bardziej złożonymi warunkami");
+            Console.WriteLine("\nTesty wyszukiwania z bardziej złożonymi warunkami");
             Console.WriteLine("-----------------------------------------------------------");
             var foundByMultipleConditions =
             lib1?.FindItem(x => x.Publisher == "ITPress" && x.DateOfIssue >= new
@@ -551,6 +615,33 @@ namespace woch_lab3
             );
             if (groupedByNationality is not null) foreach (var e in groupedByNationality)
                     Console.WriteLine(e);
+
+
+            Console.WriteLine("-----------------------------------------------------------");
+            Console.WriteLine("Testy filtrowania książek po tematyce");
+            Console.WriteLine("-----------------------------------------------------------");
+            ((Book)i1).AddCategory("programowanie");
+            ((Book)i1).AddCategory("algorytmy");
+
+            ((Book)i4).AddCategory("bazy danych");
+            ((Book)i4).AddCategory("programowanie");
+
+            ((Book)i3).AddCategory("fantastyka");
+            ((Book)i3).AddCategory("powieść");
+
+            Console.WriteLine("Książki z kategorii 'programowanie':");
+            foreach (var b in c1.FilterBooksByCategory("programowanie"))
+                Console.WriteLine(b);
+
+            Console.WriteLine("\nKsiążki z kategorii 'algorytmy':");
+            foreach (var b in c1.FilterBooksByCategory("algorytmy"))
+                Console.WriteLine(b);
+
+            Console.WriteLine("\nKsiążki z kategorii 'bazy danych':");
+            foreach (var b in c1.FilterBooksByCategory("bazy danych"))
+                Console.WriteLine(b);
+
+
         }
     }
 }

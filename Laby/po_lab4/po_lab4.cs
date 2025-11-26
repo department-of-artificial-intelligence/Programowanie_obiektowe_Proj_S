@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace po_lab04
 {
     class Subject
     {
-        public string _specialization;
+        private string _specialization;
         private int _semester;
-        public int _hoursCount;
+        private int _hoursCount;
 
         public string Name { get; set; }
         public string Specialization
@@ -42,7 +44,7 @@ namespace po_lab04
             }
         }
 
-        public Subject(): this(string.Empty, string.Empty, 1, 1) { }
+        public Subject() : this(string.Empty, string.Empty, 1, 1) { }
         public Subject(string name, string specialization, int semester, int hoursCount) {
             this.Name = name;
             this.Specialization = specialization;
@@ -59,16 +61,16 @@ namespace po_lab04
 
     class FinalGrade
     {
-        public Subject _subject;
-        public double _value;
+        private Subject _subject;
+        private double _value;
 
         public Subject Subject { get => _subject;
             set
             {
-                if(value is null) throw new ArgumentNullException("Przedmiot nie może być pusty ani przyjmowac wartości null.");
+                if (value is null) throw new ArgumentNullException("Przedmiot nie może być pusty ani przyjmowac wartości null.");
                 _subject = value;
             }
-        
+
         }
         public double Value
         {
@@ -95,7 +97,7 @@ namespace po_lab04
         }
     }
 
-    interface IClassWithIList { }
+    public interface IClassWithIList { }
 
 
     public abstract class Person
@@ -123,7 +125,7 @@ namespace po_lab04
         public string AcademicTitle { get; set; } = string.Empty;
         public string Position { get; set; } = string.Empty;
 
-        public Lecturer() { }
+        public Lecturer() : base() { }
         public Lecturer(string firstName, string lastName, DateTime dateOfBirth, string academicTitle, string position)
             : base(firstName, lastName, dateOfBirth)
         {
@@ -143,7 +145,7 @@ namespace po_lab04
         public static int Id => _id;
 
         public IList<FinalGrade> Grades { get; set; } = new List<FinalGrade>();
-        public string Specialization {  get; set; }
+        public string Specialization { get; set; }
 
         public int _group;
         public int Group
@@ -159,9 +161,12 @@ namespace po_lab04
         public int Semester { get; set; }
         public int IndexId { get; set; } = 0;
         public double AverageGrades { get => Grades.Average(g => g.Value); }
-   
-        public Student() { _id++;  }
-        public Student(string firstName, string lastName, DateTime dateOfBirth, string specialization, int group, int semester): base(firstName, lastName, dateOfBirth)
+
+        public Student() : base()
+        {
+            _id++;
+        }
+        public Student(string firstName, string lastName, DateTime dateOfBirth, string specialization, int group, int semester) : base(firstName, lastName, dateOfBirth)
         {
             Specialization = specialization;
             Group = group;
@@ -225,7 +230,7 @@ namespace po_lab04
         }
     }
 
-    
+
     static class ClassWithListGetListExtension
     {
         public static IList<T>? GetList<T>(this IClassWithIList obj)
@@ -235,7 +240,7 @@ namespace po_lab04
             var property = obj
                 .GetType()
                 .GetProperties()
-                .FirstOrDefault(p => 
+                .FirstOrDefault(p =>
                 p.PropertyType == typeof(IList<T>));
 
             if (property is null) return null;
@@ -251,17 +256,17 @@ namespace po_lab04
             if (obj is null) return;
 
             var collection = obj.GetList<T>();
-            if(collection is null) return;
+            if (collection is null) return;
 
             collection.Add(itemToAdd);
         }
 
         public static void AddRange<T>(this IClassWithIList obj, IList<T> itemsToAdd)
         {
-            if(obj is null) return;
+            if (obj is null) return;
 
             var collection = obj.GetList<T>();
-            if(collection is null) return;
+            if (collection is null) return;
 
             foreach (var item in itemsToAdd)
                 collection.Add(item);
@@ -269,7 +274,7 @@ namespace po_lab04
 
         public static void Clear<T>(this IClassWithIList obj)
         {
-            if(obj is null) return;
+            if (obj is null) return;
 
             var collection = obj.GetList<T>();
             if (collection is null) return;
@@ -279,7 +284,7 @@ namespace po_lab04
 
         public static bool Contains<T>(this IClassWithIList obj, T itemToCheck)
         {
-            if (obj is null ) return false;
+            if (obj is null) return false;
 
             var collection = obj.GetList<T>();
             if (collection is null) return false;
@@ -289,7 +294,7 @@ namespace po_lab04
 
         public static int IndexOf<T>(this IClassWithIList obj, T itemToFind)
         {
-            if( obj is null ) return -1;
+            if (obj is null) return -1;
 
             var collection = obj.GetList<T>();
             if (collection is null) return -1;
@@ -314,7 +319,7 @@ namespace po_lab04
             var collection = obj.GetList<T>();
             if (collection is null) return false;
 
-            if(index < 0 || index >= collection.Count) return false;
+            if (index < 0 || index >= collection.Count) return false;
 
             collection.RemoveAt(index);
 
@@ -323,7 +328,7 @@ namespace po_lab04
 
         public static void Update<T>(this IClassWithIList obj, T oldItem, T newItem)
         {
-            if(obj is null || newItem is null) return;
+            if (obj is null || newItem is null) return;
 
             var collection = obj.GetList<T>();
             if (collection is null) return;
@@ -332,57 +337,103 @@ namespace po_lab04
             collection[index] = newItem;
         }
 
-        public static void ForEach<T>(this IClassWithIList obj,  Action<T> action)
+        public static void ForEach<T>(this IClassWithIList obj, Action<T> action)
         {
-            if( obj is null || action is null) return;
+            if (obj is null || action is null) return;
 
             var collection = obj.GetList<T>();
             if (collection is null) return;
 
-            foreach(var e in collection) action(e);
+            foreach (var e in collection) action(e);
         }
 
         public static void RemoveAll<T>(this IClassWithIList obj, Func<T, bool> predicate)
         {
-            if(obj is null) return;
+            if (obj is null) return;
 
             var collection = obj.GetList<T>();
-            if(collection is null) return;
+            if (collection is null) return;
 
             var toRemove = collection.Where(predicate).ToList();
 
             foreach (var item in toRemove)
                 collection.Remove(item);
         }
+    }
 
-        public static IEnumerable<string> GroupBy<T, TKey>(this IClassWithIList obj, Func<T, TKey> keySelector)
+
+    public static class ClassWithIListGroupingExtension
+    {
+
+        public class GroupReport<TKey, TElement>
         {
-            if (obj is null || keySelector is null)
-                return Enumerable.Empty<string>();
+            public TKey Key { get; set; }
+            public IList<TElement> Elements { get; set; }
 
-            var collection = obj.GetList<T>();
-            if (collection is null)
-                return Enumerable.Empty<string>();
-
-            return collection
-                .GroupBy(keySelector)
-                .Select(gr => $"Grupa: {gr.Key}\n  {string.Join("\n  ", gr)}");
+            public override string ToString()
+            {
+                var elementsStrings = Elements.Select(item => $"    - {item}");
+                var elementsBlock = string.Join("\n", elementsStrings);
+                return $"  Grupa: {Key}\n{elementsBlock}";
+            }
         }
 
-        public static IEnumerable<string> GroupBy<T, TKey, TElement>(this IClassWithIList obj, Func<T, TKey> keySelector, Func<T, TElement> elementSelector)
+        public class GroupReport<TOuterKey, TInnerKey, TElement>
         {
-            if (obj is null || keySelector is null || elementSelector is null)
-                return Enumerable.Empty<string>();
+            public TOuterKey Key { get; set; }
+            public IList<GroupReport<TInnerKey, TElement>> Elements { get; set; }
 
-            var collection = obj.GetList<T>();
-            if (collection is null)
-                return Enumerable.Empty<string>();
-
-            return collection
-                .GroupBy(keySelector, elementSelector)
-                .Select(gr => $"Grupa: {gr.Key}\n  {string.Join("\n  ", gr)}");
+            public override string ToString()
+            {
+                var innerGroupsBlock = string.Join("\n", Elements);
+                return $"Grupa Zewnętrzna: {Key}\n{innerGroupsBlock}";
+            }
         }
 
+        public static List<GroupReport<TKey, T>> GroupBy<T, TKey>(
+            this IClassWithIList obj,
+            Func<T, TKey> groupingKey)
+        {
+            var list = obj.GetList<T>();
+            if (list == null || groupingKey == null)
+            {
+                return new List<GroupReport<TKey, T>>();
+            }
+
+            return list.GroupBy(groupingKey)
+                       .Select(g => new GroupReport<TKey, T>
+                       {
+                           Key = g.Key,
+                           Elements = g.ToList()
+                       })
+                       .ToList();
+        }
+
+        public static List<GroupReport<TOuterKey, TInnerKey, T>> GroupBy<T, TOuterKey, TInnerKey>(
+            this IClassWithIList obj,
+            Func<T, TOuterKey> outerKeySelector,
+            Func<T, TInnerKey> innerKeySelector)
+        {
+            var list = obj.GetList<T>();
+            if (list == null || outerKeySelector == null || innerKeySelector == null)
+            {
+                return new List<GroupReport<TOuterKey, TInnerKey, T>>();
+            }
+
+            return list.GroupBy(outerKeySelector)
+                       .Select(outerGroup => new GroupReport<TOuterKey, TInnerKey, T>
+                       {
+                           Key = outerGroup.Key,
+                           Elements = outerGroup.GroupBy(innerKeySelector)
+                                                .Select(innerGroup => new GroupReport<TInnerKey, T>
+                                                {
+                                                    Key = innerGroup.Key,
+                                                    Elements = innerGroup.ToList()
+                                                })
+                                                .ToList()
+                       })
+                       .ToList();
+        }
     }
 
 
@@ -390,10 +441,7 @@ namespace po_lab04
 
 
 
-
-
-
-    class Program
+class Program
     {
         static void Main()
         {

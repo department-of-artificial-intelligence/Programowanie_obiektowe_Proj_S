@@ -1,56 +1,50 @@
-﻿using Project.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model
+﻿namespace Project.Model
 {
-    public class Driver : IClassWithIEnum
+    public class Driver
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public bool IsAvailable { get; set; } = true;
-        public Vehicle? AssignedVehicle { get; private set; }
-
-        public Driver(int id, string firstName, string lastName)
+        public enum DriverStatus
         {
-            Id = id ;
-            FirstName = firstName ;
-            LastName = lastName ;
+            Available,
+            Assigned,
+            Unavailable
+        }
+
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string LicenseNumber { get; set; } = string.Empty;
+
+        public DriverStatus Status { get; set; } = DriverStatus.Available;
+
+        public Vehicle? AssignedVehicle { get; set; }
+
+        public bool IsAvailable => Status == DriverStatus.Available;
+
+        public Driver(int id, string firstName, string lastName, string licenseNumber)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            LicenseNumber = licenseNumber;
         }
 
         public void AssignVehicle(Vehicle vehicle)
         {
-            if(IsAvailable && vehicle.IsAvailable)
-            {
-                AssignedVehicle = vehicle;
-                IsAvailable = false;
-                vehicle.AssignDriver(this);
-                Console.WriteLine($"Vehicle with ID: {vehicle.Id} ({vehicle.RegistrationNumber}) assigned to driver {FirstName} {LastName}.");
-            }
+            AssignedVehicle = vehicle;
+            Status = DriverStatus.Assigned;
         }
 
-        public void CompleteOrder()
+        public void MarkAsAvailable()
         {
-            if (AssignedVehicle != null) {
-                Console.WriteLine($"Driver {FirstName} {LastName} has completed the order with vehicle with ID: {AssignedVehicle.Id} ({AssignedVehicle.RegistrationNumber}");
-                IsAvailable = true;
-                AssignedVehicle.MarkAsAvailable();
-                AssignedVehicle = null;
-            }
+            AssignedVehicle = null;
+            Status = DriverStatus.Available;
         }
 
         public override string ToString()
         {
-            return $"{FirstName} {LastName}, ID: {Id}. Is available? - {IsAvailable}";
-        }
-
-        public void Print()
-        {
-            throw new NotImplementedException();
+            return $"Driver ID: {Id}, Name: {FirstName} {LastName}, " +
+                   $"License: {LicenseNumber}, OStatus: {Status}, " +
+                   $"Assigned vehicle: {(AssignedVehicle != null ? AssignedVehicle.RegistrationNumber : "None")}";
         }
     }
 }
