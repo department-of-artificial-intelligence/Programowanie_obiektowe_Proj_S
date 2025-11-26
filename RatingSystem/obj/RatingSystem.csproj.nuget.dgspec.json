@@ -4,14 +4,14 @@
     "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj": {}
   },
   "projects": {
-    "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj": {
+    "/home/roman/RiderProjects/RatingSystem/Domain/Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj",
-        "projectName": "RatingSystem",
-        "projectPath": "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj",
+        "projectUniqueName": "/home/roman/RiderProjects/RatingSystem/Domain/Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "/home/roman/RiderProjects/RatingSystem/Domain/Domain.csproj",
         "packagesPath": "/home/roman/.nuget/packages/",
-        "outputPath": "/home/roman/RiderProjects/RatingSystem/RatingSystem/obj/",
+        "outputPath": "/home/roman/RiderProjects/RatingSystem/Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/roman/.nuget/NuGet/NuGet.Config"
@@ -43,6 +43,85 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/roman/.dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj",
+        "projectName": "RatingSystem",
+        "projectPath": "/home/roman/RiderProjects/RatingSystem/RatingSystem/RatingSystem.csproj",
+        "packagesPath": "/home/roman/.nuget/packages/",
+        "outputPath": "/home/roman/RiderProjects/RatingSystem/RatingSystem/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/roman/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net10.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net10.0": {
+            "targetAlias": "net10.0",
+            "projectReferences": {
+              "/home/roman/RiderProjects/RatingSystem/Domain/Domain.csproj": {
+                "projectPath": "/home/roman/RiderProjects/RatingSystem/Domain/Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net10.0": {
+          "targetAlias": "net10.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

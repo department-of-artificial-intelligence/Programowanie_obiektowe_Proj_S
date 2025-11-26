@@ -7,6 +7,11 @@ public class Rating
     private int _value;
     private string _comment;
 
+    public Service Service
+    {
+        get;
+        set;
+    }
     public int Id
     {
         get => _id;
