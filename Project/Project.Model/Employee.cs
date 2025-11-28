@@ -11,7 +11,7 @@ namespace Project.Model
         Manager, Mechanic
     }
 
-    internal class Employee : Person
+    public class Employee : Person
     {
         public int EmployeeId { get; set; }
         public EmployeeRole Role { get; set; }

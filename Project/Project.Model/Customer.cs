@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class Customer : Person
+    public class Customer : Person
     {
         private List<Bicycle> _bicycles;
 

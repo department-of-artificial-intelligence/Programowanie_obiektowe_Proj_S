@@ -2,7 +2,7 @@
 
 namespace Project.Model
 {
-    internal class Station
+    public class Station
     {
         public string Location { get; set; }
         public int Amount { get; set; }

@@ -12,7 +12,7 @@ namespace Project.Model
         Rented,
         Maintenance
     }
-    internal class Bicycle
+    public class Bicycle
     {
         public int Id {  get; set; }
         public string Model { get; set; }
@@ -41,7 +41,6 @@ namespace Project.Model
 
         public override string ToString()
         {
-            
             return $"ID: {Id}, {Model} ({Type}) - {Price} EUR/hour";
         }
     }
