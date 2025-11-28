@@ -52,6 +52,7 @@ public class RentalLogic : IRental
             Car = car,
             Customer = customer,
             Branch = branch,
+            StartDate = DateTime.Now,
             Days = days,
             Cost = car.PricePerDay * days,
         };

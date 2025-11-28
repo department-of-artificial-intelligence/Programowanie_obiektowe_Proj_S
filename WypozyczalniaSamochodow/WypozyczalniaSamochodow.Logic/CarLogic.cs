@@ -25,7 +25,7 @@ public class CarLogic : ICar
         foreach (var car in _cars)
         {
             var branch = _branches.FirstOrDefault(b => b.Id == car.BranchId);
-            Console.WriteLine($"{car} | Oddział: {branch?.Name ?? "Nieznany"}");
+            Console.WriteLine($"{car} | Oddział: {branch?.Name} {branch?.City}");
         }
     }
 
@@ -45,7 +45,7 @@ public class CarLogic : ICar
         _cars.Add(car);
         branch.AddCar(car);
 
-        Console.WriteLine($"Dodano samochód {car.Brand} {car.Model} do oddziału {branch.Name}");
+        Console.WriteLine($"Dodano samochód {car.Brand} {car.Model} do oddziału {branch.Name} {branch.City}");
     }
 
     public void RemoveCar(int carId)

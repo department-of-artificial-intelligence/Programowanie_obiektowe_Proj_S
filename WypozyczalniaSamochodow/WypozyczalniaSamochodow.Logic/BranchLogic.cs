@@ -20,6 +20,7 @@ public class BranchLogic : IBranch
             Console.WriteLine("Brak oddziałów.");
             return;
         }
+
         _branches.ForEach(b => Console.WriteLine(b));
     }
 

@@ -31,6 +31,7 @@ namespace WypozyczalniaSamochodow.Model
         public override string ToString()
         {
             return $"Oddział {Id}: {Name} ({City}), Samochody: {Cars.Count}";
+
         }
     }
 }

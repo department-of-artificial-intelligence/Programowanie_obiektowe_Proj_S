@@ -18,9 +18,26 @@
         public int BranchId { get; set; }
         //public Branch Branch { get; set; }
 
+        public Car() { }
+        public Car(int id, string brand, string model, int productionYear, float engineVolume, double avgConsumption, int power, string gearbox, string fuelType, double pricePerDay, bool isAvailable, int branchId)
+        {
+            Id = id;
+            Brand = brand;
+            Model = model;
+            ProductionYear = productionYear;
+            EngineVolume = engineVolume;
+            AvgConsumption = avgConsumption;
+            Power = power;
+            Gearbox = gearbox;
+            FuelType = fuelType;
+            PricePerDay = pricePerDay;
+            IsAvailable = isAvailable;
+            BranchId = branchId;
+        }
+
         public override string ToString()
         {
-            return $"[{Id}] {Brand} {Model} ({ProductionYear}) | {PricePerDay} zł/dzień | {(IsAvailable ? "Dostępny" : "Niedostępny")}";
+            return $"[{Id}] {Brand} {Model} ({ProductionYear}) | {Power}KM | {PricePerDay} zł/dzień | {(IsAvailable ? "Dostępny" : "Niedostępny")}";
         }
     }
 }
