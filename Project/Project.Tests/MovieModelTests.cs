@@ -4,23 +4,23 @@ using Project.Model;
 public class MovieModelTests
 {
     
-    private List<Author> Authors { get; set; }
-    private List<Movie> Movies { get; set; }
+    private List<Author> Authors { get; set; } = new List<Author>();
+    private List<Movie> Movies { get; set; } = new List<Movie>();
 
-    private List<User> Users { get; set; }
+    private List<User> Users { get; set; } = new List<User>();
 
-    private List<MovieMark> MovieMarks { get; set; }
+    private List<MovieMark> MovieMarks { get; set; } = new List<MovieMark>();
 
-    private List<Review> Reviews { get; set; }
+    private List<Review> Reviews { get; set; } = new List<Review>();
 
     public MovieModelTests() {
     
         // Lists Initialization
-        Authors = new List<Author>();
-        Movies = new List<Movie>();
-        Users = new List<User>();
-        MovieMarks = new List<MovieMark>();
-        Reviews = new List<Review>();
+        //Authors = new List<Author>();
+        //Movies = new List<Movie>();
+        //Users = new List<User>();
+        //MovieMarks = new List<MovieMark>();
+        //Reviews = new List<Review>();
 
         // List Initialization with Mock Data
         // TODO: Create Data Initializer with advanced data generation
@@ -62,10 +62,10 @@ public class MovieModelTests
         Reviews.Add(new Review(1, Users[2], Movies[4], 1.8f, "Boring!"));
         Reviews.Add(new Review(2, Users[3], Movies[3], 5.0f, "Amazing!"));
         Reviews.Add(new Review(3, Users[4], Movies[0], 5.0f, "Excellent!"));
-        Reviews.Add(new Review(4, Users[5], Movies[5], 5.0f, "Perfect!!"));
+        Reviews.Add(new Review(4, Users[5], Movies[4], 5.0f, "Perfect!!"));
         Reviews.Add(new Review(5, Users[1], Movies[1], 3.0f, "Normal!"));
         Reviews.Add(new Review(6, Users[2], Movies[2], 2.5f, "I don't like this film..."));
-        Reviews.Add(new Review(7, Users[3], Movies[6], 4.5f, "I would like to watch it one more time!!"));
+        Reviews.Add(new Review(7, Users[3], Movies[1], 4.5f, "I would like to watch it one more time!!"));
         Reviews.Add(new Review(8, Users[4], Movies[4], 5.0f, "Perfect!"));
         Reviews.Add(new Review(9, Users[5], Movies[3], 3.3f, "Good!"));
     }
@@ -99,8 +99,8 @@ public class MovieModelTests
 
         User User = new User(Random.Shared.Next(), "Miracle", "qwerty123");
 
-        Assert.Empty(User.Username);
-        Assert.Empty(User.HashPassword);
+        Assert.NotEmpty(User.Username);
+        Assert.NotEmpty(User.HashPassword);
 
         Movie Movie = new Movie(Random.Shared.Next(), "One Frame Man", "Watch 1 fps animation with cropped png frames!", "Enjoy this 1 fps anim.!", Genre.ANIMATION, Author);
 
@@ -119,5 +119,16 @@ public class MovieModelTests
         Assert.NotNull(Review.User);
     }
 
+    [Fact]
+    public void TestLINQMethodsWithMovies()
+    {
+        List<Movie> expected = new List<Movie>();
+        expected.Add(Movies[0]);
+        expected.Add(Movies[4]);
+
+        var actual = Movies.Where(m => m.Genre == Genre.FANTASY);
+
+        Assert.Equal(expected, actual);
+    }
     
 }
