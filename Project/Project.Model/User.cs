@@ -15,6 +15,9 @@ public class User : BaseEntity<int>
         HashPassword = hashPassword;
     }
 
+    [SetsRequiredMembers]
+    public User() : base(0) { }
+
     public override string ToString()
     {
         return $"User: {Username}";

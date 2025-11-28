@@ -23,6 +23,9 @@ public class Movie : BaseEntity<int>
         Author = author;
     }
 
+    [SetsRequiredMembers]
+    public Movie() : base(0) { }
+
     public override string ToString()
     {
         return $"Move:{Title}/{Genre.ToString()}/{TagLine}";

@@ -17,6 +17,8 @@ public class Review : BaseEntity<int>
         Comment = comment;
     }
 
+    [SetsRequiredMembers]
+    public Review() : base(0) { }
     public override string ToString()
     {
         return $"Review for film: {Movie.Title} by {User}: {Rate}/{Comment}";

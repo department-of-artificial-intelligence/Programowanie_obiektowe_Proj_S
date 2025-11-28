@@ -18,4 +18,22 @@ public class ApplicationDbContext : DbContext
     public string DbPath { get; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+
+    // - - - - - - - - - - - - - - - - - -
+    // Temp code | will be deleted soon
+    // - - - - - - - - - - - - - - - - - -
+
+    // Default constructor for usage in Program.cs
+    public ApplicationDbContext() {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        DbPath = System.IO.Path.Join(path, "application.db");
+    }
+
+    // Defining SQLite as Application Database | Use DatabaseConfiguration.cs instead
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => 
+        optionsBuilder.UseSqlite($"Data Source={DbPath}");
+
+
 }

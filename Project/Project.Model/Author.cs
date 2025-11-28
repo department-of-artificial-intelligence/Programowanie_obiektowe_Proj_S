@@ -16,6 +16,9 @@ public class Author : BaseEntity<int>
         BirthDay = birthDay;
     }
 
+    [SetsRequiredMembers]
+    public Author() : base(0) { }
+
     public override string ToString()
     {
         return $"Author: {FirstName}/{LastName}/{BirthDay}";

@@ -88,7 +88,7 @@ public class MovieModelTests
     }
 
     [Fact]
-    public void AssertModelsConstructors ()
+    public void AssertModelsConstructors()
     {
         Author Author = new Author(Random.Shared.Next(), "Aleksander", "Slabunov", new DateTime(2006, 12, 27));
 
@@ -120,7 +120,7 @@ public class MovieModelTests
     }
 
     [Fact]
-    public void TestLINQMethodsWithMovies()
+    public void TestLinqMethodsWithMovies()
     {
         List<Movie> expected = new List<Movie>();
         expected.Add(Movies[0]);
@@ -129,6 +129,19 @@ public class MovieModelTests
         var actual = Movies.Where(m => m.Genre == Genre.FANTASY);
 
         Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void TestBaseEntityList()
+    {
+        var list = new List<BaseEntity<int>>();
+
+        list.AddRange(Movies);
+        list.AddRange(Users);
+        list.AddRange(Authors);
+
+        Assert.NotNull(list);
+        Assert.NotEmpty(list);
     }
     
 }

@@ -18,6 +18,9 @@ public class MovieMark : BaseEntity<int>
         Type = type;
     }
 
+    [SetsRequiredMembers]
+    public MovieMark () : base(0) { }
+
     public override string ToString()
     {
         return $"MovieMark: {Type} for film: {Movie.Title}";
