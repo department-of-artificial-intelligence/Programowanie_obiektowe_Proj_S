@@ -1,6 +1,5 @@
 ﻿using Project.Model;
 using Project.Model.Utils;
-using Project.Reports;
 using Project.Reports.Generators;
 
 namespace Project.ConsoleApp
