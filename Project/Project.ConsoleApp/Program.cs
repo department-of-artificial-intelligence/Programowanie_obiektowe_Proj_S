@@ -24,8 +24,8 @@ Festival f1 = new Festival() {Name ="Festiwal", Artists = [a1, a2, a3], Venue = 
 //Console.WriteLine(c3);
 //Console.WriteLine(f1);
 
-Ticket t1 = new Ticket() { Price = 150 , Concert = c1, Type = Ticket.Ticket_type.Floor};
-Ticket t2 = new Ticket() { Price = 500, Concert = c2, Type = Ticket.Ticket_type.Seated, Sector='B', Seat_Number= 56};
+Ticket t1 = new Ticket() { Price = 150 , Concert = c1, Type = Ticket.TicketType.Floor};
+Ticket t2 = new Ticket() { Price = 500, Concert = c2, Type = Ticket.TicketType.Seated, SeatNumber= "A31"};
 
 Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 40, Tickets = new List<Ticket>{t1,t2} };
 

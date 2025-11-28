@@ -11,26 +11,25 @@ namespace Project.Model
     public class Ticket
     {
         public int Id { get; set; }
-        public float Price { get; set; }
+        public double Price { get; set; }
 
       
         public Concert Concert { get; set; }
-        public enum Ticket_type
+        public enum TicketType
         {
             Floor = 0,
             Seated = 1,
         };
 
-        public Ticket_type Type { get; set; }
+        public TicketType Type { get; set; }
 
-        public char Sector {  get; set; }
-        public int Seat_Number { get; set; }
+        public string SeatNumber {  get; set; }
 
         public Ticket() 
         {
-            Seat_Number = 0;
             Concert = new Concert();
             Concert.TicketsSold += 1;
+            SeatNumber = string.Empty;
         }
         
 
@@ -39,10 +38,10 @@ namespace Project.Model
         public override string ToString()
         {
             string _type= string.Empty;
-            if (Type == Ticket_type.Seated)
+            if (Type == TicketType.Seated)
             {
                 _type = "Miejsce siedzące";
-                return Concert.ToString() + $", {_type}, Miejsce {Sector}{Seat_Number}, {Price} zł";
+                return Concert.ToString() + $", {_type}, Miejsce {SeatNumber}, {Price} zł";
             }
             else
             {
