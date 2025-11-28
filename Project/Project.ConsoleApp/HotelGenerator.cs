@@ -79,6 +79,7 @@ namespace Project.ConsoleApp
             {
                 Floor = number / 10,
                 Number = number,
+                PricePerDay = this._random.Next(1, 10) * 50,
                 Residents = this.GenerateResidents(this._random.Next(1, 3)),
                 HistoricResidents = this.GenerateHistoricResidents(this._random.Next(1, 5))
             };

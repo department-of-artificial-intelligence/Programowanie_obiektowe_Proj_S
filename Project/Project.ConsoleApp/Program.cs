@@ -26,10 +26,15 @@ namespace Project.ConsoleApp
             var peopleWithAgeReportGenerator = new PeopleWithAgeMoreThanProvidedReportGenerator(25);
             var peopleWithAgeReport = peopleWithAgeReportGenerator.GenerateReport(s_hotel);
 
+            var revenueReportGenerator = new RevenueInTimeRangeReportGenerator(DateTime.Now.AddDays(-1000), DateTime.Now);
+            var revenueReport = revenueReportGenerator.GenerateReport(s_hotel);
+            
             Console.WriteLine(ageReport);
             Console.WriteLine(resideReport);
+            Console.WriteLine(revenueReport);
             
             peopleWithAgeReport.Details.People.ForEach(Console.WriteLine);
+            s_hotel.Rooms.ToList().ForEach(Console.WriteLine);
         }
     }
 }

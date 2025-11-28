@@ -1,5 +1,4 @@
 ﻿using Project.Model;
-using Project.Model.Abstract;
 using Project.Reports.Generators;
 
 namespace Project.Reports.Tests
@@ -8,7 +7,7 @@ namespace Project.Reports.Tests
     {
         private ResidentsMock _testData = new ResidentsMock()
         {
-            TestData = new List<Resident>()
+            MockedResidents = new List<Resident>()
             {
                 new Resident()
                 {
@@ -57,15 +56,6 @@ namespace Project.Reports.Tests
 
             Assert.Single(report.Details.People);
             Assert.Equal(this._testData.AllResidents.Last().Person, report.Details.People.First());
-        }
-
-        private class ResidentsMock : IContainsResidents, IContainsCurrentResidents
-        {
-            public required List<Resident> TestData { get; init; }
-
-            public IEnumerable<IResident> AllResidents { get => this.TestData; }
-
-            public IEnumerable<Resident> Residents { get => this.TestData; }
         }
     }
 }
