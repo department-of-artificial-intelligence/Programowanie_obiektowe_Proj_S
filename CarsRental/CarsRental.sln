@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36518.9 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.ConsoleApp", "CarsRental.ConsoleApp\CarsRental.ConsoleApp.csproj", "{1204C225-3782-41C2-B7DF-6DDEBAF3564D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9} = {2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Model", "CarsRental.Model\CarsRental.Model.csproj", "{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{1204C225-3782-41C2-B7DF-6DDEBAF3564D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1204C225-3782-41C2-B7DF-6DDEBAF3564D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1204C225-3782-41C2-B7DF-6DDEBAF3564D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
