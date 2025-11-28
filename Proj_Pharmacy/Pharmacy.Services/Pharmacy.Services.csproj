@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pharmacy.Interfaces\Pharmacy.Interfaces.csproj" />
+		<ProjectReference Include="..\Pharmacy.Models\Pharmacy.Models.csproj" />
+	</ItemGroup>
+</Project>
