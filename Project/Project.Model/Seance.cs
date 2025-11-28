@@ -1,9 +1,9 @@
-﻿using Project.Entities;
+﻿using Project.Models.Common;
 using Project.Utils;
 
 namespace Project.Models
 {
-    public class Seance : BaseEntity
+    public class Seance : Base
     {
         public string FilmId { get; private set; }
         public string AuditoriumId { get; private set; }

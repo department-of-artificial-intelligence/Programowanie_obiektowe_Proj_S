@@ -1,10 +1,10 @@
-﻿using Project.Entities;
-using Project.Interfaces;
+﻿using Project.Interfaces;
+using Project.Models.Common;
 using Project.Utils;
 
 namespace Project.Models
 {
-    public class Film : BaseEntity, IRatable, IListManageable<string>
+    public class Film : Base, IRatable, IListManageable<string>
     {
         public string Title { get; private set; }
         public string Description { get; private set; }

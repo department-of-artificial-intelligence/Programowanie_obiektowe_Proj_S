@@ -1,8 +1,8 @@
-﻿using Project.Entities;
+﻿using Project.Models.Common;
 
 namespace Project.Models
 {
-    public class CinemaNetwork : BaseEntity
+    public class CinemaNetwork : Base
     {
         public string CompanyName { get; private set; }
         public string ManagerName { get; private set; }

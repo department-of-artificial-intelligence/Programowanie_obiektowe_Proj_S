@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Logic.Handlers;
-using Project.Logic.SortingFiltering;
+using Project.Services.Handlers;
+using Project.Services.SortingFiltering;
 
 
 namespace Project.ConsoleApp.Menues

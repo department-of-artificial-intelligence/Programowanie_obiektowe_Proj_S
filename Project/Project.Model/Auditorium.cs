@@ -1,10 +1,10 @@
-﻿using Project.Entities;
-using Project.Interfaces;
+﻿using Project.Interfaces;
+using Project.Models.Common;
 using Project.Utils;
 
 namespace Project.Models
 {
-    public class Auditorium : BaseEntity, IRatable, IListManageable<string>
+    public class Auditorium : Base, IRatable, IListManageable<string>
     {
         public string CinemaId { get; private set; }
         public string Name { get; private set; }

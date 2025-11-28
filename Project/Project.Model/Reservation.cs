@@ -1,8 +1,8 @@
-﻿using Project.Entities;
+﻿using Project.Models.Common;
 
 namespace Project.Models
 {
-    public class Reservation : BaseEntity
+    public class Reservation : Base
     {
         public string SeanceId { get; private set; }
         public string CustomerFirstName { get; private set; }

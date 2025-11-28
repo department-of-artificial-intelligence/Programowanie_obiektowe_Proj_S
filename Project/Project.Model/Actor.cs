@@ -1,8 +1,8 @@
-﻿using Project.Entities;
+﻿using Project.Models.Common;
 
 namespace Project.Models
 {
-    public class Actor : PersonEntity
+    public class Actor : Person
     {
         public string Biography { get; private set; } = string.Empty;
         public double Popularity { get; private set; }

@@ -1,4 +1,4 @@
-﻿using Project.Entities;
+﻿using Project.Models.Common;
 
 namespace Project.Models
 {
@@ -11,7 +11,7 @@ namespace Project.Models
         VIP
     }
 
-    public class Ticket : BaseEntity
+    public class Ticket : Base
     {
         public string ReservationId { get; private set; }
         public string CinemaId { get; private set; }

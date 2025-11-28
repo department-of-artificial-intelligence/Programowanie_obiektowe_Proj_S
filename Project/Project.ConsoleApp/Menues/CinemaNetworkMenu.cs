@@ -1,11 +1,11 @@
 ﻿using Project.ConsoleApp.Helpers;
-using Project.Logic;
-using Project.Logic.SortingFiltering;
+using Project.Services;
+using Project.Services.SortingFiltering;
 using Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Project.Logic.Handlers;
+using Project.Services.Handlers;
 
 namespace Project.ConsoleApp.Menues
 {
