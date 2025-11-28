@@ -17,13 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\Project.Model\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Project.Model\Project.Models.csproj" />
-    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
-    <ProjectReference Include="..\Project.Utils\Project.Utils.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

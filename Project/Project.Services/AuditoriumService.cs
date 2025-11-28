@@ -1,8 +1,8 @@
 ﻿using Project.Models;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services
 {
-    public static class AuditoriumSortingFiltering
+    public class AuditoriumService
     {
         public static List<Auditorium> FilterAuditoriumsByName(List<Auditorium> auditoriums, string name)
         {
@@ -22,6 +22,23 @@ namespace Project.Services.SortingFiltering
         public static List<Auditorium> SortAuditoriumsByMaxCapacity(List<Auditorium> auditoriums)
         {
             return [.. auditoriums.OrderByDescending(a => a.Capacity)];
+        }
+
+        public static void DeleteAuditorium(List<Auditorium> auditoriums, List<Seance> seances,
+                                            List<Reservation> reservations, List<Ticket> tickets, string auditoriumId)
+        {
+            var seancesToDelete = seances.Where(s => s.AuditoriumId == auditoriumId).ToList();
+
+            foreach (var seance in seancesToDelete)
+            {
+                SeanceService.DeleteSeance(seances, reservations, tickets, seance.Id);
+            }
+
+            var auditorium = auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
+            if (auditorium != null)
+            {
+                auditoriums.Remove(auditorium);
+            }
         }
     }
 }

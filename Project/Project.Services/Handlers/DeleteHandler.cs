@@ -4,21 +4,6 @@ namespace Project.Services.Handlers
 {
     public static class DeleteHandler
     {
-        public static void DeleteActor(List<Actor> actors, List<Film> films, string actorId)
-        {
-            foreach (var film in films)
-            {
-                film.RemoveItem(actorId);
-            }
-
-            var actor = actors.FirstOrDefault(a => a.Id == actorId);
-
-            if (actor != null)
-            {
-                actors.Remove(actor);
-            }
-        }
-
         public static void DeleteFilm(List<Film> films, List<Cinema> cinemas, List<Seance> seances,
             List<Reservation> reservations, List<Ticket> tickets, string filmId)
         {
@@ -65,40 +50,6 @@ namespace Project.Services.Handlers
             if (network != null)
             {
                 cinemaNetworks.Remove(network);
-            }
-        }
-
-        public static void DeleteAuditorium(List<Auditorium> auditoriums, List<Seance> seances,
-            List<Reservation> reservations, List<Ticket> tickets, string auditoriumId)
-        {
-            var seancesToDelete = seances.Where(s => s.AuditoriumId == auditoriumId).ToList();
-
-            foreach (var seance in seancesToDelete)
-            {
-                DeleteSeance(seances, reservations, tickets, seance.Id);
-            }
-
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
-            if (auditorium != null)
-            {
-                auditoriums.Remove(auditorium);
-            }
-        }
-
-        public static void DeleteSeance(List<Seance> seances, List<Reservation> reservations,
-            List<Ticket> tickets, string seanceId)
-        {
-            var reservationsToDelete = reservations.Where(r => r.SeanceId == seanceId).ToList();
-
-            foreach (var reservation in reservationsToDelete)
-            {
-                DeleteReservation(reservations, tickets, reservation.Id);
-            }
-
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
-            if (seance != null)
-            {
-                seances.Remove(seance);
             }
         }
 

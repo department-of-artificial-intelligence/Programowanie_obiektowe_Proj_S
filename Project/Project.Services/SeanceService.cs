@@ -1,10 +1,8 @@
 ﻿using Project.Models;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services
 {
-    public static class SeanceSortingFiltering
+    public class SeanceService
     {
         public static List<Seance> FilterSeancesByFilmId(List<Seance> seances, string filmId)
         {
@@ -45,6 +43,23 @@ namespace Project.Services.SortingFiltering
                     ? s.OccupiedSeatIds.Count / (double)auditorium.Capacity
                     : 0;
             })];
+        }
+
+        public static void DeleteSeance(List<Seance> seances, List<Reservation> reservations,
+                                        List<Ticket> tickets, string seanceId)
+        {
+            var reservationsToDelete = reservations.Where(r => r.SeanceId == seanceId).ToList();
+
+            foreach (var reservation in reservationsToDelete)
+            {
+                //DeleteReservation(reservations, tickets, reservation.Id);
+            }
+
+            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            if (seance != null)
+            {
+                seances.Remove(seance);
+            }
         }
     }
 }
