@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.ConsoleApp", "Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Model", "CarsRental.Model\CarsRental.Model.csproj", "{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Tests", "CarsRental.Tests\CarsRental.Tests.csproj", "{72BE0553-C242-47CE-807D-189C1DDA3991}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Logic", "CarsRental.Logic\CarsRental.Logic.csproj", "{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,14 @@ Global
 		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FF6C246-4E2D-4C82-979B-9A31E68D5CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72BE0553-C242-47CE-807D-189C1DDA3991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72BE0553-C242-47CE-807D-189C1DDA3991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72BE0553-C242-47CE-807D-189C1DDA3991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72BE0553-C242-47CE-807D-189C1DDA3991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
