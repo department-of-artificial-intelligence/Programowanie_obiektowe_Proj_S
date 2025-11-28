@@ -156,7 +156,7 @@ namespace Project.ConsoleApp
                 film6.AddItem(actor3.Id);
                 film6.AddItem(actor6.Id);
 
-                // Add films to cinemas' available films
+                // Add films to cinemas available films
                 cinema1.AddItem(film1.Id);
                 cinema1.AddItem(film2.Id);
                 cinema1.AddItem(film3.Id);
@@ -254,7 +254,7 @@ namespace Project.ConsoleApp
                 Console.WriteLine($"Created: {actors.Count} actors, {cinemas.Count} cinemas, {auditoriums.Count} auditoriums,");
                 Console.WriteLine($"{films.Count} films, {seances.Count} seances, {reservations.Count} reservations,");
                 Console.WriteLine($"{tickets.Count} tickets, {cinemaNetworks.Count} cinema networks.");
-                Thread.Sleep(2000); // Brief pause to read the summary
+                Thread.Sleep(2000);
             }
             catch (Exception ex)
             {

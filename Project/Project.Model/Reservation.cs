@@ -73,6 +73,9 @@ namespace Project.Models
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email is required", nameof(email));
 
+            if (string.IsNullOrWhiteSpace(phone))
+                throw new ArgumentException("Phone is required", nameof(phone));
+
             CustomerFirstName = firstName;
             CustomerLastName = lastName;
             CustomerEmail = email;
@@ -80,6 +83,7 @@ namespace Project.Models
 
             MarkAsUpdated();
         }
+
 
         public override string ToString()
         {

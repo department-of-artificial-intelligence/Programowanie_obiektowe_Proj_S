@@ -46,7 +46,7 @@
             if (string.IsNullOrWhiteSpace(nationality))
                 throw new ArgumentException("Nationality is required", nameof(nationality));
 
-            if (birthDate > DateTime.Now.AddYears(-5))
+            if (birthDate > DateTime.Now)
                 throw new ArgumentException("Invalid birth date", nameof(birthDate));
         }
 

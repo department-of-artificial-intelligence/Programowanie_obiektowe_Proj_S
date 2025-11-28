@@ -2,6 +2,6 @@
 {
     public static class IdGenerator
     {
-        public static string Generate() => DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        public static string Generate() => DateTime.Now.ToString("yyyyMMddHHmmssFFFFFFF");
     }
 }

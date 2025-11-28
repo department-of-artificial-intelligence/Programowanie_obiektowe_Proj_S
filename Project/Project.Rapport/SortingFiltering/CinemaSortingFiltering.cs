@@ -14,7 +14,7 @@ namespace Project.Logic.SortingFiltering
             return [.. cinemas.Where(c => c.Name.Contains(name, StringComparison.OrdinalIgnoreCase))];
         }
 
-        public static List<Cinema> FilterCinemasWhereFilmAvailable(List<Cinema> cinemas, string filmId)
+        public static List<Cinema> FilterCinemasWhereFilmAvailable(List<Cinema> cinemas, string? filmId)
         {
             return [.. cinemas.Where(c => c.Items.Contains(filmId))];
         }

@@ -20,4 +20,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Entities\Project.Entities.csproj" />
+    <ProjectReference Include="..\Project.Interfaces\Project.Interfaces.csproj" />
+    <ProjectReference Include="..\Project.Model\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Rapport\Project.Logic.csproj" />
+    <ProjectReference Include="..\Project.Utils\Project.Utils.csproj" />
+  </ItemGroup>
+
 </Project>
