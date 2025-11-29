@@ -1,9 +1,9 @@
 ﻿using Project.Models.Common;
-using Project.Services.SortingFiltering;
+using Project.Services.Common;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services.Common
 {
-    public class GenericSortingTests
+    public class BaseServiceTests
     {
         private class TestEntity : Base
         {
@@ -33,7 +33,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = GenericSorting.SortByTimeNewest(entities);
+            var result = BaseService.SortByTimeNewest(entities);
 
             // Assert
             Assert.Equal("Newest", result[0].Name);
@@ -53,7 +53,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = GenericSorting.SortByTimeOldest(entities);
+            var result = BaseService.SortByTimeOldest(entities);
 
             // Assert
             Assert.Equal("Oldest", result[0].Name);
@@ -68,7 +68,7 @@ namespace Project.Tests.Logic
             var emptyList = new List<TestEntity>();
 
             // Act
-            var result = GenericSorting.SortByTimeNewest(emptyList);
+            var result = BaseService.SortByTimeNewest(emptyList);
 
             // Assert
             Assert.Empty(result);
@@ -81,7 +81,7 @@ namespace Project.Tests.Logic
             var emptyList = new List<TestEntity>();
 
             // Act
-            var result = GenericSorting.SortByTimeOldest(emptyList);
+            var result = BaseService.SortByTimeOldest(emptyList);
 
             // Assert
             Assert.Empty(result);
@@ -97,7 +97,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = GenericSorting.SortByTimeNewest(singleItem);
+            var result = BaseService.SortByTimeNewest(singleItem);
 
             // Assert
             Assert.Single(result);
@@ -114,7 +114,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = GenericSorting.SortByTimeOldest(singleItem);
+            var result = BaseService.SortByTimeOldest(singleItem);
 
             // Assert
             Assert.Single(result);
@@ -134,7 +134,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = GenericSorting.SortByTimeNewest(entities);
+            var result = BaseService.SortByTimeNewest(entities);
 
             // Assert
             Assert.Equal(3, result.Count);

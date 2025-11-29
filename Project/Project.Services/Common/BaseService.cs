@@ -1,8 +1,8 @@
 ﻿using Project.Models.Common;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services.Common
 {
-    public static class GenericSorting
+    public static class BaseService
     {
         public static List<T> SortByTimeNewest<T>(List<T> entities) where T : Base
         {

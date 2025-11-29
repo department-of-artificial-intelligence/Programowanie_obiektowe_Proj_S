@@ -1,13 +1,13 @@
-﻿using Project.Services.SortingFiltering;
+﻿using Project.Services;
 using Project.Models;
 
 namespace Project.Tests.Logic
 {
-    public class CinemaSortingFilteringTests
+    public class CinemaServiceTests
     {
         private readonly List<Cinema> _cinemas;
 
-        public CinemaSortingFilteringTests()
+        public CinemaServiceTests()
         {
             _cinemas =
             [
@@ -44,7 +44,7 @@ namespace Project.Tests.Logic
         public void SortByNumberOfAvailableFilms_ReturnsCinemasInDescendingOrder()
         {
             // Act
-            var result = CinemaSortingFiltering.SortByNumberOfAvailableFilms(_cinemas);
+            var result = CinemaService.SortByNumberOfAvailableFilms(_cinemas);
 
             // Assert
             Assert.Equal(3, result[0].Items.Count);
@@ -56,7 +56,7 @@ namespace Project.Tests.Logic
         public void FilterCinemasByName_ValidName_ReturnsMatchingCinemas()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasByName(_cinemas, "Cinema");
+            var result = CinemaService.FilterCinemasByName(_cinemas, "Cinema");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -67,7 +67,7 @@ namespace Project.Tests.Logic
         public void FilterCinemasByName_CaseInsensitive_ReturnsMatchingCinemas()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasByName(_cinemas, "multiplex");
+            var result = CinemaService.FilterCinemasByName(_cinemas, "multiplex");
 
             // Assert
             Assert.Single(result);
@@ -78,7 +78,7 @@ namespace Project.Tests.Logic
         public void FilterCinemasByName_EmptyString_ReturnsAllCinemas()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasByName(_cinemas, "");
+            var result = CinemaService.FilterCinemasByName(_cinemas, "");
 
             // Assert
             Assert.Equal(_cinemas.Count, result.Count);
@@ -88,7 +88,7 @@ namespace Project.Tests.Logic
         public void FilterCinemasWhereFilmAvailable_ValidFilmId_ReturnsCinemasWithFilm()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasWhereFilmAvailable(_cinemas, "film1");
+            var result = CinemaService.FilterCinemasWhereFilmAvailable(_cinemas, "film1");
 
             // Assert
             Assert.Equal(3, result.Count);
@@ -98,7 +98,7 @@ namespace Project.Tests.Logic
         public void FilterCinemasWhereFilmAvailable_FilmNotAvailable_ReturnsEmptyList()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasWhereFilmAvailable(_cinemas, "nonexistent-film");
+            var result = CinemaService.FilterCinemasWhereFilmAvailable(_cinemas, "nonexistent-film");
 
             // Assert
             Assert.Empty(result);
@@ -108,10 +108,32 @@ namespace Project.Tests.Logic
         public void FilterCinemasWhereFilmAvailable_NullFilmId_ReturnsEmptyList()
         {
             // Act
-            var result = CinemaSortingFiltering.FilterCinemasWhereFilmAvailable(_cinemas, null);
+            var result = CinemaService.FilterCinemasWhereFilmAvailable(_cinemas, null);
 
             // Assert
             Assert.Empty(result);
+        }
+
+        [Fact]
+        public void DeleteCinema_ValidCinemaId_RemovesCinemaAndRelatedData()
+        {
+            // Arrange
+            var cinemas = new List<Cinema>
+            {
+                new("Test Cinema", "Address", "+380441234567", "test@test.com", "Manager")
+            };
+            var auditoriums = new List<Auditorium>();
+            var seances = new List<Seance>();
+            var reservations = new List<Reservation>();
+            var tickets = new List<Ticket>();
+
+            var cinemaId = cinemas[0].Id;
+
+            // Act
+            CinemaService.DeleteCinema(cinemas, auditoriums, seances, reservations, tickets, cinemaId);
+
+            // Assert
+            Assert.Empty(cinemas);
         }
     }
 }

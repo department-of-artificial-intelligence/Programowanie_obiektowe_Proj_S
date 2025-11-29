@@ -1,11 +1,7 @@
 ﻿using Project.ConsoleApp.Helpers;
-using Project.Services;
-using Project.Services.SortingFiltering;
 using Project.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Project.Services.Handlers;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -58,11 +54,11 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestNetworks = GenericSorting.SortByTimeNewest(cinemaNetworks);
+                        var newestNetworks = BaseService.SortByTimeNewest(cinemaNetworks);
                         DisplayHelper.DisplayCinemaNetworks(newestNetworks, "Cinema Networks (Newest First)");
                         break;
                     case "2":
-                        var oldestNetworks = GenericSorting.SortByTimeOldest(cinemaNetworks);
+                        var oldestNetworks = BaseService.SortByTimeOldest(cinemaNetworks);
                         DisplayHelper.DisplayCinemaNetworks(oldestNetworks, "Cinema Networks (Oldest First)");
                         break;
                     case "0": return;
@@ -222,7 +218,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteCinemaNetwork(cinemaNetworks, id);
+                    CinemaNetworkService.DeleteCinemaNetwork(cinemaNetworks, id);
                     Console.WriteLine("Cinema network deleted successfully!");
                 }
                 else

@@ -1,14 +1,14 @@
-﻿using Project.Services.SortingFiltering;
+﻿using Project.Services;
 using Project.Models;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services
 {
-    public class SeanceSortingFilteringTests
+    public class SeanceServiceTests
     {
         private readonly List<Seance> _seances;
         private readonly List<Auditorium> _auditoriums;
 
-        public SeanceSortingFilteringTests()
+        public SeanceServiceTests()
         {
             _auditoriums =
             [
@@ -60,7 +60,7 @@ namespace Project.Tests.Logic
         public void FilterSeancesByFilmId_ValidFilmId_ReturnsMatchingSeances()
         {
             // Act
-            var result = SeanceSortingFiltering.FilterSeancesByFilmId(_seances, "film1");
+            var result = SeanceService.FilterSeancesByFilmId(_seances, "film1");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -71,7 +71,7 @@ namespace Project.Tests.Logic
         public void FilterSeancesByFilmId_NonExistentFilmId_ReturnsEmptyList()
         {
             // Act
-            var result = SeanceSortingFiltering.FilterSeancesByFilmId(_seances, "nonexistent");
+            var result = SeanceService.FilterSeancesByFilmId(_seances, "nonexistent");
 
             // Assert
             Assert.Empty(result);
@@ -81,10 +81,10 @@ namespace Project.Tests.Logic
         public void FilterSeancesByFilmId_NullOrEmptyInput_ReturnsEmptyList()
         {
             // Act & Assert
-            Assert.Empty(SeanceSortingFiltering.FilterSeancesByFilmId(null!, "film1"));
-            Assert.Empty(SeanceSortingFiltering.FilterSeancesByFilmId([], "film1"));
-            Assert.Empty(SeanceSortingFiltering.FilterSeancesByFilmId(_seances, null!));
-            Assert.Empty(SeanceSortingFiltering.FilterSeancesByFilmId(_seances, ""));
+            Assert.Empty(SeanceService.FilterSeancesByFilmId(null!, "film1"));
+            Assert.Empty(SeanceService.FilterSeancesByFilmId([], "film1"));
+            Assert.Empty(SeanceService.FilterSeancesByFilmId(_seances, null!));
+            Assert.Empty(SeanceService.FilterSeancesByFilmId(_seances, ""));
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Project.Tests.Logic
             var auditoriumId = _auditoriums[0].Id;
 
             // Act
-            var result = SeanceSortingFiltering.FilterSeancesByAuditoriumId(_seances, auditoriumId);
+            var result = SeanceService.FilterSeancesByAuditoriumId(_seances, auditoriumId);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -105,7 +105,7 @@ namespace Project.Tests.Logic
         public void SortSeancesByStartTime_ReturnsSeancesInAscendingOrder()
         {
             // Act
-            var result = SeanceSortingFiltering.SortSeancesByStartTime(_seances);
+            var result = SeanceService.SortSeancesByStartTime(_seances);
 
             // Assert
             for (int i = 0; i < result.Count - 1; i++)
@@ -119,7 +119,7 @@ namespace Project.Tests.Logic
         public void SortSeancesByPrice_ReturnsSeancesInAscendingOrder()
         {
             // Act
-            var result = SeanceSortingFiltering.SortSeancesByPrice(_seances);
+            var result = SeanceService.SortSeancesByPrice(_seances);
 
             // Assert
             for (int i = 0; i < result.Count - 1; i++)
@@ -133,7 +133,7 @@ namespace Project.Tests.Logic
         public void SortSeancesByOccupiedSeats_WithValidData_ReturnsSeancesInDescendingOccupancyRate()
         {
             // Act
-            var result = SeanceSortingFiltering.SortSeancesByOccupiedSeats(_seances, _auditoriums);
+            var result = SeanceService.SortSeancesByOccupiedSeats(_seances, _auditoriums);
 
             // Assert
             for (int i = 0; i < result.Count - 1; i++)
@@ -159,7 +159,7 @@ namespace Project.Tests.Logic
             var testSeances = new List<Seance> { seanceWithUnknownAuditorium };
 
             // Act
-            var result = SeanceSortingFiltering.SortSeancesByOccupiedSeats(testSeances, _auditoriums);
+            var result = SeanceService.SortSeancesByOccupiedSeats(testSeances, _auditoriums);
 
             // Assert
             Assert.Single(result);
@@ -169,8 +169,32 @@ namespace Project.Tests.Logic
         public void SortSeancesByOccupiedSeats_EmptyInput_ReturnsEmptyList()
         {
             // Act & Assert
-            Assert.Empty(SeanceSortingFiltering.SortSeancesByOccupiedSeats([], _auditoriums));
-            Assert.Empty(SeanceSortingFiltering.SortSeancesByOccupiedSeats(null!, _auditoriums));
+            Assert.Empty(SeanceService.SortSeancesByOccupiedSeats([], _auditoriums));
+            Assert.Empty(SeanceService.SortSeancesByOccupiedSeats(null!, _auditoriums));
+        }
+
+        [Fact]
+        public void DeleteSeance_ValidSeanceId_RemovesSeanceAndReservations()
+        {
+            // Arrange
+            var seances = new List<Seance>
+            {
+                new("film1", "auditorium1", DateTime.Now.AddHours(1), 100.0m, 120)
+            };
+            var reservations = new List<Reservation>
+            {
+                new(seances[0].Id, "John", "Doe", "john@test.com", "+380441234567", "Cash")
+            };
+            var tickets = new List<Ticket>();
+
+            var seanceId = seances[0].Id;
+
+            // Act
+            SeanceService.DeleteSeance(seances, reservations, tickets, seanceId);
+
+            // Assert
+            Assert.Empty(seances);
+            Assert.Empty(reservations);
         }
     }
 }

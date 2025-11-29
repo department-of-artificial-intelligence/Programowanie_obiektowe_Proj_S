@@ -52,7 +52,7 @@ namespace Project.Services
 
             foreach (var reservation in reservationsToDelete)
             {
-                //DeleteReservation(reservations, tickets, reservation.Id);
+                ReservationService.DeleteReservation(reservations, tickets, reservation.Id);
             }
 
             var seance = seances.FirstOrDefault(s => s.Id == seanceId);

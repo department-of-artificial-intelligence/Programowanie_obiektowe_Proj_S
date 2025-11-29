@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -54,23 +54,23 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestReservations = GenericSorting.SortByTimeNewest(reservations);
+                        var newestReservations = BaseService.SortByTimeNewest(reservations);
                         DisplayHelper.DisplayReservations(newestReservations, "Reservations (Newest First)");
                         break;
                     case "2":
-                        var oldestReservations = GenericSorting.SortByTimeOldest(reservations);
+                        var oldestReservations = BaseService.SortByTimeOldest(reservations);
                         DisplayHelper.DisplayReservations(oldestReservations, "Reservations (Oldest First)");
                         break;
                     case "3":
                         Console.Write("Enter seance ID to filter: ");
                         string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
-                        var seanceReservations = ReservationSortingFiltering.FilterReservationsBySeanceId(reservations, seanceId);
+                        var seanceReservations = ReservationService.FilterReservationsBySeanceId(reservations, seanceId);
                         DisplayHelper.DisplayReservations(seanceReservations, $"Reservations for seance {seanceId}");
                         break;
                     case "4":
                         Console.Write("Enter payment method to filter: ");
                         string paymentMethod = ConsoleHelper.ReadRequiredString("Payment method");
-                        var paymentReservations = ReservationSortingFiltering.FilterReservationsByPaymentMethod(reservations, paymentMethod);
+                        var paymentReservations = ReservationService.FilterReservationsByPaymentMethod(reservations, paymentMethod);
                         DisplayHelper.DisplayReservations(paymentReservations, $"Reservations with payment method '{paymentMethod}'");
                         break;
                     case "0": return;
@@ -223,7 +223,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteReservation(reservations, tickets, id);
+                    ReservationService.DeleteReservation(reservations, tickets, id);
                     Console.WriteLine("Reservation and all related tickets deleted successfully!");
                 }
                 else

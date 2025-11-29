@@ -1,10 +1,9 @@
 ﻿using Project.Interfaces;
-using Project.Services.SortingFiltering;
 using Project.Models;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services.Common
 {
-    public class RatableSortingTests
+    public class RatableService
     {
         private class TestRatable(string name, double rating, uint totalRatings) : IRatable
         {
@@ -32,7 +31,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = RatableSorting.SortByRating(entities);
+            var result = Project.Services.Common.RatableService.SortByRating(entities);
 
             // Assert
             Assert.Equal(4.8, result[0].Rating);
@@ -52,7 +51,7 @@ namespace Project.Tests.Logic
             };
 
             // Act
-            var result = RatableSorting.SortByPopularity(entities);
+            var result = Project.Services.Common.RatableService.SortByPopularity(entities);
 
             // Assert
             Assert.Equal(100u, result[0].TotalRatings);
@@ -80,7 +79,7 @@ namespace Project.Tests.Logic
             cinemas[2].AddRating(5);
 
             // Act
-            var result = RatableSorting.SortByRating(cinemas);
+            var result = Project.Services.Common.RatableService.SortByRating(cinemas);
 
             // Assert
             Assert.Equal(5.0, result[0].Rating); 
@@ -112,7 +111,7 @@ namespace Project.Tests.Logic
             films[2].AddRating(4);
 
             // Act
-            var result = RatableSorting.SortByPopularity(films);
+            var result = Project.Services.Common.RatableService.SortByPopularity(films);
 
             // Assert
             Assert.Equal(3u, result[0].TotalRatings); 
@@ -127,7 +126,7 @@ namespace Project.Tests.Logic
             var emptyList = new List<TestRatable>();
 
             // Act
-            var result = RatableSorting.SortByRating(emptyList);
+            var result = Project.Services.Common.RatableService.SortByRating(emptyList);
 
             // Assert
             Assert.Empty(result);
@@ -140,7 +139,7 @@ namespace Project.Tests.Logic
             var emptyList = new List<TestRatable>();
 
             // Act
-            var result = RatableSorting.SortByPopularity(emptyList);
+            var result = Project.Services.Common.RatableService.SortByPopularity(emptyList);
 
             // Assert
             Assert.Empty(result);

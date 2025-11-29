@@ -1,8 +1,8 @@
 ﻿using Project.Models;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services
 {
-    public static class TicketSortingFiltering
+    public class TicketService
     {
         public static List<Ticket> FilterTicketsByReservationId(List<Ticket> tickets, string reservationId)
         {
@@ -37,6 +37,15 @@ namespace Project.Services.SortingFiltering
         public static List<Ticket> SortTicketsByFinalPrice(List<Ticket> tickets)
         {
             return [.. tickets.OrderByDescending(t => t.FinalPrice)];
+        }
+
+        public static void DeleteTicket(List<Ticket> tickets, string ticketId)
+        {
+            var ticket = tickets.FirstOrDefault(t => t.Id == ticketId);
+            if (ticket != null)
+            {
+                tickets.Remove(ticket);
+            }
         }
     }
 }

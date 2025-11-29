@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -68,23 +68,23 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestFilms = GenericSorting.SortByTimeNewest(films);
+                        var newestFilms = BaseService.SortByTimeNewest(films);
                         DisplayHelper.DisplayFilms(newestFilms, "Films (Newest First)");
                         break;
                     case "2":
-                        var oldestFilms = GenericSorting.SortByTimeOldest(films);
+                        var oldestFilms = BaseService.SortByTimeOldest(films);
                         DisplayHelper.DisplayFilms(oldestFilms, "Films (Oldest First)");
                         break;
                     case "3":
-                        var ratedFilms = RatableSorting.SortByRating(films);
+                        var ratedFilms = RatableService.SortByRating(films);
                         DisplayHelper.DisplayFilms(ratedFilms, "Films by Rating");
                         break;
                     case "4":
-                        var popularFilms = RatableSorting.SortByPopularity(films);
+                        var popularFilms = RatableService.SortByPopularity(films);
                         DisplayHelper.DisplayFilms(popularFilms, "Films by Popularity");
                         break;
                     case "5":
-                        var actorCountFilms = FilmSortingFiltering.SortFilmsByNumberOfActors(films);
+                        var actorCountFilms = FilmService.SortFilmsByNumberOfActors(films);
                         DisplayHelper.DisplayFilms(actorCountFilms, "Films by Number of Actors");
                         break;
                     case "6":
@@ -92,37 +92,37 @@ namespace Project.ConsoleApp.Menues
                         uint minDuration = ConsoleHelper.ReadUInt();
                         Console.Write("Enter maximum duration (minutes, optional): ");
                         uint maxDuration = ConsoleHelper.ReadUInt(uint.MaxValue);
-                        var durationFilms = FilmSortingFiltering.FilterFilmsByDuration(films, minDuration, maxDuration);
+                        var durationFilms = FilmService.FilterFilmsByDuration(films, minDuration, maxDuration);
                         DisplayHelper.DisplayFilms(durationFilms, $"Films with duration {minDuration}-{maxDuration} minutes");
                         break;
                     case "7":
                         Console.Write("Enter genre: ");
                         string genre = ConsoleHelper.ReadRequiredString("Genre");
-                        var genreFilms = FilmSortingFiltering.FilterFilmsByGenre(films, genre);
+                        var genreFilms = FilmService.FilterFilmsByGenre(films, genre);
                         DisplayHelper.DisplayFilms(genreFilms, $"Films in genre '{genre}'");
                         break;
                     case "8":
                         Console.Write("Filter by age restriction? (true/false): ");
                         bool ageRestriction = ConsoleHelper.ReadBoolean();
-                        var ageFilms = FilmSortingFiltering.FilterFilmsByAgeRestriction(films, ageRestriction);
+                        var ageFilms = FilmService.FilterFilmsByAgeRestriction(films, ageRestriction);
                         DisplayHelper.DisplayFilms(ageFilms, $"Films with age restriction: {ageRestriction}");
                         break;
                     case "9":
                         Console.Write("Enter director name: ");
                         string director = ConsoleHelper.ReadRequiredString("Director");
-                        var directorFilms = FilmSortingFiltering.FilterFilmsByDirector(films, director);
+                        var directorFilms = FilmService.FilterFilmsByDirector(films, director);
                         DisplayHelper.DisplayFilms(directorFilms, $"Films by director '{director}'");
                         break;
                     case "10":
                         Console.Write("Enter title: ");
                         string title = ConsoleHelper.ReadRequiredString("Title");
-                        var titleFilms = FilmSortingFiltering.FilterFilmsByTitle(films, title);
+                        var titleFilms = FilmService.FilterFilmsByTitle(films, title);
                         DisplayHelper.DisplayFilms(titleFilms, $"Films with title containing '{title}'");
                         break;
                     case "11":
                         Console.Write("Enter film ID: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var cinemasWithFilm = CinemaSortingFiltering.FilterCinemasWhereFilmAvailable(cinemas, filmId);
+                        var cinemasWithFilm = CinemaService.FilterCinemasWhereFilmAvailable(cinemas, filmId);
                         DisplayHelper.DisplayCinemas(cinemasWithFilm, $"Cinemas showing film {filmId}");
                         break;
                     case "0": return;
@@ -373,7 +373,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteFilm(films, cinemas, seances, reservations, tickets, id);
+                    FilmService.DeleteFilm(films, cinemas, seances, reservations, tickets, id);
                     Console.WriteLine("Film and all related data deleted successfully!");
                 }
                 else

@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -65,29 +65,29 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestCinemas = GenericSorting.SortByTimeNewest(cinemas);
+                        var newestCinemas = BaseService.SortByTimeNewest(cinemas);
                         DisplayHelper.DisplayCinemas(newestCinemas, "Cinemas (Newest First)");
                         break;
                     case "2":
-                        var oldestCinemas = GenericSorting.SortByTimeOldest(cinemas);
+                        var oldestCinemas = BaseService.SortByTimeOldest(cinemas);
                         DisplayHelper.DisplayCinemas(oldestCinemas, "Cinemas (Oldest First)");
                         break;
                     case "3":
-                        var ratedCinemas = RatableSorting.SortByRating(cinemas);
+                        var ratedCinemas = RatableService.SortByRating(cinemas);
                         DisplayHelper.DisplayCinemas(ratedCinemas, "Cinemas by Rating");
                         break;
                     case "4":
-                        var popularCinemas = RatableSorting.SortByPopularity(cinemas);
+                        var popularCinemas = RatableService.SortByPopularity(cinemas);
                         DisplayHelper.DisplayCinemas(popularCinemas, "Cinemas by Popularity");
                         break;
                     case "5":
-                        var filmCountCinemas = CinemaSortingFiltering.SortByNumberOfAvailableFilms(cinemas);
+                        var filmCountCinemas = CinemaService.SortByNumberOfAvailableFilms(cinemas);
                         DisplayHelper.DisplayCinemas(filmCountCinemas, "Cinemas by Number of Available Films");
                         break;
                     case "6":
                         Console.Write("Enter cinema name to filter: ");
                         string name = ConsoleHelper.ReadRequiredString("Cinema name");
-                        var filteredCinemas = CinemaSortingFiltering.FilterCinemasByName(cinemas, name);
+                        var filteredCinemas = CinemaService.FilterCinemasByName(cinemas, name);
                         DisplayHelper.DisplayCinemas(filteredCinemas, $"Cinemas with name containing '{name}'");
                         break;
                     case "0": return;
@@ -327,7 +327,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteCinema(cinemas, auditoriums, seances, reservations, tickets, id);
+                    CinemaService.DeleteCinema(cinemas, auditoriums, seances, reservations, tickets, id);
                     Console.WriteLine("Cinema and all related data deleted successfully!");
                 }
                 else

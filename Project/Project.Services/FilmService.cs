@@ -1,8 +1,8 @@
 ﻿using Project.Models;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services
 {
-    public static class FilmSortingFiltering
+    public class FilmService
     {
         public static List<Film> FilterFilmsByDuration(List<Film> films, uint minDuration, uint maxDuration = uint.MaxValue)
         {
@@ -37,6 +37,28 @@ namespace Project.Services.SortingFiltering
         public static List<Film> FilterFilmsWhereActorIs(List<Film> films, string actorId)
         {
             return [.. films.Where(f => f.Items.Contains(actorId))];
+        }
+
+        public static void DeleteFilm(List<Film> films, List<Cinema> cinemas, List<Seance> seances,
+                                      List<Reservation> reservations, List<Ticket> tickets, string filmId)
+        {
+            foreach (var cinema in cinemas)
+            {
+                cinema.RemoveItem(filmId);
+            }
+
+            var seancesToDelete = seances.Where(s => s.FilmId == filmId).ToList();
+
+            foreach (var seance in seancesToDelete)
+            {
+                SeanceService.DeleteSeance(seances, reservations, tickets, seance.Id);
+            }
+
+            var film = films.FirstOrDefault(f => f.Id == filmId);
+            if (film != null)
+            {
+                films.Remove(film);
+            }
         }
     }
 }

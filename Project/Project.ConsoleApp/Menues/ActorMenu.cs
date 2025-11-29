@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -59,17 +59,17 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestActors = GenericSorting.SortByTimeNewest(actors);
+                        var newestActors = BaseService.SortByTimeNewest(actors);
 
                         DisplayHelper.DisplayActors(newestActors, "Actors (Newest First)");
                         break;
                     case "2":
-                        var oldestActors = GenericSorting.SortByTimeOldest(actors);
+                        var oldestActors = BaseService.SortByTimeOldest(actors);
 
                         DisplayHelper.DisplayActors(oldestActors, "Actors (Oldest First)");
                         break;
                     case "3":
-                        var popularActors = ActorSortingFiltering.SortActorsByPopularity(actors);
+                        var popularActors = ActorService.SortActorsByPopularity(actors);
 
                         DisplayHelper.DisplayActors(popularActors, "Actors by Popularity");
                         break;
@@ -77,7 +77,7 @@ namespace Project.ConsoleApp.Menues
                         Console.Write("Enter last name to filter: ");
 
                         string lastName = ConsoleHelper.ReadRequiredString("Last name");
-                        var filteredActors = ActorSortingFiltering.FilterActorsByLastName(actors, lastName);
+                        var filteredActors = ActorService.FilterActorsByLastName(actors, lastName);
 
                         DisplayHelper.DisplayActors(filteredActors, $"Actors with Last Name containing '{lastName}'");
                         break;
@@ -85,7 +85,7 @@ namespace Project.ConsoleApp.Menues
                         Console.Write("Enter actor ID: ");
 
                         string actorId = ConsoleHelper.ReadRequiredString("Actor ID");
-                        var actorFilms = FilmSortingFiltering.FilterFilmsWhereActorIs(films, actorId);
+                        var actorFilms = FilmService.FilterFilmsWhereActorIs(films, actorId);
 
                         DisplayHelper.DisplayFilms(actorFilms, $"Films featuring actor {actorId}");
                         break;
@@ -248,7 +248,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteActor(actors, films, id);
+                    ActorService.DeleteActor(actors, films, id);
                     Console.WriteLine("Actor deleted successfully!");
                 }
                 else

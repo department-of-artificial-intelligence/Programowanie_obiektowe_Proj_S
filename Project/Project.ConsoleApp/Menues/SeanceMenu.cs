@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -64,35 +64,35 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestSeances = GenericSorting.SortByTimeNewest(seances);
+                        var newestSeances = BaseService.SortByTimeNewest(seances);
                         DisplayHelper.DisplaySeances(newestSeances, "Seances (Newest First)");
                         break;
                     case "2":
-                        var oldestSeances = GenericSorting.SortByTimeOldest(seances);
+                        var oldestSeances = BaseService.SortByTimeOldest(seances);
                         DisplayHelper.DisplaySeances(oldestSeances, "Seances (Oldest First)");
                         break;
                     case "3":
-                        var startTimeSeances = SeanceSortingFiltering.SortSeancesByStartTime(seances);
+                        var startTimeSeances = SeanceService.SortSeancesByStartTime(seances);
                         DisplayHelper.DisplaySeances(startTimeSeances, "Seances by Start Time");
                         break;
                     case "4":
-                        var priceSeances = SeanceSortingFiltering.SortSeancesByPrice(seances);
+                        var priceSeances = SeanceService.SortSeancesByPrice(seances);
                         DisplayHelper.DisplaySeances(priceSeances, "Seances by Price");
                         break;
                     case "5":
-                        var occupiedSeances = SeanceSortingFiltering.SortSeancesByOccupiedSeats(seances, auditoriums);
+                        var occupiedSeances = SeanceService.SortSeancesByOccupiedSeats(seances, auditoriums);
                         DisplayHelper.DisplaySeances(occupiedSeances, "Seances by Occupied Seats");
                         break;
                     case "6":
                         Console.Write("Enter film ID to filter: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var filmSeances = SeanceSortingFiltering.FilterSeancesByFilmId(seances, filmId);
+                        var filmSeances = SeanceService.FilterSeancesByFilmId(seances, filmId);
                         DisplayHelper.DisplaySeances(filmSeances, $"Seances for film {filmId}");
                         break;
                     case "7":
                         Console.Write("Enter auditorium ID to filter: ");
                         string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
-                        var auditoriumSeances = SeanceSortingFiltering.FilterSeancesByAuditoriumId(seances, auditoriumId);
+                        var auditoriumSeances = SeanceService.FilterSeancesByAuditoriumId(seances, auditoriumId);
                         DisplayHelper.DisplaySeances(auditoriumSeances, $"Seances in auditorium {auditoriumId}");
                         break;
                     case "0": return;
@@ -354,7 +354,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteSeance(seances, reservations, tickets, id);
+                    SeanceService.DeleteSeance(seances, reservations, tickets, id);
                     Console.WriteLine("Seance and all related data deleted successfully!");
                 }
                 else

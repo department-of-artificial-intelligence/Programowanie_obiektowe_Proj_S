@@ -1,13 +1,13 @@
-﻿using Project.Services.SortingFiltering;
+﻿using Project.Services;
 using Project.Models;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services
 {
-    public class FilmSortingFilteringTests
+    public class FilmServiceTests
     {
         private readonly List<Film> _films;
 
-        public FilmSortingFilteringTests()
+        public FilmServiceTests()
         {
             _films =
             [
@@ -36,7 +36,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByDuration_ValidRange_ReturnsCorrectFilms(uint minDuration, uint maxDuration, int expectedCount)
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByDuration(_films, minDuration, maxDuration);
+            var result = FilmService.FilterFilmsByDuration(_films, minDuration, maxDuration);
 
             // Assert
             Assert.Equal(expectedCount, result.Count);
@@ -46,7 +46,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByDuration_MaxDurationNotSpecified_ReturnsAllFilmsAboveMin()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByDuration(_films, 140, uint.MaxValue);
+            var result = FilmService.FilterFilmsByDuration(_films, 140, uint.MaxValue);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -56,7 +56,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByGenre_ValidGenre_ReturnsMatchingFilms()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByGenre(_films, "Sci-Fi");
+            var result = FilmService.FilterFilmsByGenre(_films, "Sci-Fi");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -67,7 +67,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByGenre_PartialMatch_ReturnsMatchingFilms()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByGenre(_films, "Mus");
+            var result = FilmService.FilterFilmsByGenre(_films, "Mus");
 
             // Assert
             Assert.Single(result);
@@ -78,7 +78,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByAgeRestriction_True_ReturnsFilmsWithRestriction()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByAgeRestriction(_films, true);
+            var result = FilmService.FilterFilmsByAgeRestriction(_films, true);
 
             // Assert
             Assert.Single(result);
@@ -90,7 +90,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByAgeRestriction_False_ReturnsFilmsWithoutRestriction()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByAgeRestriction(_films, false);
+            var result = FilmService.FilterFilmsByAgeRestriction(_films, false);
 
             // Assert
             Assert.Equal(3, result.Count);
@@ -101,7 +101,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByDirector_ValidDirector_ReturnsMatchingFilms()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByDirector(_films, "Nolan");
+            var result = FilmService.FilterFilmsByDirector(_films, "Nolan");
 
             // Assert
             Assert.Single(result);
@@ -112,7 +112,7 @@ namespace Project.Tests.Logic
         public void FilterFilmsByTitle_ValidTitle_ReturnsMatchingFilms()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsByTitle(_films, "The");
+            var result = FilmService.FilterFilmsByTitle(_films, "The");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -131,7 +131,7 @@ namespace Project.Tests.Logic
             _films[2].AddItem("actor6");
 
             // Act
-            var result = FilmSortingFiltering.SortFilmsByNumberOfActors(_films);
+            var result = FilmService.SortFilmsByNumberOfActors(_films);
 
             // Assert
             Assert.Equal(3, result[0].Items.Count); 
@@ -149,7 +149,7 @@ namespace Project.Tests.Logic
             _films[2].AddItem(actorId);
 
             // Act
-            var result = FilmSortingFiltering.FilterFilmsWhereActorIs(_films, actorId);
+            var result = FilmService.FilterFilmsWhereActorIs(_films, actorId);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -160,10 +160,68 @@ namespace Project.Tests.Logic
         public void FilterFilmsWhereActorIs_ActorNotInFilms_ReturnsEmptyList()
         {
             // Act
-            var result = FilmSortingFiltering.FilterFilmsWhereActorIs(_films, "non-existing-actor");
+            var result = FilmService.FilterFilmsWhereActorIs(_films, "non-existing-actor");
 
             // Assert
             Assert.Empty(result);
         }
+
+        [Fact]
+        public void DeleteFilm_ValidFilmId_RemovesFilmAndFromCinemasAndSeances()
+        {
+            // Arrange
+            var films = new List<Film>
+            {
+                new("Test Film", "Description", 120, "Director", "Action", false,
+                    "poster.jpg", "trailer.mov")
+            };
+            var cinemas = new List<Cinema>
+            {
+                new("Test Cinema", "Address", "+380441234567", "test@test.com", "Manager")
+            };
+            var seances = new List<Seance>();
+            var reservations = new List<Reservation>();
+            var tickets = new List<Ticket>();
+
+            var filmId = films[0].Id;
+            cinemas[0].AddItem(filmId);
+
+            // Act
+            FilmService.DeleteFilm(films, cinemas, seances, reservations, tickets, filmId);
+
+            // Assert
+            Assert.Empty(films);
+            Assert.DoesNotContain(filmId, cinemas[0].Items);
+        }
+
+        [Fact]
+        public void DeleteFilm_FilmInMultipleCinemas_RemovesFromAllCinemas()
+        {
+            // Arrange
+            var films = new List<Film>
+            {
+                new("Test Film", "Description", 120, "Director", "Action", false, "poster.jpg", "trailer.mov")
+            };
+            var cinemas = new List<Cinema>
+            {
+                new("Cinema 1", "Address 1", "+380441111111", "cinema1@test.com", "Manager 1"),
+                new("Cinema 2", "Address 2", "+380442222222", "cinema2@test.com", "Manager 2")
+            };
+            var seances = new List<Seance>();
+            var reservations = new List<Reservation>();
+            var tickets = new List<Ticket>();
+
+            var filmId = films[0].Id;
+            cinemas[0].AddItem(filmId);
+            cinemas[1].AddItem(filmId);
+
+            // Act
+            FilmService.DeleteFilm(films, cinemas, seances, reservations, tickets, filmId);
+
+            // Assert
+            Assert.Empty(films);
+            Assert.All(cinemas, cinema => Assert.DoesNotContain(filmId, cinema.Items));
+        }
+
     }
 }

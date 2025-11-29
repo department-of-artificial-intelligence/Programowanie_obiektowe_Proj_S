@@ -1,8 +1,8 @@
 ﻿using Project.Interfaces;
 
-namespace Project.Services.SortingFiltering
+namespace Project.Services.Common
 {
-    public static class RatableSorting
+    public static class RatableService
     {
         public static List<T> SortByRating<T>(List<T> entities) where T : IRatable
         {

@@ -1,13 +1,13 @@
-﻿using Project.Services.SortingFiltering;
+﻿using Project.Services;
 using Project.Models;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services
 {
-    public class TicketSortingFilteringTests
+    public class TicketServiceTests
     {
         private readonly List<Ticket> _tickets;
 
-        public TicketSortingFilteringTests()
+        public TicketServiceTests()
         {
             _tickets =
             [
@@ -23,7 +23,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsByReservationId_ValidId_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByReservationId(_tickets, "reservation1");
+            var result = TicketService.FilterTicketsByReservationId(_tickets, "reservation1");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -34,7 +34,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsByCinemaId_ValidId_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByCinemaId(_tickets, "cinema1");
+            var result = TicketService.FilterTicketsByCinemaId(_tickets, "cinema1");
 
             // Assert
             Assert.Equal(3, result.Count);
@@ -45,7 +45,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsBySeanceId_ValidId_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsBySeanceId(_tickets, "seance1");
+            var result = TicketService.FilterTicketsBySeanceId(_tickets, "seance1");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -56,7 +56,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsByFilmId_ValidId_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByFilmId(_tickets, "film1");
+            var result = TicketService.FilterTicketsByFilmId(_tickets, "film1");
 
             // Assert
             Assert.Equal(3, result.Count);
@@ -67,7 +67,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsByAuditoriumId_ValidId_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByAuditoriumId(_tickets, "auditorium1");
+            var result = TicketService.FilterTicketsByAuditoriumId(_tickets, "auditorium1");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -78,7 +78,7 @@ namespace Project.Tests.Logic
         public void FilterTicketsByTicketType_ValidType_ReturnsMatchingTickets()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByTicketType(_tickets, TicketType.Standard);
+            var result = TicketService.FilterTicketsByTicketType(_tickets, TicketType.Standard);
 
             // Assert
             Assert.Single(result);
@@ -89,7 +89,7 @@ namespace Project.Tests.Logic
         public void SortTicketsByFinalPrice_ReturnsTicketsInDescendingOrder()
         {
             // Act
-            var result = TicketSortingFiltering.SortTicketsByFinalPrice(_tickets);
+            var result = TicketService.SortTicketsByFinalPrice(_tickets);
 
             // Assert
             Assert.Equal(180.0m, result[0].FinalPrice);
@@ -103,10 +103,29 @@ namespace Project.Tests.Logic
         public void FilterTicketsByReservationId_NoMatches_ReturnsEmptyList()
         {
             // Act
-            var result = TicketSortingFiltering.FilterTicketsByReservationId(_tickets, "nonexistent-reservation");
+            var result = TicketService.FilterTicketsByReservationId(_tickets, "nonexistent-reservation");
 
             // Assert
             Assert.Empty(result);
+        }
+
+        [Fact]
+        public void DeleteTicket_ValidTicketId_RemovesTicket()
+        {
+            // Arrange
+            var tickets = new List<Ticket>
+            {
+                new("reservation1", "cinema1", "auditorium1", "seance1", "film1", "A1", 100.0m,
+                    TicketType.Standard)
+            };
+
+            var ticketId = tickets[0].Id;
+
+            // Act
+            TicketService.DeleteTicket(tickets, ticketId);
+
+            // Assert
+            Assert.Empty(tickets);
         }
     }
 }

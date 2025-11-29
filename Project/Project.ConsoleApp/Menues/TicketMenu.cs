@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 
 namespace Project.ConsoleApp.Menues
@@ -61,45 +61,45 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestTickets = GenericSorting.SortByTimeNewest(tickets);
+                        var newestTickets = BaseService.SortByTimeNewest(tickets);
                         DisplayHelper.DisplayTickets(newestTickets, "Tickets (Newest First)");
                         break;
                     case "2":
-                        var oldestTickets = GenericSorting.SortByTimeOldest(tickets);
+                        var oldestTickets = BaseService.SortByTimeOldest(tickets);
                         DisplayHelper.DisplayTickets(oldestTickets, "Tickets (Oldest First)");
                         break;
                     case "3":
-                        var priceTickets = TicketSortingFiltering.SortTicketsByFinalPrice(tickets);
+                        var priceTickets = TicketService.SortTicketsByFinalPrice(tickets);
                         DisplayHelper.DisplayTickets(priceTickets, "Tickets by Final Price");
                         break;
                     case "4":
                         Console.Write("Enter reservation ID to filter: ");
                         string reservationId = ConsoleHelper.ReadRequiredString("Reservation ID");
-                        var reservationTickets = TicketSortingFiltering.FilterTicketsByReservationId(tickets, reservationId);
+                        var reservationTickets = TicketService.FilterTicketsByReservationId(tickets, reservationId);
                         DisplayHelper.DisplayTickets(reservationTickets, $"Tickets for reservation {reservationId}");
                         break;
                     case "5":
                         Console.Write("Enter cinema ID to filter: ");
                         string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
-                        var cinemaTickets = TicketSortingFiltering.FilterTicketsByCinemaId(tickets, cinemaId);
+                        var cinemaTickets = TicketService.FilterTicketsByCinemaId(tickets, cinemaId);
                         DisplayHelper.DisplayTickets(cinemaTickets, $"Tickets for cinema {cinemaId}");
                         break;
                     case "6":
                         Console.Write("Enter seance ID to filter: ");
                         string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
-                        var seanceTickets = TicketSortingFiltering.FilterTicketsBySeanceId(tickets, seanceId);
+                        var seanceTickets = TicketService.FilterTicketsBySeanceId(tickets, seanceId);
                         DisplayHelper.DisplayTickets(seanceTickets, $"Tickets for seance {seanceId}");
                         break;
                     case "7":
                         Console.Write("Enter film ID to filter: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var filmTickets = TicketSortingFiltering.FilterTicketsByFilmId(tickets, filmId);
+                        var filmTickets = TicketService.FilterTicketsByFilmId(tickets, filmId);
                         DisplayHelper.DisplayTickets(filmTickets, $"Tickets for film {filmId}");
                         break;
                     case "8":
                         Console.Write("Enter auditorium ID to filter: ");
                         string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
-                        var auditoriumTickets = TicketSortingFiltering.FilterTicketsByAuditoriumId(tickets, auditoriumId);
+                        var auditoriumTickets = TicketService.FilterTicketsByAuditoriumId(tickets, auditoriumId);
                         DisplayHelper.DisplayTickets(auditoriumTickets, $"Tickets for auditorium {auditoriumId}");
                         break;
                     case "9":
@@ -112,7 +112,7 @@ namespace Project.ConsoleApp.Menues
                             ConsoleHelper.WaitForKey();
                             break;
                         }
-                        var typeTickets = TicketSortingFiltering.FilterTicketsByTicketType(tickets, ticketType);
+                        var typeTickets = TicketService.FilterTicketsByTicketType(tickets, ticketType);
                         DisplayHelper.DisplayTickets(typeTickets, $"Tickets of type {ticketType}");
                         break;
                     case "0": return;
@@ -307,7 +307,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteTicket(tickets, id);
+                    TicketService.DeleteTicket(tickets, id);
                     Console.WriteLine("Ticket deleted successfully!");
                 }
                 else

@@ -1,7 +1,7 @@
 ﻿using Project.Models;
 using Project.ConsoleApp.Helpers;
-using Project.Services.Handlers;
-using Project.Services.SortingFiltering;
+using Project.Services;
+using Project.Services.Common;
 
 namespace Project.ConsoleApp.Menues
 {
@@ -67,32 +67,32 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestAuditoriums = GenericSorting.SortByTimeNewest(auditoriums);
+                        var newestAuditoriums = BaseService.SortByTimeNewest(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(newestAuditoriums, "Auditoriums (Newest First)");
                         break;
                     case "2":
-                        var oldestAuditoriums = GenericSorting.SortByTimeOldest(auditoriums);
+                        var oldestAuditoriums = BaseService.SortByTimeOldest(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(oldestAuditoriums, "Auditoriums (Oldest First)");
                         break;
                     case "3":
-                        var ratedAuditoriums = RatableSorting.SortByRating(auditoriums);
+                        var ratedAuditoriums = RatableService.SortByRating(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(ratedAuditoriums, "Auditoriums by Rating");
                         break;
                     case "4":
-                        var popularAuditoriums = RatableSorting.SortByPopularity(auditoriums);
+                        var popularAuditoriums = RatableService.SortByPopularity(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(popularAuditoriums, "Auditoriums by Popularity");
                         break;
                     case "5":
-                        var featureCountAuditoriums = AuditoriumSortingFiltering.SortAuditoriumsByFeatures(auditoriums);
+                        var featureCountAuditoriums = AuditoriumService.SortAuditoriumsByFeatures(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(featureCountAuditoriums, "Auditoriums by Features Count");
                         break;
                     case "6":
-                        var capacityAuditoriums = AuditoriumSortingFiltering.SortAuditoriumsByMaxCapacity(auditoriums);
+                        var capacityAuditoriums = AuditoriumService.SortAuditoriumsByMaxCapacity(auditoriums);
 
                         DisplayHelper.DisplayAuditoriums(capacityAuditoriums, "Auditoriums by Max Capacity");
                         break;
@@ -100,7 +100,7 @@ namespace Project.ConsoleApp.Menues
                         Console.Write("Enter auditorium name to filter: ");
 
                         string name = ConsoleHelper.ReadRequiredString("Auditorium name");
-                        var filteredAuditoriums = AuditoriumSortingFiltering.FilterAuditoriumsByName(auditoriums, name);
+                        var filteredAuditoriums = AuditoriumService.FilterAuditoriumsByName(auditoriums, name);
 
                         DisplayHelper.DisplayAuditoriums(filteredAuditoriums, $"Auditoriums with name containing '{name}'");
                         break;
@@ -108,7 +108,7 @@ namespace Project.ConsoleApp.Menues
                         Console.Write("Enter feature to filter: ");
 
                         string feature = ConsoleHelper.ReadRequiredString("Feature");
-                        var featureAuditoriums = AuditoriumSortingFiltering.FilterAuditoriumsByFeature(auditoriums, feature);
+                        var featureAuditoriums = AuditoriumService.FilterAuditoriumsByFeature(auditoriums, feature);
 
                         DisplayHelper.DisplayAuditoriums(featureAuditoriums, $"Auditoriums with feature '{feature}'");
                         break;
@@ -369,7 +369,7 @@ namespace Project.ConsoleApp.Menues
                 string? confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    DeleteHandler.DeleteAuditorium(auditoriums, seances, reservations, tickets, id);
+                    AuditoriumService.DeleteAuditorium(auditoriums, seances, reservations, tickets, id);
                     Console.WriteLine("Auditorium and all related data deleted successfully!");
                 }
                 else

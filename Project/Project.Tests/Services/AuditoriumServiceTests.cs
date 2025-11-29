@@ -1,13 +1,13 @@
-﻿using Project.Services.SortingFiltering;
+﻿using Project.Services;
 using Project.Models;
 
-namespace Project.Tests.Logic
+namespace Project.Tests.Services
 {
-    public class AuditoriumSortingFilteringTests
+    public class AuditoriumServiceTests
     {
         private readonly List<Auditorium> _auditoriums;
 
-        public AuditoriumSortingFilteringTests()
+        public AuditoriumServiceTests()
         {
             _auditoriums =
             [
@@ -49,7 +49,7 @@ namespace Project.Tests.Logic
         public void FilterAuditoriumsByName_ValidName_ReturnsMatchingAuditoriums()
         {
             // Act
-            var result = AuditoriumSortingFiltering.FilterAuditoriumsByName(_auditoriums, "Hall");
+            var result = AuditoriumService.FilterAuditoriumsByName(_auditoriums, "Hall");
 
             // Assert
             Assert.Equal(4, result.Count);
@@ -60,7 +60,7 @@ namespace Project.Tests.Logic
         public void FilterAuditoriumsByFeature_ValidFeature_ReturnsMatchingAuditoriums()
         {
             // Act
-            var result = AuditoriumSortingFiltering.FilterAuditoriumsByFeature(_auditoriums, "Dolby");
+            var result = AuditoriumService.FilterAuditoriumsByFeature(_auditoriums, "Dolby");
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -72,7 +72,7 @@ namespace Project.Tests.Logic
         public void SortAuditoriumsByFeatures_ReturnsAuditoriumsInDescendingOrder()
         {
             // Act
-            var result = AuditoriumSortingFiltering.SortAuditoriumsByFeatures(_auditoriums);
+            var result = AuditoriumService.SortAuditoriumsByFeatures(_auditoriums);
 
             // Assert
             Assert.Equal(4, result[0].Items.Count); 
@@ -85,7 +85,7 @@ namespace Project.Tests.Logic
         public void SortAuditoriumsByMaxCapacity_ReturnsAuditoriumsInDescendingOrder()
         {
             // Act
-            var result = AuditoriumSortingFiltering.SortAuditoriumsByMaxCapacity(_auditoriums);
+            var result = AuditoriumService.SortAuditoriumsByMaxCapacity(_auditoriums);
 
             // Assert
             Assert.Equal(240, (double)result[0].Capacity); 
@@ -98,8 +98,8 @@ namespace Project.Tests.Logic
         public void FilterAuditoriumsByFeature_PartialMatch_ReturnsMatchingAuditoriums()
         {
             // Act
-            var result = AuditoriumSortingFiltering.FilterAuditoriumsByFeature(_auditoriums, "Projection");
-
+            var result = AuditoriumService.FilterAuditoriumsByFeature(_auditoriums, "Projection");
+                
             // Assert
             Assert.Equal(2, result.Count);
         }
@@ -108,10 +108,35 @@ namespace Project.Tests.Logic
         public void FilterAuditoriumsByFeature_NoMatches_ReturnsEmptyList()
         {
             // Act
-            var result = AuditoriumSortingFiltering.FilterAuditoriumsByFeature(_auditoriums, "NonExistentFeature");
+            var result = AuditoriumService.FilterAuditoriumsByFeature(_auditoriums, "NonExistentFeature");
 
             // Assert
             Assert.Empty(result);
+        }
+
+        [Fact]
+        public void DeleteAuditorium_ValidAuditoriumId_RemovesAuditoriumAndSeances()
+        {
+            // Arrange
+            var auditoriums = new List<Auditorium>
+            {
+                new("cinema1", "Test Hall", 1, 10, 20)
+            };
+            var seances = new List<Seance>
+            {
+                new("film1", auditoriums[0].Id, DateTime.Now.AddHours(1), 100.0m, 120)
+            };
+            var reservations = new List<Reservation>();
+            var tickets = new List<Ticket>();
+
+            var auditoriumId = auditoriums[0].Id;
+
+            // Act
+            AuditoriumService.DeleteAuditorium(auditoriums, seances, reservations, tickets, auditoriumId);
+
+            // Assert
+            Assert.Empty(auditoriums);
+            Assert.Empty(seances);
         }
     }
 }
