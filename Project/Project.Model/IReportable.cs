@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.ConsoleApp
+namespace Project.Model
 {
-    internal class Class2
+    public interface IReportable
     {
+        string ReportDescription { get; }
+        void DisplayDetails();
     }
 }
