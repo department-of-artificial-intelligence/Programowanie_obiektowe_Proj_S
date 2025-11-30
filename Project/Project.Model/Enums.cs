@@ -1,16 +1,15 @@
-﻿namespace Project.Model
-{
-    public enum PerformanceStatus
-    {
-        Scheduled,
-        Canceled,
-        Finished
-    }
+﻿namespace Project.Model;
 
-    public enum TicketStatus
-    {
-        Available,
-        Reserved,
-        Sold
-    }
+public enum PerformanceStatus
+{
+    Scheduled,
+    Canceled,
+    Finished
+}
+
+public enum TicketStatus
+{
+    Available,
+    Reserved,
+    Sold
 }

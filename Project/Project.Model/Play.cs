@@ -5,38 +5,62 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
+namespace Project.Model;
+
+public class Play
 {
-    public class Play
+    public int PlayId { get; set; }
+    public string Title { get; set; }
+    public Director? Director { get; set; }
+    public List<Actor> Actors { get; set; }
+
+    public Play(int playId, string title, Director? director = null, List<Actor>? actors = null)
     {
-        public string Title { get; set; }
-        public Director Director { get; set; }
-        public List<Actor> Actors { get; set; }
+        PlayId = playId;
+        Title = title;
+        Director = director;
+        Actors = actors ?? new List<Actor>();
+    }
 
-        public Play(string title, Director director, List<Actor>? actors)
+    public bool AddActor(Actor actor)
+    {
+        if (actor is null || Actors.Contains(actor)) return false;
+        if (!actor.Plays.Contains(this))
         {
-            Title = title;
-            Director = director;
-            Actors = actors ?? new List<Actor>();
+            actor.Plays.Add(this);
         }
-
-        public bool AddActor(Actor actor)
+        Actors.Add(actor);
+        return true;
+    }
+    public bool RemoveActor(Actor actor)
+    {
+        if (Actors.Count == 0 || actor is null) return false;
+        if (actor.Plays.Contains(this))
         {
-            if (actor is null || Actors.Contains(actor)) return false;
-            Actors.Add(actor);
-            if (!actor.Plays.Contains(this)) actor.AddPlay(this);
-            return true;
+            actor.Plays.Remove(this);
         }
-        public bool RemoveActor(Actor actor)
+        return Actors.Remove(actor);
+    }
+    public bool RemoveActor(int actorId)
+    {
+        if (Actors.Count == 0) return false;
+        var actor = Actors.FirstOrDefault(p => p.ActorId == actorId);
+        if (actor is null) return false;
+        if (actor.Plays.Contains(this))
         {
-            if (Actors.Count == 0 || actor is null) return false;
-            if (actor.Plays.Contains(this)) actor.RemovePlay(this);
-            return Actors.Remove(actor);
+            actor.Plays.Remove(this);
         }
-        public void RemoveAllActors()
+        return Actors.Remove(actor);
+    }
+    public void RemoveAllActors()
+    {
+        foreach (Actor actor in Actors)
         {
-            foreach (Actor actor in Actors) if (actor.Plays.Contains(this)) actor.RemovePlay(this);
-            Actors.Clear();
+            if (actor.Plays.Contains(this))
+            {
+                actor.Plays.Remove(this);
+            }
         }
+        Actors.Clear();
     }
 }

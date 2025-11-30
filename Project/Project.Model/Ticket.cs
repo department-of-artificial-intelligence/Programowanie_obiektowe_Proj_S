@@ -4,25 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
-{
-    public class Ticket
-    {
-        public int TicketId { get; set; }
-        public decimal Price { get; set; }
-        public TicketStatus Status { get; set; }
-        public Customer Customer { get; private set; }
-        public Performance Performance { get; private set; }
-        public Seat Seat { get; private set; }
+namespace Project.Model;
 
-        public Ticket(int ticketId, decimal price, TicketStatus status, Customer customer, Performance performance, Seat seat)
-        {
-            TicketId = ticketId;
-            Price = price;
-            Status = status;
-            Customer = customer;
-            Performance = performance;
-            Seat = seat;
-        }
+public class Ticket
+{
+    public int TicketId { get; set; }
+    public decimal Price { get; set; }
+    public Performance Performance { get; set; }
+    public Seat Seat { get; set; }
+    public TicketStatus Status { get; set; }
+    public Customer? Customer { get; set; }
+
+    public Ticket(int ticketId, decimal price, Performance performance, Seat seat, TicketStatus status = TicketStatus.Available)
+    {
+        TicketId = ticketId;
+        Price = price;
+        Performance = performance;
+        Seat = seat;
+        Status = status;
+        Customer = null;
     }
 }

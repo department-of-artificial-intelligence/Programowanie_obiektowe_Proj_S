@@ -4,21 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
+namespace Project.Model;
+
+public class Address
 {
-    public class Address
+    public string Country { get; set; }
+    public string City { get; set; }
+    public string Street { get; set; }
+    
+    public Address()
     {
-        public string Country { get; set; }
-        public string City { get; set; }
-        public string Street { get; set; }
-        public string PostalCode { get; set; }
-        
-        public Address(string country, string city, string street, string postalCode)
-        {
-            Country = country;
-            City = city;
-            Street = street;
-            PostalCode = postalCode;
-        }
+        Country = string.Empty;
+        City = string.Empty;
+        Street = string.Empty;
+    }
+
+    public Address(string country, string city, string street)
+    {
+        Country = country;
+        City = city;
+        Street = street;
+    }
+
+    public override string ToString()
+    {
+        return $"{Country}, {City}, {Street}";
     }
 }

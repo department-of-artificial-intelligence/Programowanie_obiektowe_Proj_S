@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Model
+namespace Project.Model;
+
+public interface IPlayManager
 {
-    public interface IInterface //placeholder
-    {
-    }
+    bool AddPlay(Play play);
+    bool RemovePlay(Play play);
+    bool RemovePlay(int playId);
+    void RemoveAllPlays();
 }
