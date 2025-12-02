@@ -8,8 +8,7 @@ namespace Project.Model
 {
     public class Teacher: Person
     {
-        public required int TeacherId { get; set; }
-        public required string LanquageOfTeaching { get; set; }
+        public required string LanguageOfTeaching { get; set; }
         public required decimal Salary { get; set; }
         public required decimal HoursWorked { get; set; }
         public List<Group> AssignedGroups {  get; set; }

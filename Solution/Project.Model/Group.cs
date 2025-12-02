@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Group
+    public class Group: IReportable
     {
         public required int GroupId {  get; set; }
         public required string GroupName {  get; set; }
@@ -16,15 +16,21 @@ namespace Project.Model
         public required string Schedule {  get; set; }
         public required DateTime StartDate { get; set; }
         public required DateTime EndDate { get; set; }
-        public List<Student> Students { get; set; }
+        public List<Enrollment> Enrollments { get; set; }
+        public List<Attendance> Attendances { get; set; } = new List<Attendance>();
 
         public Group()
         {
-            Students = new List<Student>();
+            Enrollments = new List<Enrollment>();
         }
 
         public required Teacher Teacher { get; set; }
         public required Course Course { get; set; }
 
+
+        public string GetInfo()
+        {
+            return $"Grupa {GroupName} ({Course?.Language}), Uczniów: {Enrollments?.Count ?? 0}/{MaxStudents}";
+        }
     }
 }

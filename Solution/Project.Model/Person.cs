@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public abstract class Person
+    public abstract class Person: IReportable
     {
         public required int Id { get; set;} 
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required DateOnly DateOfBirth { get; set; }
         public required string Address { get; set; }
-        public required int PhoneNumber { get; set; }
+        public required string PhoneNumber { get; set; }
         public required string Email { get; set; }
 
         public int Age
@@ -29,8 +29,9 @@ namespace Project.Model
             }
         }
 
-
-
-
+        public virtual string GetInfo()
+        {
+            return $"{FirstName} {LastName} (ID: {Id})";
+        }
     }
 }
