@@ -1,20 +1,17 @@
-﻿namespace Project.Model
+﻿using Project.Abstractions;
+using Project.Model;
+
+namespace Project.Model
 {
-    public class Driver
+    public class Driver : IDriver
     {
-        public enum DriverStatus
-        {
-            Available,
-            Assigned,
-            Unavailable
-        }
+        public DriverStatus Status { get; set; } = DriverStatus.Available;
 
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string LicenseNumber { get; set; } = string.Empty;
 
-        public DriverStatus Status { get; set; } = DriverStatus.Available;
 
         public Vehicle? AssignedVehicle { get; set; }
 
@@ -28,10 +25,19 @@
             LicenseNumber = licenseNumber;
         }
 
-        public void AssignVehicle(Vehicle vehicle)
+        IVehicle? IDriver.AssignedVehicle => AssignedVehicle;
+
+        public void AssignVehicle(IVehicle vehicle)
         {
-            AssignedVehicle = vehicle;
-            Status = DriverStatus.Assigned;
+            if (vehicle is Vehicle concreteVehicle)
+            {
+                AssignedVehicle = concreteVehicle;
+                Status = DriverStatus.Assigned;
+            }
+            else
+            {
+                throw new ArgumentException("ERROR - Provided vehicle is not a concrete Vehicle type.");
+            }
         }
 
         public void MarkAsAvailable()

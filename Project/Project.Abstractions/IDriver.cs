@@ -1,15 +1,26 @@
 ﻿namespace Project.Abstractions
+{
+    public enum DriverStatus
     {
+        Available,
+        Assigned,
+        Unavailable
+    }
+
     public interface IDriver
     {
+        public DriverStatus Status { get; set; }
+
         int Id { get; set; }
         string FirstName { get; set; }
         string LastName { get; set; }
-        bool IsAvailable { get; }
-        Vehicle? AssignedVehicle { get; }
+        string LicenseNumber { get; set; }
 
-        void AssignVehicle(Vehicle vehicle);
-        void CompleteOrder();
-        void Print();
+        bool IsAvailable { get; }
+
+        IVehicle? AssignedVehicle { get; }
+
+        void AssignVehicle(IVehicle vehicle);
+        void MarkAsAvailable();
     }
 }

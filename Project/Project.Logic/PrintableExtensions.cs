@@ -1,28 +1,26 @@
 ﻿using Project.Model;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Project.Abstractions;
 
 namespace Project.Logic
 {
     public static class PrintableExtension
     {
         // DRIVER METHODS
-        public static IEnumerable<Driver> FilterAvailable(this IEnumerable<Driver> drivers)
+        public static IEnumerable<IDriver> FilterAvailable(this IEnumerable<IDriver> drivers)
         {
             return drivers.Where(d => d.IsAvailable);
         }
 
-        public static IEnumerable<Driver> SortByLastName(this IEnumerable<Driver> drivers)
+        public static IEnumerable<IDriver> SortByLastName(this IEnumerable<IDriver> drivers)
         {
             return drivers.OrderBy(d => d.LastName);
         }
 
-        public static void PrintDriverStatistics(this IEnumerable<Driver> drivers)
+        public static void PrintDriverStatistics(this IEnumerable<IDriver> drivers)
         {
             int totalDrivers = drivers.Count();
             int availableDrivers = drivers.Count(d => d.IsAvailable);
-            int assignedDrivers = drivers.Count(d => d.Status == Driver.DriverStatus.Assigned);
+            int assignedDrivers = drivers.Count(d => d.Status == DriverStatus.Assigned);
 
             Console.WriteLine($"--- Driver Statistics ({DateTime.Now}) ---");
             Console.WriteLine($"Total drivers: {totalDrivers}");
@@ -33,9 +31,9 @@ namespace Project.Logic
 
         // ORDER METHODS
 
-        public static IEnumerable<Order> FilterByStatus(this IEnumerable<Order> orders, Order.OrderStatus status)
+        public static IEnumerable<Order> FilterByStatus(this IEnumerable<Order> orders, OrderStatus status)
         {
-            return orders.Where(o => o.OStatus == status);
+            return orders.Where(o => o.Status == status);
         }
 
         public static IEnumerable<Order> SortByLoadingAddress(this IEnumerable<Order> orders)
@@ -48,7 +46,7 @@ namespace Project.Logic
             Console.WriteLine($"--- Order Status Summary ({DateTime.Now}) ---");
 
             var summary = orders
-                .GroupBy(o => o.OStatus)
+                .GroupBy(o => o.Status)
                 .Select(g => new { Status = g.Key, Count = g.Count() })
                 .OrderBy(x => (int)x.Status);
 
@@ -62,7 +60,7 @@ namespace Project.Logic
 
         // VEHICLE METHODS
 
-        public static IEnumerable<Vehicle> FilterByType(this IEnumerable<Vehicle> vehicles, Vehicle.VehicleType type)
+        public static IEnumerable<Vehicle> FilterByType(this IEnumerable<Vehicle> vehicles, VehicleType type)
         {
             return vehicles.Where(v => v.VType == type);
         }

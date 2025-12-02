@@ -1,52 +1,58 @@
 ﻿using System;
 using Project.Abstractions;
+using Project.Model;
 
 namespace Project.Model
 {
-    public class Order
+    public class Order : IOrder
     {
         public int Id { get; private set; }
         public string LoadingDescription { get; private set; }
         public string LoadingAddress { get; private set; }
         public string UnloadingAddress { get; private set; }
 
-        public enum OrderStatus
-        {
-            Pending,
-            InProgress,
-            Completed,
-            Cancelled
-        }
-        public OrderStatus OStatus { get; private set; } = OrderStatus.Pending;
+        public OrderStatus Status { get; private set; } = OrderStatus.Pending;
         public Driver? AssignedDriver { get; private set; }
         public Vehicle? AssignedVehicle { get; private set; }
+
+        string IOrder.LoadDesc => LoadingDescription;
+        string IOrder.UnloadingAdress => UnloadingAddress;
+        IDriver? IOrder.AssignedDriver => AssignedDriver;
+        IVehicle? IOrder.AssignedVehicle => AssignedVehicle;
 
         public Order(int id, string loadDesc, string loadingAddress, string unloadingAddress)
         {
             Id = id;
             LoadingDescription = loadDesc;
             LoadingAddress = loadingAddress;
-            UnloadingAddress = unloadingAddress; // Poprawione
+            UnloadingAddress = unloadingAddress;
         }
 
-        public void AssignOrder(Driver driver)
+        public void AssignOrder(IDriver driver)
         {
-            if (OStatus != OrderStatus.Pending)
+            if (driver is Driver concreteDriver)
             {
-                Console.WriteLine($"ERROR - Order {Id} cannot be assigned. Only 'pending' orders can be assigned.");
-                return;
-            }
+                if (Status != OrderStatus.Pending)
+                {
+                    Console.WriteLine($"ERROR - Order {Id} cannot be assigned. Only 'pending' orders can be assigned.");
+                    return;
+                }
 
-            if (!driver.IsAvailable || driver.AssignedVehicle == null)
+                if (!concreteDriver.IsAvailable || concreteDriver.AssignedVehicle == null)
+                {
+                    Console.WriteLine($"ERROR - Driver: {concreteDriver.FirstName} {concreteDriver.LastName} is not available now.");
+                    return;
+                }
+
+                AssignedDriver = concreteDriver;
+                AssignedVehicle = concreteDriver.AssignedVehicle;
+                Status = OrderStatus.InProgress;
+                Console.WriteLine($"Order {Id} has been assigned to driver {concreteDriver.FirstName} {concreteDriver.LastName} and is now in progress.");
+            }
+            else
             {
-                Console.WriteLine($"ERROR - Driver: {driver.FirstName} {driver.LastName} is not available now.");
-                return;
+                throw new ArgumentException("Provided driver is not a concrete Driver type.");
             }
-
-            AssignedDriver = driver;
-            AssignedVehicle = driver.AssignedVehicle;
-            OStatus = OrderStatus.InProgress;
-            Console.WriteLine($"Order {Id} has been assigned to driver {driver.FirstName} {driver.LastName} and is now in progress.");
         }
 
         public override string ToString()
@@ -57,9 +63,6 @@ namespace Project.Model
                    $"Loading Description: {LoadingDescription}";
         }
 
-        public void Print()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

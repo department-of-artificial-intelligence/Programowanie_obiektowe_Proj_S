@@ -2,23 +2,8 @@
 using Project.Model;
 using System;
 
-public abstract class Vehicle
+public abstract class Vehicle : IVehicle
 {
-    public enum VehicleStatus
-    {
-        Available,
-        InTransit,
-        UnderMaintenance
-    }
-
-    public enum VehicleType
-    {
-        CompanyCar,
-        DeliveryVan,
-        Truck,
-        SemiTrailer
-    }
-
     public int Id { get; set; } = int.MinValue;
     public string VinNumber { get; set; } = string.Empty;
     public int ProductionYear { get; set; } = int.MinValue;
@@ -31,8 +16,8 @@ public abstract class Vehicle
     public VehicleStatus VStatus { get; set; }
     public abstract VehicleType VType { get; }
 
-    public Driver? AssignedDriver { get; set; }
-
+    public IDriver? AssignedDriver { get; set; }
+    // ----------------------> tu koniec
 
     public Vehicle(int id, string vinNumber, int productionYear, float engineSize,
                        int mileage, string brand, string model, string registrationNumber)
@@ -49,7 +34,7 @@ public abstract class Vehicle
 
     public bool IsAvailable => VStatus == VehicleStatus.Available;
 
-    public void AssignDriver(Driver? driver)
+    public void AssignDriver(IDriver? driver)
     {
         if(driver.IsAvailable == true)
         {
@@ -72,4 +57,5 @@ public abstract class Vehicle
                $"Production year: {ProductionYear}, Engine: {EngineSize}l, Mileage: {Mileage} km, " +
                $"Registration: {RegistrationNumber}, Type: {VType}, OStatus: {VStatus}";
     }
+
 }

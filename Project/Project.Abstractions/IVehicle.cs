@@ -1,12 +1,43 @@
-﻿public interface IDriver
+﻿namespace Project.Abstractions
 {
-    int Id { get; set; }
-    string FirstName { get; set; }
-    string LastName { get; set; }
-    bool IsAvailable { get; }
-    object? AssignedVehicle { get; }
+    public enum VehicleStatus
+    {
+        Available,
+        InTransit,
+        UnderMaintenance
+    }
 
-    void AssignVehicle(object vehicle);
-    void CompleteOrder();
-    void Print();
+    public enum VehicleType
+    {
+        CompanyCar,
+        DeliveryVan,
+        Truck,
+        SemiTrailer
+    }
+
+    public interface IVehicle
+    {
+        int Id { get; set; }
+        string VinNumber { get; set; }
+        int ProductionYear { get; set; }
+        float EngineSize { get; set; }
+        int Mileage { get; set; }
+        string Brand { get; set; }
+        string Model { get; set; }
+        string RegistrationNumber { get; set; }
+
+        VehicleStatus VStatus { get; set; }
+        VehicleType VType { get; }
+
+        IDriver? AssignedDriver { get; set; }
+
+        bool IsAvailable { get; }
+
+        void AssignDriver(IDriver? driver);
+        void MarkAsAvailable();
+
+        float CalculateWearRate();
+
+        string ToString();
+    }
 }
