@@ -19,18 +19,13 @@ public class Seat
         Hall = hall;
     }
 
-    public (int Row,int Seat) SeatLocation() // ??? testowe
+    public (int Row, int Seat) SeatLocation() // ??? testowe
     {
         return (RowNumber, SeatNumber);
     }
 
-    public string SeatLocationString()
-    {
-        return $"rząd:{RowNumber},miejsce:{SeatNumber}";
-    }
-
     public override string ToString()
     {
-        return $"{Hall}/{SeatLocationString()}";
+        return $"rząd:{RowNumber}, miejsce:{SeatNumber}";
     }
 }

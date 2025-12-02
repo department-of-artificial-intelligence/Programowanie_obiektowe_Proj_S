@@ -79,7 +79,14 @@ public class Hall
         Performances.Clear();
     }
 
-    public string GetSeats() => Seats.ListToString();
+    public string GetSeats()
+    {
+        var OrderedSeats = Seats
+            .OrderBy(s => s.RowNumber)
+            .ThenBy(s => s.SeatNumber)
+            .ToList();
+        return OrderedSeats.ListToString("Brak siedzeń");
+    }
 
     public string GetPerformances() => Performances.ListToString();
 

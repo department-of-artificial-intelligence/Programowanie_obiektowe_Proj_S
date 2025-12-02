@@ -17,20 +17,26 @@ siecTeatrow.CreateTheater(3, "Teatr Muzyczny Capitol", "Polska", "Wrocław", "Pi
 //Console.WriteLine(siecTeatrow);
 //Console.WriteLine();
 
-siecTeatrow.Theaters[0].CreateHall(1);
-siecTeatrow.Theaters[1].CreateHall(1);
-siecTeatrow.Theaters[1].CreateHall(2);
-siecTeatrow.Theaters[1].CreateHall(3);
-siecTeatrow.Theaters[2].CreateHall(1);
-siecTeatrow.Theaters[2].CreateHall(2);
+var theater1 = siecTeatrow.Theaters[0];
+var theater2 = siecTeatrow.Theaters[1];
+var theater3 = siecTeatrow.Theaters[2];
+
+theater1.CreateHall(1);
+theater1.CreateHall(1);
+theater2.CreateHall(2);
+theater2.CreateHall(3);
+theater3.CreateHall(1);
+theater3.CreateHall(2);
 
 Console.WriteLine(siecTeatrow);
 Console.WriteLine();
 
-siecTeatrow.Theaters[0].Halls[0].CreateSeat(1, 1);
-siecTeatrow.Theaters[0].Halls[0].CreateSeat(1, 1); // powtórzenie sziedzenia
-siecTeatrow.Theaters[0].Halls[0].CreateSeat(1, 2);
-siecTeatrow.Theaters[0].Halls[0].CreateSeat(2, 1);
-siecTeatrow.Theaters[0].Halls[0].CreateSeat(2, 2);
+var hall1 = siecTeatrow.Theaters[0].Halls[0];
+hall1.CreateSeat(2, 2);
+hall1.CreateSeat(1, 2);
+hall1.CreateSeat(1, 1);
+hall1.CreateSeat(1, 1); // powtórzenie siedzenia
+hall1.CreateSeat(2, 1);
 
-Console.WriteLine(siecTeatrow.Theaters[0].Halls[0].GetSeats());
+Console.WriteLine("Siedzenia w Sali 1:");
+Console.WriteLine(hall1.GetSeats());

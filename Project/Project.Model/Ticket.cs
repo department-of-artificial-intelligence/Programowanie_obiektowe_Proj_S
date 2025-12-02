@@ -27,6 +27,6 @@ public class Ticket
 
     public override string ToString()
     {
-        return $"{TicketId}/{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat.SeatLocationString()}";
+        return $"{TicketId}/{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat}";
     }
 }
