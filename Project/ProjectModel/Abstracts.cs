@@ -10,15 +10,15 @@ namespace Project.Model
     {
         List<Employee> AllEmployees();
         bool AddEmployee(Employee employee);
-        bool DeleteEmployee(int id);
+        bool RemoveEmployee(Employee employee);
 
-        bool sortEmployees();
+        bool SortEmployees();
     }
     public interface IEmployeeManager
     {
         void DisplayEmployees();
-        bool AddEmployee();
-        bool DeleteEmployee();
+        bool AddEmployee(string firstName, string lastName, string position);
+        bool RemoveEmployee(int id);
     }
     //------------------------------Interfejsy do klasy EmployeeManager
     public interface IPharmaciesSource
@@ -29,20 +29,16 @@ namespace Project.Model
     public interface IDrugsSource
     {
         List<Drug> AllDrugs();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="drug"></param>
-        /// <returns></returns>
-        bool AddDrug(Drug drug);
-        bool DeleteDrug(string name);
+        bool AddNewDrug(Drug drug);
+        bool RemoveDrug(string name);
+        bool SortDrugs();
     }
     public interface IDrugManager
     {
         void DisplayDrugs();
-        bool AddDrug();
-        bool DeleteDrug();
+        bool AddDrug(string nazwa, string typ, string cena, string opis);
+        bool RemoveDrug(string doUsuniecia);
         void sortByFirstLetter();
-        void sortByTypeOfDrug();
+        void sortWhetherDrugIsOnPrescription();
     }
 }

@@ -22,42 +22,26 @@ namespace Project.Model
                 Console.WriteLine(emp);
             }
         }
-        public bool AddEmployee()
+        public bool AddEmployee(string firstName, string lastName, string position)
         {
-            var pracownicy = _source.AllEmployees();
-            int new_id = 0;
-            while(pracownicy.Any(x => x.Id == new_id)) {
+            List<Employee> lista = _source.AllEmployees();
+            int new_id = 1;
+            while (lista.Any(x => x.Id == new_id))
+            {
                 new_id++;
             }
-            Console.Write("Podaj imie nowego pracownika: ");
-            string? imie = Console.ReadLine();
-            Console.Write("Podaj nazwisko nowego pracownika: ");
-            string? nazw = Console.ReadLine();
-            Console.Write("Podaj stanowisko nowego pracownika: ");
-            string? stanowisko = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(imie) || string.IsNullOrWhiteSpace(nazw) || string.IsNullOrWhiteSpace(stanowisko))
-            {
-                Console.WriteLine("Ktoras dana nie zostala podana");
-                return false;
-            }
-            Employee nowy = new(new_id, imie, nazw, stanowisko);
-            _source.AddEmployee(nowy);
-            _source.sortEmployees();
-            Console.WriteLine($"Dodany Pracownik: {nowy}");
+            var newEmployee = new Employee(new_id, firstName, lastName, position);
+            _source.AddEmployee(newEmployee);
+            _source.SortEmployees();
             return true;
         }
-        public bool DeleteEmployee()
+        public bool RemoveEmployee(int id)
         {
-            Console.Write("Podaj Id pracownika do usunięcia: ");
-            if(!int.TryParse(Console.ReadLine(), out int id))
-            {
-                Console.WriteLine("Nie podales liczby!!");
-                return false;
-            }else
-            {
-                _source.DeleteEmployee(id);
-                return true;
-            }
+            var lista = _source.AllEmployees();
+            Employee? doUsuniecia = lista.FirstOrDefault(x => x.Id == id);
+            if (doUsuniecia is null) return false;
+            _source.RemoveEmployee(doUsuniecia);
+            return true;
         }
     }
 }

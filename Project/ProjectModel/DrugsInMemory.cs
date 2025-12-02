@@ -18,21 +18,29 @@ namespace Project.Model
         {
             return Drugs;
         }
-        public bool AddDrug(Drug drug) 
+        public bool AddNewDrug(Drug drug)
         {
             if (drug is null) return false;
+            foreach (var l in Drugs)
+            {
+                if (l.Name == drug.Name)
+                {
+                    return false;
+                }
+            }
             Drugs.Add(drug);
             return true;
         }
-        public bool DeleteDrug(string name)
+        public bool SortDrugs()
         {
-            if(string.IsNullOrWhiteSpace(name))
-            {
-                return false;
-            }
-            var usuniety = Drugs.FirstOrDefault(x => x.Name == name);
-            if (usuniety is null) return false;
-            Drugs.Remove(usuniety);
+            Drugs = Drugs.OrderBy(x => x.DrugId).ToList();
+            return true;
+        }
+        public bool RemoveDrug(string name)
+        {
+            var doUsuniecia = Drugs.FirstOrDefault(x => x.Name == name);
+            if (doUsuniecia is null) return false;
+            Drugs.Remove(doUsuniecia);
             return true;
         }
     }

@@ -14,13 +14,15 @@ namespace Project.Model
         {
             _source = source;
         }
-        public void displayAllPharmacies()
+        public override string ToString()
         {
             var pharmacies = _source.AllPharmacies();
-            foreach(Pharmacy a in pharmacies)
+            string s = string.Empty;
+            foreach(var phar in pharmacies)
             {
-                Console.WriteLine($"{a},\n");
+                s += phar + "\n" + "\n";
             }
+            return "\n" + s;
         }
     }
 }

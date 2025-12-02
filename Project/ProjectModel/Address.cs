@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Project.Model
 {
     public class Address
     {
+        
         public string City { get; set; }
         public string Street { get; set; }
         public string PostalCode { get; set; }
@@ -23,9 +23,9 @@ namespace Project.Model
         }
         public Address() : this(string.Empty, string.Empty, string.Empty, 0) { }
 
-        public void DisplayAddress()
+        public override string ToString()
         {
-            Console.WriteLine($"Adres Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}");
+            return $"Adres Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}";
         }
     }
 }

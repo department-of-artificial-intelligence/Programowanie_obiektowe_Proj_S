@@ -24,16 +24,13 @@ namespace Project.Model
             Employees.Add(employee);
             return true;
         }
-        public bool DeleteEmployee(int id)
+        public bool RemoveEmployee(Employee employee)
         {
-            if (id >= 0)
-            {
-                Employees.RemoveAt(id);
-                return true;
-            }
-            return false;
+            if (employee is null) return false;
+            Employees.Remove(employee);
+            return true;
         }
-        public bool sortEmployees()
+        public bool SortEmployees()
         {
             Employees = Employees.OrderBy(emp => emp.Id).ToList();
             return true;

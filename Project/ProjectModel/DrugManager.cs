@@ -21,47 +21,31 @@ namespace Project.Model
             {
                 Console.WriteLine(drug);
             }
-
         }
-        public bool AddDrug()
+        public bool AddDrug(string nazwa, string typ, string cena, string opis)
         {
-            /*
-            var drugs = _source.AllDrugs();
-            
-            int new_id = 0;
-            while (drugs.Any(x => x.Id == new_id))   gdy dodamy Id do klasy Drug < --
+            var lista = _source.AllDrugs();
+            int new_id = 1;
+            while(lista.Any(x => x.DrugId == new_id))
             {
                 new_id++;
             }
-            */
-            Console.Write("Podaj nazwe dodawanego leku: ");
-            string? nazwa = Console.ReadLine();
-            Console.Write("Podaj typ dodawanego leku: ");
-            string? typ = Console.ReadLine();
-            Console.Write("Podaj cene leku - musi to byc liczba: ");
-            string? cena = Console.ReadLine();
-            Console.Write("Podaj opis leku: ");
-            string? opis = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis))
-            {
-                Console.WriteLine("Nie wpisales ktorejs z danych leku");
-                return false;
-            }
-            Drug nowy = new Drug(nazwa, typ, cena, opis);
+            Drug nowy = new Drug(new_id, nazwa, typ, cena, opis);
             if (nowy is null) return false;
-            _source.AddDrug(nowy);
-            return true;
-        }
-        public bool DeleteDrug()
-        {
-            Console.WriteLine("Podaj nazwe leku do usuniecia: ");
-            string? nazwa = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(nazwa))
+            if(_source.AddNewDrug(nowy))
             {
-                Console.WriteLine("Nie wpisales nic!");
+                _source.SortDrugs();
+                return true;
+            }
+            else
+            {
                 return false;
             }
-            _source.DeleteDrug(nazwa);
+        }
+        public bool RemoveDrug(string nazwa)
+        {
+            if (string.IsNullOrWhiteSpace(nazwa)) return false;
+            _source.RemoveDrug(nazwa);
             return true;
         }
         public void sortByFirstLetter()
@@ -74,15 +58,12 @@ namespace Project.Model
                 Console.WriteLine($"{group.Key}: {polaczone}");
             }
         }
-        public void sortByTypeOfDrug()
+        public void sortWhetherDrugIsOnPrescription()
         {
             var lista = _source.AllDrugs();
-            var pogrupowane = lista.GroupBy(x => x.TypeOfMedicine);
-            foreach (var group in pogrupowane)
-            {
-                string polaczone = string.Join(", ", group.Select(x => x.Name));
-                Console.WriteLine($"{group.Key}: {polaczone}");
-            }
+            var pogrupowane = lista.Where(x => x is PrescriptionDrug);
+            string polaczone = string.Join(", ", pogrupowane.Select(x => x.Name));
+            Console.WriteLine($"Leki Na Recepte: {polaczone}");
         }
     }
 }
