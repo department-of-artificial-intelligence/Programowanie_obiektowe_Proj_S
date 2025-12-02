@@ -8,17 +8,19 @@ public class Order : IShowInfo
     public int OrderId { get; set; }
     public IList<MenuItem> Items { get; set; } = [];
     public DateTime OrderTime { get; set; }
-    //public required Client Client { get; set; }
+    public Client Client { get; set; }
 
-    public Order() : this(0, []) { }
-    public Order(int orderId, IList<MenuItem> items)
+    public Order() : this(0, new Client(), []) { }
+    public Order(int orderId, Client client) : this(orderId, client, new List<MenuItem>()) { }
+    public Order(int orderId, Client client, IList<MenuItem> items)
     {
         OrderId = orderId;
         Items = items;
+        Client = client;
         OrderTime = DateTime.Now;
     }
 
-    public void AddItme(MenuItem item)
+    public void AddItem(MenuItem item)
     {
         if (item != null)
         {
@@ -38,7 +40,7 @@ public class Order : IShowInfo
     public string GetInfo()
     {
         var info = $"---- Order #{OrderId} ----\n";
-        //info += $"Client: {Client.Name}\n";
+        info += $"Client: {Client.FirstName} {Client.LastName}\n";
         info += $"Time: {OrderTime}\n";
         info += "Items:\n";
 
