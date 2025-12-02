@@ -24,4 +24,9 @@ public class Ticket
         Status = status;
         Customer = null;
     }
+
+    public override string ToString()
+    {
+        return $"{TicketId}/{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat.SeatLocationString()}";
+    }
 }

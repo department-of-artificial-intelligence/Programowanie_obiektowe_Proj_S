@@ -29,7 +29,7 @@ public class Theater
         Halls = new List<Hall>();
     }
 
-    public bool AddHall(int hallId)
+    public bool CreateHall(int hallId)
     {
         if (hallId <= 0) return false;
         Hall hall = new Hall(hallId);
@@ -48,10 +48,8 @@ public class Theater
         Halls.Clear();
     }
 
-    public override string ToString() // zamiast sal, ich liczba?
+    public override string ToString()
     {
-        string s = $"{TheaterId}/{Name}/Adres: {Address}";
-        s += Halls.Capacity == 0 ? "\nBrak sal teatralnych" : "Sale teatralne:" + string.Join("", Halls.Select(t => "\n- " + t));
-        return s;
+        return $"{TheaterId}/{Name}/Adres: {Address}\nSale teatralne:\n" + Halls.ListToString("Brak sal teatralnych");
     }
 }

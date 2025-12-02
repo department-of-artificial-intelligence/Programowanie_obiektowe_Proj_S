@@ -46,8 +46,6 @@ public class TheaterNetwork
     }
     public override string ToString()
     {
-        string s = $"Sieć teatrów: {Name}";
-        s += Theaters.Capacity == 0 ? "\nBrak teatrów" : string.Join("", Theaters.Select(t => "\n- " + t));
-        return s;
+        return $"Sieć teatrów: {Name}\n" + Theaters.ListToString("Brak teatrów", '*');
     }
 }

@@ -29,7 +29,7 @@ public class Hall
         Performances = new List<Performance>();
     }
 
-    public bool AddSeat(int rowNumber, int seatNumber)
+    public bool CreateSeat(int rowNumber, int seatNumber)
     {
         if (rowNumber <= 0 || seatNumber <= 0) return false;
         if (Seats.Any(s => s.RowNumber == rowNumber && s.SeatNumber == seatNumber)) return false;
@@ -77,5 +77,14 @@ public class Hall
             performance.Hall = null;
         }
         Performances.Clear();
+    }
+
+    public string GetSeats() => Seats.ListToString();
+
+    public string GetPerformances() => Performances.ListToString();
+
+    public override string ToString()
+    {
+        return $"Sala nr.{HallId}";
     }
 }
