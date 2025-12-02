@@ -1,4 +1,6 @@
-﻿namespace RestaurantNetwork.Model
+﻿using RestaurantNetwork.Model;
+
+namespace RestaurantManagement.Models.Interfaces
 {
     public interface INetworkManager
     {

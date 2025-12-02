@@ -13,8 +13,7 @@ namespace RestaurantManagement
     {
         static List<Restaurant> restaurants = new(); // lista restauracji bo jest ich wiecej
 
-
-
+        // =======================================Dodaj, Lista===================================================
         static void Main(string[] args)
         {
             while (true)
@@ -31,9 +30,9 @@ namespace RestaurantManagement
 
                 switch (option)
                 {
-                    case "1": AddRestaurant(); break;  // <-- dodane
-                    case "2": ShowRestaurants(); break; // <-- dodane
-                    case "3": ManageRestaurant(); break; // <-- dodane
+                    case "1": AddRestaurant(); break; 
+                    case "2": ShowRestaurants(); break; 
+                    case "3": ManageRestaurant(); break; 
                     case "0": return;
                     default: Console.WriteLine("Niepoprawna opcja!"); break;
                 }
@@ -100,9 +99,8 @@ namespace RestaurantManagement
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
                 Clients = new List<Person>(),
-                Reservations = new List<Reservation>() // <-- bardzo ważne
+                Reservations = new List<Reservation>() 
             };
-
 
             restaurants.Add(restaurant);
             Console.WriteLine("Dodano restaurację!");
@@ -116,13 +114,14 @@ namespace RestaurantManagement
                 return;
             }
 
+            var sortedRestaurants = restaurants.OrderBy(r => r.Name).ToList();
+
             Console.WriteLine("\nLista restauracji:");
-            for (int i = 0; i < restaurants.Count; i++)
+            for (int i = 0; i < sortedRestaurants.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {restaurants[i].Name} ({restaurants[i].Address.City})");
+                Console.WriteLine($"{i + 1}. {sortedRestaurants[i].Name} ({sortedRestaurants[i].Address.City})");
             }
         }
-
 
         static void ManageRestaurant()
         {
@@ -144,6 +143,7 @@ namespace RestaurantManagement
             var selected = restaurants[choice - 1];
             Console.WriteLine($"\nWybrano restaurację: {selected.Name}");
 
+            //======================================== ZARZADZANIE Pracownik/Rezerwacje ================================================== 
             while (true)
             {
                 Console.Clear();
@@ -158,10 +158,10 @@ namespace RestaurantManagement
                 switch (option)
                 {
                     case "1":
-                        ManageEmployees(selected); // Podmenu dla pracowników
+                        ManageEmployees(selected); 
                         break;
                     case "2":
-                        ManageReservations(selected); // Podmenu dla rezerwacji
+                        ManageReservations(selected); 
                         break;
                     case "0":
                         return;
@@ -175,8 +175,8 @@ namespace RestaurantManagement
             }
         }
 
-
-        static void ManageReservations(Restaurant restaurant) // <-- dodane
+        //======================================== ZARZADZANIE Rezerwacja ================================================== 
+        static void ManageReservations(Restaurant restaurant) 
 
         {
             while (true)
@@ -287,8 +287,8 @@ namespace RestaurantManagement
         }
 
 
-        //
-        static void ManageEmployees(Restaurant restaurant) // <-- dodane
+        //======================================== ZARZADZANIE Pracownikami ================================================== 
+        static void ManageEmployees(Restaurant restaurant) 
         {
             while (true)
             {
@@ -365,7 +365,6 @@ namespace RestaurantManagement
 }
 
         }
-
         static void AddEmployee(Restaurant restaurant) 
         {
             Console.Write("Imię: ");
@@ -412,13 +411,13 @@ namespace RestaurantManagement
                 return;
             }
 
-            if (dateOfBirth.Month < 1 || dateOfBirth.Month > 12) // <-- dodane
+            if (dateOfBirth.Month < 1 || dateOfBirth.Month > 12) 
             {
-                Console.WriteLine("Miesiąc poza zakresem"); // <-- dodane
-                return; // <-- dodane
+                Console.WriteLine("Miesiąc poza zakresem"); 
+                return; 
             }
 
-            if (dateOfBirth.Day < 1 || dateOfBirth.Day > 31) // <-- dodane
+            if (dateOfBirth.Day < 1 || dateOfBirth.Day > 31) 
             {
                 Console.WriteLine("Dzień poza zakresem"); 
                 return; 
@@ -466,11 +465,11 @@ namespace RestaurantManagement
                 Address = address
             };
 
-            restaurant.Employees.Add(employee); // <-- zmienione
+            restaurant.Employees.Add(employee); 
             Console.WriteLine("Pracownik dodany!");
         }
 
-        static void RemoveEmployee(Restaurant restaurant) // <-- zmienione
+        static void RemoveEmployee(Restaurant restaurant) 
         {
             Console.Write("Podaj nazwisko pracownika do usunięcia: ");
             string lastName = Console.ReadLine();
@@ -486,7 +485,7 @@ namespace RestaurantManagement
                 Console.WriteLine("Nie znaleziono pracownika!");
         }
 
-        static void ShowEmployees(Restaurant restaurant) // <-- zmienione
+        static void ShowEmployees(Restaurant restaurant) 
         {
             if (!restaurant.Employees.Any())
             {
@@ -503,5 +502,5 @@ namespace RestaurantManagement
     }
 
 
-//sortowanie jakiejs listy
+//framework, test jakis
 }

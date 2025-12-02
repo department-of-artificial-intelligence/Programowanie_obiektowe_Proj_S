@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Model\RestaurantManagement.Models.csproj" />
+    <ProjectReference Include="..\Restaurant.Tests\RestaurantManagement.Tests.csproj" />
   </ItemGroup>
 
 </Project>
