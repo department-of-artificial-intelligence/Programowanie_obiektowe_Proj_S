@@ -25,7 +25,7 @@ namespace Project.Model
 
         public override string ToString()
         {
-            return $"Id: {Id}, Imie: {FirstName}, Nazwisko:{LastName}, Stanowisko: {Position}";
+            return $"Id: {Id}, Imie: {FirstName}, Nazwisko: {LastName}, Stanowisko: {Position}";
         }
     }
 }
