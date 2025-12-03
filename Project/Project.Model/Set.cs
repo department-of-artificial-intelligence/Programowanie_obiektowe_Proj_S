@@ -12,5 +12,5 @@ public class Set
         Repetitions = repetitions;
         SetCount = setCount;
         WeightUsed = weight;
-    }
+    }//d
 }
