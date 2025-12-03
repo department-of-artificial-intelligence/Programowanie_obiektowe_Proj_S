@@ -5,17 +5,17 @@ using System.Linq;
 
 class Program
 {
-    // Globalne instancje klas zarządzających
+   
     private static DataManagement data = new DataManagement();
     private static ReportGenerator reports = new ReportGenerator();
 
     static void Main(string[] args)
     {
-        InitializeSampleData(); // Inicjalizacja przykładowych danych testowych
+        InitializeSampleData(); 
 
         while (true)
         {
-            DisplayMainMenu(); // Wyświetlenie menu głównego
+            DisplayMainMenu(); 
             string choice = Console.ReadLine();
 
             switch (choice)
@@ -36,6 +36,15 @@ class Program
                     // Generowanie raportu z grupowaniem przy użyciu wyrażenia lambda (LINQ)
                     reports.GroupClientsByGoal(data.Clients);
                     break;
+                case "6":
+                   
+                    reports.DisplayAllData(
+                        data.Clients,
+                        data.Trainers,
+                        data.Exercises,
+                        data.Workouts
+                    );
+                    break;
                 case "7":
                     Console.WriteLine("\nZamykanie aplikacji...");
                     return;
@@ -48,19 +57,14 @@ class Program
         }
     }
 
-    // --- METODY INTERAKTYWNE ZE STANDARDOWYM ODCZYTEM ---
+    // METODY INTERAKTYWNE 
 
     private static void AddClientInteractive()
     {
         Console.WriteLine("\n--- DODAWANIE NOWEGO KLIENTA ---");
-
-        // UWAGA: Konwersje i odczyty są teraz proste, bez walidacji pętli!
-
         Console.Write("Podaj ID Klienta (unikalna liczba całkowita): ");
-        // Ręczne konwertowanie ciągu na liczbę całkowitą. Wystąpi błąd, jeśli dane będą złe!
         int id = int.Parse(Console.ReadLine());
 
-        // --- Sprawdzanie unikalności ID (Walidacja logiczna musi pozostać) ---
         if (data.Clients.Any(c => c.Id == id))
         {
             Console.WriteLine($"Błąd: Klient o ID {id} już istnieje. Program zakończy działanie, by uniknąć błędu.");
@@ -75,29 +79,28 @@ class Program
         string email = Console.ReadLine();
 
         Console.Write("Podaj wagę (kg): ");
-        double weight = double.Parse(Console.ReadLine()); // Prosta konwersja
+        double weight = double.Parse(Console.ReadLine()); 
 
         Console.Write("Podaj wzrost (m): ");
-        double height = double.Parse(Console.ReadLine()); // Prosta konwersja
+        double height = double.Parse(Console.ReadLine()); 
 
         Console.Write("Podaj cel treningowy (np. redukcja, masa): ");
         string goal = Console.ReadLine();
 
         var newClient = new Client(id, firstName, lastName, email, weight, height, goal);
         data.AddClient(newClient);
-        Console.WriteLine($"\n✅ Dodano klienta: {newClient.FirstName} {newClient.LastName} (ID: {newClient.Id})");
+        Console.WriteLine($"\n Dodano klienta: {newClient.FirstName} {newClient.LastName} (ID: {newClient.Id})");
     }
 
     private static void AddTrainerInteractive()
     {
         Console.WriteLine("\n--- DODAWANIE NOWEGO TRENERA ---");
 
-        // UWAGA: Konwersje i odczyty są teraz proste, bez walidacji pętli!
+       
 
         Console.Write("Podaj ID Trenera (unikalna liczba całkowita): ");
         int id = int.Parse(Console.ReadLine());
 
-        // --- Sprawdzanie unikalności ID (Walidacja logiczna musi pozostać) ---
         if (data.Trainers.Any(t => t.Id == id))
         {
             Console.WriteLine($"Błąd: Trener o ID {id} już istnieje. Program zakończy działanie, by uniknąć błędu.");
@@ -115,7 +118,7 @@ class Program
         string specialization = Console.ReadLine();
 
         Console.Write("Podaj stawkę godzinową (PLN): ");
-        decimal rate = decimal.Parse(Console.ReadLine()); // Prosta konwersja
+        decimal rate = decimal.Parse(Console.ReadLine()); 
 
         var newTrainer = new Trainer(id, firstName, lastName, email, specialization, rate);
         data.AddTrainer(newTrainer);
@@ -129,7 +132,6 @@ class Program
         Console.Write("Podaj ID Ćwiczenia (unikalna liczba całkowita): ");
         int id = int.Parse(Console.ReadLine());
 
-        // --- Sprawdzanie unikalności ID (Walidacja logiczna musi pozostać) ---
         if (data.Exercises.Any(e => e.Id == id))
         {
             Console.WriteLine($"Błąd: Ćwiczenie o ID {id} już istnieje. Program zakończy działanie, by uniknąć błędu.");
@@ -143,7 +145,7 @@ class Program
 
         var newExercise = new Exercise(id, name, muscleGroup);
         data.AddExercise(newExercise);
-        Console.WriteLine($"\n✅ Dodano ćwiczenie: {newExercise.Name} (ID: {newExercise.Id})");
+        Console.WriteLine($"\n Dodano ćwiczenie: {newExercise.Name} (ID: {newExercise.Id})");
     }
 
     private static void AddWorkoutInteractive()
@@ -185,7 +187,7 @@ class Program
         var newWorkout = new Workout(workoutId, DateTime.Now.Date, client);
         Console.WriteLine($"\n✅ Tworzenie treningu dla {client.FirstName} {client.LastName}...");
 
-        // 3. Dodawanie Serii Ćwiczeń (Uproszczona pętla)
+        // 3. Dodawanie Serii Ćwiczeń
         Console.WriteLine("\n--- DODAWANIE SERII ---");
         Console.WriteLine("Dostępne Ćwiczenia:");
         foreach (var e in data.Exercises)
@@ -215,11 +217,8 @@ class Program
 
         data.AddWorkout(newWorkout);
         client.PlannedWorkouts.Add(newWorkout);
-        Console.WriteLine($"\n✅ Trening o ID {newWorkout.Id} zapisany i przypisany do {client.FirstName}.");
+        Console.WriteLine($"\n Trening o ID {newWorkout.Id} zapisany i przypisany do {client.FirstName}.");
     }
-
-    // --- METODY POMOCNICZE (ZOSTAWIAMY TYLKO DISPLAY MENU) ---
-
     private static void DisplayMainMenu()
     {
         Console.Clear();
@@ -231,14 +230,11 @@ class Program
         Console.WriteLine("4. Dodaj nowy Trening");
         Console.WriteLine("--------------------------------------------------");
         Console.WriteLine("5. Raport: Grupowanie Klientów wg Celów (LINQ)");
+        Console.WriteLine("6. Raport: wszystkie dane");
         Console.WriteLine("--------------------------------------------------");
         Console.WriteLine("7. ZAMKNIJ APLIKACJĘ");
         Console.Write("\nWybierz opcję: ");
     }
-
-    // Usunięto metody Value, ReadInt, ReadDouble, ReadDecimal zgodnie z prośbą.
-
-    // --- FUNKCJA INICJALIZUJĄCA DANE TESTOWE ---
 
     private static void InitializeSampleData()
     {

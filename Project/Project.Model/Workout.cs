@@ -14,8 +14,6 @@ public class Workout : IReportable
         Client = client;
         Sets = new List<Set>();
     }
-
-    // IReportable Implementation
     public string ReportDescription
     {
         get { return $"WORKOUT (ID: {Id}): {Date.ToShortDateString()} | Client: {Client.LastName}"; }
@@ -26,7 +24,7 @@ public class Workout : IReportable
         Console.WriteLine($"  -> Client: {Client.FirstName} | Total Exercises: {Sets.Count}");
         foreach (var set in Sets)
         {
-            Console.WriteLine($"     - {set.Exercise.Name}: {set.SetCount}x{set.Repetitions} ({set.WeightUsed}kg)");
+            Console.WriteLine($" - {set.Exercise.Name}: {set.SetCount}x{set.Repetitions} ({set.WeightUsed}kg)");
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿using Project.Model;
 using System.Linq;
 
-// ReportGenerator.cs
+
 public class ReportGenerator
 {
-    // LAMBDA EXPRESSION FOR GROUPING
+
     public void GroupClientsByGoal(List<Client> allClients)
     {
-        Console.WriteLine("\n\n--- 📋 REPORT 1: Clients Grouped by Training Goal (LINQ GroupBy with Lambda) ---");
+        Console.WriteLine("\n\n GroupByLambda) ---");
 
-        // Using lambda expression 'c => c.TrainingGoal' for grouping
         var goalGroups = allClients
             .GroupBy(c => c.TrainingGoal)
             .OrderByDescending(g => g.Count());
@@ -23,16 +22,50 @@ public class ReportGenerator
             }
         }
     }
-
-    // Interface utilization (Polymorphism)
-    public void GenerateReportSummary(List<IReportable> reportList)
+        public void DisplayAllData(
+        List<Client> Clients,
+        List<Trainer> Trainers,
+        List<Exercise> Exercises,
+        List<Workout> Workouts)
     {
-        Console.WriteLine("\n\n--- 📈 REPORT 2: Reportable Items Summary (Polymorphism with Interface) ---");
-        foreach (var element in reportList)
+        Console.WriteLine("\n\n--- ZESTAWIENIE WSZYSTKICH DANYCH SYSTEMU ---");
+        Console.WriteLine("-------------------------------------------------");
+
+        // 1. Klienci
+        Console.WriteLine($"\n[KLIENCI] (Liczba: {Clients.Count})");
+        foreach (var c in Clients)
         {
-            // Calls methods/properties defined in the IReportable interface
-            Console.WriteLine($"\n{element.ReportDescription}");
-            element.DisplayDetails();
+            Console.WriteLine($"  -> ID: {c.Id} | {c.FirstName} {c.LastName} | Cel: {c.TrainingGoal} | Waga: {c.Weight}kg");
         }
+
+        // 2. Trenerzy
+        Console.WriteLine($"\n[TRENERZY] (Liczba: {Trainers.Count})");
+        foreach (var t in Trainers)
+        {
+            Console.WriteLine($"  -> ID: {t.Id} | {t.FirstName} {t.LastName} | Specjalizacja: {t.Specialization} | Stawka: {t.HourlyRate:C}");
+        }
+
+        // 3. Ćwiczenia
+        Console.WriteLine($"\n[ĆWICZENIA] (Liczba: {Exercises.Count})");
+        foreach (var e in Exercises)
+        {
+            Console.WriteLine($"  -> ID: {e.Id} | {e.Name} | Partia: {e.MuscleGroup}");
+        }
+
+        Console.WriteLine($"\n[TRENINGI] (Liczba: {Workouts.Count})");
+        foreach (var w in Workouts)
+        {
+            Console.WriteLine($"  -> ID: {w.Id} | Data: {w.Date.ToShortDateString()} | Klient: {w.Client.LastName}");
+            // Wyświetlanie szczegółów serii dla każdego treningu
+            foreach (var set in w.Sets)
+            {
+                
+                Console.WriteLine($"     -> {set.Exercise.Name}: {set.SetCount} serii po {set.Repetitions} powtórzeń ({set.WeightUsed}kg)");
+            }
+        }
+        Console.WriteLine("\n-------------------------------------------------");
     }
 }
+    
+   
+
