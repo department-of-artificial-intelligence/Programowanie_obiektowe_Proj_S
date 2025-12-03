@@ -7,57 +7,6 @@ using System.Threading.Tasks;
 
 namespace CarsRental.Model
 {
-    public class CustomerManager : IManager<Customer>
-    {
-        private List<Customer> _customers = new List<Customer>();
-        private int _customerCounter = 0;
-
-        public void Add(Customer customer)
-        {
-            Console.WriteLine("Dodawanie klienta...");
-
-            if (customer == null)
-            {
-                Console.WriteLine("Nie można dodać pustych danych!\n");
-                return;
-            }
-
-            _customerCounter++;
-            customer.Id = _customerCounter;
-            _customers.Add(customer);
-
-            Console.WriteLine($"Dodano {customer.FirstName} {customer.LastName}\n");
-        }
-
-        public List<Customer> GetAll()
-        {
-            return _customers;
-        }
-
-        public Customer? GetById(int id)
-        {
-            var cus = _customers.Find(c => c.Id == id);
-            if (cus == null)
-            {
-                Console.WriteLine($"Nie znaleziono klienta ID({id})\n");
-                return null;
-            }
-            return cus;
-        }
-
-        public void Remove(int id)
-        {
-            Console.WriteLine("Usuwanie klienta...");
-
-            Customer? customerToRemove = GetById(id);
-            if (customerToRemove != null)
-            {
-                _customers.Remove(customerToRemove);
-                Console.WriteLine($"Usunięto {customerToRemove.FirstName} {customerToRemove.LastName}\n");
-            }
-        }
-    }
-
     public class Customer : IIdentify
     {
         private int _id;

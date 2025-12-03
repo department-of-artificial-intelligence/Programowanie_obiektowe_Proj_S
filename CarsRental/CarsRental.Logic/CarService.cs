@@ -29,6 +29,39 @@ namespace CarsRental.Logic
             Console.WriteLine($"Dodano {car.Brand} {car.Model} {car.ProdYear} do wypożyczalni!\n");
         }
 
+        public void UpdateCar(Car car)
+        {
+            Console.WriteLine("Aktualizowanie pojazdu...");
+            if (car == null)
+            {
+                Console.WriteLine("Pola nie mogą być puste!");
+                return;
+            }
+
+            var existingCar = GetCar(car.Id);
+            if (existingCar == null)
+            {
+                Console.WriteLine("Nie znaleziono takiego samochodu");
+                return;
+            }
+
+            existingCar.Brand = car.Brand;
+            existingCar.Model = car.Model;
+            existingCar.ProdYear = car.ProdYear;
+            existingCar.EngineVolume = car.EngineVolume;
+            existingCar.HorsePower = car.HorsePower;
+            existingCar.Torque = car.Torque;
+            existingCar.TimetoHundred = car.TimetoHundred;
+            existingCar.DriveType = car.DriveType;
+            existingCar.GearboxType = car.GearboxType;
+            existingCar.Seats = car.Seats;
+            existingCar.BasePrice = car.BasePrice;
+            existingCar.IsAvailable = car.IsAvailable;
+            existingCar.Department = car.Department;
+
+            Console.WriteLine($"Zaktualizowano samochód [{car.Id}] {car.Brand} {car.Model}");
+        }
+
         public void RemoveCar(int id)
         {
             Console.WriteLine("Usuwanie pojazdu...");

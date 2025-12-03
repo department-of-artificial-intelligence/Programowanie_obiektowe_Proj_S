@@ -10,11 +10,12 @@ namespace CarsRental.Logic
     public interface ICarService
     {
         void AddCar(Car car);
-        void RemoveCar(int id);
-        Car? GetCar(int id);
+        void UpdateCar(Car car);
+        void RemoveCar(int carId);
+        Car? GetCar(int carId);
         List<Car> GetAllCars();
-        bool RentCar(int id);
-        bool ReturnCar(int id);
+        bool RentCar(int carId);
+        bool ReturnCar(int carId);
         List<Car> GetCarsByDepartment(Department department);
     }
 }
