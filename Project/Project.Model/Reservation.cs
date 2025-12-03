@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace SiecHoteli
+namespace Project.Model
 {
-    public class Reservation
+    public class Reservation : IHotelElement
     {
         public int Id { get; set; }
-        public string ImieKlienta { get; set; } = string.Empty;
-        public string NazwiskoKlienta { get; set; } = string.Empty;
-        public Room Pokoj { get; set; } = new Room();
+        public Guest Gosc { get; set; } = new();
+        public Room Pokoj { get; set; } = new();
         public DateTime DataOd { get; set; }
         public DateTime DataDo { get; set; }
+        public decimal Koszt => (decimal)(DataDo - DataOd).TotalDays * Pokoj.CenaZaDobe;
 
-        public override string ToString() =>
-            $"Rezerwacja #{Id}: {ImieKlienta} {NazwiskoKlienta}, pokój {Pokoj.Numer}, {DataOd:d} - {DataDo:d}";
+        public string Info() => ToString();
+        public override string ToString() => $"Rezerwacja #{Id}: {Gosc.PelneDane()}, pokój {Pokoj.Numer}, {DataOd:dd-MM-yyyy} - {DataDo:dd-MM-yyyy} | koszt: {Koszt:C}";
     }
 }
