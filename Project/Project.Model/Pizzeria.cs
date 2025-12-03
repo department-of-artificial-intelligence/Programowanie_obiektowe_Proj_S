@@ -11,6 +11,8 @@ namespace Project.Model
         public string Name { get; set; }
         public string Address { get; set; }
         public Menu Menu { get; set; }
+        //public StorageRoom Storage { get; set; }
+        public IList<Worker> Workers { get; set; }
         public IList<Order> Orders { get; set; }
 
         public Pizzeria() : this(string.Empty, string.Empty) { }
@@ -18,6 +20,8 @@ namespace Project.Model
         {
             Name = name;
             Menu = new Menu();
+            //Storage = new StorageRoom();
+            Workers = new List<Worker>();
             Orders = new List<Order>();
             Address = address;
         }
@@ -64,6 +68,7 @@ namespace Project.Model
             var info = $"=== PIZZERIA: {Name} ===\n";
             info += $"Address: {Address}\n";
             info += $"Menu items: {Menu.AvailableItems.Count}\n";
+            info += $"Staff count: {Workers.Count}\n";
             info += $"Total orders: {Orders.Count}\n";
             info += "=========================";
 
