@@ -3,6 +3,9 @@ using Project.Model;
 using Project.Domain;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Project.ConsoleApp
 {
@@ -10,45 +13,17 @@ namespace Project.ConsoleApp
     {
         // Testing Entity Framework
         static async Task Main(string[] args) {
-
-            try
+            IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
             {
-                using var db = new ApplicationDbContext();
+                var cns = context.Configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContext<ApplicationDbContext>(options=> options.UseSqlServer(cns));
+            }).Build();
 
-                Console.WriteLine($"Database path: {db.DbPath}");
+            var context = _host.Services.GetService<ApplicationDbContext>();
+            if (context != null) {
+                context.Database.Migrate();
+                context.Database.EnsureCreated();
 
-                // Create new User
-                Console.WriteLine("Trying to add new Person to database");
-                db.Add(new User(Random.Shared.Next(0, 10), "Test user", "passwordHash123"));
-                await db.SaveChangesAsync();
-
-                // Read 
-                Console.WriteLine("Querying for user");
-                var user = await db.Users
-                    .OrderBy(x => x.Id)
-                    .FirstAsync();
-                Console.WriteLine($"Received user: {user}");
-
-                // Update
-                Console.WriteLine("Updating an existing user");
-                user.HashPassword = "newHashPass";
-                await db.SaveChangesAsync();
-
-                // Delete
-                Console.WriteLine("Delete user");
-                db.Remove(user);
-                await db.SaveChangesAsync();
-                Console.WriteLine("Successfully deleted!");
-            }
-            catch (System.InvalidOperationException e)
-            {
-                Console.WriteLine("Error while generating ApplicationDbContext");
-                Console.WriteLine(e.Message);
-                return;
-            }
-            catch (Exception e) {
-                Console.WriteLine($"Error: {e.Message}");
-                throw e;
             }
         }
 
