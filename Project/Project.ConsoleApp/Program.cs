@@ -1,5 +1,29 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Menues;
+﻿using Project.ConsoleApp.Menues;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Project.DAL;
+using Project.Models;
+
+
+IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+{
+    var cns = context.Configuration.GetConnectionString("DefaultConnection");
+    services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(cns));
+}).Build();
+
+
+var context = _host.Services.GetService<ApplicationDBContext>();
+if (context != null)
+{
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    var actor = new Actor("Tom", "Hanks", "American", new DateTime(1956, 7, 9), "https://example.com/tom_hanks.jpg", "Famous American actor known for Forrest Gump and Cast Away.", 95.5);
+    context.Actors.Add(actor);
+    context.SaveChanges();
+}
 
 namespace Project.ConsoleApp
 {
