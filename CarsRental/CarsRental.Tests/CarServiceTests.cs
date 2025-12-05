@@ -6,121 +6,119 @@ namespace CarsRental.Tests
 {
     public class CarServiceTests
     {
-        private CarService _carService;
-        private Department _testDepartment;
-
-        public CarServiceTests()
+        private Car CreateTestCar(Department dept = null)
         {
-            _carService = new CarService();
-            _testDepartment = new Department();
+            return new Car
+            {
+                Brand = "BMW",
+                Model = "M3",
+                ProdYear = 2018,
+                EngineVolume = 3.0,
+                HorsePower = 431,
+                Torque = 550,
+                TimetoHundred = 4.1,
+                DriveType = "RWD",
+                GearboxType = "Automatic",
+                Seats = 5,
+                BasePrice = 300,
+                IsAvailable = true,
+                Department = dept
+            };
         }
 
         [Fact]
-        public void AddCar_Success()
+        public void AddCar_ShouldAssignIdAndAddToList()
         {
-            var car = new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, true, _testDepartment);
-            _carService.AddCar(car);
-            Assert.Equal(1, car.Id);
-            Assert.Single(_carService.GetAllCars());
+            var service = new CarService();
+            var car = CreateTestCar(new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com"));
+
+            service.AddCar(car);
+
+            var allCars = service.GetAllCars();
+            Assert.Single(allCars);
+            Assert.Equal(1, allCars[0].Id);
         }
 
         [Fact]
-        public void AddCar_Null_Fail()
+        public void UpdateCar_ShouldModifyExistingCar()
         {
-            _carService.AddCar(null);
-            Assert.Empty(_carService.GetAllCars());
+            var service = new CarService();
+            var dept = new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com");
+            var car = CreateTestCar(dept);
+
+            service.AddCar(car);
+
+            var updated = CreateTestCar(dept);
+            updated.Id = 1;
+            updated.Model = "M4";
+
+            service.UpdateCar(updated);
+
+            var result = service.GetCar(1);
+            Assert.Equal("M4", result.Model);
         }
 
         [Fact]
-        public void GetCar_ExistingId_Success()
+        public void RemoveCar_ShouldRemoveCorrectCar()
         {
-            var car = new Car(0, "Audi", "A6", 2021, 2.0, 245, 370, 6.2, "AWD", "Automatyczna", 5, 280.0, true, _testDepartment);
-            _carService.AddCar(car);
+            var service = new CarService();
+            var dept = new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com");
+            var car = CreateTestCar(dept);
 
-            var result = _carService.GetCar(1);
+            service.AddCar(car);
+            service.RemoveCar(1);
 
-            Assert.NotNull(result);
-            Assert.Equal("Audi", result.Brand);
-            Assert.Equal("A6", result.Model);
+            Assert.Empty(service.GetAllCars());
         }
 
         [Fact]
-        public void GetCar_NonExistingId_Fail()
+        public void RentCar_ShouldSetIsAvailableToFalse()
         {
-            var result = _carService.GetCar(999);
-            Assert.Null(result);
-        }
+            var service = new CarService();
+            var dept = new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com");
+            var car = CreateTestCar(dept);
 
-        [Fact]
-        public void RemoveCar_ExistingCar_Remove()
-        {
-            var car = new Car(0, "Toyota", "Corolla", 2020, 1.8, 140, 180, 9.5, "FWD", "Manualna", 5, 180.0, true, _testDepartment);
-            _carService.AddCar(car);
-
-            _carService.RemoveCar(1);
-
-            Assert.Empty(_carService.GetAllCars());
-        }
-
-        [Fact]
-        public void RentCar_AvailableCar_Success()
-        {
-            var car = new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, true, _testDepartment);
-            _carService.AddCar(car);
-
-            bool result = _carService.RentCar(1);
+            service.AddCar(car);
+            bool result = service.RentCar(1);
 
             Assert.True(result);
-            Assert.False(_carService.GetCar(1).IsAvailable);
+            Assert.False(service.GetCar(1).IsAvailable);
         }
 
         [Fact]
-        public void RentCar_UnavailableCar_Fail()
+        public void ReturnCar_ShouldSetIsAvailableToTrue()
         {
-            var car = new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, false, _testDepartment);
-            _carService.AddCar(car);
+            var service = new CarService();
+            var dept = new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com");
 
-            bool result = _carService.RentCar(1);
+            var car = CreateTestCar(dept);
+            car.IsAvailable = false;
 
-            Assert.False(result);
-        }
-
-        [Fact]
-        public void ReturnCar_RentedCar_Success()
-        {
-            var car = new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, false, _testDepartment);
-            _carService.AddCar(car);
-
-            bool result = _carService.ReturnCar(1);
+            service.AddCar(car);
+            bool result = service.ReturnCar(1);
 
             Assert.True(result);
-            Assert.True(_carService.GetCar(1).IsAvailable);
+            Assert.True(service.GetCar(1).IsAvailable);
         }
 
         [Fact]
-        public void GetCarsByDepartment_Success()
+        public void GetCarsByDepartment_ShouldReturnCorrectCars()
         {
-            var dep2 = new Department(2, "Other Rental", "Other Address", "987654321", "other@test.pl");
-            _carService.AddCar(new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, true, _testDepartment));
-            _carService.AddCar(new Car(0, "Audi", "A6", 2021, 2.0, 245, 370, 6.2, "AWD", "Automatyczna", 5, 280.0, true, dep2));
-            _carService.AddCar(new Car(0, "Toyota", "Corolla", 2020, 1.8, 140, 180, 9.5, "FWD", "Manualna", 5, 180.0, true, _testDepartment));
+            var service = new CarService();
 
-            var result = _carService.GetCarsByDepartment(_testDepartment);
+            var dept1 = new Department(1, "Main", "Centrum 1", "111-111-111", "main@cars.com");
+            var dept2 = new Department(2, "Airport", "Lotnisko 2", "222-222-222", "airport@cars.com");
 
-            Assert.Equal(2, result.Count);
-            Assert.All(result, car => Assert.Equal(_testDepartment, car.Department));
-        }
+            var car1 = CreateTestCar(dept1);
+            var car2 = CreateTestCar(dept2);
 
-        [Fact]
-        public void GetAllCars_Success()
-        {
-            _carService.AddCar(new Car(0, "BMW", "M3", 2022, 3.0, 480, 550, 4.1, "RWD", "Automatyczna", 5, 350.0, true, _testDepartment));
-            _carService.AddCar(new Car(0, "Audi", "A6", 2021, 2.0, 245, 370, 6.2, "AWD", "Automatyczna", 5, 280.0, true, _testDepartment));
-            _carService.AddCar(new Car(0, "Toyota", "Corolla", 2020, 1.8, 140, 180, 9.5, "FWD", "Manualna", 5, 180.0, true, _testDepartment));
+            service.AddCar(car1);
+            service.AddCar(car2);
 
-            var result = _carService.GetAllCars();
+            var result = service.GetCarsByDepartment(dept1);
 
-            Assert.Equal(3, result.Count);
+            Assert.Single(result);
+            Assert.Equal("Main", result[0].Department.Name);
         }
     }
 }

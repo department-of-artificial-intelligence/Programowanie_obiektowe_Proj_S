@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.ConsoleApp", "CarsRental.ConsoleApp\CarsRental.ConsoleApp.csproj", "{1204C225-3782-41C2-B7DF-6DDEBAF3564D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Tests", "CarsRental.Tests\CarsRental.Tests.csproj", "{72BE0553-C242-47CE-807D-189C1DDA3991}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.Logic", "CarsRental.Logic\CarsRental.Logic.csproj", "{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsRental.DAL", "CarsRental.DAL\CarsRental.DAL.csproj", "{8CB2A971-EF5E-469A-89F0-820FF269F6C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B76BCADC-E3A1-443D-ABD5-0B3B2333DF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CB2A971-EF5E-469A-89F0-820FF269F6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CB2A971-EF5E-469A-89F0-820FF269F6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CB2A971-EF5E-469A-89F0-820FF269F6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CB2A971-EF5E-469A-89F0-820FF269F6C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
