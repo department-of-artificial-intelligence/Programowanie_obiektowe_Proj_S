@@ -1,4 +1,8 @@
-﻿using Project.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Project.DAL;
+using Project.Model;
 using Project.Model.Utils;
 using Project.Reports.Generators;
 
@@ -11,6 +15,20 @@ namespace Project.ConsoleApp
         
         private static void Main()
         {
+            var host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+            {
+                var connectionString = @"Server=(localdb)\mssqllocaldb;Database=Project-Database;Trusted_Connection=True;MultipleActiveResultSets=true"; // todo
+                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            }).Build();
+
+            var context = host.Services.GetService<ApplicationDbContext>()!;
+
+            context.Database.Migrate();
+            context.Database.EnsureCreated();
+
+            context.Hotels.Add(s_hotel);
+            context.SaveChanges();
+
             // id info extraction
             Console.WriteLine(s_hotel);
             Console.WriteLine(UlongIdGenerator.ExtractInfo(s_hotel.Id));
