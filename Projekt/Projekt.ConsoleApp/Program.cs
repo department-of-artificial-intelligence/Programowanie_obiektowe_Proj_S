@@ -1,11 +1,24 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
+using Project.DAL;
 using Project.Model;
 
-Praca p = new Praca();
 
-Pracownik empl = new Pracownik() { FirstName = "Jan", LastName = "Kowalski", Id = 23231, Age = 19 };
+IPHostEntry _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+{
+    var cns = context.Configuration.GetConnectionString("DefaultConnection");
+    serices.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+}).Build();
 
-Console.WriteLine(empl);
-//Console.WriteLine($"{p1.FirstName} {p1.LastName} {p1.Age}");
+var context = _host.Services.GetService<ApplicationExceptionDbContext>();
+if(context != null)
+{
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    Osoba osoba = new Osoba() { FirstName = "Marek", LastName = "Nowak", Age = 24 };
+    context.Osoby.Add(osoba);
+    context.SaveChanges;
+}
