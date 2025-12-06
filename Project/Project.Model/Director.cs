@@ -9,23 +9,31 @@ namespace Project.Model;
 
 public class Director : Person, IPlayManager
 {
+    private static int MaxId = 0;
     public int DirectorId { get; set; }
     public int YearsOfExperience { get; set; }
     public decimal Salary { get; set; }
     public List<Play> Plays { get; set; }
+    private static int GetNextId() => MaxId + 1;
 
     public Director()
     {
-        DirectorId = 0;
+        DirectorId = GetNextId();
+        MaxId = DirectorId;
         YearsOfExperience = 0;
         Salary = 0;
         Plays = new List<Play>();
     }
 
-    public Director(string firstName, string lastName, int directorId, int yearsOfExperience, decimal salary, List<Play>? plays = null)
+    public Director(string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null) 
+        : this(GetNextId(), firstName, lastName, yearsOfExperience, salary, plays) { }
+
+    public Director(int directorId, string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null)
         : base(firstName, lastName)
     {
+        if (directorId <= MaxId) throw new Exception($"directorId {directorId} jest mniejsze lub równe MaxId {MaxId}");
         DirectorId = directorId;
+        MaxId = DirectorId;
         YearsOfExperience = yearsOfExperience;
         Salary = salary;
         Plays = plays ?? new List<Play>();
@@ -59,5 +67,15 @@ public class Director : Person, IPlayManager
             play.Director = null;
         }
         Plays.Clear();
+    }
+
+    public string GetPlaysString()
+    {
+        return Plays.ListToString("Nie reżyserował żadnych sztuk", '-');
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + $"/{DirectorId}/{YearsOfExperience}/{Salary}PLN";
     }
 }

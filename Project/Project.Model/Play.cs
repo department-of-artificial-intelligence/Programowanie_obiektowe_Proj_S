@@ -9,16 +9,37 @@ namespace Project.Model;
 
 public class Play
 {
+    private static int MaxId = 0;
     public int PlayId { get; set; }
     public string Title { get; set; }
+    public Author? Author { get; set; }
     public Director? Director { get; set; }
     public List<Actor> Actors { get; set; }
+    private static int GetNextId() => MaxId + 1;
 
-    public Play(int playId, string title, Director? director = null, List<Actor>? actors = null)
+    public Play()
     {
+        PlayId = GetNextId();
+        MaxId = PlayId;
+        Title = string.Empty;
+        Author = null;
+        Director = null;
+        Actors = new List<Actor>();
+    }
+
+    public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null) 
+        : this(GetNextId(), title, author, director, actors) { }
+
+    public Play(int playId, string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
+    {
+        if (playId <= MaxId) throw new Exception($"playId {playId} jest mniejsze lub równe MaxId {MaxId}");
         PlayId = playId;
+        MaxId = PlayId;
         Title = title;
+        Author = author;
+        Author?.AddPlay(this);
         Director = director;
+        Director?.AddPlay(this);
         Actors = actors ?? new List<Actor>();
     }
 
@@ -62,5 +83,17 @@ public class Play
             }
         }
         Actors.Clear();
+    }
+
+    public string GetActorsString()
+    {
+        return Actors.ListToString("Nikt nie gra w tej sztuce", '-');
+    }
+
+    public override string ToString()
+    {
+        return $"{PlayId}/\"{Title}\"/" +
+            $"autor: {Author?.FirstName} {Author?.LastName ?? "Nieznany"}/" +
+            $"reżyser: {Director?.FirstName} {Director?.LastName ?? "Nieznany"}";
     }
 }

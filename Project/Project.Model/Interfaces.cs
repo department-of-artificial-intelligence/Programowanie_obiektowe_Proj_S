@@ -12,4 +12,5 @@ public interface IPlayManager
     bool RemovePlay(Play play);
     bool RemovePlay(int playId);
     void RemoveAllPlays();
+    string GetPlaysString();
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -9,19 +10,27 @@ namespace Project.Model;
 
 public class Customer : Person
 {
-    public required int CustomerId { get; set; }
+    private static int MaxId = 0;
+    public int CustomerId { get; set; }
     public List<Ticket> Tickets { get; set; }
+    private static int GetNextId() => MaxId + 1;
 
     public Customer()
     {
-        CustomerId = 0;
+        CustomerId = GetNextId();
+        MaxId = CustomerId;
         Tickets = new List<Ticket>();
     }
 
-    public Customer(string firstName, string lastName, int customerId) 
+    public Customer(string firstName, string lastName)
+        : this(GetNextId(), firstName, lastName) { }
+
+    public Customer(int customerId, string firstName, string lastName) 
         : base(firstName, lastName)
     {
+        if (customerId <= MaxId) throw new Exception($"customerId {customerId} jest mniejsze lub równe MaxId {MaxId}");
         CustomerId = customerId;
+        MaxId = CustomerId;
         Tickets = new List<Ticket>();
     }
 
@@ -53,5 +62,10 @@ public class Customer : Person
             ticket.Customer = null;
         }
         Tickets.Clear();
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + $"/{CustomerId}";
     }
 }

@@ -8,9 +8,10 @@ namespace Project.Model;
 
 public static class ListExtensions
 {
-    public static string ListToString<T> (this List<T> list, string emptyMessage = "list is empty", char? bullet = '-') where T : class
+    public static string ListToString<T> (this IList<T> list, string? emptyMessage = null, char? bullet = null)
     {
-        if (list.Count == 0) return $"{emptyMessage}";
-        return string.Join("\n", list.Select(x => $"{bullet} {x}"));
+        if (list.Count == 0) 
+            return emptyMessage is null ? "list is empty" : $"{emptyMessage}";
+        return string.Join("\n", list.Select(x => bullet is null ? $"{x}" : $"{bullet} {x}"));
     }
 }

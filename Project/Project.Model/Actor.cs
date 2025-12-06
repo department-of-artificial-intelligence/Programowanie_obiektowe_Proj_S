@@ -9,23 +9,31 @@ namespace Project.Model;
 
 public class Actor : Person, IPlayManager
 {
+    private static int MaxId = 0;
     public int ActorId { get; set; }
     public decimal Salary { get; set; }
     public List<Play> Plays { get; set; }
+    private static int GetNextId() => MaxId + 1;
 
     public Actor()
     {
-        ActorId = 0;
+        ActorId = GetNextId();
+        MaxId = ActorId;
         Salary = 0;
         Plays = new List<Play>();
     }
 
-    public Actor(string firstName, string lastName, int actorId, decimal salary, List<Play> plays) 
+    public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null)
+        : this(GetNextId(), firstName, lastName, salary, plays) { }
+
+    public Actor(int actorId, string firstName, string lastName, decimal salary, List<Play>? plays = null) 
         : base(firstName, lastName)
     {
+        if (actorId <= MaxId) throw new Exception($"actorId {actorId} jest mniejsze lub równe MaxId {MaxId}");
         ActorId = actorId;
+        MaxId = ActorId;
         Salary = salary;
-        Plays = plays;
+        Plays = plays ?? new List<Play>();
     }
 
     public bool AddPlay(Play play)
@@ -68,5 +76,15 @@ public class Actor : Person, IPlayManager
             }
         }
         Plays.Clear();
+    }
+
+    public string GetPlaysString()
+    {
+        return Plays.ListToString("Nie gra w żadnych sztukach", '-');
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + $"/{ActorId}/{Salary}PLN";
     }
 }

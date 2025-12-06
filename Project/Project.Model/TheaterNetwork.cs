@@ -25,6 +25,13 @@ public class TheaterNetwork
         Theaters = new List<Theater>();
     }
 
+    public bool CreateTheater(string name, string country, string city, string street)
+    {
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
+        Theater theater = new Theater(name, country, city, street);
+        Theaters.Add(theater);
+        return true;
+    }
     public bool CreateTheater(int theaterId, string name, string country, string city, string street)
     {
         if (theaterId <= 0 || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
@@ -44,8 +51,14 @@ public class TheaterNetwork
     {
         Theaters.Clear();
     }
+
+    public string GetTheatersString()
+    {
+        return Theaters.ListToString("Brak teatrów", '*');
+    }
+
     public override string ToString()
     {
-        return $"Sieć teatrów: {Name}\n" + Theaters.ListToString("Brak teatrów", '*');
+        return $"Sieć teatrów: {Name}\n" + GetTheatersString();
     }
 }

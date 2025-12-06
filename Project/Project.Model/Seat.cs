@@ -14,18 +14,19 @@ public class Seat
 
     public Seat(int rowNumber, int seatNumber, Hall hall)
     {
+        if (hall.Seats.Any(s => s.RowNumber == rowNumber && s.SeatNumber == seatNumber)) throw new Exception($"Hall {hall.HallId} posiada już miejsce ({rowNumber},{seatNumber})");
         RowNumber = rowNumber;
         SeatNumber = seatNumber;
         Hall = hall;
     }
 
-    public (int Row, int Seat) SeatLocation() // ??? testowe
+    public (int Row, int Seat) SeatLocation()
     {
         return (RowNumber, SeatNumber);
     }
 
     public override string ToString()
     {
-        return $"rząd:{RowNumber}, miejsce:{SeatNumber}";
+        return $"rząd:{RowNumber},miejsce:{SeatNumber}";
     }
 }

@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 namespace Project.Model;
 
-public class Person {
+public abstract class Person {
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public Person()
+    protected Person()
     {
         FirstName = string.Empty;
         LastName = string.Empty;
     }
 
-    public Person(string firstName, string lastName)
+    protected Person(string firstName, string lastName)
     {
         FirstName = firstName;
         LastName = lastName;
+    }
+
+    public override string ToString()
+    {
+        return $"{FirstName} {LastName}";
     }
 }
