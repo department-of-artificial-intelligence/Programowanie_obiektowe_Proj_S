@@ -9,32 +9,46 @@ namespace Project.Model;
 public class Theater
 {
     private static int MaxId = 0;
-    public int TheaterId { get; set; }
-    public string Name { get; set; }
-    public Address Address { get; set; }
-    public List<Hall> Halls { get; set; }
+    private string _name;
+    public int TheaterId { get; }
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa teatru nie może być null lub pusta", nameof(Name));
+            _name = value;
+        }
+    }
+    public Address Address { get; private set; }
+    public List<Hall> Halls { get; }
     private static int GetNextId() => MaxId + 1;
 
-    public Theater()
-    {
-        TheaterId = GetNextId();
-        MaxId = TheaterId;
-        Name = string.Empty;
-        Address = new Address();
-        Halls = new List<Hall>();
-    }
+    //public Theater()
+    //{
+    //    TheaterId = GetNextId();
+    //    MaxId = TheaterId;
+    //    Name = string.Empty;
+    //    Address = new Address();
+    //    Halls = new List<Hall>();
+    //}
 
     public Theater(string name, string country, string city, string street)
         : this(GetNextId(), name, country, city, street) { }
 
     public Theater(int theaterId, string name, string country, string city, string street)
     {
-        if (theaterId <= MaxId) throw new Exception($"theaterId {theaterId} jest mniejsze lub równe MaxId {MaxId}");
+        if (theaterId <= MaxId) throw new ArgumentOutOfRangeException(nameof(theaterId), $"ID teatru {theaterId} jest mniejsze lub równe MaxId {MaxId}");
         TheaterId = theaterId;
         MaxId = TheaterId;
         Name = name;
         Address = new Address(country, city, street);
         Halls = new List<Hall>();
+    }
+
+    public void ChangeAddress(string country, string city, string street)
+    {
+        Address = new Address(country, city, street);
     }
 
     public bool CreateHall(List<Performance>? performances = null)

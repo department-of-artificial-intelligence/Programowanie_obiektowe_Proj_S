@@ -5,19 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Project.Model;
 
 public class TheaterNetwork
 {
-    public string Name { get; set; }
-    public List<Theater> Theaters { get; set; }
-
-    public TheaterNetwork()
+    private string _name;
+    public string Name
     {
-        Name = string.Empty;
-        Theaters = new List<Theater>();
+        get => _name;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa sieci nie może być null lub pusta", nameof(Name));
+            _name = value;
+        }
     }
+    public List<Theater> Theaters { get; }
+
+    //public TheaterNetwork()
+    //{
+    //    Name = string.Empty;
+    //    Theaters = new List<Theater>();
+    //}
 
     public TheaterNetwork(string name)
     {

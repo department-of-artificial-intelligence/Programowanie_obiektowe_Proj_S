@@ -1,6 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Project.ConsoleApp;
 using Project.Model;
+using System.Reflection.Metadata;
+
+/* ToDo:
+ * ogólne:
+ * faktyczny program.cs
+ * testy jednostkowe
+ * baza danych
+ * 
+ * metody:
+ * wyświetlenie siedzeń zmienić aby było widać które zajęte? tak samo ale D-dostępne, Z-zarezerwowane, S-sprzedane ?
+ * zarządanie biletami
+ */
 
 try
 {
@@ -184,12 +197,121 @@ try
     hall1.CreateSeats(4, 6);
     Console.WriteLine("Siedzenia w Sali 1:");
     Console.WriteLine(hall1.GetSeatsString());
-    // stwórz bilety bazując na liście miejsc w hall -> metoda
     Console.WriteLine("Siedzenia w Sali 1:");
     Console.WriteLine(hall1.VisualizeSeatsString());
 }
-catch(Exception ex)
+catch (ArgumentOutOfRangeException ex)
 {
-    Console.WriteLine("================Error Message================");
-    Console.WriteLine(ex.Message);
+    Console.WriteLine("Błąd zakresu: " + ex.Message);
 }
+catch (ArgumentNullException ex)
+{
+    Console.WriteLine("Błąd argumentu null: " + ex.Message);
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine("Błąd argumentu: " + ex.Message);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine("Błąd operacji: " + ex.Message);
+}
+
+//test
+/*
+string userInput = string.Empty;
+Console.WriteLine("==================================");
+Console.WriteLine("System zarządzania siecią teatrów");
+Console.WriteLine("==================================");
+
+Console.Write("Podaj nazwę sieci: ");
+userInput = Console.ReadLine();
+TheaterNetwork theaterNetwork = new TheaterNetwork(userInput);
+
+List<Director> directors = new List<Director>();
+List<Actor> actors = new List<Actor>();
+List<Author> authors = new List<Author>();
+List<Customer> customers = new List<Customer>();
+List<Play> plays = new List<Play>();
+List<Performance> performances = new List<Performance>();
+
+while (true)
+{
+    try
+    {
+        Menu.StartOptions();
+        Console.Write("> ");
+        userInput = Console.ReadLine();
+        if (userInput == "x") break;
+        switch (userInput)
+        {
+            case "1":
+                while (true)
+                {
+                    Menu.CreationOptions();
+                    Console.Write("> ");
+                    userInput = Console.ReadLine();
+                    if (userInput == "x") break;
+                    switch (userInput) 
+                    {
+                        case "1":
+                            while (true)
+                            {
+                                Menu.TheaterCreationOptions();
+                                Console.Write("> ");
+                                userInput = Console.ReadLine();
+                                if (userInput == "x") break;
+                                switch (userInput)
+                                {
+                                    case "1":
+                                        Console.Write("Podaj nazwę teatru: ");
+                                        string name;
+                                        name = Console.ReadLine();
+                                        Console.Write("Podaj kraj: ");
+                                        string country;
+                                        country = Console.ReadLine();
+                                        Console.Write("Podaj miasto: ");
+                                        string city;
+                                        city = Console.ReadLine();
+                                        Console.Write("Podaj ulicę: ");
+                                        string street;
+                                        street = Console.ReadLine();
+                                        bool isCreated = theaterNetwork.CreateTheater(name, country, city, street);
+                                        Console.WriteLine(isCreated ? $"Poprawnie utworzono teatr" : "Wystąpił błąd podczas tworzenia");
+                                        break;
+                                    case "2":
+                                        break;
+                                    case "3":
+                                        break;
+                                }
+                            }
+                        break;
+                        case "2":
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            break;
+                        case "5":
+                            break;
+                    }
+                }
+                userInput = string.Empty;
+                break;
+            case "2":
+                Console.WriteLine("not implemented yet");
+                userInput = string.Empty;
+                break;
+            case "3":
+                Console.WriteLine("not implemented yet");
+                userInput = string.Empty;
+                break;
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("================Error Message================");
+        Console.WriteLine(ex.Message);
+    }
+}
+*/

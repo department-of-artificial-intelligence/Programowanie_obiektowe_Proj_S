@@ -7,14 +7,32 @@ using System.Threading.Tasks;
 namespace Project.Model;
 
 public abstract class Person {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-
-    protected Person()
+    public string _firstName;
+    public string _lastName;
+    public string FirstName
     {
-        FirstName = string.Empty;
-        LastName = string.Empty;
+        get => _firstName;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Imię nie może być null lub puste", nameof(FirstName));
+            _firstName = value;
+        }
     }
+    public string LastName
+    {
+        get => _lastName;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwisko nie może być null lub puste", nameof(LastName));
+            _lastName = value;
+        }
+    }
+
+    //protected Person()
+    //{
+    //    FirstName = string.Empty;
+    //    LastName = string.Empty;
+    //}
 
     protected Person(string firstName, string lastName)
     {

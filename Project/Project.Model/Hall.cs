@@ -12,9 +12,9 @@ namespace Project.Model;
 public class Hall
 {
     private static int MaxId = 0;
-    public int HallId { get; set; }
-    public List<Seat> Seats { get; set; }
-    public List<Performance> Performances { get; set; }
+    public int HallId { get; }
+    public List<Seat> Seats { get; }
+    public List<Performance> Performances { get; }
     private static int GetNextId() => MaxId + 1;
     public int MaxRows() => Seats.Any() ? Seats.Max(s => s.RowNumber) : 0;
     public int MaxSeatsInRow(int row) => Seats.Any() ? Seats.Where(s => s.RowNumber == row).Max(s => s.SeatNumber) : 0;
@@ -24,7 +24,7 @@ public class Hall
 
     public Hall(int hallId, List<Performance>? performances = null)
     {
-        if (hallId <= MaxId) throw new Exception($"hallId {hallId} jest mniejsze lub równe MaxId {MaxId}");
+        if (hallId <= MaxId) throw new ArgumentOutOfRangeException(nameof(hallId), $"ID sali {hallId} jest mniejsze lub równe MaxId {MaxId}");
         HallId = hallId;
         MaxId = HallId;
         Seats = new List<Seat>();

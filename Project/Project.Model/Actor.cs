@@ -10,18 +10,27 @@ namespace Project.Model;
 public class Actor : Person, IPlayManager
 {
     private static int MaxId = 0;
-    public int ActorId { get; set; }
-    public decimal Salary { get; set; }
-    public List<Play> Plays { get; set; }
+    private decimal _salary;
+    public int ActorId { get; }
+    public decimal Salary 
+    { 
+        get => _salary;
+        set 
+        {
+            if (value < 0) throw new ArgumentException("Płaca nie może być ujemna", nameof(Salary));
+            _salary = value;
+        }
+    }
+    public List<Play> Plays { get; }
     private static int GetNextId() => MaxId + 1;
 
-    public Actor()
-    {
-        ActorId = GetNextId();
-        MaxId = ActorId;
-        Salary = 0;
-        Plays = new List<Play>();
-    }
+    //public Actor()
+    //{
+    //    ActorId = GetNextId();
+    //    MaxId = ActorId;
+    //    Salary = 0;
+    //    Plays = new List<Play>();
+    //}
 
     public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null)
         : this(GetNextId(), firstName, lastName, salary, plays) { }
@@ -29,7 +38,7 @@ public class Actor : Person, IPlayManager
     public Actor(int actorId, string firstName, string lastName, decimal salary, List<Play>? plays = null) 
         : base(firstName, lastName)
     {
-        if (actorId <= MaxId) throw new Exception($"actorId {actorId} jest mniejsze lub równe MaxId {MaxId}");
+        if (actorId <= MaxId) throw new ArgumentOutOfRangeException(nameof(actorId), $"ID aktora {actorId} jest mniejsze lub równe MaxId {MaxId}");
         ActorId = actorId;
         MaxId = ActorId;
         Salary = salary;

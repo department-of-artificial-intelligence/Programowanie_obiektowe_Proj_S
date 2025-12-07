@@ -10,29 +10,38 @@ namespace Project.Model;
 public class Play
 {
     private static int MaxId = 0;
-    public int PlayId { get; set; }
-    public string Title { get; set; }
+    private string _title;
+    public int PlayId { get; }
+    public string Title
+    {
+        get => _title;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Tytuł nie może być null lub pusty", nameof(Title));
+            _title = value;
+        }
+    }
     public Author? Author { get; set; }
     public Director? Director { get; set; }
-    public List<Actor> Actors { get; set; }
+    public List<Actor> Actors { get; }
     private static int GetNextId() => MaxId + 1;
 
-    public Play()
-    {
-        PlayId = GetNextId();
-        MaxId = PlayId;
-        Title = string.Empty;
-        Author = null;
-        Director = null;
-        Actors = new List<Actor>();
-    }
+    //public Play()
+    //{
+    //    PlayId = GetNextId();
+    //    MaxId = PlayId;
+    //    Title = string.Empty;
+    //    Author = null;
+    //    Director = null;
+    //    Actors = new List<Actor>();
+    //}
 
     public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null) 
         : this(GetNextId(), title, author, director, actors) { }
 
     public Play(int playId, string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
     {
-        if (playId <= MaxId) throw new Exception($"playId {playId} jest mniejsze lub równe MaxId {MaxId}");
+        if (playId <= MaxId) throw new ArgumentOutOfRangeException(nameof(playId), $"ID sztuki {playId} jest mniejsze lub równe MaxId {MaxId}");
         PlayId = playId;
         MaxId = PlayId;
         Title = title;

@@ -8,16 +8,43 @@ namespace Project.Model;
 
 public class Address
 {
-    public string Country { get; set; }
-    public string City { get; set; }
-    public string Street { get; set; }
-    
-    public Address()
+    private string _country;
+    private string _city;
+    private string _street;
+    public string Country
     {
-        Country = string.Empty;
-        City = string.Empty;
-        Street = string.Empty;
+        get => _country;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Kraj nie może być null lub pusty", nameof(Country));
+            _country = value;
+        }
     }
+    public string City
+    {
+        get => _city;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Miasto nie może być null lub puste", nameof(City));
+            _city = value;
+        }
+    }
+    public string Street
+    {
+        get => _street;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Ulica nie może być null lub pusta", nameof(Street));
+            _street = value;
+        }
+    }
+
+    //public Address()
+    //{
+    //    Country = string.Empty;
+    //    City = string.Empty;
+    //    Street = string.Empty;
+    //}
 
     public Address(string country, string city, string street)
     {

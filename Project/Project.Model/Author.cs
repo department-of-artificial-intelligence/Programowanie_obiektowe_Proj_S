@@ -9,16 +9,16 @@ namespace Project.Model;
 public class Author : Person, IPlayManager
 {
     private static int MaxId = 0;
-    public int AuthorId { get; set; }
-    public List<Play> Plays { get; set; }
+    public int AuthorId { get; }
+    public List<Play> Plays { get; }
     private static int GetNextId() => MaxId + 1;
 
-    public Author()
-    {
-        AuthorId = GetNextId();
-        MaxId = AuthorId;
-        Plays = new List<Play>();
-    }
+    //public Author()
+    //{
+    //    AuthorId = GetNextId();
+    //    MaxId = AuthorId;
+    //    Plays = new List<Play>();
+    //}
 
     public Author(string firstName, string lastName, List<Play>? plays = null) 
         : this(GetNextId(), firstName, lastName, plays) { }
@@ -26,7 +26,7 @@ public class Author : Person, IPlayManager
     public Author(int authorId, string firstName, string lastName, List<Play>? plays = null)
         : base(firstName, lastName)
     {
-        if (authorId <= MaxId) throw new Exception($"authorId {authorId} jest mniejsze lub równe MaxId {MaxId}");
+        if (authorId <= MaxId) throw new ArgumentOutOfRangeException(nameof(authorId), $"ID autora {authorId} jest mniejsze lub równe MaxId {MaxId}");
         AuthorId = authorId;
         MaxId = AuthorId;
         Plays = plays ?? new List<Play>();
