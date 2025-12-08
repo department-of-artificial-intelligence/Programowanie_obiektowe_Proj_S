@@ -13,5 +13,7 @@ namespace Projekt.Model
 
         public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
         public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+        public Branch() { }
     }
 }

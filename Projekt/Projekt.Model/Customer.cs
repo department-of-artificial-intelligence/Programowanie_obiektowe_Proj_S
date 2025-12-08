@@ -15,6 +15,8 @@ namespace Projekt.Model
         public DateTime DateOfBirth { get; set; }
         public virtual ICollection<Rental> RentalHistory { get; set; } = new List<Rental>();
 
+        public Customer() { }
+
         public override string ToString()
         {
             return $"[{Id}] {FirstName} {LastName} ";

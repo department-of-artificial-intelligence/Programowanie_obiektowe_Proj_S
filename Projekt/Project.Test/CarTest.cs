@@ -18,11 +18,11 @@ namespace Project.Test
                 DailyRate = 200
             };
 
-            Assert(auto.Marka == "TestAudi", "Marka powinna byæ 'TestAudi'");
-            Assert(auto.Status == CarStatus.Available, "Domyœlny status to Available");
+            Assert.True(auto.Marka == "TestAudi", "Marka powinna byæ 'TestAudi'");
+            Assert.True(auto.Status == CarStatus.Available, "Domyœlny status to Available");
 
             string opis = auto.ToString();
-            Assert(opis.Contains("TestAudi") && opis.Contains("A4"), "ToString musi zawieraæ markê i model");
+            Assert.True(opis.Contains("TestAudi") && opis.Contains("A4"), "ToString musi zawieraæ markê i model");
         }
     }
 }

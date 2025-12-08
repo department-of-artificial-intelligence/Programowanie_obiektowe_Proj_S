@@ -1,5 +1,27 @@
-﻿using Projekt.Model;
-public class Program
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Projekt.DAL;
+using Projekt.Model;
+
+IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+{
+    var cns = context.Configuration.GetConnectionString("DefaultConnection");
+    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+}).Build();
+
+
+var context = _host.Services.GetService<ApplicationDbContext>();
+if (context != null)
+{
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    Car person = new Car() {  };
+    context.Cars.Add(person);
+    context.SaveChanges();
+}
+public partial class Program
 {
     //Dane
 
@@ -9,12 +31,12 @@ public class Program
     static List<Employee> BazaPracownikow = new List<Employee>();
     static List<Rental> BazaWypozyczen = new List<Rental>();
 
-    static int nextBranchId = 1;
+   /* static int nextBranchId = 1;
     static int nextCarId = 1;
     static int nextCustomerId = 1;
     static int nextEmployeeId = 1;
     static int nextRentalId = 1;
-
+*/
     static void Main(string[] args)
     {
         InicjalizujDane();
@@ -27,20 +49,20 @@ public class Program
 
         var oddzialCzew = new Branch
         {
-            Id = nextBranchId++,
+            /*Id = nextBranchId++,*/
             Name = "Częstochowa Centrum",
             Address = "ul. Warszawska 31"
         };
         var oddzialWawa = new Branch
         {
-            Id = nextBranchId++,
-            Name = "Warszawa Centrum",
+/*            Id = nextBranchId++,
+*/            Name = "Warszawa Centrum",
             Address = "ul. Marszałkowska 1"
         };
         var oddzialKrk = new Branch
         {
-            Id = nextBranchId++,
-            Name = "Kraków Rynek",
+/*            Id = nextBranchId++,
+*/            Name = "Kraków Rynek",
             Address = "ul. Floriańska 2"
         };
         BazaOddzialow.AddRange(new[] { oddzialWawa, oddzialKrk });
@@ -49,8 +71,8 @@ public class Program
 
         var car1 = new Car
         {
-            Id = nextCarId++,
-            Marka = "Toyota",
+/*            Id = nextCarId++,
+*/            Marka = "Toyota",
             Model = "Yaris",
             Year = 2022,
             RegistrationNumber = "WA 12345",
@@ -61,8 +83,8 @@ public class Program
         };
         var car2 = new Car
         {
-            Id = nextCarId++,
-            Marka = "Skoda",
+/*            Id = nextCarId++,
+*/            Marka = "Skoda",
             Model = "Octavia",
             Year = 2023,
             RegistrationNumber = "KR 54321",
@@ -73,8 +95,8 @@ public class Program
         };
         var car3 = new Car
         {
-            Id = nextCarId++,
-            Marka = "Ford",
+/*            Id = nextCarId++,
+*/            Marka = "Ford",
             Model = "Mondeo",
             Year = 2021,
             RegistrationNumber = "WA 67890",
@@ -85,8 +107,8 @@ public class Program
         };
         var car4 = new Car
         {
-            Id = nextCarId++,
-            Marka = "BMW",
+/*            Id = nextCarId++,
+*/            Marka = "BMW",
             Model = "X5",
             Year = 2023,
             RegistrationNumber = "KR 98765",
@@ -97,8 +119,8 @@ public class Program
         };
         var car5 = new Car
         {
-            Id = nextCarId++,
-            Marka = "BMW",
+/*            Id = nextCarId++,
+*/            Marka = "BMW",
             Model = "Seria 5",
             Year = 2025,
             RegistrationNumber = "SC 345CL",
@@ -119,16 +141,16 @@ public class Program
 
         var cust1 = new Customer
         {
-            Id = nextCustomerId++,
-            FirstName = "Jan",
+/*            Id = nextCustomerId++,
+*/            FirstName = "Jan",
             LastName = "Kowalski",
             PhoneNumber = "111222333",
             DateOfBirth = new DateTime(1990, 5, 15)
         };
         var cust2 = new Customer
         {
-            Id = nextCustomerId++,
-            FirstName = "Anna",
+/*            Id = nextCustomerId++,
+*/            FirstName = "Anna",
             LastName = "Nowak",
             PhoneNumber = "444555666",
             DateOfBirth = new DateTime(1985, 10, 2)
@@ -139,24 +161,24 @@ public class Program
 
         var emp1 = new Employee
         {
-            Id = nextEmployeeId++,
-            FirstName = "Piotr",
+/*            Id = nextEmployeeId++,
+*/            FirstName = "Piotr",
             LastName = "Zieliński",
             BranchId = oddzialWawa.Id,
             Branch = oddzialWawa
         };
         var emp2 = new Employee
         {
-            Id = nextEmployeeId++,
-            FirstName = "Ewa",
+/*            Id = nextEmployeeId++,
+*/            FirstName = "Ewa",
             LastName = "Wiśniewska",
             BranchId = oddzialKrk.Id,
             Branch = oddzialKrk
         };
         var emp3 = new Employee
         {
-            Id = nextEmployeeId++,
-            FirstName = "Jan",
+/*            Id = nextEmployeeId++,
+*/            FirstName = "Jan",
             LastName = "Krawczyk",
             BranchId = oddzialCzew.Id,
             Branch = oddzialCzew
@@ -170,8 +192,8 @@ public class Program
 
         var rental1 = new Rental
         {
-            Id = nextRentalId++,
-            CustomerId = cust1.Id,
+/*            Id = nextRentalId++,
+*/            CustomerId = cust1.Id,
             Customer = cust1,
             CarId = car3.Id,
             Car = car3,
@@ -335,8 +357,8 @@ public class Program
 
         var noweWypozyczenie = new Rental
         {
-            Id = nextRentalId++,
-            CustomerId = klient.Id,
+/*            Id = nextRentalId++,
+*/            CustomerId = klient.Id,
             Customer = klient,
             CarId = samochod.Id,
             Car = samochod,
