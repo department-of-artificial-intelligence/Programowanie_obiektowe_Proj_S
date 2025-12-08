@@ -15,7 +15,7 @@ public class Program
             Console.WriteLine("   SYSTEM ZARZĄDZANIA FLOTĄ (C# Project)     ");
             Console.WriteLine("=============================================");
             Console.ResetColor();
-            Console.WriteLine(" 1. Pokaż wszystkie pojazdy");
+            Console.WriteLine(" 1. Pokaż wszystkie pojazdy"); 
             Console.WriteLine(" 2. Znajdź pojazd po rejestracji");
             Console.WriteLine("---------------------------------------------");
             Console.WriteLine(" 3. Dodaj nowy SAMOCHÓD OSOBOWY");

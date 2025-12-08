@@ -17,7 +17,7 @@ namespace Projekt.Model
         public int Rocznik { get; set; }
         public string Paliwo { get; set; }
         public string Tablica { get; set; }
-        public Driver PrzypisanyKierwoca { get; set; }
+        public Driver PrzypisanyKierowca { get; set; }
         public List<Service> HistoriaSerwisowa { get; set; }
         public Vehicle(string marka, string model, int przebieg, double silnik, int rocznik, string paliwo, string tablica)
         {
@@ -32,12 +32,12 @@ namespace Projekt.Model
         }
         public void PrzypiszKierowce(Driver kierowca) 
         {
-            PrzypisanyKierwoca = kierowca;
+            PrzypisanyKierowca = kierowca;
             Console.WriteLine($"Przypisano kierowce {kierowca.Imie} do pojazdu {Tablica}");
         }
         public void UsunKierowce()
         {
-            PrzypisanyKierwoca = null;
+            PrzypisanyKierowca = null;
         }
         public void DodajWpisSerwisowy(string opis, double koszt)
         {
