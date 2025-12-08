@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Project.DAL.Migrations
 {
-    /// <inheritdoc />
+    /// <inheritdoc />  
     public partial class Start : Migration
     {
         /// <inheritdoc />

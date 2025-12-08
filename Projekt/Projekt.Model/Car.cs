@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 
 namespace Projekt.Model
-{
+{  
     public class Car
     {
         public int Id { get; set; }
