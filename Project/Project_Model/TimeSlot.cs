@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project_Model
+namespace Project.Model
 {
     public class TimeSlot{
         public int Id {  get; set; }
@@ -13,6 +13,13 @@ namespace Project_Model
         public DateTime EndDateTime { get; set; }
         public bool IsBooked {  get; set; }=false;
 
+        public TimeSlot(int id, int tutorId, DateTime startDateTime, DateTime endDateTime)
+        {
+            Id = id;
+            TutorId = tutorId;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+        }
         public TimeSlot()
         {
             Id = 0;
@@ -21,14 +28,6 @@ namespace Project_Model
             EndDateTime = DateTime.MinValue;
             IsBooked = false;
         }
-        public TimeSlot(int id, int tutorId, DateTime startDateTime, DateTime endDateTime)
-        {
-            Id = id;
-            TutorId = tutorId;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
-        }
-
         public TimeSpan GetDuration(){
             return EndDateTime- StartDateTime;
         }

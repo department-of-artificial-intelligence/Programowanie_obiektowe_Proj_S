@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project_Model
+namespace Project.Model
 {
     public class Subject
     {
@@ -12,16 +12,16 @@ namespace Project_Model
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public Subject() { 
-            Id = 0;
-            Name=string.Empty;
-            Description = string.Empty;
-        }
-
         public Subject(int id, string name, string description) {
             Id = id;
             Name = name;
             Description = description;
+        }
+        public Subject()
+        {
+            Id = 0;
+            Name = string.Empty;
+            Description = string.Empty;
         }
         public override string ToString() => $"Subject {Id}: {Name}";
     }

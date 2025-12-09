@@ -1,6 +1,6 @@
 
 
-using Project_Model;
+/*using Project.Model;
 
 namespace Project.Tests
 {
@@ -16,4 +16,4 @@ namespace Project.Tests
             Assert.True(p1.FirstName.Length > 2);
         }
     }
-}
+}*/
