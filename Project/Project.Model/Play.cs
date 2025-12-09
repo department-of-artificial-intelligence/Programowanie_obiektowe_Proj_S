@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace Project.Model;
 
 public class Play
 {
-    private static int MaxId = 0;
-    private string _title;
-    public int PlayId { get; }
+    // Pola prywatne
+    private string _title = string.Empty;
+
+    // Właściwości
+    public int PlayId { get; private set; } // PK
     public string Title
     {
         get => _title;
@@ -21,37 +18,31 @@ public class Play
             _title = value;
         }
     }
-    public Author? Author { get; set; }
-    public Director? Director { get; set; }
-    public List<Actor> Actors { get; }
-    private static int GetNextId() => MaxId + 1;
+    public Author? Author { get; set; } // Navigation property
+    public Director? Director { get; set; } // Navigation property
+    public List<Actor> Actors { get; } = new List<Actor>(); // Navigation property
 
-    //public Play()
-    //{
-    //    PlayId = GetNextId();
-    //    MaxId = PlayId;
-    //    Title = string.Empty;
-    //    Author = null;
-    //    Director = null;
-    //    Actors = new List<Actor>();
-    //}
+    // Konstruktory
+    private Play() { }
 
-    public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null) 
-        : this(GetNextId(), title, author, director, actors) { }
-
-    public Play(int playId, string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
+    public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
     {
-        if (playId <= MaxId) throw new ArgumentOutOfRangeException(nameof(playId), $"ID sztuki {playId} jest mniejsze lub równe MaxId {MaxId}");
-        PlayId = playId;
-        MaxId = PlayId;
         Title = title;
         Author = author;
         Author?.AddPlay(this);
         Director = director;
         Director?.AddPlay(this);
         Actors = actors ?? new List<Actor>();
+        foreach (var actor in Actors)
+        {
+            if (!actor.Plays.Contains(this))
+            {
+                actor.Plays.Add(this);
+            }
+        }
     }
 
+    // Metody dodawania i usuwania elementów listy Actor
     public bool AddActor(Actor actor)
     {
         if (actor is null || Actors.Contains(actor)) return false;
@@ -94,6 +85,7 @@ public class Play
         Actors.Clear();
     }
 
+    // Metody string
     public string GetActorsString()
     {
         return Actors.ListToString("Nikt nie gra w tej sztuce", '-');
@@ -101,7 +93,7 @@ public class Play
 
     public override string ToString()
     {
-        return $"{PlayId}/\"{Title}\"/" +
+        return $"\"{Title}\"/" +
             $"autor: {Author?.FirstName} {Author?.LastName ?? "Nieznany"}/" +
             $"reżyser: {Director?.FirstName} {Director?.LastName ?? "Nieznany"}";
     }

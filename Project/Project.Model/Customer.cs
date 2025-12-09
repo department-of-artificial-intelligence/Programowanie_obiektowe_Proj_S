@@ -1,39 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Customer : Person
 {
-    private static int MaxId = 0;
-    public int CustomerId { get; }
-    public List<Ticket> Tickets { get; }
-    private static int GetNextId() => MaxId + 1;
+    // Właściwości
+    public int CustomerId { get; private set; } // PK
+    public List<Ticket> Tickets { get; } = new List<Ticket>(); // Navigation property
 
-    //public Customer()
-    //{
-    //    CustomerId = GetNextId();
-    //    MaxId = CustomerId;
-    //    Tickets = new List<Ticket>();
-    //}
+    // Konstruktory
+    public Customer() { }
 
-    public Customer(string firstName, string lastName)
-        : this(GetNextId(), firstName, lastName) { }
-
-    public Customer(int customerId, string firstName, string lastName) 
+    public Customer(string firstName, string lastName, List<Ticket>? tickets = null) 
         : base(firstName, lastName)
     {
-        if (customerId <= MaxId) throw new ArgumentOutOfRangeException(nameof(customerId), $"ID klienta {customerId} jest mniejsze lub równe MaxId {MaxId}");
-        CustomerId = customerId;
-        MaxId = CustomerId;
-        Tickets = new List<Ticket>();
+        Tickets = tickets ?? new List<Ticket>();
+        foreach (var ticket in Tickets)
+        {
+            ticket.Customer = this;
+        }
     }
 
+    // Metody dodawania i usuwania elementów listy Ticket
     public bool AddTicket(Ticket ticket)
     {
         if (ticket is null || Tickets.Contains(ticket)) return false;
@@ -64,23 +50,23 @@ public class Customer : Person
         Tickets.Clear();
     }
 
-    public bool ReserveTicket(Performance performance, Seat seat) //WIP, seat or coordinates?
-    {
-        Ticket? foundTicket = performance.Tickets.FirstOrDefault(t => t.Seat.SeatLocation() == seat.SeatLocation());
-        if (foundTicket is null || foundTicket.Status != TicketStatus.Available) return false;
-        foundTicket.Customer = this;
-        foundTicket.Status = TicketStatus.Reserved;
-        return true;
-    }
-    // buy ticket for reserved tickets:BuyTicket(Performance performance, Ticket ticket)
-    public bool BuyTicket(Performance performance, Seat seat) //WIP
-    {
-        Ticket? foundTicket = performance.Tickets.FirstOrDefault(t => t.Seat.SeatLocation() == seat.SeatLocation());
-        if (foundTicket is null || foundTicket.Status == TicketStatus.Sold) return false;
-        if (foundTicket.Status == TicketStatus.Reserved && foundTicket.Customer != this) return false;
-        foundTicket.Status = TicketStatus.Sold;
-        return true;
-    }
+    //public bool ReserveTicket(Performance performance, Seat seat) //WIP, seat or coordinates?
+    //{
+    //    Ticket? foundTicket = performance.Tickets.FirstOrDefault(t => t.Seat.SeatLocation() == seat.SeatLocation());
+    //    if (foundTicket is null || foundTicket.Status != TicketStatus.Available) return false;
+    //    foundTicket.Customer = this;
+    //    foundTicket.Status = TicketStatus.Reserved;
+    //    return true;
+    //}
+    //// buy ticket for reserved tickets:BuyTicket(Performance performance, Ticket ticket)
+    //public bool BuyTicket(Performance performance, Seat seat) //WIP
+    //{
+    //    Ticket? foundTicket = performance.Tickets.FirstOrDefault(t => t.Seat.SeatLocation() == seat.SeatLocation());
+    //    if (foundTicket is null || foundTicket.Status == TicketStatus.Sold) return false;
+    //    if (foundTicket.Status == TicketStatus.Reserved && foundTicket.Customer != this) return false;
+    //    foundTicket.Status = TicketStatus.Sold;
+    //    return true;
+    //}
     //public bool CancelReservation(Performance performance) //WIP
     //{
     //    Ticket? foundTicket = performance.Tickets.FirstOrDefault(t => t.Seat.SeatLocation() == seat.SeatLocation());
@@ -89,8 +75,9 @@ public class Customer : Person
     //    return true;
     //}
 
+    // Metody string
     public override string ToString()
     {
-        return base.ToString() + $"/{CustomerId}";
+        return base.ToString();
     }
 }

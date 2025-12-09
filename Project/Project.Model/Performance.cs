@@ -1,50 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Performance
 {
-    private static int MaxId = 0;
-    public int PerformanceId { get; }
-    public Play Play { get; }
+    public int PerformanceId { get; private set; } // PK
+    public Play Play { get; } = default!; // Navigation property
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
     public PerformanceStatus Status { get; set; }
-    public List<Ticket> Tickets { get; }
-    public Hall? Hall { get; set; }
-    private static int GetNextId() => MaxId + 1;
+    public List<Ticket> Tickets { get; } = new List<Ticket>(); // Navigation property
+    internal Hall? Hall { get; set; } // Navigation property
 
-    //public Performance(Play play)
-    //{
-    //    PerformanceId = GetNextId();
-    //    Play = play;
-    //    StartTime = DateTime.MinValue;
-    //    EndTime = DateTime.MinValue;
-    //    Tickets = new List<Ticket>();
-    //    Status = PerformanceStatus.Scheduled;
-    //    Hall = null;
-    //}
+    // Konstruktory
+    private Performance() { }
 
-    public Performance(Play play, DateTime startTime, DateTime endTime, List<Ticket>? tickets = null, PerformanceStatus status = PerformanceStatus.Scheduled)
-        : this(GetNextId(), play, startTime, endTime, tickets, status) { }
-
-    public Performance(int performanceId, Play play, DateTime startTime, DateTime endTime, List<Ticket>? tickets = null, PerformanceStatus status = PerformanceStatus.Scheduled)
+    public Performance(Play play, DateTime startTime, DateTime endTime, PerformanceStatus status = PerformanceStatus.Scheduled)
     {
-        if (performanceId <= MaxId) throw new ArgumentOutOfRangeException(nameof(performanceId), $"ID przedstawienia {performanceId} jest mniejsze lub równe MaxId {MaxId}");
         if (play is null) throw new ArgumentNullException(nameof(play), "Sztuka nie może być null");
-        PerformanceId = performanceId;
-        MaxId = PerformanceId;
-        Play = play ;
+        Play = play;
         SetTimes(startTime, endTime);
-        Tickets = tickets ?? new List<Ticket>();
         Status = status;
         Hall = null;
     }
 
+    // Metoda zmiany czasów
     public void SetTimes(DateTime start, DateTime end)
     {
         if (end <= start) throw new ArgumentException($"Czas zakończenia {end} musi być późniejszy niż rozpoczęcia {start}");
@@ -52,17 +30,11 @@ public class Performance
         EndTime = end;
     }
 
+    // Metody tworzenia i usuwania elementów listy Ticket
     public bool CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
     {
         if (price <= 0 || seat is null) return false;
         Ticket ticket = new Ticket(price, this, seat, status);
-        Tickets.Add(ticket);
-        return true;
-    }
-    public bool CreateTicket(int ticketId, decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
-    {
-        if (ticketId <= 0 || price <= 0 || seat is null) return false;
-        Ticket ticket = new Ticket(ticketId, price, this, seat, status);
         Tickets.Add(ticket);
         return true;
     }
@@ -86,6 +58,7 @@ public class Performance
         }
     }
 
+    // Metody string
     public string GetTicketsString()
     {
         return Tickets.ListToString("Brak biletów", '-');
@@ -93,7 +66,7 @@ public class Performance
 
     public override string ToString()
     {
-        string hallId = Hall?.HallId.ToString() ?? "nieznana";
-        return $"{PerformanceId}/\"{Play.Title}\"/{Status}/Sala {hallId}/start:{StartTime}/koniec:{EndTime}";
+        string hallName = Hall?.HallName ?? "nieznana";
+        return $"\"{Play.Title}\"/{Status}/Sala {hallName}/start:{StartTime}/koniec:{EndTime}";
     }
 }

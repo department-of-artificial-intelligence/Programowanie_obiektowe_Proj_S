@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Actor : Person, IPlayManager
 {
-    private static int MaxId = 0;
+    // Pola prywatne
     private decimal _salary;
-    public int ActorId { get; }
+
+    // Właściwości
+    public int ActorId { get; private set; } // PK
     public decimal Salary 
     { 
         get => _salary;
@@ -21,30 +16,26 @@ public class Actor : Person, IPlayManager
             _salary = value;
         }
     }
-    public List<Play> Plays { get; }
-    private static int GetNextId() => MaxId + 1;
+    public List<Play> Plays { get; } = new List<Play>(); // Navigation property
 
-    //public Actor()
-    //{
-    //    ActorId = GetNextId();
-    //    MaxId = ActorId;
-    //    Salary = 0;
-    //    Plays = new List<Play>();
-    //}
+    // Konstruktory
+    private Actor() { }
 
-    public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null)
-        : this(GetNextId(), firstName, lastName, salary, plays) { }
-
-    public Actor(int actorId, string firstName, string lastName, decimal salary, List<Play>? plays = null) 
+    public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null) 
         : base(firstName, lastName)
     {
-        if (actorId <= MaxId) throw new ArgumentOutOfRangeException(nameof(actorId), $"ID aktora {actorId} jest mniejsze lub równe MaxId {MaxId}");
-        ActorId = actorId;
-        MaxId = ActorId;
         Salary = salary;
         Plays = plays ?? new List<Play>();
+        foreach (var play in Plays)
+        {
+            if (!play.Actors.Contains(this))
+            {
+                play.Actors.Add(this);
+            }
+        }
     }
 
+    // Metody dodawania i usuwania elementów listy Play
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
@@ -87,6 +78,7 @@ public class Actor : Person, IPlayManager
         Plays.Clear();
     }
 
+    // Metody string
     public string GetPlaysString()
     {
         return Plays.ListToString("Nie gra w żadnych sztukach", '-');
@@ -94,6 +86,6 @@ public class Actor : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $"/{ActorId}/{Salary}PLN";
+        return base.ToString() + $"/{Salary}PLN";
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Project.Model;
 
-namespace Project.Model;
+public abstract class Person 
+{
+    // Pola prywatne
+    private string _firstName = string.Empty;
+    private string _lastName = string.Empty;
 
-public abstract class Person {
-    public string _firstName;
-    public string _lastName;
+    // Właściwości
     public string FirstName
     {
         get => _firstName;
@@ -28,11 +26,8 @@ public abstract class Person {
         }
     }
 
-    //protected Person() 
-    //{
-    //    FirstName = string.Empty;
-    //    LastName = string.Empty;
-    //}
+    // Konstruktory
+    protected Person() { }
 
     protected Person(string firstName, string lastName)
     {
@@ -40,6 +35,7 @@ public abstract class Person {
         LastName = lastName;
     }
 
+    // Metody string
     public override string ToString()
     {
         return $"{FirstName} {LastName}";

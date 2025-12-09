@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Director : Person, IPlayManager
 {
-    private static int MaxId = 0;
+    // Pola prywatne
     private int _yearsOfExperience;
     private decimal _salary;
-    public int DirectorId { get; }
+
+    // Właściwości
+    public int DirectorId { get; private set; } //PK
     public int YearsOfExperience
     {
         get => _yearsOfExperience;
@@ -31,32 +26,24 @@ public class Director : Person, IPlayManager
             _salary = value;
         }
     }
-    public List<Play> Plays { get; }
-    private static int GetNextId() => MaxId + 1;
+    public List<Play> Plays { get; } = new List<Play>(); // Navigation property
 
-    //public Director()
-    //{
-    //    DirectorId = GetNextId();
-    //    MaxId = DirectorId;
-    //    YearsOfExperience = 0;
-    //    Salary = 0;
-    //    Plays = new List<Play>();
-    //}
+    // Konstruktory
+    private Director() { }
 
-    public Director(string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null) 
-        : this(GetNextId(), firstName, lastName, yearsOfExperience, salary, plays) { }
-
-    public Director(int directorId, string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null)
+    public Director(string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null)
         : base(firstName, lastName)
     {
-        if (directorId <= MaxId) throw new ArgumentOutOfRangeException(nameof(directorId), $"ID reżysera {directorId} jest mniejsze lub równe MaxId {MaxId}");
-        DirectorId = directorId;
-        MaxId = DirectorId;
         YearsOfExperience = yearsOfExperience;
         Salary = salary;
         Plays = plays ?? new List<Play>();
+        foreach (var play in Plays)
+        {
+            play.Director = this;
+        }
     }
 
+    // Metody dodawania i usuwania elementów listy Play
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
@@ -87,6 +74,7 @@ public class Director : Person, IPlayManager
         Plays.Clear();
     }
 
+    // Metody string
     public string GetPlaysString()
     {
         return Plays.ListToString("Nie reżyserował żadnych sztuk", '-');
@@ -94,6 +82,6 @@ public class Director : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $"/{DirectorId}/{YearsOfExperience}/{Salary}PLN";
+        return base.ToString() + $"/{YearsOfExperience}/{Salary}PLN";
     }
 }

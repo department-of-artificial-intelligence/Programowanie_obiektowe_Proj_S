@@ -1,37 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Author : Person, IPlayManager
 {
-    private static int MaxId = 0;
-    public int AuthorId { get; }
-    public List<Play> Plays { get; }
-    private static int GetNextId() => MaxId + 1;
+    // Właściwości
+    public int AuthorId { get; private set; } // PK
+    public List<Play> Plays { get; } = new List<Play>(); // Navigation property
 
-    //public Author()
-    //{
-    //    AuthorId = GetNextId();
-    //    MaxId = AuthorId;
-    //    Plays = new List<Play>();
-    //}
+    // Konstruktory
+    private Author() { }
 
-    public Author(string firstName, string lastName, List<Play>? plays = null) 
-        : this(GetNextId(), firstName, lastName, plays) { }
-
-    public Author(int authorId, string firstName, string lastName, List<Play>? plays = null)
+    public Author(string firstName, string lastName, List<Play>? plays = null)
         : base(firstName, lastName)
     {
-        if (authorId <= MaxId) throw new ArgumentOutOfRangeException(nameof(authorId), $"ID autora {authorId} jest mniejsze lub równe MaxId {MaxId}");
-        AuthorId = authorId;
-        MaxId = AuthorId;
         Plays = plays ?? new List<Play>();
+        foreach (var play in Plays)
+        {
+            play.Author = this;
+        }
     }
 
+    // Metody dodawania i usuwania elementów listy Play
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
@@ -62,6 +50,7 @@ public class Author : Person, IPlayManager
         Plays.Clear();
     }
 
+    // Metody string
     public string GetPlaysString()
     {
         return Plays.ListToString("Nie napisał żadnych sztuk", '-');
@@ -69,6 +58,6 @@ public class Author : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $"/{AuthorId}";
+        return base.ToString();
     }
 }

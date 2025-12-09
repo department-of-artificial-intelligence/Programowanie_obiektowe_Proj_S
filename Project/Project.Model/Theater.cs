@@ -1,66 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Theater
 {
-    private static int MaxId = 0;
-    private string _name;
-    public int TheaterId { get; }
-    public string Name
+    // Pola prywatne
+    private string _theaterName = string.Empty;
+
+    // Właściwości
+    public int TheaterId { get; private set; } // PK
+    public string TheaterName
     {
-        get => _name;
+        get => _theaterName;
         set
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa teatru nie może być null lub pusta", nameof(Name));
-            _name = value;
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa teatru nie może być null lub pusta", nameof(TheaterName));
+            _theaterName = value;
         }
     }
-    public Address Address { get; private set; }
-    public List<Hall> Halls { get; }
-    private static int GetNextId() => MaxId + 1;
+    public Address Address { get; private set; } = default!;
+    public TheaterNetwork TheaterNetwork { get; private set; } = default!; // Navigation property
+    public List<Hall> Halls { get; } = new List<Hall>(); // Navigation property
 
-    //public Theater()
-    //{
-    //    TheaterId = GetNextId();
-    //    MaxId = TheaterId;
-    //    Name = string.Empty;
-    //    Address = new Address();
-    //    Halls = new List<Hall>();
-    //}
+    // Konstruktory
+    private Theater() { }
 
-    public Theater(string name, string country, string city, string street)
-        : this(GetNextId(), name, country, city, street) { }
-
-    public Theater(int theaterId, string name, string country, string city, string street)
+    internal Theater(string theaterName, string country, string city, string street, TheaterNetwork theaterNetwork)
     {
-        if (theaterId <= MaxId) throw new ArgumentOutOfRangeException(nameof(theaterId), $"ID teatru {theaterId} jest mniejsze lub równe MaxId {MaxId}");
-        TheaterId = theaterId;
-        MaxId = TheaterId;
-        Name = name;
+        TheaterName = theaterName;
         Address = new Address(country, city, street);
-        Halls = new List<Hall>();
+        TheaterNetwork = theaterNetwork;
     }
 
+    // Metoda zmiany adresu
     public void ChangeAddress(string country, string city, string street)
     {
         Address = new Address(country, city, street);
     }
 
+    // Metody tworzenia i usuwania elementów listy Hall
     public bool CreateHall(List<Performance>? performances = null)
     {
-        Hall hall = new Hall(performances);
-        Halls.Add(hall);
-        return true;
-    }
-    public bool CreateHall(int hallId, List<Performance>? performances = null)
-    {
-        if (hallId <= 0) return false;
-        Hall hall = new Hall(hallId, performances);
+        Hall hall = new Hall(this, performances);
         Halls.Add(hall);
         return true;
     }
@@ -76,6 +55,7 @@ public class Theater
         Halls.Clear();
     }
 
+    // Metody string
     public string GetHallsString()
     {
         return Halls.ListToString("Brak sal teatralnych", '-');
@@ -83,6 +63,6 @@ public class Theater
 
     public override string ToString()
     {
-        return $"{TheaterId}/{Name}/Adres: {Address}\nSale teatralne:\n" + GetHallsString();
+        return $"{TheaterName}/Adres: {Address}\nSale teatralne:\n" + GetHallsString();
     }
 }

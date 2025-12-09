@@ -1,52 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class TheaterNetwork
 {
-    private string _name;
-    public string Name
+    // Pola prywatne
+    private string _networkName = string.Empty;
+
+    // Właściwości
+    public int TheaterNetworkId { get; private set; } // PK
+    public string NetworkName
     {
-        get => _name;
+        get => _networkName;
         set
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa sieci nie może być null lub pusta", nameof(Name));
-            _name = value;
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa sieci nie może być null lub pusta", nameof(NetworkName));
+            _networkName = value;
         }
     }
-    public List<Theater> Theaters { get; }
+    public List<Theater> Theaters { get; } = new List<Theater>(); // Navigation property
 
-    //public TheaterNetwork()
-    //{
-    //    Name = string.Empty;
-    //    Theaters = new List<Theater>();
-    //}
+    // Konstruktory
+    private TheaterNetwork() { }
 
     public TheaterNetwork(string name)
     {
-        Name = name;
-        Theaters = new List<Theater>();
+        NetworkName = name;
     }
 
-    public bool CreateTheater(string name, string country, string city, string street)
+    // Metody tworzenia i usuwania elementów listy Theater
+    public bool CreateTheater(string theaterName, string country, string city, string street)
     {
-        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
-        Theater theater = new Theater(name, country, city, street);
-        Theaters.Add(theater);
-        return true;
-    }
-    public bool CreateTheater(int theaterId, string name, string country, string city, string street)
-    {
-        if (theaterId <= 0 || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
-        if (Theaters.Any(t => t.TheaterId == theaterId)) return false;
-        Theater theater = new Theater(theaterId, name, country, city, street);
+        if (string.IsNullOrWhiteSpace(theaterName) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
+        Theater theater = new Theater(theaterName, country, city, street, this);
         Theaters.Add(theater);
         return true;
     }
@@ -62,6 +46,7 @@ public class TheaterNetwork
         Theaters.Clear();
     }
 
+    // Metody string
     public string GetTheatersString()
     {
         return Theaters.ListToString("Brak teatrów", '*');
@@ -69,6 +54,6 @@ public class TheaterNetwork
 
     public override string ToString()
     {
-        return $"Sieć teatrów: {Name}\n" + GetTheatersString();
+        return $"Sieć teatrów: {NetworkName}\n" + GetTheatersString();
     }
 }

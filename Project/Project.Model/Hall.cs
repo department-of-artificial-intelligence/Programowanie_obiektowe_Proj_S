@@ -1,36 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Hall
 {
-    private static int MaxId = 0;
-    public int HallId { get; }
-    public List<Seat> Seats { get; }
-    public List<Performance> Performances { get; }
-    private static int GetNextId() => MaxId + 1;
+    // Pola prywatne
+    private string _hallName = string.Empty;
+
+    // Właściwości
+    public int HallId { get; private set; } // PK
+    public string HallName
+    {
+        get => _hallName;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Nazwa sali nie może być null lub pusta", nameof(HallName));
+            _hallName = value;
+        }
+    }
+    public List<Seat> Seats { get; } = new List<Seat>(); // Navigation property
+    public List<Performance> Performances { get; } = new List<Performance>(); // Navigation property
+    public Theater Theater { get; } = default!; // Navigation property
+
+    // Konstruktory
+    private Hall() { }
+
+    internal Hall(Theater theater, List<Performance>? performances = null)
+    {
+        Theater = theater;
+        Performances = performances ?? new List<Performance>();
+        foreach (var performance in Performances)
+        {
+            performance.Hall = this;
+        }
+    }
+
+    // Metody zwracające maksymalną ilość miejsc
     public int MaxRows() => Seats.Any() ? Seats.Max(s => s.RowNumber) : 0;
     public int MaxSeatsInRow(int row) => Seats.Any() ? Seats.Where(s => s.RowNumber == row).Max(s => s.SeatNumber) : 0;
 
-    public Hall(List<Performance>? performances = null)
-        : this(GetNextId(), performances) { }
-
-    public Hall(int hallId, List<Performance>? performances = null)
-    {
-        if (hallId <= MaxId) throw new ArgumentOutOfRangeException(nameof(hallId), $"ID sali {hallId} jest mniejsze lub równe MaxId {MaxId}");
-        HallId = hallId;
-        MaxId = HallId;
-        Seats = new List<Seat>();
-        Performances = performances ?? new List<Performance>();
-    }
-
+    // Metody tworzenia i usuwania elementów listy Seat
     public bool CreateSeat(int rowNumber, int seatNumber)
     {
         if (rowNumber <= 0 || seatNumber <= 0) return false;
@@ -63,6 +70,7 @@ public class Hall
         Seats.Clear();
     }
 
+    // Metody dodawania i usuwania elementów listy Performance
     public bool AddPerformance(Performance performance)
     {
         if (performance is null || Performances.Contains(performance)) return false;
@@ -93,6 +101,7 @@ public class Hall
         Performances.Clear();
     }
 
+    // Metoda sortująca siedzenia
     public List<Seat> OrderSeats()
     {
         return Seats
@@ -101,6 +110,7 @@ public class Hall
             .ToList();
     }
 
+    // Metody string
     public string GetSeatsString() // zwraca tylko istniejące siedzenia
     {
         if (Seats.Count == 0) return "Brak siedzeń";
