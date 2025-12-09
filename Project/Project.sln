@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Model", "Project.Model\Project.Model.csproj", "{2F8B714A-480E-4B4F-A628-2FF0FF95EAB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.ConsoleApp", "Project.ConsoleApp\Project.UI.ConsoleApp.csproj", "{5884D902-E96B-48FF-B9CF-CDB1AD12BA4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.ConsoleApp", "Project.ConsoleApp\Project.ConsoleApp.csproj", "{5884D902-E96B-48FF-B9CF-CDB1AD12BA4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Tests", "Project.Tests\Project.Tests.csproj", "{76E7E08B-ED48-41F9-92E7-E5E67D40612B}"
 EndProject
