@@ -152,7 +152,7 @@ class Program
     {
         Console.WriteLine("\n--- DODAJ NOWY TRENING ---");
 
-        // 1. POBIERANIE ID TRENINGU
+       // 1. POBIERANIE ID TRENINGU
         Console.Write("Podaj ID Treningu (unikalna liczba całkowita): ");
         int workoutId = int.Parse(Console.ReadLine());
 
