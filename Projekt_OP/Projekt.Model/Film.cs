@@ -12,7 +12,7 @@ namespace Projekt.Model
         public string Title { get; private set; }
         public int TimeMin { get; private set; }
         public string Genre { get; private set; }
-        public List<Hall> Hall { get; private set; }
+        public List<Hall> Halls { get; private set; }
 
         public Film()
         {
@@ -32,7 +32,7 @@ namespace Projekt.Model
 
         public override string ToString()
         {
-            return $"Film: {Title} | ID:{ID} | CzasTrwania:{TimeMin} min | Gatunek {Genre}\n";//dopracowac wyswietlanie sie sali w kinie jesli to mozliwe 
+            return $"Film: {Title} | ID:{ID} | CzasTrwania:{TimeMin} min | Gatunek:{Genre}\n";//dopracowac wyswietlanie sie sali w kinie jesli to mozliwe 
         }
     }
 }

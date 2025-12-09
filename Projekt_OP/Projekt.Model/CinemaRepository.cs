@@ -10,10 +10,11 @@ namespace Projekt.Model
     {
         private readonly List<Cinema> _cinemas;
         private int _nextId = 1;
+        
 
-        public CinemaRepository(List <Cinema> inicijalizacja)
+        public CinemaRepository(List <Cinema> cinemas)
         {
-            _cinemas = inicijalizacja;
+            _cinemas = cinemas;
             if (_cinemas.Any())
                 _nextId = _cinemas.Max(c => c.CinemaID) + 1;
         }
