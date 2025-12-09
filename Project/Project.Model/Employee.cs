@@ -1,12 +1,14 @@
 ﻿using RestaurantManagement.Models.Enums;
-using System.Diagnostics.Metrics;
-using System.IO;
-using System.Reflection.Emit;
+using System;
 
 namespace RestaurantManagement.Models
 {
     public class Employee : Person
     {
+        public int Id { get; set; } // PK dla EF
+        public int RestaurantId { get; set; } // FK do restauracji
+        public Restaurant Restaurant { get; set; } = null!; // nawigacja
+
         public EmployeeType EmployeeType { get; set; }
         public int Salary { get; set; }
         public required DateTime HiredOn { get; set; }
@@ -17,5 +19,4 @@ namespace RestaurantManagement.Models
             return $"{FirstName} {LastName} ({EmployeeType})";
         }
     }
-
 }

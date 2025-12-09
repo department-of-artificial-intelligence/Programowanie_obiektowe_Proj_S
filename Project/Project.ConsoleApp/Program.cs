@@ -1,38 +1,65 @@
 ﻿#nullable disable
-using RestaurantManagement.Models;
-using RestaurantManagement.Models.Enums;
-using RestaurantNetwork.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RestaurantManagement.DAL;
+using RestaurantManagement.Models;
+using RestaurantManagement.Models.Enums;
+using RestaurantNetwork.Model;
+
 
 namespace RestaurantManagement
 {
     class Program
     {
-        static List<Restaurant> restaurants = new(); // lista restauracji bo jest ich wiecej
-
-        // =======================================Dodaj, Lista===================================================
         static void Main(string[] args)
         {
+            // ==== KONFIGURACJA HOSTA I DB CONTEXT ====
+            IHost _host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
+                {
+                    var configuration = context.Configuration.GetConnectionString("DefaultConnection");
+                    services.AddDbContext<ApplicationDbContext>(options =>
+                        options.UseSqlServer(configuration));
+                })
+                .Build();
+
+            using var scope = _host.Services.CreateScope();
+            var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
+
+            if (db != null)
+            {
+                db.Database.Migrate();
+                db.Database.EnsureCreated();
+            }
+            else
+            {
+                Console.WriteLine("Błąd: brak kontekstu bazy danych!");
+                return;
+            }
+
+            // =========== MENU GŁÓWNE ===========
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("=== Zarządzanie Siecią Restauracji ===");
-                Console.WriteLine("1. Dodaj restaurację"); 
-                Console.WriteLine("2. Lista restauracji");  
-                Console.WriteLine("3. Wybierz restaurację"); 
+                Console.WriteLine("1. Dodaj restaurację");
+                Console.WriteLine("2. Lista restauracji");
+                Console.WriteLine("3. Wybierz restaurację");
                 Console.WriteLine("0. Wyjście");
-                Console.Write("Wybierz opcje: ");
+                Console.Write("Wybierz opcję: ");
 
                 string option = Console.ReadLine();
 
                 switch (option)
                 {
-                    case "1": AddRestaurant(); break; 
-                    case "2": ShowRestaurants(); break; 
-                    case "3": ManageRestaurant(); break; 
+                    case "1": AddRestaurant(db); break;
+                    case "2": ShowRestaurants(db); break;
+                    case "3": ManageRestaurant(db); break;
                     case "0": return;
                     default: Console.WriteLine("Niepoprawna opcja!"); break;
                 }
@@ -42,7 +69,8 @@ namespace RestaurantManagement
             }
         }
 
-        static void AddRestaurant() 
+        // ==================== RESTAURACJE ====================
+        static void AddRestaurant(ApplicationDbContext db)
         {
             Console.Write("Nazwa restauracji: ");
             string name = Console.ReadLine();
@@ -68,7 +96,7 @@ namespace RestaurantManagement
             string phoneNumber = Console.ReadLine();
             if (phoneNumber.Length != 9)
             {
-                Console.WriteLine("Nieprawidłowy format numeru telefonu");
+                Console.WriteLine("Nieprawidłowy numer telefonu");
                 return;
             }
 
@@ -76,7 +104,7 @@ namespace RestaurantManagement
             string email = Console.ReadLine();
             if (!email.Contains("@"))
             {
-                Console.WriteLine("Nieprawidłowy format adresu e-mail");
+                Console.WriteLine("Nieprawidłowy email");
                 return;
             }
 
@@ -98,41 +126,45 @@ namespace RestaurantManagement
                 ClosingHours = closing,
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>(),
-                Reservations = new List<Reservation>() 
+                Clients = new List<Person>()
             };
 
-            restaurants.Add(restaurant);
-            Console.WriteLine("Dodano restaurację!");
+
+            db.Restaurant.Add(restaurant);
+            db.SaveChanges();
+
+            Console.WriteLine("Dodano restaurację i zapisano w bazie!");
         }
 
-        static void ShowRestaurants()
+        static void ShowRestaurants(ApplicationDbContext db)
         {
+            var restaurants = db.Restaurant.Include(r => r.Address).ToList();
+
             if (!restaurants.Any())
             {
-                Console.WriteLine("Brak restauracji w sieci.");
+                Console.WriteLine("Brak restauracji.");
                 return;
             }
 
-            var sortedRestaurants = restaurants.OrderBy(r => r.Name).ToList();
+            var sorted = restaurants.OrderBy(r => r.Name).ToList();
 
             Console.WriteLine("\nLista restauracji:");
-            for (int i = 0; i < sortedRestaurants.Count; i++)
+            for (int i = 0; i < sorted.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {sortedRestaurants[i].Name} ({sortedRestaurants[i].Address.City})");
+                Console.WriteLine($"{i + 1}. {sorted[i].Name} ({sorted[i].Address.City})");
             }
         }
 
-        static void ManageRestaurant()
+        static void ManageRestaurant(ApplicationDbContext db)
         {
+            var restaurants = db.Restaurant.Include(r => r.Address).ToList();
             if (!restaurants.Any())
             {
-                Console.WriteLine("Brak restauracji do zarządzania.");
+                Console.WriteLine("Brak restauracji.");
                 return;
             }
 
-            ShowRestaurants();
-
+            ShowRestaurants(db);
             Console.Write("\nWybierz restaurację: ");
             if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > restaurants.Count)
             {
@@ -141,231 +173,50 @@ namespace RestaurantManagement
             }
 
             var selected = restaurants[choice - 1];
-            Console.WriteLine($"\nWybrano restaurację: {selected.Name}");
 
-            //======================================== ZARZADZANIE Pracownik/Rezerwacje ================================================== 
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"=== Zarządzanie restauracją: {selected.Name} ===");
-                Console.WriteLine("1. Zarządzaj pracownikami");
-                Console.WriteLine("2. Zarządzaj rezerwacjami");
+                Console.WriteLine($"=== {selected.Name} ===");
+                Console.WriteLine("1. Pracownicy");
+                Console.WriteLine("2. Rezerwacje");
                 Console.WriteLine("0. Powrót");
-                Console.Write("Wybierz opcję: ");
 
-                string option = Console.ReadLine();
+                string opt = Console.ReadLine();
 
-                switch (option)
+                switch (opt)
                 {
-                    case "1":
-                        ManageEmployees(selected); 
-                        break;
-                    case "2":
-                        ManageReservations(selected); 
-                        break;
-                    case "0":
-                        return;
-                    default:
-                        Console.WriteLine("Niepoprawna opcja!");
-                        break;
-                }
-
-                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
-                Console.ReadLine();
-            }
-        }
-
-        //======================================== ZARZADZANIE Rezerwacja ================================================== 
-        static void ManageReservations(Restaurant restaurant) 
-
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine($"=== Zarządzanie restauracją: {restaurant.Name} ===");
-                Console.WriteLine("1. Dodaj rezerwację");
-                Console.WriteLine("2. Usuń rezerwację");
-                Console.WriteLine("3. Lista rezerwacji");
-                Console.WriteLine("0. Powrót");
-                Console.Write("Wybierz opcję: ");
-
-                string option = Console.ReadLine();
-
-                switch (option)
-                {
-                    case "1": AddReservation(restaurant); break;
-                    case "2": RemoveReservation(restaurant); break;
-                    case "3": ShowReservation(restaurant); break;
+                    case "1": ManageEmployees(selected, db); break;
+                    case "2": ManageReservations(selected, db); break;
                     case "0": return;
-                    default: Console.WriteLine("Niepoprawna opcja!"); break;
                 }
-
-                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
-                Console.ReadLine();
             }
         }
 
-        static void AddReservation(Restaurant restaurant)
-        {
-            Console.Write("Nazwisko: ");
-            string customerName = Console.ReadLine();
-
-            Console.Write("Liczba osób: ");
-            if (!int.TryParse(Console.ReadLine(), out int numberOfPeople) || numberOfPeople <= 0)
-            {
-                Console.WriteLine("Nieprawidłowa liczba osób!");
-                return;
-            }
-
-            Console.Write("Numer telefonu: ");
-            string phoneNumber = Console.ReadLine();
-            if (phoneNumber.Length != 9)
-            {
-                Console.WriteLine("Nieprawidłowy format numeru telefonu");
-                return;
-            }
-
-            Console.Write("Data (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime date))
-            {
-                Console.WriteLine("Nieprawidłowa data!");
-                return;
-            }
-
-            Console.Write("Godzina rezerwacji (HH:mm): ");
-            if (!TimeOnly.TryParse(Console.ReadLine(), out TimeOnly time))
-            {
-                Console.WriteLine("Nieprawidłowa godzina!");
-                return;
-            }
-
-            var reservation = new Reservation
-            {
-                CustomerName = customerName,
-                NumberOfPeople = numberOfPeople,
-                PhoneNumber = phoneNumber,
-                Date = date,
-                Time = time
-            };
-
-            restaurant.Reservations.Add(reservation);
-            Console.WriteLine("Rezerwacja dodana!");
-        }
-
-        static void RemoveReservation(Restaurant restaurant)
-        {
-            Console.Write("Podaj nazwisko do usunięcia: ");
-            string nameToRemove = Console.ReadLine();
-
-            var res = restaurant.Reservations.FirstOrDefault(r =>
-                       r.CustomerName.Equals(nameToRemove, StringComparison.OrdinalIgnoreCase));
-
-            if (res != null)
-            {
-                restaurant.Reservations.Remove(res);
-                Console.WriteLine("Rezerwacja usunięta!");
-            }
-            else
-            {
-                Console.WriteLine("Nie znaleziono rezerwacji!");
-            }
-        }
-
-        static void ShowReservation(Restaurant restaurant)
-        {
-            if (!restaurant.Reservations.Any())
-            {
-                Console.WriteLine("Brak rezerwacji w tej restauracji.");
-                return;
-            }
-
-            Console.WriteLine($"\nRezerwacje w restauracji {restaurant.Name}:");
-            foreach (var r in restaurant.Reservations)
-            {
-                Console.WriteLine($"- {r.CustomerName}, {r.NumberOfPeople} osób, {r.Date:yyyy-MM-dd} {r.Time:HH:mm}, Tel: {r.PhoneNumber}");
-            }
-        }
-
-
-        //======================================== ZARZADZANIE Pracownikami ================================================== 
-        static void ManageEmployees(Restaurant restaurant) 
+        // ==================== PRACOWNICY ====================
+        static void ManageEmployees(Restaurant restaurant, ApplicationDbContext db)
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"=== Zarządzanie restauracją: {restaurant.Name} ===");
-                Console.WriteLine("1. Dodaj pracownika");
-                Console.WriteLine("2. Usuń pracownika");
-                Console.WriteLine("3. Lista pracowników");
-                Console.WriteLine("0. Powrót");
-                Console.Write("Wybierz opcję: ");
+                Console.WriteLine("1. Dodaj");
+                Console.WriteLine("2. Usuń");
+                Console.WriteLine("3. Lista");
+                Console.WriteLine("0. Wróć");
 
-                string option = Console.ReadLine();
+                string opt = Console.ReadLine();
 
-                switch (option)
+                switch (opt)
                 {
-                    case "1": AddEmployee(restaurant); break;
-                    case "2": RemoveEmployee(restaurant); break;
-                    case "3": ShowEmployees(restaurant); break;
+                    case "1": AddEmployee(restaurant, db); break;
+                    case "2": RemoveEmployee(restaurant, db); break;
+                    case "3": ShowEmployees(restaurant, db); break;
                     case "0": return;
-                    default: Console.WriteLine("Niepoprawna opcja!"); break;
                 }
-
-                Console.WriteLine("\nKliknij Enter, aby kontynuować...");
-                Console.ReadLine();
             }
-            static void ManageRestaurant()
-{
-    if (!restaurants.Any())
-    {
-        Console.WriteLine("Brak restauracji do zarządzania.");
-        return;
-    }
-
-    ShowRestaurants();
-
-    Console.Write("\nWybierz restaurację: ");
-    if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > restaurants.Count)
-    {
-        Console.WriteLine("Niepoprawny wybór.");
-        return;
-    }
-
-    var selected = restaurants[choice - 1];
-    
-    while (true)
-    {
-        Console.Clear();
-        Console.WriteLine($"=== Zarządzanie restauracją: {selected.Name} ===");
-        Console.WriteLine("1. Zarządzaj pracownikami");
-        Console.WriteLine("2. Zarządzaj rezerwacjami");
-        Console.WriteLine("0. Powrót");
-        Console.Write("Wybierz opcję: ");
-
-        string option = Console.ReadLine();
-
-        switch (option)
-        {
-            case "1":
-                ManageEmployees(selected);
-                break;
-            case "2":
-                ManageReservations(selected);
-                break;
-            case "0":
-                return;
-            default:
-                Console.WriteLine("Niepoprawna opcja!");
-                break;
         }
 
-        Console.WriteLine("\nKliknij Enter, aby kontynuować...");
-        Console.ReadLine();
-    }
-}
-
-        }
-        static void AddEmployee(Restaurant restaurant) 
+        static void AddEmployee(Restaurant restaurant, ApplicationDbContext db)
         {
             Console.Write("Imię: ");
             string firstName = Console.ReadLine();
@@ -373,76 +224,20 @@ namespace RestaurantManagement
             Console.Write("Nazwisko: ");
             string lastName = Console.ReadLine();
 
-            Console.Write("Stanowisko (Kelner, Szef, Kucharz, Menadżer, Barman, Host, Sprzątaczka, Dostawca): ");
-            string typeInput = Console.ReadLine();
-            if (!Enum.TryParse(typeInput, true, out EmployeeType type))
-            {
-                Console.WriteLine("Nieprawidłowy format.");
-                return;
-            }
-
-            Console.Write("Wypłata: ");
-            if (!int.TryParse(Console.ReadLine(), out int salary))
-            {
-                Console.WriteLine("Nieprawidłowy format");
-                return;
-            }
-
             Console.Write("Numer telefonu: ");
             string phoneNumber = Console.ReadLine();
-            if (phoneNumber.Length != 9)
-            {
-                Console.WriteLine("Nieprawidłowy format numeru telefonu");
-                return;
-            }
 
             Console.Write("Email: ");
             string email = Console.ReadLine();
-            if (!email.Contains("@"))
-            {
-                Console.WriteLine("Nieprawidłowy format adresu e-mail");
-                return;
-            }
 
-            Console.Write("Data urodzenia (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
-            {
-                Console.WriteLine("Nieprawidłowy format daty.");
-                return;
-            }
-
-            if (dateOfBirth.Month < 1 || dateOfBirth.Month > 12) 
-            {
-                Console.WriteLine("Miesiąc poza zakresem"); 
-                return; 
-            }
-
-            if (dateOfBirth.Day < 1 || dateOfBirth.Day > 31) 
-            {
-                Console.WriteLine("Dzień poza zakresem"); 
-                return; 
-            }
-
-            int age = DateTime.Now.Year - dateOfBirth.Year;
-            if (DateTime.Now < dateOfBirth.AddYears(age))
-                age--;
-
-            if (age < 18)
-            {
-                Console.WriteLine("Osoba musi mieć ukończone 18 lat, aby mogła być zatrudniona");
-                return; 
-            }
+            Console.Write("Data urodzenia (yyyy-MM-dd): ");
+            DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth);
 
             Console.Write("Państwo: ");
             string country = Console.ReadLine();
 
             Console.Write("Kod pocztowy: ");
             string zipCode = Console.ReadLine();
-            if (zipCode.Length != 6 || !zipCode.Contains("-"))
-            {
-                Console.WriteLine("Nieprawidłowy format kodu");
-                return;
-            }
 
             Console.Write("Miasto: ");
             string city = Console.ReadLine();
@@ -456,51 +251,131 @@ namespace RestaurantManagement
             {
                 FirstName = firstName,
                 LastName = lastName,
-                EmployeeType = type,
-                Salary = salary,
-                HiredOn = DateTime.Now,
                 PhoneNumber = phoneNumber,
                 Email = email,
                 DateOfBirth = dateOfBirth,
-                Address = address
+                Address = address,
+                HiredOn = DateTime.Now,
+                Restaurant = restaurant
             };
 
-            restaurant.Employees.Add(employee); 
-            Console.WriteLine("Pracownik dodany!");
+            db.Employee.Add(employee);
+            db.SaveChanges();
+
+            Console.WriteLine("Pracownik dodany i zapisany do bazy!");
         }
 
-        static void RemoveEmployee(Restaurant restaurant) 
+        static void RemoveEmployee(Restaurant restaurant, ApplicationDbContext db)
         {
-            Console.Write("Podaj nazwisko pracownika do usunięcia: ");
-            string lastName = Console.ReadLine();
+            Console.Write("Nazwisko: ");
+            string name = Console.ReadLine();
 
-            var emp = restaurant.Employees.FirstOrDefault(e => e.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+            var emp = db.Employee.FirstOrDefault(x =>
+                x.LastName.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                x.RestaurantId == restaurant.Id);
+
             if (emp != null)
             {
-                emp.FiredOn = DateTime.Now;
-                restaurant.Employees.Remove(emp);
-                Console.WriteLine("Pracownik usunięty!");
+                db.Employee.Remove(emp);
+                db.SaveChanges();
+                Console.WriteLine("Usunięto pracownika z bazy!");
             }
-            else
-                Console.WriteLine("Nie znaleziono pracownika!");
         }
 
-        static void ShowEmployees(Restaurant restaurant) 
+        static void ShowEmployees(Restaurant restaurant, ApplicationDbContext db)
         {
-            if (!restaurant.Employees.Any())
-            {
-                Console.WriteLine("Brak pracowników w tej restauracji.");
-                return;
-            }
+            var employees = db.Employee
+                .Where(e => e.RestaurantId == restaurant.Id)
+                .ToList();
 
-            Console.WriteLine($"\nPracownicy restauracji {restaurant.Name}:");
-            foreach (var e in restaurant.Employees)
+            foreach (var e in employees)
             {
-                Console.WriteLine($"- {e.FirstName} {e.LastName}, {e.EmployeeType}, Pensja: {e.Salary}");
+                Console.WriteLine($"{e.FirstName} {e.LastName}");
+            }
+        }
+
+        // ==================== REZERWACJE ====================
+        static void ManageReservations(Restaurant restaurant, ApplicationDbContext db)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("1. Dodaj");
+                Console.WriteLine("2. Usuń");
+                Console.WriteLine("3. Lista");
+                Console.WriteLine("0. Powrót");
+
+                string opt = Console.ReadLine();
+                switch (opt)
+                {
+                    case "1": AddReservation(restaurant, db); break;
+                    case "2": RemoveReservation(restaurant, db); break;
+                    case "3": ShowReservation(restaurant, db); break;
+                    case "0": return;
+                }
+            }
+        }
+
+        static void AddReservation(Restaurant restaurant, ApplicationDbContext db)
+        {
+            Console.Write("Nazwisko klienta: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Liczba osób: ");
+            int.TryParse(Console.ReadLine(), out int people);
+
+            Console.Write("Telefon: ");
+            string phone = Console.ReadLine();
+
+            Console.Write("Data (yyyy-MM-dd): ");
+            DateTime.TryParse(Console.ReadLine(), out DateTime date);
+
+            Console.Write("Godzina (HH:mm): ");
+            TimeOnly.TryParse(Console.ReadLine(), out TimeOnly time);
+
+            var reservation = new Reservation
+            {
+                CustomerName = name,
+                NumberOfPeople = people,
+                PhoneNumber = phone,
+                Date = date,
+                Time = time,
+                Restaurant = restaurant
+            };
+
+            db.Reservation.Add(reservation);
+            db.SaveChanges();
+
+            Console.WriteLine("Rezerwacja dodana i zapisana w bazie!");
+        }
+
+        static void RemoveReservation(Restaurant restaurant, ApplicationDbContext db)
+        {
+            Console.Write("Nazwisko klienta: ");
+            string name = Console.ReadLine();
+
+            var res = db.Reservation.FirstOrDefault(x =>
+                x.CustomerName.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                x.RestaurantId == restaurant.Id);
+
+            if (res != null)
+            {
+                db.Reservation.Remove(res);
+                db.SaveChanges();
+                Console.WriteLine("Rezerwacja usunięta z bazy!");
+            }
+        }
+
+        static void ShowReservation(Restaurant restaurant, ApplicationDbContext db)
+        {
+            var reservations = db.Reservation
+                .Where(r => r.RestaurantId == restaurant.Id)
+                .ToList();
+
+            foreach (var r in reservations)
+            {
+                Console.WriteLine($"{r.CustomerName} {r.Date:yyyy-MM-dd} {r.Time}");
             }
         }
     }
-
-
-//framework, test jakis
 }

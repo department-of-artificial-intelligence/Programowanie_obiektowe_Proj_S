@@ -2,8 +2,10 @@
 
 namespace RestaurantManagement.Models
 {
-    public class Address : IAddress
+    public class Address
     {
+        public int Id { get; set; } // PK dla EF
+
         public string Country { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
