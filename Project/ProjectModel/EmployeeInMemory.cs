@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Project.Model;
+
 namespace Project.Model
 {
-    public class EmpInMemory : ISourceEmployee
+    public class EmployeeInMemory : ISourceEmployee
     {
         public List<Employee> Employees { get; private set; }
 
-        public EmpInMemory(List<Employee> employees)
+        public EmployeeInMemory(List<Employee> employees)
         {
             Employees = employees;
         }
@@ -28,11 +28,6 @@ namespace Project.Model
         {
             if (employee is null) return false;
             Employees.Remove(employee);
-            return true;
-        }
-        public bool SortEmployees()
-        {
-            Employees = Employees.OrderBy(emp => emp.Id).ToList();
             return true;
         }
     }

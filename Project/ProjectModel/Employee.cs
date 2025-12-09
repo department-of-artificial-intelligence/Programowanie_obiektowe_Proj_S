@@ -14,14 +14,17 @@ namespace Project.Model
 
         public string Position { get; set; }
 
-        public Employee(int id, string firstName, string lastName, string position)
+        public int PharmacyId { get; set; }
+
+        public Pharmacy Pharmacy { get; set; }
+        public Employee(string firstName, string lastName, string position, Pharmacy pharmacy)
         {
-            Id = id;
             FirstName = firstName;
             LastName = lastName;
             Position = position;
+            Pharmacy = pharmacy;
         }
-        public Employee() : this(0, string.Empty, string.Empty, string.Empty) { }
+        public Employee() : this(string.Empty, string.Empty, string.Empty, new Pharmacy()) { }
 
         public override string ToString()
         {

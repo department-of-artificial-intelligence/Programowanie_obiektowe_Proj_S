@@ -10,11 +10,11 @@ namespace Project.Test
         public void KonstruktorParametrycznyTest()
         {
             string nazwa = "Apap";
-            string name = "Ibuprom";
             string typ = "Przeciwbolowy";
             string cena = "10z³";
             string opis = "Przeciwbolowy lek oparty na paracetamolu";
-            var drug = new Drug(0, nazwa, typ, cena, opis);
+            Pharmacy phar = new Pharmacy();
+            var drug = new Drug(nazwa, typ, cena, opis, phar);
 
             Assert.Equal(nazwa, drug.Name);
             Assert.Equal(typ, drug.TypeOfMedicine);
@@ -37,7 +37,8 @@ namespace Project.Test
             string typ = "Przeciwbolowy";
             string cena = "10z³";
             string opis = "Przeciwbolowy lek oparty na paracetamolu";
-            Drug drug = new Drug(0, nazwa, typ, cena, opis);
+            Pharmacy phar = new Pharmacy();
+            Drug drug = new Drug(nazwa, typ, cena, opis, phar);
             drug.ToString();
         }
     }

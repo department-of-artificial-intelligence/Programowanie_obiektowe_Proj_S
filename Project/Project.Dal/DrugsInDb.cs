@@ -3,39 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// KLASA WYŁĄCZNIE DO TESTOW
-namespace Project.Model
+using Project.Dal;
+using Project.Model;
+namespace Project.Dal
 {
-    public class DrugsInMemory : IDrugsSource
+    public class DrugsInDataBase : IDrugsSource
     {
-        public List<Drug> Drugs { get; private set; }
+        private readonly ApplicationDbContext _db;
 
-        public DrugsInMemory(List<Drug> drugs)
+        public DrugsInDataBase(ApplicationDbContext db)
         {
-            Drugs = drugs;
+            _db = db;
         }
         public List<Drug> AllDrugs()
         {
-            return Drugs;
+            return _db.Drugs.OrderBy(x => x.DrugId).ToList();
         }
         public bool AddNewDrug(Drug drug)
         {
             if (drug is null) return false;
-            foreach (var l in Drugs)
+            foreach (var l in _db.Drugs)
             {
                 if (l.Name == drug.Name)
                 {
                     return false;
                 }
             }
-            Drugs.Add(drug);
+            _db.Drugs.Add(drug);
+            _db.SaveChanges();
             return true;
         }
         public bool RemoveDrug(Drug drug)
         {
-            var doUsuniecia = Drugs.FirstOrDefault(x => x.DrugId == drug.DrugId);
-            if (doUsuniecia is null) return false;
-            Drugs.Remove(doUsuniecia);
+            if (drug is null) return false;
+            _db.Drugs.Remove(drug);
+            _db.SaveChanges();
             return true;
         }
     }

@@ -17,16 +17,17 @@ namespace Project.Test
             string name = "Apteka Centralna";
             var address = new Address();
 
-            var employeeManagerMock = new Mock<IEmployeeManager>();
-            var drugManagerMock = new Mock<IDrugManager>();
-
-            var pharmacy = new Pharmacy(id, name, address, employeeManagerMock.Object, drugManagerMock.Object);
+            var pharmacy = new Pharmacy(name, address) { Id = id};
 
             Assert.Equal(id, pharmacy.Id);
             Assert.Equal(name, pharmacy.Name);
             Assert.Equal(address, pharmacy.Address);
-            Assert.Equal(employeeManagerMock.Object, pharmacy.Employees);
-            Assert.Equal(drugManagerMock.Object, pharmacy.Drugs);
+        }
+        [Fact]
+        public void KonstruktorDomyslnyTest()
+        {
+            
+
         }
     }
 }

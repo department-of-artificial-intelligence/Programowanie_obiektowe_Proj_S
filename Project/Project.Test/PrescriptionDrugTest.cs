@@ -16,8 +16,8 @@ namespace Project.Test
             string typ = "Przeciwdepresyjne";
             string cena = "12.50zl";
             string opis = "Przeciwdepresyjny lek mocny";
-
-            PrescriptionDrug drug = new PrescriptionDrug(0, nazwa, typ, cena, opis);
+            Pharmacy phar = new Pharmacy();
+            PrescriptionDrug drug = new PrescriptionDrug(nazwa, typ, cena, opis, phar);
 
             Assert.Equal(nazwa, drug.Name);
             Assert.Equal(typ, drug.TypeOfMedicine);

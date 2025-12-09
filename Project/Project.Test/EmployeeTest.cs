@@ -23,7 +23,8 @@ namespace Project.Test
             string imie = "Jan";
             string nazwisko = "Pierzgalski";
             string stanowisko = "Magister Farmacji";
-            var employee = new Employee(0, imie, nazwisko, stanowisko);
+            Pharmacy phar = new Pharmacy();
+            var employee = new Employee(imie, nazwisko, stanowisko, phar);
             Assert.Equal(imie, employee.FirstName);
             Assert.Equal(nazwisko, employee.LastName);
             Assert.Equal(stanowisko, employee.Position);
@@ -34,7 +35,8 @@ namespace Project.Test
             string imie = "Jan";
             string nazwisko = "Pierzgalski";
             string stanowisko = "Magister Farmacji";
-            var employee = new Employee(0, imie, nazwisko, stanowisko);
+            Pharmacy phar = new Pharmacy();
+            var employee = new Employee(imie, nazwisko, stanowisko, phar);
             string toString = employee.ToString();
             string poprawnyToString = "Id: 0, Imie: Jan, Nazwisko: Pierzgalski, Stanowisko: Magister Farmacji";
             Assert.Equal(poprawnyToString, toString);

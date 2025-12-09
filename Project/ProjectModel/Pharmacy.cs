@@ -8,19 +8,18 @@ namespace Project.Model
 {
     public class Pharmacy
     {
-        public IEmployeeManager Employees { get; private set; }
-        public IDrugManager Drugs { get; private set; }
-        public Address Address { get; private set; }
         public int Id { get; set; }
         public string Name { get; set; }
+        public Address Address { get; private set; }
+        public int AddressId { get; set; }
+        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public List<Drug> Drugs { get; set; } = new List<Drug>();
 
-        public Pharmacy(int id, string nazwa, Address address, IEmployeeManager employeeManager, IDrugManager drugManager)
+        public Pharmacy() { }
+        public Pharmacy(string nazwa, Address address)
         {
-            Id = id;
             Name = nazwa;
             Address = address;
-            Employees = employeeManager;
-            Drugs = drugManager;
         }
         public override string ToString()
         {

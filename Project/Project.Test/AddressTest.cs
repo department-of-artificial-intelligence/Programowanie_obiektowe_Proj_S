@@ -19,7 +19,7 @@ namespace Project.Test
             Assert.Equal(string.Empty, adr.City);
             Assert.Equal(string.Empty, adr.Street);
             Assert.Equal(string.Empty, adr.PostalCode);
-            Assert.Equal(0, adr.Street_Number);
+            Assert.Equal(0, adr.StreetNumber);
         }
         [Fact]
         public void KonstruktorParametrycznyTest()
@@ -32,7 +32,7 @@ namespace Project.Test
             Assert.Equal(miasto, adr.City);
             Assert.Equal(Ulica, adr.Street);
             Assert.Equal(kod_pocztowy, adr.PostalCode);
-            Assert.Equal(numer, adr.Street_Number);
+            Assert.Equal(numer, adr.StreetNumber);
         }
         [Fact]
         public void ToStringTest()

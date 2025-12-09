@@ -8,24 +8,22 @@ namespace Project.Model
 {
     public class Address
     {
-        
+        public int Id { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string PostalCode { get; set; }
-        public int Street_Number { get; set; }
-
-        public Address(string city, string street, string postalCode, int street_number)
+        public int StreetNumber { get; set; }
+        public Address(string city, string street, string postalCode, int streetNumber)
         {
             City = city;
             Street = street;
             PostalCode = postalCode;
-            Street_Number = street_number;
+            StreetNumber = streetNumber;
         }
         public Address() : this(string.Empty, string.Empty, string.Empty, 0) { }
-
         public override string ToString()
         {
-            return $"Adres Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {Street_Number}";
+            return $"Adres Miasto: {City}, Ulica: {Street}, Kod-Pocztowy: {PostalCode}, Numer Budynku: {StreetNumber}";
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class EmployeeManager : IEmployeeManager
+    public class EmployeeManager
     {
         private readonly ISourceEmployee _source;
 
@@ -14,33 +14,21 @@ namespace Project.Model
         {
             _source = source;
         }
-        public void DisplayEmployees()
+        public bool AddEmployee(string firstName, string lastName, string position, Pharmacy phar)
         {
-            var pracownicy = _source.AllEmployees();
-            foreach(Employee emp in pracownicy)
-            {
-                Console.WriteLine(emp);
-            }
-        }
-        public bool AddEmployee(string firstName, string lastName, string position)
-        {
-            List<Employee> lista = _source.AllEmployees();
-            int new_id = 1;
-            while (lista.Any(x => x.Id == new_id))
-            {
-                new_id++;
-            }
-            var newEmployee = new Employee(new_id, firstName, lastName, position);
-            _source.AddEmployee(newEmployee);
-            _source.SortEmployees();
+            if (phar is null) return false;
+            var newEmployee = new Employee(firstName, lastName, position, phar);
+            if (newEmployee is null) return false;
+            if (!_source.AddEmployee(newEmployee)) return false;
             return true;
         }
-        public bool RemoveEmployee(int id)
+        public bool RemoveEmployee(int id, Pharmacy phar)
         {
-            var lista = _source.AllEmployees();
-            Employee? doUsuniecia = lista.FirstOrDefault(x => x.Id == id);
+            if (phar is null) return false;
+            var lista = _source.AllEmployees().Where(e => e.PharmacyId == phar.Id).ToList();
+            Employee? doUsuniecia = lista.FirstOrDefault(x => x.Id == id && x.Pharmacy == phar);
             if (doUsuniecia is null) return false;
-            _source.RemoveEmployee(doUsuniecia);
+            if (!_source.RemoveEmployee(doUsuniecia)) return false;
             return true;
         }
     }
