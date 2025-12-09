@@ -19,4 +19,9 @@
 		<ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
 		<ProjectReference Include="..\Projekt.Model\Projekt.Model.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>
