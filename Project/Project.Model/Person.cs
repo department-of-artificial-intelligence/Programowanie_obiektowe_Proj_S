@@ -28,7 +28,7 @@ public abstract class Person {
         }
     }
 
-    //protected Person()
+    //protected Person() 
     //{
     //    FirstName = string.Empty;
     //    LastName = string.Empty;
