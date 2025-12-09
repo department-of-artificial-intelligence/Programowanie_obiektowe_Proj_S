@@ -21,6 +21,8 @@ namespace Projekt.Model
         public decimal TotalCost { get; set; }
         public RentalStatus Status { get; set; }
 
+        public Rental() { }
+
         public override string ToString()
         {
             string status = (ActualReturnDate == null) ? "W TOKU" : "Zakończone";
@@ -29,3 +31,4 @@ namespace Projekt.Model
     }
 }
 
+  

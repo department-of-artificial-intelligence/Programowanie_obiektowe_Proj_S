@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 
 namespace Projekt.Model
-{
+{  
     public class Car
     {
         public int Id { get; set; }
@@ -18,6 +18,7 @@ namespace Projekt.Model
         public int CurrentBranchId { get; set; }
         public virtual Branch CurrentBranch { get; set; }
 
+        public Car () { }
         public override string ToString()
         {
             return $"[{Id}] {Marka} {Model} ({RegistrationNumber}) - Status: {Status} - Oddział: {CurrentBranch?.Name ?? "Brak"}";
