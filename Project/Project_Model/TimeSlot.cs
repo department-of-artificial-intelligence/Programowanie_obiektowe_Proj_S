@@ -1,37 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class TimeSlot{
-        public int Id {  get; set; }
+    public class TimeSlot
+    {
+        public int Id { get; set; }
         public int TutorId { get; set; }
-        public DateTime StartDateTime {  get; set; }
+        public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
-        public bool IsBooked {  get; set; }=false;
+        public bool IsBooked { get; set; } = false;
 
-        public TimeSlot(int id, int tutorId, DateTime startDateTime, DateTime endDateTime)
+        public TimeSlot(int tutorId, DateTime start, DateTime end)
         {
-            Id = id;
             TutorId = tutorId;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            StartDateTime = start;
+            EndDateTime = end;
         }
-        public TimeSlot()
-        {
-            Id = 0;
-            TutorId = 0;
-            StartDateTime = DateTime.MinValue;
-            EndDateTime = DateTime.MinValue;
-            IsBooked = false;
-        }
-        public TimeSpan GetDuration(){
-            return EndDateTime- StartDateTime;
-        }
+        public TimeSlot() { }
+
+        public TimeSpan GetDuration() => EndDateTime - StartDateTime;
+
         public override string ToString()
-            => $"{Id}: {StartDateTime:dd-MM HH-mm} - {EndDateTime:dd-MM HH-mm} (Zajęty: {IsBooked})";
+            => $"{Id}: {StartDateTime:dd-MM HH:mm} - {EndDateTime:HH:mm} (Zajęty: {IsBooked})";
     }
 }

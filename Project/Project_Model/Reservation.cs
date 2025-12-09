@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Model
 {
@@ -13,19 +9,12 @@ namespace Project.Model
         public DateTime CreationDate { get; set; }
         public string Status { get; set; }
 
-        public Reservation(int id, Lesson lesson)
+        public Reservation(Lesson lesson)
         {
-            Id = id;
             Lesson = lesson;
             CreationDate = DateTime.Now;
             Status = ReservationStatuses.Pending;
         }
-        public Reservation()
-        {
-            Id = 0;
-            Lesson = null;
-            CreationDate = DateTime.MinValue;
-            Status = string.Empty;
-        }
+        public Reservation() { }
     }
 }

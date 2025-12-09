@@ -1,28 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Project.Model
 {
     public class Subject
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        // Relacja zwrotna dla EF 
+        public List<Tutor> Tutors { get; set; } = new();
 
-        public Subject(int id, string name, string description) {
-            Id = id;
+        public Subject(string name, string description)
+        {
             Name = name;
             Description = description;
         }
-        public Subject()
-        {
-            Id = 0;
-            Name = string.Empty;
-            Description = string.Empty;
-        }
-        public override string ToString() => $"Subject {Id}: {Name}";
+        public Subject() { } 
+        public override string ToString() => $"Przedmiot {Id}: {Name}";
     }
 }

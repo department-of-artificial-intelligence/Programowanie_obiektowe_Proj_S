@@ -14,8 +14,6 @@ namespace Project.Model
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
         public string Status { get; set; }
-
-
         public Payment(int id, Reservation reservation, decimal amount)
         {
             Id = id;
