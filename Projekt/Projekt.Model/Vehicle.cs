@@ -37,7 +37,7 @@ namespace Projekt.Model
         }
         public void UsunKierowce()
         {
-            PrzypisanyKierowca = null;
+            PrzypisanyKierowca = new Driver();
         }
         public void DodajWpisSerwisowy(string opis, double koszt)
         {

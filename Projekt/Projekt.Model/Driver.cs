@@ -16,7 +16,7 @@ namespace Projekt.Model
             Nazwisko = nazwisko;
             NumerPrawaJazdy = numerPrawaJazdy;
         }
-
+        public Driver() { }
         public override string ToString()
         {
             return $"{Imie} {Nazwisko} ({NumerPrawaJazdy})";

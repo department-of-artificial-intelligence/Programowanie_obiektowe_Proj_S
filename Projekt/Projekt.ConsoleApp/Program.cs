@@ -68,7 +68,9 @@ public class Program
                     Console.WriteLine("Zamykanie...");
                     break;
                 default:
-                    KomunikatBlad("Nieznana opcja!");
+                    Console.WriteLine("Blad wybieramy z przedzialu <0;9>");
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
             }
         }
