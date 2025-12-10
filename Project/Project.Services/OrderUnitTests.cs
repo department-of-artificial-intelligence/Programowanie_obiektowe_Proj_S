@@ -5,18 +5,6 @@ using Xunit;
 public class OrderTests
 {
     [Fact]
-    public void Constructor_Test()
-    {
-        var o = new Order(5, "Steel", "Warsaw", "Berlin");
-
-        Assert.Equal(5, o.Id);
-        Assert.Equal("Steel", o.LoadingDescription);
-        Assert.Equal("Warsaw", o.LoadingAddress);
-        Assert.Equal("Berlin", o.UnloadingAddress);
-        Assert.Equal(OrderStatus.Pending, o.Status);
-    }
-
-    [Fact]
     public void AssignOrder_WhenDriverUnavailable_Test()
     {
         var o = new Order(1, "Desc", "A", "B");

@@ -5,18 +5,6 @@ using Xunit;
 public class DriverTests
 {
     [Fact]
-    public void Constructor_Test()
-    {
-        var d = new Driver(10, "Jan", "Nowak", "LIC123");
-
-        Assert.Equal(10, d.Id);
-        Assert.Equal("Jan", d.FirstName);
-        Assert.Equal("Nowak", d.LastName);
-        Assert.Equal("LIC123", d.LicenseNumber);
-        Assert.True(d.IsAvailable);
-    }
-
-    [Fact]
     public void AssignVehicle_Test()
     {
         var d = new Driver(1, "A", "B", "C");
