@@ -1,12 +1,65 @@
-﻿using Project.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Project.DAL;
 using Project.Logic;
+using Project.Model;
 using Project.Model.DTOs;
 using Project.Model.Extensions;
+
 
 class Program
 {
     public static void Main(string[] args)
     {
+        //konfiguracja BD
+        IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+        {
+            var cns = context.Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+        }).Build();
+
+        using (var scope = _host.Services.CreateScope())
+        {
+            var context = _host.Services.GetService<ApplicationDbContext>();
+            if (context != null)
+            {
+                context.Database.Migrate();
+                //context.Database.EnsureCreated();
+
+                Console.WriteLine("--- STATUS BAZY DANYCH ---");
+                Console.WriteLine("Połączono z bazą SQL.");
+
+                if (!context.Persons.Any())
+                {
+                    Student person = new Student()
+                    {
+                        Id = 0,
+                        FirstName = "Testowy",
+                        LastName = "Janusz",
+                        Address = "Baza Danych SQL",
+                        DateOfBirth = new DateOnly(1990, 1, 1),
+                        PhoneNumber = "111222333",
+                        Email = "test@db.com",
+                        LanguageOfLearning = "SQL",
+                        Balance = 0
+                    };
+
+                    context.Persons.Add(person);
+                    context.SaveChanges();
+                    Console.WriteLine("Dodano rekord do bazy SQL.");
+                }
+                else
+                {
+                    Console.WriteLine("Baza już zawiera dane.");
+                }
+                Console.WriteLine("--------------------------\n");
+            }
+        }
+
+
         School mySchool = new School
         {
             Id = 1,
@@ -15,8 +68,9 @@ class Program
             Address = "Main St",
             Country = "Poland"
         };
-
         mySchool.SeedData();
+
+        SchoolService service = new SchoolService(mySchool);
 
         Console.WriteLine("=== SYSTEM SZKOŁY JĘZYKOWEJ ===");
         Console.WriteLine($"Liczba studentów: {mySchool.Students.Count}");
@@ -25,9 +79,7 @@ class Program
 
         // Zastosowanie LINQ
         Console.WriteLine("\n--- Studenci uczący się angielskiego ---");
-        var englishStudents = mySchool.Students
-            .Where(s => s.LanguageOfLearning == "English")
-            .ToList();
+        var englishStudents = service.GetStudentsByLanguage("English");
 
         foreach(var s in englishStudents)
         {
@@ -36,29 +88,21 @@ class Program
 
         // Sortowanie
         Console.WriteLine("\n--- Nauczyciele według zarobków ---");
-        var sortedTeachers = mySchool.Teachers
-            .OrderBy(t => t.Salary)
-            .ToList();
+        var sortedTeachers = service.GetTeachersSortedBySalary();
 
         foreach(var t in sortedTeachers)
         {
             Console.WriteLine($"{t.LastName} {t.FirstName} : {t.Salary} PLN");
         }
 
-        // Proste statystyki
+        // Statystyki
         Console.WriteLine("\n--- Statystyki kursów ---");
-        if (mySchool.Courses.Any())
+        var stats = service.GetCourseStatistics();
+        if (stats.mostExpensive != null)
         {
-            decimal avgPrice = mySchool.Courses.Average(c => c.PricePerHour);
-            decimal maxPrice = mySchool.Courses.Max(c => c.PricePerHour);
-
-            var mostExpensiveCourse = mySchool.Courses
-                .OrderByDescending(c => c.PricePerHour)
-                .FirstOrDefault();
-
-            Console.WriteLine($"Srednia cena za godzinę: {avgPrice:F2} PLN");
-            Console.WriteLine($"Najwyższa cena: {maxPrice} PLN");
-            Console.WriteLine($"Najdroższy kurs to: {mostExpensiveCourse?.Language} ({mostExpensiveCourse?.Level})");
+            Console.WriteLine($"Srednia cena za godzinę: {stats.avg:F2} PLN");
+            Console.WriteLine($"Najwyższa cena: {stats.max} PLN");
+            Console.WriteLine($"Najdroższy kurs to: {stats.mostExpensive.Language} ({stats.mostExpensive.Level})");
         }
 
         // Polimorfizm
@@ -112,5 +156,7 @@ class Program
         Console.WriteLine($"Telefon: {student.PhoneNumber.ToPolishPhoneNumber()}");
 
         mySchool.Groups.PrintToConsole();
+
+        Console.ReadLine();
     }
 }
