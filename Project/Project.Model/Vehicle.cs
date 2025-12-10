@@ -17,7 +17,6 @@ public abstract class Vehicle : IVehicle
     public abstract VehicleType VType { get; }
 
     public IDriver? AssignedDriver { get; set; }
-    // ----------------------> tu koniec
 
     public Vehicle(int id, string vinNumber, int productionYear, float engineSize,
                        int mileage, string brand, string model, string registrationNumber)

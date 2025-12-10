@@ -1,6 +1,6 @@
 ﻿namespace Project.Abstractions
 {
-    public enum DriverStatus // do modelu
+    public enum DriverStatus
     {
         Available,
         Assigned,
