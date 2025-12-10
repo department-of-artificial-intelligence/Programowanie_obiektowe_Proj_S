@@ -55,7 +55,6 @@ public class PizzeriasNetwork
             foreach (var pizzeria in PizzeriasList)
             {
                 Console.WriteLine(pizzeria.GetInfo());
-                Console.WriteLine();
             }
         }
         Console.WriteLine("==================================================");

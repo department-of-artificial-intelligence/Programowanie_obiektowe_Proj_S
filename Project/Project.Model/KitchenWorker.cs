@@ -9,8 +9,8 @@ public class KitchenWorker : Worker
 		Station = station;
 	}
 
-	public new string GetInfo()
-	{
-		return base.GetInfo() + $"\n - Station: {Station}";
-	}
+    public void PrepareFood()
+    {
+        Console.WriteLine($"{FirstName} is preparing food at the {Station}.");
+    }
 }

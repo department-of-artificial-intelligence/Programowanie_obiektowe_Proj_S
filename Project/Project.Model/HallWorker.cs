@@ -9,8 +9,13 @@ public class HallWorker : Worker
         AssignedTables = 0;
     }
 
-    public new string GetInfo()
+    public void ServeClient(Client client)
     {
-        return base.GetInfo() + $"\n - Assigned Tables: {AssignedTables}";
+        Console.WriteLine($"{FirstName} is serving {client.GetFullName()}.");
+    }
+
+    public void CleanTable(int tableNumber)
+    {
+        Console.WriteLine($"{FirstName} is cleaning table {tableNumber}.");
     }
 }

@@ -11,7 +11,7 @@ namespace Project.Model
         public string Name { get; set; }
         public string Address { get; set; }
         public Menu Menu { get; set; }
-        //public StorageRoom Storage { get; set; }
+        public StorageRoom Storage { get; set; }
         public IList<Worker> Workers { get; set; }
         public IList<Order> Orders { get; set; }
 
@@ -20,10 +20,18 @@ namespace Project.Model
         {
             Name = name;
             Menu = new Menu();
-            //Storage = new StorageRoom();
+            Storage = new StorageRoom();
             Workers = new List<Worker>();
             Orders = new List<Order>();
             Address = address;
+        }
+
+        public void AddWorker(Worker worker)
+        {
+            if (worker != null)
+            {
+                Workers.Add(worker);
+            }
         }
 
         public void AddOrder(Order order)
@@ -75,5 +83,4 @@ namespace Project.Model
             return info;
         }
     }
-
 }
