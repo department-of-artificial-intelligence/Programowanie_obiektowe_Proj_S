@@ -6,15 +6,20 @@ namespace Project.Model
     {
         public float MaxVolumeCubicMeters { get; init; }
 
-        public DeliveryVan(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registationNumber, float maxVolume)
-            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registationNumber)
+        public DeliveryVan(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, float maxVolume)
+            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
             MaxVolumeCubicMeters = maxVolume;
         }
 
         public override VehicleType VType => VehicleType.DeliveryVan;
 
-        public override float CalculateWearRate() => 0.15f;
+        public override float CalculateWearRate()
+        {
+            int vehicleAge = DateTime.Now.Year - ProductionYear;
+            float wear = 0.05f + (Mileage * 0.000015f) + (vehicleAge * 0.007f);
+            return wear;
+        }
 
         public override string ToString()
         {

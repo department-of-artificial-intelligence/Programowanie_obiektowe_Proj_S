@@ -1,32 +1,82 @@
-﻿using Project.Abstractions;
-using Project.Model;
-using Xunit;
+﻿using Project.Model;
+using Project.Abstractions;
 
-public class VehicleTests
+namespace Project.Tests
 {
-    [Fact]
-    public void AssignDriver_Test()
+    public class VehicleTests
     {
-        var driver = new Driver(1, "A", "B", "C");
-        var truck = new Truck(1, "V", 2000, 5, 0, "MAN", "TGX", "R1", 1000);
+        private class FakeDriver : IDriver
+        {
+            public bool IsAvailable => Status == DriverStatus.Available;
 
-        truck.AssignDriver(driver);
+            public int Id { get; set; }
+            public string FirstName => "A";
+            public string LastName => "B";
+            public string LicenseNumber => "X";
+            public DriverStatus Status { get; set; } = DriverStatus.Available;
+            public IVehicle? AssignedVehicle => null;
 
-        Assert.Equal(driver, truck.AssignedDriver);
-        Assert.Equal(VehicleStatus.InTransit, truck.VStatus);
-    }
+            public List<IOrder> Orders { get; } = new();
 
-    [Fact]
-    public void MarkAsAvailable_Test()
-    {
-        var driver = new Driver(1, "A", "B", "C");
-        var van = new DeliveryVan(1, "V", 2000, 5, 0, "Ford", "T", "R2", 10);
+            public void AssignOrder(IOrder order) { }
+            public void RemoveOrder(IOrder order) { }
+            public void AssignVehicle(IVehicle vehicle) { }
+            public void MarkAsAvailable() { Status = DriverStatus.Available; }
+        }
 
-        van.AssignDriver(driver);
-        van.MarkAsAvailable();
+        [Fact]
+        public void IsAvailableWhenStatusAvailableTest() // Returns True when Status Available
+        {
+            var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5)
+            {
+                VStatus = VehicleStatus.Available
+            };
 
-        Assert.Null(van.AssignedDriver);
-        Assert.Equal(VehicleStatus.Available, van.VStatus);
-        Assert.True(van.IsAvailable);
+            Assert.True(v.IsAvailable);
+        }
+
+        [Fact]
+        public void AssignDriverWhenDriverNullTest() // Throws exception when Driver is null
+        {
+            var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
+
+            Assert.Throws<ArgumentNullException>(() => v.AssignDriver(null));
+        }
+
+        [Fact]
+        public void AssignDriverWhenDriverNotAvailableTest() // Throws exception when Driver is not Available
+        {
+            var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
+            var driver = new FakeDriver { Status = DriverStatus.Assigned };
+
+            Assert.Throws<InvalidOperationException>(() => v.AssignDriver(driver));
+        }
+
+        [Fact]
+        public void AssignDriverTest() // Sets Status and Driver
+        {
+            var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
+            var driver = new FakeDriver();
+
+            v.AssignDriver(driver);
+
+            Assert.Equal(VehicleStatus.InTransit, v.VStatus);
+            Assert.Equal(driver, v.AssignedDriver);
+        }
+
+        [Fact]
+        public void MarkAsAvailableTest() // Sets Status and Driver
+        {
+            var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5)
+            {
+                AssignedDriver = new FakeDriver(),
+                VStatus = VehicleStatus.InTransit
+            };
+
+            v.MarkAsAvailable();
+
+            Assert.Null(v.AssignedDriver);
+            Assert.Equal(VehicleStatus.Available, v.VStatus);
+        }
     }
 }

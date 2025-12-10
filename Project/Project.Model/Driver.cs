@@ -1,5 +1,5 @@
 ﻿using Project.Abstractions;
-using Project.Model;
+using System.Collections.Generic;
 
 namespace Project.Model
 {
@@ -12,6 +12,7 @@ namespace Project.Model
         public string LastName { get; set; } = string.Empty;
         public string LicenseNumber { get; set; } = string.Empty;
 
+        public List<IOrder> Orders { get; private set; } = new List<IOrder>();
 
         public Vehicle? AssignedVehicle { get; set; }
 
@@ -46,10 +47,29 @@ namespace Project.Model
             Status = DriverStatus.Available;
         }
 
+        public void AssignOrder(IOrder order)
+        {
+            if (!Orders.Contains(order))
+            {
+                Orders.Add(order);
+                Status = DriverStatus.Assigned;
+            }
+        }
+
+        public void RemoveOrder(IOrder order)
+        {
+            if (Orders.Contains(order))
+            {
+                Orders.Remove(order);
+                if (Orders.Count == 0)
+                    Status = DriverStatus.Available;
+            }
+        }
+
         public override string ToString()
         {
             return $"Driver ID: {Id}, Name: {FirstName} {LastName}, " +
-                   $"License: {LicenseNumber}, OStatus: {Status}, " +
+                   $"License: {LicenseNumber}, Status: {Status}, " +
                    $"Assigned vehicle: {(AssignedVehicle != null ? AssignedVehicle.RegistrationNumber : "None")}";
         }
     }

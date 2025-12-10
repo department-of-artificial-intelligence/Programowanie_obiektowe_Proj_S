@@ -2,6 +2,6 @@
 {
     public interface ICompanyCar : IVehicle
     {
-        bool IsExecutive { get; }
+        public int NumberOfSeats { get; init; }
     }
 }

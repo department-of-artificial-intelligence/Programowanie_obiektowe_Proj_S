@@ -1,31 +1,81 @@
-using Project.Abstractions;
 using Project.Model;
-using Xunit;
+using Project.Abstractions;
 
-public class DriverTests
+namespace Project.Tests
 {
-    [Fact]
-    public void AssignVehicle_Test()
+    public class DriverTests
     {
-        var d = new Driver(1, "A", "B", "C");
-        var car = new CompanyCar(1, "VIN", 2020, 1.5f, 0, "BMW", "3", "REG", false);
+        private class FakeOrder : IOrder
+        {
+            public int Id => 1;
+            public string LoadDesc => "X";
+            public string LoadingAddress => "A";
+            public string UnloadingAdress => "B";
+            public OrderStatus Status => OrderStatus.Pending;
 
-        d.AssignVehicle(car);
+            public IDriver? AssignedDriver => null;
+            public IVehicle? AssignedVehicle => null;
 
-        Assert.Equal(car, d.AssignedVehicle);
-        Assert.Equal(DriverStatus.Assigned, d.Status);
-    }
+            public void AssignOrder(IDriver driver) { }
+        }
 
-    [Fact]
-    public void MarkAsAvailable_Test()
-    {
-        var d = new Driver(1, "A", "B", "C");
-        var van = new DeliveryVan(1, "X", 2020, 2, 0, "Ford", "Transit", "REG", 12);
+        [Fact]
+        public void IsAvailableTest() // Returns True if Status == Available
+        {
+            var d = new Driver(1, "A", "B", "C") { Status = DriverStatus.Available };
+            Assert.True(d.IsAvailable);
+        }
 
-        d.AssignVehicle(van);
-        d.MarkAsAvailable();
+        [Fact]
+        public void AssignVehicle_SetsVehicleAndStatus() // Sets Vehicle and Status
+        {
+            var d = new Driver(1, "A", "B", "C");
+            var v = new DeliveryVan(1, "V", 2000, 5, 0, "Ford", "T", "R", 5);
 
-        Assert.True(d.IsAvailable);
-        Assert.Null(d.AssignedVehicle);
+            d.AssignVehicle(v);
+
+            Assert.Equal(v, d.AssignedVehicle);
+            Assert.Equal(DriverStatus.Assigned, d.Status);
+        }
+
+        [Fact]
+        public void MarkAsAvailableTest() // Clears Vehicle and sets Status
+        {
+            var d = new Driver(1, "A", "B", "C")
+            {
+                AssignedVehicle = new DeliveryVan(1, "V", 2000, 5, 0, "Ford", "T", "R", 5),
+                Status = DriverStatus.Assigned
+            };
+
+            d.MarkAsAvailable();
+
+            Assert.Null(d.AssignedVehicle);
+            Assert.Equal(DriverStatus.Available, d.Status);
+        }
+
+        [Fact]
+        public void AssignOrderTest() // Clears Vehicle and sets Status
+        {
+            var d = new Driver(1, "A", "B", "C");
+            var order = new FakeOrder();
+
+            d.AssignOrder(order);
+
+            Assert.Contains(order, d.Orders);
+            Assert.Equal(DriverStatus.Assigned, d.Status);
+        }
+
+        [Fact]
+        public void RemoveOrderTest() // Removes Order and restores Status
+        {
+            var d = new Driver(1, "A", "B", "C");
+            var order = new FakeOrder();
+            d.AssignOrder(order);
+
+            d.RemoveOrder(order);
+
+            Assert.DoesNotContain(order, d.Orders);
+            Assert.Equal(DriverStatus.Available, d.Status);
+        }
     }
 }

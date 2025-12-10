@@ -7,8 +7,8 @@ namespace Project.Model
     {
         public float MaxGrossWeightTons { get; init; }
 
-        public SemiTrailer(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registationNumber, float maxGrossWeightTons)
-            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registationNumber)
+        public SemiTrailer(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, float maxGrossWeightTons)
+            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
             MaxGrossWeightTons = maxGrossWeightTons;
         }
@@ -16,7 +16,13 @@ namespace Project.Model
         public override VehicleType VType => VehicleType.SemiTrailer;
 
 
-        public override float CalculateWearRate() => 0.35f;
+        public override float CalculateWearRate()
+        {
+            int vehicleAge = DateTime.Now.Year - ProductionYear;
+            float wear = 0.10f + (Mileage * 0.000018f) + (vehicleAge * 0.012f);
+            return wear;
+        }
+
 
         public override string ToString()
         {

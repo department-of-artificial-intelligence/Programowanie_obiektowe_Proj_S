@@ -9,18 +9,22 @@
 
     public interface IDriver
     {
-        public DriverStatus Status { get; set; }
-
-        int Id { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        string LicenseNumber { get; set; }
+        int Id { get; }
+        string FirstName { get; }
+        string LastName { get; }
+        string LicenseNumber { get; }
+        DriverStatus Status { get; }
 
         bool IsAvailable { get; }
 
         IVehicle? AssignedVehicle { get; }
 
+        List<IOrder> Orders { get; }
+
         void AssignVehicle(IVehicle vehicle);
         void MarkAsAvailable();
+
+        void AssignOrder(IOrder order);
+        void RemoveOrder(IOrder order);
     }
 }

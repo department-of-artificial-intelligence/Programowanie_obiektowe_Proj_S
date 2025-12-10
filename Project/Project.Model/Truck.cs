@@ -1,25 +1,29 @@
 ﻿using Project.Abstractions;
 
-
 namespace Project.Model
 {
     public class Truck : Vehicle
     {
-        public int MaxPayloadKg { get; init; }
+        public int MaxPayLoadKg { get; init; }
 
-        public Truck(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registationNumber, int maxPayload)
-            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registationNumber)
+        public Truck(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, int maxPayload)
+            : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
-            MaxPayloadKg = maxPayload;
+            MaxPayLoadKg = maxPayload;
         }
 
         public override VehicleType VType => VehicleType.Truck;
 
-        public override float CalculateWearRate() => 0.25f;
+        public override float CalculateWearRate()
+        {
+            int vehicleAge = DateTime.Now.Year - ProductionYear;
+            float wear = 0.08f + (Mileage * 0.00002f) + (vehicleAge * 0.01f);
+            return wear;
+        }
 
         public override string ToString()
         {
-            return base.ToString() + $", Max Payload: {MaxPayloadKg} kg";
+            return base.ToString() + $", Max Payload: {MaxPayLoadKg} kg";
         }
     }
 }

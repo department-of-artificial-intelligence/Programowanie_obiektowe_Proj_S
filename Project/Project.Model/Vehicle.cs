@@ -1,7 +1,4 @@
 ﻿using Project.Abstractions;
-using Project.Model;
-using System;
-
 public abstract class Vehicle : IVehicle
 {
     public int Id { get; set; } = int.MinValue;
@@ -18,8 +15,7 @@ public abstract class Vehicle : IVehicle
 
     public IDriver? AssignedDriver { get; set; }
 
-    public Vehicle(int id, string vinNumber, int productionYear, float engineSize,
-                       int mileage, string brand, string model, string registrationNumber)
+    public Vehicle(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber)
     {
         Id = id;
         VinNumber = vinNumber;
@@ -35,12 +31,16 @@ public abstract class Vehicle : IVehicle
 
     public void AssignDriver(IDriver? driver)
     {
-        if(driver.IsAvailable == true)
-        {
-            AssignedDriver = driver;
-            VStatus = VehicleStatus.InTransit;
-        }
+        if (driver is null)
+            throw new ArgumentNullException(nameof(driver));
+
+        if (!driver.IsAvailable)
+            throw new InvalidOperationException("ERROR - Driver is not available.");
+
+        AssignedDriver = driver;
+        VStatus = VehicleStatus.InTransit;
     }
+
 
     public void MarkAsAvailable()
     {

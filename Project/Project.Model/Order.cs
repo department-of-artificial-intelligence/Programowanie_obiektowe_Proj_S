@@ -1,6 +1,4 @@
-﻿using System;
-using Project.Abstractions;
-using Project.Model;
+﻿using Project.Abstractions;
 
 namespace Project.Model
 {
@@ -51,7 +49,7 @@ namespace Project.Model
             }
             else
             {
-                throw new ArgumentException("Provided driver is not a concrete Driver type.");
+                throw new ArgumentException("ERROR - Provided driver is not a concrete Driver type.");
             }
         }
 

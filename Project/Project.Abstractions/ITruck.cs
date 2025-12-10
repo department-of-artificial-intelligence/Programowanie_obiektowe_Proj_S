@@ -2,6 +2,6 @@
 {
     public interface ITruck : IVehicle
     {
-        int MaxPayloadKg { get; }
+        int MaxPayLoadKg { get; }
     }
 }
