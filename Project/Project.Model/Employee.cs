@@ -9,14 +9,21 @@ namespace Project.Model
     public class Employee: Person
     {
 
-        public required int Id { get; set; }
-
+        public required int StoreId 
+        { 
+          get = value;
+          set{
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("Id nie może być wartością poniżej 0!");
+                }
+                _storeId = value;
+            };
+            }
 
         public required EmployeePosition Position { get; set; }
 
         public required decimal Salary { get; set; }
-
-        public required int StoreId { get; set; }
 
         public required string WorkPlace { get; set; }
 
