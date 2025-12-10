@@ -25,7 +25,7 @@ namespace RestaurantManagement.Tests
                 ClosingHours = closing,
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>(),
+                //Clients = new List<Person>(),
                 Reservations = new List<Reservation>()
             };
 
@@ -38,7 +38,7 @@ namespace RestaurantManagement.Tests
             Assert.Equal(closing, restaurant.ClosingHours);
             Assert.NotNull(restaurant.Menu);
             Assert.NotNull(restaurant.Employees);
-            Assert.NotNull(restaurant.Clients);
+            //Assert.NotNull(restaurant.Clients);
             Assert.NotNull(restaurant.Reservations);
         }
 
@@ -192,7 +192,7 @@ namespace RestaurantManagement.Tests
                 ClosingHours = new TimeOnly(22, 0),
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>()
+               // Clients = new List<Person>()
             };
 
             // Assert
@@ -214,7 +214,7 @@ namespace RestaurantManagement.Tests
                 ClosingHours = new TimeOnly(22, 0),
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>(),
+               // Clients = new List<Person>(),
                 Reservations = new List<Reservation>()
             };
         }

@@ -18,7 +18,7 @@ namespace RestaurantManagement.Models
 
         public required List<MenuItem> Menu { get; set; } = new List<MenuItem>();
         public required List<Employee> Employees { get; set; } = new List<Employee>();
-        public required List<Person> Clients { get; set; } = new List<Person>();
+        //public required List<Person> Clients { get; set; } = new List<Person>();
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         public List<Employee> GetEmployeesByType(EmployeeType type)

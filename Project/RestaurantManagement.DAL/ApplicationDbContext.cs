@@ -14,6 +14,7 @@ namespace RestaurantManagement.DAL
       
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
 
     }

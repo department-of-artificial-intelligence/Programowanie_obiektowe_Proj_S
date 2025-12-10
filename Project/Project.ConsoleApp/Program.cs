@@ -1,28 +1,23 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RestaurantManagement.DAL;
 using RestaurantManagement.Models;
-using RestaurantManagement.Models.Enums;
-using RestaurantNetwork.Model;
 
 
 namespace RestaurantManagement
 {
     class Program
-    {
+{
         static void Main(string[] args)
         {
             // ==== KONFIGURACJA HOSTA I DB CONTEXT ====
             IHost _host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
-                    var configuration = context.Configuration.GetConnectionString("DefaultConnection");
+                    var configuration = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=RestaurantDB;Integrated Security=True;Trusted_Connection=yes;TrustServerCertificate=True;";
                     services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlServer(configuration));
                 })
@@ -31,16 +26,16 @@ namespace RestaurantManagement
             using var scope = _host.Services.CreateScope();
             var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-            if (db != null)
-            {
-                db.Database.Migrate();
-                db.Database.EnsureCreated();
-            }
-            else
-            {
-                Console.WriteLine("Błąd: brak kontekstu bazy danych!");
-                return;
-            }
+            //if (db != null)
+            //{
+            //    db.Database.Migrate();
+            //    db.Database.EnsureCreated();
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Błąd: brak kontekstu bazy danych!");
+            //    return;
+            //}
 
             // =========== MENU GŁÓWNE ===========
             while (true)
@@ -126,7 +121,7 @@ namespace RestaurantManagement
                 ClosingHours = closing,
                 Menu = new List<MenuItem>(),
                 Employees = new List<Employee>(),
-                Clients = new List<Person>()
+                //Clients = new List<Person>()
             };
 
 
