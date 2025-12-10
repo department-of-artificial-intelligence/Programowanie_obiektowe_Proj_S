@@ -12,7 +12,7 @@ using RestaurantManagement.DAL;
 namespace RestaurantManagement.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209201620_Initial")]
+    [Migration("20251210083851_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

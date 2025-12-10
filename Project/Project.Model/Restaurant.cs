@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using RestaurantNetwork.Model; 
 
+//ondelete no action/ set null
+
 namespace RestaurantManagement.Models
 {
     public class Restaurant
     {
         public int Id { get; set; } // PK
-
         public required string Name { get; set; }
         public required Address Address { get; set; }
         public required string PhoneNumber { get; set; }

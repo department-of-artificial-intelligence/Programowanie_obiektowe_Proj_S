@@ -14,5 +14,6 @@ namespace RestaurantManagement.Models
         public required Address Address { get; set; }
         public string FullName => $"{FirstName} {LastName}";
 
+      
     }
 }
