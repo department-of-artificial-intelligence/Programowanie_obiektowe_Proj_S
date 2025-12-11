@@ -11,24 +11,26 @@ namespace Projekt.Model
         private string _name;
         private string _lastName;
         private int _iD;
+        public Cinema Cinema { get; set; }
+        public int CinemaID { get; set; }
 
         public string Name { get { return _name; } set { _name = value; } }
         public string LastName { get { return _lastName; } set { _lastName = value; } }
         public int ID { get { return _iD; } set { _iD = value; } }
+        
 
 
         public Employee() 
         {
             _name = string.Empty;
             _lastName = string.Empty;
-            _iD = 0;
         }
 
-        public Employee(int ID,string Name, string LastName)
+        public Employee(string Name, string LastName, Cinema cinema)
         {
             _name = Name;
             _lastName = LastName;
-            _iD = ID;
+            Cinema = cinema;
         }
 
         public override string ToString()

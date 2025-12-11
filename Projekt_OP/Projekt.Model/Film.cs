@@ -8,26 +8,25 @@ namespace Projekt.Model
 {
     public class Film
     {
+        //ID Do bazy (Klucz głowny)
         public int ID { get;  set; }
         public string Title { get; private set; }
         public int TimeMin { get; private set; }
         public string Genre { get; private set; }
-        public List<Hall> Halls { get; private set; }
+        //Nwigacja bazy
+        public Hall Hall { get; set; }
+        public int HallID { get; set; }
 
         public Film()
         {
-            ID = 0;
-            Title = string.Empty;
-            TimeMin = 0;
-            Genre = string.Empty;
         }
 
-        public Film(int iD, string title, int time, string genre)
+        public Film( string title, int time, string genre,Hall hall)
         {
-            ID = iD;
             Title = title;
             TimeMin = time;
             Genre = genre;
+            Hall = hall;
         }
 
         public override string ToString()

@@ -9,31 +9,21 @@ namespace Projekt.Model
     public class Cinema
     {
         public int CinemaID { get;  set; }
-        public string CinemaName { get; private set; }
-        public List<Hall> Hall { get; private set; }
-        public CinemaAddress Address { get; private set; }
-        public List<Employee> Employees { get; private set; }
+        public string CinemaName { get; set; }
+        public List<Hall> Hall { get; set; } = new List<Hall>();
+        public CinemaAddress Address { get; set; }
+        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public int CinemaAddressID { get; set; }
 
         public Cinema() 
         {
-            CinemaID = 0;
-            CinemaName = string.Empty;
-            Address = new CinemaAddress();
-            Hall = new List<Hall>();
-            Employees = new List<Employee>();
-
         }
-        
 
-        public Cinema(int cinemaID,string cinemaName,CinemaAddress address,List<Hall> hall,List<Employee> employees) 
+        public Cinema(string cinemaName, CinemaAddress address)
         {
-            CinemaID = cinemaID;
             CinemaName = cinemaName;
             Address = address;
-            Hall = hall;
-            Employees  = employees;
         }
-
 
         public override string ToString()
         {
