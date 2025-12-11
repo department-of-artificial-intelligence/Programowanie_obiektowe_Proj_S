@@ -1,26 +1,19 @@
 ﻿namespace Project.Model;
 
-public class Customer : Person
+public class Customer : Person, ITicketTransactions
 {
     // Właściwości
     public int CustomerId { get; private set; } // PK
-    public List<Ticket> Tickets { get; } = new List<Ticket>(); // Navigation property
+    public List<Ticket> Tickets { get; } = new List<Ticket>(); 
 
     // Konstruktory
     public Customer() { }
 
-    public Customer(string firstName, string lastName, List<Ticket>? tickets = null)
-        : base(firstName, lastName)
-    {
-        if (tickets is null) return;
-        foreach (var ticket in tickets)
-        {
-            AddTicket(ticket);
-        }
-    }
+    public Customer(string firstName, string lastName)
+        : base(firstName, lastName) { }
 
-    // Metody dodawania i usuwania elementów listy Ticket
-    public bool AddTicket(Ticket ticket)
+    // Metody dodawania i usuwania elementów listy Ticket (potrzebne do rezerwacji/kupna)
+    private bool AddTicket(Ticket ticket)
     {
         if (ticket is null || Tickets.Contains(ticket)) return false;
         if (ticket.Customer is not null && ticket.Customer != this) throw new InvalidOperationException($"Bilet ma już właściciela: {ticket}");
@@ -28,83 +21,36 @@ public class Customer : Person
         Tickets.Add(ticket);
         return true;
     }
-    public bool RemoveTicket(Ticket ticket)
+    private bool RemoveTicket(Ticket ticket)
     {
-        if (ticket is null) return false;
-        if (ticket.Status == TicketStatus.Reserved) ticket.Status = TicketStatus.Available;
-        ticket.Customer = null;
-        return Tickets.Remove(ticket);
-    }
-    public bool RemoveTicket(int ticketId)
-    {
-        var ticket = Tickets.FirstOrDefault(t => t.TicketId == ticketId);
-        if (ticket is null) return false;
+        if (!Tickets.Contains(ticket)) return false;
         ticket.Status = TicketStatus.Available;
         ticket.Customer = null;
         return Tickets.Remove(ticket);
     }
-    public void RemoveAllTickets()
-    {
-        foreach (var ticket in Tickets.ToList())
-        {
-            RemoveTicket(ticket);
-        }
-    }
 
-    // Metody zarządzania rezerwacją biletów
-    // Zadziała tylko gdy jest dostępny
-    public bool ReserveTicket(Performance performance, Seat seat)
-    {
-        if (performance is null || seat is null) return false;
-        Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
-
-        if (ticket is null) return false;
-        if (!ticket.CanBeReserved(this)) return false;
-
-        ticket.Status = TicketStatus.Reserved;
-        AddTicket(ticket);
-        return true;
-    }
-
-    // Zadziała gdy jest dostępny lub zarezerwowany przez tego klienta
-    public bool BuyTicket(Performance performance, Seat seat)
-    {
-        if (performance is null || seat is null) return false;
-        Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
-
-        if (ticket is null) return false;
-        if (!ticket.CanBeBought(this)) return false;
-
-        ticket.Status = TicketStatus.Sold;
-        AddTicket(ticket);
-        return true;
-    }
-
-    // Zadziała tylko gdy jest zarezerwowany
-    public bool CancelReservation(Performance performance, Seat seat)
-    {
-        if (performance is null || seat is null) return false;
-        Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
-
-        if (ticket is null) return false;
-        if (!ticket.CanBeCanceled(this)) return false;
-
-        RemoveTicket(ticket);
-        return true;
-    }
-
+    // Metody zarządzania rezerwacją/kupnem biletów
     public bool BuyTicket(Ticket ticket)
     {
         if (!ticket.CanBeBought(this)) return false;
         ticket.Status = TicketStatus.Sold;
-        AddTicket(ticket);
-        return true;
+        return AddTicket(ticket);
+    }
+    public bool RefundTicket(Ticket ticket)
+    {
+        if (!ticket.CanBeRefunded(this)) return false;
+        return RemoveTicket(ticket);
+    }
+    public bool ReserveTicket(Ticket ticket)
+    {
+        if (!ticket.CanBeReserved(this)) return false;
+        ticket.Status = TicketStatus.Reserved;
+        return AddTicket(ticket);
     }
     public bool CancelReservation(Ticket ticket)
     {
         if (!ticket.CanBeCanceled(this)) return false;
-        RemoveTicket(ticket);
-        return true;
+        return RemoveTicket(ticket);
     }
     public void BuyAllReserved()
     {
@@ -114,6 +60,16 @@ public class Customer : Person
         foreach (var ticket in reservedTickets)
         {
             ticket.Status = TicketStatus.Sold;
+        }
+    }
+    public void RefundAllBought()
+    {
+        var boughtTickets = Tickets
+            .Where(t => t.Status == TicketStatus.Sold)
+            .ToList();
+        foreach (var ticket in boughtTickets)
+        {
+            RefundTicket(ticket);
         }
     }
     public void CancelAllReserved()

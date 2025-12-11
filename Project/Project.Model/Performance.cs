@@ -4,12 +4,12 @@ public class Performance
 {
     // Właściwości
     public int PerformanceId { get; private set; } // PK
-    public Play Play { get; } = default!; // Navigation property
+    public Play Play { get; } = default!; 
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
     public PerformanceStatus Status { get; set; }
-    public List<Ticket> Tickets { get; } = new List<Ticket>(); // Navigation property
-    internal Hall? Hall { get; set; } // Navigation property
+    public List<Ticket> Tickets { get; } = new List<Ticket>(); 
+    public Hall? Hall { get; set; } 
 
     // Konstruktory
     private Performance() { }
@@ -23,9 +23,15 @@ public class Performance
         Hall = null;
     }
 
+    public void RemoveHallReference()
+    {
+        Hall = null;
+    }
+
     // Metoda zmiany czasów
     public void SetTimes(DateTime start, DateTime end)
     {
+        if (Status == PerformanceStatus.Canceled || Status == PerformanceStatus.Finished) throw new ArgumentException($"Przedstawienie ma status: {Status}");
         if (end <= start) throw new ArgumentException($"Czas zakończenia {end} musi być późniejszy niż rozpoczęcia {start}");
         StartTime = start;
         EndTime = end;
@@ -40,20 +46,24 @@ public class Performance
         Tickets.Add(ticket);
         return true;
     }
-    public bool DeleteTicket(int ticketId)
+    public bool DeleteTicket(Ticket ticket)
     {
-        var ticket = Tickets.FirstOrDefault(t => t.TicketId == ticketId);
-        if (ticket is null) return false;
+        if (ticket.Status == TicketStatus.Sold) return false; // nie można usunąć sprzedanego biletu
+        if (!Tickets.Contains(ticket)) return false;
+        ticket.Customer?.CancelReservation(ticket);
         return Tickets.Remove(ticket);
     }
     public void DeleteTickets()
     {
-        Tickets.Clear();
+        foreach (var ticket in Tickets.ToList())
+        {
+            DeleteTicket(ticket);
+        }
     }
     public void CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
     {
         if (Hall is null) return;
-        foreach (var seat in Hall.OrderSeats())
+        foreach (var seat in Hall.Seats)
         {
             CreateTicket(price, seat, status);
         }
@@ -63,6 +73,69 @@ public class Performance
     public string GetTicketsString()
     {
         return Tickets.ListToString("Brak biletów", '-');
+    }
+
+    public string VisualizeTicketsString()
+    {
+        if (Hall is null) return "Brak przypisanej Sali";
+        var allSeats = Hall.Seats;
+        if (allSeats.Count == 0) return "Brak siedzeń w Sali";
+
+        int maxRow = allSeats.Max(s => s.RowNumber);
+        int maxSeat = allSeats.Max(s => s.SeatNumber);
+
+        string ticketsString = "";
+        ticketsString += $"Wizualizacja biletów dla sztuki: {Play.Title} | Sala: {Hall.HallName}\n";
+        ticketsString += "Legenda: D - Dostępny, Z - Zarezerwowany, S - Sprzedany, B - Brak biletu, X - Brak Siedzenia\n";
+
+        for (int r = 1; r <= maxRow; r++)
+        {
+            string rowString = $"Rząd {r}: ";
+
+            for (int s = 1; s <= maxSeat; s++)
+            {
+                char symbol;
+
+                var foundSeat = allSeats.FirstOrDefault(seat => seat.RowNumber == r && seat.SeatNumber == s);
+
+                if (foundSeat is null)
+                {
+                    symbol = 'X';
+                }
+                else
+                {
+                    var ticket = Tickets.FirstOrDefault(t => t.Seat == foundSeat);
+
+                    if (ticket is not null)
+                    {
+                        switch (ticket.Status)
+                        {
+                            case TicketStatus.Available:
+                                symbol = 'D';
+                                break;
+                            case TicketStatus.Reserved:
+                                symbol = 'Z';
+                                break;
+                            case TicketStatus.Sold:
+                                symbol = 'S';
+                                break;
+                            default:
+                                symbol = '?';
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        symbol = 'B';
+                    }
+                }
+
+                rowString += $"{symbol} ";
+            }
+            ticketsString += rowString + "\n";
+        }
+
+        return ticketsString;
     }
 
     public override string ToString()

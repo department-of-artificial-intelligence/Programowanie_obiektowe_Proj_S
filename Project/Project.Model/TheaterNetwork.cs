@@ -16,7 +16,7 @@ public class TheaterNetwork
             _networkName = value;
         }
     }
-    public List<Theater> Theaters { get; } = new List<Theater>(); // Navigation property
+    public List<Theater> Theaters { get; } = new List<Theater>(); 
 
     // Konstruktory
     private TheaterNetwork() { }
@@ -30,14 +30,12 @@ public class TheaterNetwork
     public bool CreateTheater(string theaterName, string country, string city, string street)
     {
         if (string.IsNullOrWhiteSpace(theaterName) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
-        Theater theater = new Theater(theaterName, country, city, street, this);
+        Theater theater = new Theater(theaterName, country, city, street);
         Theaters.Add(theater);
         return true;
     }
-    public bool DeleteTheater(int theaterId)
+    public bool DeleteTheater(Theater theater)
     {
-        var theater = Theaters.FirstOrDefault(t => t.TheaterId == theaterId);
-        if (theater is null) return false;
         return Theaters.Remove(theater);
     }
     public void DeleteAllTheaters()

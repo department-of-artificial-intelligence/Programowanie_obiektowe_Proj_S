@@ -26,7 +26,7 @@ public class Director : Person, IPlayManager
             _salary = value;
         }
     }
-    public List<Play> Plays { get; } = new List<Play>(); // Navigation property
+    public List<Play> Plays { get; } = new List<Play>(); 
 
     // Konstruktory
     private Director() { }
@@ -54,14 +54,7 @@ public class Director : Person, IPlayManager
     }
     public bool RemovePlay(Play play)
     {
-        if (play is null) return false;
-        play.Director = null;
-        return Plays.Remove(play);
-    }
-    public bool RemovePlay(int playId)
-    {
-        var play = Plays.FirstOrDefault(p => p.PlayId == playId);
-        if (play is null) return false;
+        if (!Plays.Contains(play)) return false;
         play.Director = null;
         return Plays.Remove(play);
     }

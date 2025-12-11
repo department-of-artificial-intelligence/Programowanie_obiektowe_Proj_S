@@ -16,9 +16,9 @@ public class Play
             _title = value;
         }
     }
-    public Author? Author { get; internal set; } // Navigation property
-    public Director? Director { get; internal set; } // Navigation property
-    public List<Actor> Actors { get; } = new List<Actor>(); // Navigation property
+    public Author? Author { get; set; } 
+    public Director? Director { get; set; } 
+    public List<Actor> Actors { get; } = new List<Actor>(); 
 
     // Konstruktory
     private Play() { }
@@ -50,14 +50,7 @@ public class Play
     }
     public bool RemoveActor(Actor actor)
     {
-        if (actor is null) return false;
-        actor.Plays.Remove(this);
-        return Actors.Remove(actor);
-    }
-    public bool RemoveActor(int actorId)
-    {
-        var actor = Actors.FirstOrDefault(p => p.ActorId == actorId);
-        if (actor is null) return false;
+        if (!Actors.Contains(actor)) return false;
         actor.Plays.Remove(this);
         return Actors.Remove(actor);
     }

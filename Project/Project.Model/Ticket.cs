@@ -2,24 +2,13 @@
 
 public class Ticket
 {
-    // Pola prywatne
-    private decimal _price;
-
     // Właściwości
     public int TicketId { get; private set; } // PK
-    public decimal Price
-    {
-        get => _price;
-        set
-        {
-            if (value < 0) throw new ArgumentException("Cena biletu nie może być ujemna", nameof(Price));
-            _price = value;
-        }
-    }
-    public Performance Performance { get; } = default!; // Navigation property
-    public Seat Seat { get; } = default!; // Navigation property
+    public decimal Price { get; private set; }
+    public Performance Performance { get; } = default!; 
+    public Seat Seat { get; } = default!; 
     public TicketStatus Status { get; set; }
-    internal Customer? Customer { get; set; } // Navigation property
+    public Customer? Customer { get; set; } 
 
     // Konstruktory
     private Ticket() { }
@@ -28,6 +17,7 @@ public class Ticket
     {
         if (performance is null) throw new ArgumentNullException(nameof(performance), "Przedstawienie nie może być null");
         if (seat is null) throw new ArgumentNullException(nameof(seat), "Siedzenie nie może być null");
+        if (price < 0) throw new ArgumentException("Cena biletu nie może być ujemna", nameof(Price));
         Price = price;
         Performance = performance;
         Seat = seat;
@@ -50,6 +40,11 @@ public class Ticket
     {
         if (customer is null) return false;
         return Status == TicketStatus.Available || (Status == TicketStatus.Reserved && Customer == customer);
+    }
+    public bool CanBeRefunded(Customer customer)
+    {
+        if (customer is null) return false;
+        return Status == TicketStatus.Sold && Customer == customer;
     }
 
     // Metody string

@@ -17,17 +17,15 @@ public class Theater
         }
     }
     public Address Address { get; private set; } = default!;
-    public TheaterNetwork TheaterNetwork { get; private set; } = default!; // Navigation property
-    public List<Hall> Halls { get; } = new List<Hall>(); // Navigation property
+    public List<Hall> Halls { get; } = new List<Hall>(); 
 
     // Konstruktory
     private Theater() { }
 
-    internal Theater(string theaterName, string country, string city, string street, TheaterNetwork theaterNetwork)
+    internal Theater(string theaterName, string country, string city, string street)
     {
         TheaterName = theaterName;
         Address = new Address(country, city, street);
-        TheaterNetwork = theaterNetwork;
     }
 
     // Metoda zmiany adresu
@@ -39,19 +37,25 @@ public class Theater
     // Metody tworzenia i usuwania elementów listy Hall
     public bool CreateHall(string hallName, List<Performance>? performances = null)
     {
-        Hall hall = new Hall(hallName, this, performances);
+        Hall hall = new Hall(hallName, performances);
         Halls.Add(hall);
         return true;
     }
-    public bool DeleteHall(int hallId)
+    public bool DeleteHall(Hall hall)
     {
-        var hall = Halls.FirstOrDefault(t => t.HallId == hallId);
-        if (hall is null) return false;
+        if(!Halls.Contains(hall)) return false;
+        foreach (var performance in hall.Performances)
+        {
+            performance.RemoveHallReference();
+        }
         return Halls.Remove(hall);
     }
     public void DeleteAllHalls()
     {
-        Halls.Clear();
+        foreach (var hall in Halls.ToList())
+        {
+            DeleteHall(hall);
+        }
     }
 
     // Metody string

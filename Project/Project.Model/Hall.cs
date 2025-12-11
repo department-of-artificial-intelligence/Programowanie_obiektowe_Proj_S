@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Hall
 {
@@ -19,17 +17,15 @@ public class Hall
             _hallName = value;
         }
     }
-    public List<Seat> Seats { get; } = new List<Seat>(); // Navigation property
-    public List<Performance> Performances { get; } = new List<Performance>(); // Navigation property
-    public Theater Theater { get; } = default!; // Navigation property
+    public List<Seat> Seats { get; } = new List<Seat>(); 
+    public List<Performance> Performances { get; } = new List<Performance>(); 
 
     // Konstruktory
     private Hall() { }
 
-    internal Hall(string hallName, Theater theater, List<Performance>? performances = null)
+    internal Hall(string hallName, List<Performance>? performances = null)
     {
         HallName = hallName;
-        Theater = theater;
         if (performances is null) return;
         foreach (var performance in performances)
         {
@@ -46,31 +42,32 @@ public class Hall
     {
         if (rowNumber <= 0 || seatNumber <= 0) return false;
         if (Seats.Any(s => s.RowNumber == rowNumber && s.SeatNumber == seatNumber)) return false;
-        Seat seat = new Seat(rowNumber, seatNumber, this);
+        Seat seat = new Seat(rowNumber, seatNumber);
         Seats.Add(seat);
         return true;
     }
     public void CreateSeats(int a, int b)
     {
-        if (a <= 0 || b <= 0) return;
         for (int i = 1; i <= a; i++)
         {
             for (int j = 1; j <= b; j++)
             {
-                if (!Seats.Any(s => s.RowNumber == i && s.SeatNumber == j)) CreateSeat(i, j);
+                CreateSeat(i, j);
             }
                 
         }
     }
-    public bool DeleteSeat(int rowNumber, int seatNumber)
+    public bool DeleteSeat(Seat seat)
     {
-        var seat = Seats.FirstOrDefault(t => t.RowNumber == rowNumber && t.SeatNumber == seatNumber);
-        if (seat is null) return false;
+        if (!Seats.Contains(seat)) return false;
         return Seats.Remove(seat);
     }
     public void DeleteAllSeats()
     {
-        Seats.Clear();
+        foreach (var seat in Seats.ToList())
+        {
+            DeleteSeat(seat);
+        }
     }
 
     // Metody dodawania i usuwania elementów listy Performance
@@ -84,24 +81,16 @@ public class Hall
     }
     public bool RemovePerformance(Performance performance)
     {
-        if (performance is null) return false;
-        performance.Hall = null;
-        return Performances.Remove(performance);
-    }
-    public bool RemovePerformance(int performanceId)
-    {
-        var performance = Performances.FirstOrDefault(p => p.PerformanceId == performanceId);
-        if (performance is null) return false;
-        performance.Hall = null;
+        if (!Performances.Contains(performance)) return false;
+        performance.RemoveHallReference();
         return Performances.Remove(performance);
     }
     public void RemoveAllPerformances()
     {
         foreach (var performance in Performances.ToList())
         {
-            performance.Hall = null;
+            RemovePerformance(performance);
         }
-        Performances.Clear();
     }
 
     // Metoda sortująca siedzenia
@@ -114,31 +103,31 @@ public class Hall
     }
 
     // Metody string
-    public string GetSeatsString() // zwraca tylko istniejące siedzenia
-    {
-        if (Seats.Count == 0) return "Brak siedzeń";
-        List<Seat> orderedSeats = OrderSeats();
-        int maxRows = MaxRows();
-        string seatsString = string.Empty;
+    //public string GetSeatsString() // zwraca tylko istniejące siedzenia
+    //{
+    //    if (Seats.Count == 0) return "Brak siedzeń w Sali";
+    //    List<Seat> orderedSeats = OrderSeats();
+    //    int maxRows = MaxRows();
+    //    string seatsString = string.Empty;
 
-        for (int i = 1; i <= maxRows; i++)
-        {
-            seatsString += string.Join(" ", orderedSeats
-                .Where(s => s.RowNumber == i)
-                .Select(s => $"{s.SeatLocation()}"));
+    //    for (int i = 1; i <= maxRows; i++)
+    //    {
+    //        seatsString += string.Join(" ", orderedSeats
+    //            .Where(s => s.RowNumber == i)
+    //            .Select(s => $"{s.SeatLocation()}"));
 
-            seatsString += i != maxRows ? "\n" : string.Empty;
-        }
+    //        seatsString += i != maxRows ? "\n" : string.Empty;
+    //    }
 
-        return seatsString;
-    }
+    //    return seatsString;
+    //}
 
     public string VisualizeSeatsString() // zwraca też puste miejsca pomiędzy jako (X, X)
     {
-        if (Seats.Count == 0) return "Brak siedzeń";
+        if (Seats.Count == 0) return "Brak siedzeń w Sali";
         List<Seat> orderedSeats = OrderSeats();
         int maxRows = MaxRows();
-        string seatsString = string.Empty;
+        string seatsString = $"Wizualizacja miejsc dla Sali: { HallName }\n";
         Seat? seat;
 
         for (int i = 1; i <= maxRows; i++)
