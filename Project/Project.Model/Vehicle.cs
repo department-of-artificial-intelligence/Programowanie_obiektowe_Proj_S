@@ -1,4 +1,5 @@
 ﻿using Project.Abstractions;
+using System.ComponentModel.DataAnnotations.Schema;
 public abstract class Vehicle : IVehicle
 {
     public int Id { get; set; } = int.MinValue;
@@ -13,7 +14,8 @@ public abstract class Vehicle : IVehicle
     public VehicleStatus VStatus { get; set; }
     public abstract VehicleType VType { get; }
 
-    public IDriver? AssignedDriver { get; set; }
+    [NotMapped]
+    public IDriver? AssignedDriver { get; set; } = null!;
 
     public Vehicle(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber)
     {

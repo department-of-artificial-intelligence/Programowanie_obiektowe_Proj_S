@@ -1,5 +1,6 @@
 ﻿using Project.Abstractions;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Model
 {
@@ -12,12 +13,14 @@ namespace Project.Model
         public string LastName { get; set; } = string.Empty;
         public string LicenseNumber { get; set; } = string.Empty;
 
+        [NotMapped]
         public List<IOrder> Orders { get; private set; } = new List<IOrder>();
 
         public Vehicle? AssignedVehicle { get; set; }
-
+        
         public bool IsAvailable => Status == DriverStatus.Available;
 
+        public Driver() { }
         public Driver(int id, string firstName, string lastName, string licenseNumber)
         {
             Id = id;
