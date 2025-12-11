@@ -2,6 +2,7 @@
 
 public class Performance
 {
+    // Właściwości
     public int PerformanceId { get; private set; } // PK
     public Play Play { get; } = default!; // Navigation property
     public DateTime StartTime { get; private set; }
@@ -33,14 +34,14 @@ public class Performance
     // Metody tworzenia i usuwania elementów listy Ticket
     public bool CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
     {
-        if (price <= 0 || seat is null) return false;
+        if (price < 0 || seat is null || Hall is null) return false;
+        if (!Hall.Seats.Contains(seat)) return false;
         Ticket ticket = new Ticket(price, this, seat, status);
         Tickets.Add(ticket);
         return true;
     }
     public bool DeleteTicket(int ticketId)
     {
-        if (Tickets.Count == 0) return false;
         var ticket = Tickets.FirstOrDefault(t => t.TicketId == ticketId);
         if (ticket is null) return false;
         return Tickets.Remove(ticket);
@@ -52,7 +53,7 @@ public class Performance
     public void CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
     {
         if (Hall is null) return;
-        foreach (Seat seat in Hall.OrderSeats())
+        foreach (var seat in Hall.OrderSeats())
         {
             CreateTicket(price, seat, status);
         }

@@ -38,6 +38,7 @@ public class Ticket
     // Metody string
     public override string ToString()
     {
-        return $"{TicketId}/{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat}";
+        string customer = Customer is not null ? (Customer.FirstName + " " + Customer.LastName) : "nieznany";
+        return $"{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat}/Właściciel:{customer}";
     }
 }

@@ -22,7 +22,7 @@ public class Director : Person, IPlayManager
         get => _salary;
         set
         {
-            if (value < 0) throw new ArgumentException("Płaca nie może być ujemna", nameof(Salary));
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(Salary), "Płaca nie może być ujemna");
             _salary = value;
         }
     }
@@ -36,10 +36,10 @@ public class Director : Person, IPlayManager
     {
         YearsOfExperience = yearsOfExperience;
         Salary = salary;
-        Plays = plays ?? new List<Play>();
-        foreach (var play in Plays)
+        if (plays is null) return;
+        foreach (var play in plays)
         {
-            play.Director = this;
+            AddPlay(play);
         }
     }
 
@@ -47,19 +47,19 @@ public class Director : Person, IPlayManager
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
-        play.Director = this;
+        if (play.Director is not null && play.Director != this) throw new InvalidOperationException($"Sztuka \"{play.Title}\" ma już innego reżysera: {play.Director.FirstName} {play.Director.LastName}");
+        play.Director ??= this;
         Plays.Add(play);
         return true;
     }
     public bool RemovePlay(Play play)
     {
-        if (Plays.Count == 0 || play is null) return false;
+        if (play is null) return false;
         play.Director = null;
         return Plays.Remove(play);
     }
     public bool RemovePlay(int playId)
     {
-        if (Plays.Count == 0) return false;
         var play = Plays.FirstOrDefault(p => p.PlayId == playId);
         if (play is null) return false;
         play.Director = null;
@@ -67,7 +67,7 @@ public class Director : Person, IPlayManager
     }
     public void RemoveAllPlays()
     {
-        foreach (Play play in Plays)
+        foreach (var play in Plays.ToList())
         {
             play.Director = null;
         }

@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Play
 {
@@ -18,8 +16,8 @@ public class Play
             _title = value;
         }
     }
-    public Author? Author { get; set; } // Navigation property
-    public Director? Director { get; set; } // Navigation property
+    public Author? Author { get; internal set; } // Navigation property
+    public Director? Director { get; internal set; } // Navigation property
     public List<Actor> Actors { get; } = new List<Actor>(); // Navigation property
 
     // Konstruktory
@@ -32,13 +30,10 @@ public class Play
         Author?.AddPlay(this);
         Director = director;
         Director?.AddPlay(this);
-        Actors = actors ?? new List<Actor>();
-        foreach (var actor in Actors)
+        if (actors is null) return;
+        foreach (var actor in actors)
         {
-            if (!actor.Plays.Contains(this))
-            {
-                actor.Plays.Add(this);
-            }
+            AddActor(actor);
         }
     }
 
@@ -55,32 +50,22 @@ public class Play
     }
     public bool RemoveActor(Actor actor)
     {
-        if (Actors.Count == 0 || actor is null) return false;
-        if (actor.Plays.Contains(this))
-        {
-            actor.Plays.Remove(this);
-        }
+        if (actor is null) return false;
+        actor.Plays.Remove(this);
         return Actors.Remove(actor);
     }
     public bool RemoveActor(int actorId)
     {
-        if (Actors.Count == 0) return false;
         var actor = Actors.FirstOrDefault(p => p.ActorId == actorId);
         if (actor is null) return false;
-        if (actor.Plays.Contains(this))
-        {
-            actor.Plays.Remove(this);
-        }
+        actor.Plays.Remove(this);
         return Actors.Remove(actor);
     }
     public void RemoveAllActors()
     {
-        foreach (Actor actor in Actors)
+        foreach (var actor in Actors.ToList())
         {
-            if (actor.Plays.Contains(this))
-            {
-                actor.Plays.Remove(this);
-            }
+            actor.Plays.Remove(this);
         }
         Actors.Clear();
     }

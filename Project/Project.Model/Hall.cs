@@ -1,9 +1,12 @@
-﻿namespace Project.Model;
+﻿using System.Numerics;
+
+namespace Project.Model;
 
 public class Hall
 {
     // Pola prywatne
     private string _hallName = string.Empty;
+    // private Dictionary<(int, int), Seat> SeatMap { get; } = new Dictionary<(int, int), Seat>(); // możliwa zmiana: mapa siedzeń
 
     // Właściwości
     public int HallId { get; private set; } // PK
@@ -23,13 +26,14 @@ public class Hall
     // Konstruktory
     private Hall() { }
 
-    internal Hall(Theater theater, List<Performance>? performances = null)
+    internal Hall(string hallName, Theater theater, List<Performance>? performances = null)
     {
+        HallName = hallName;
         Theater = theater;
-        Performances = performances ?? new List<Performance>();
-        foreach (var performance in Performances)
+        if (performances is null) return;
+        foreach (var performance in performances)
         {
-            performance.Hall = this;
+            AddPerformance(performance);
         }
     }
 
@@ -60,7 +64,6 @@ public class Hall
     }
     public bool DeleteSeat(int rowNumber, int seatNumber)
     {
-        if (Seats.Count == 0) return false;
         var seat = Seats.FirstOrDefault(t => t.RowNumber == rowNumber && t.SeatNumber == seatNumber);
         if (seat is null) return false;
         return Seats.Remove(seat);
@@ -74,19 +77,19 @@ public class Hall
     public bool AddPerformance(Performance performance)
     {
         if (performance is null || Performances.Contains(performance)) return false;
-        performance.Hall = this;
+        if (performance.Hall is not null && performance.Hall != this) throw new InvalidOperationException($"Przedstawienie ma już salę: {performance}");
+        performance.Hall ??= this;
         Performances.Add(performance);
         return true;
     }
     public bool RemovePerformance(Performance performance)
     {
-        if (Performances.Count == 0 || performance is null) return false;
+        if (performance is null) return false;
         performance.Hall = null;
         return Performances.Remove(performance);
     }
     public bool RemovePerformance(int performanceId)
     {
-        if (Performances.Count == 0) return false;
         var performance = Performances.FirstOrDefault(p => p.PerformanceId == performanceId);
         if (performance is null) return false;
         performance.Hall = null;
@@ -94,7 +97,7 @@ public class Hall
     }
     public void RemoveAllPerformances()
     {
-        foreach (var performance in Performances)
+        foreach (var performance in Performances.ToList())
         {
             performance.Hall = null;
         }
@@ -123,6 +126,7 @@ public class Hall
             seatsString += string.Join(" ", orderedSeats
                 .Where(s => s.RowNumber == i)
                 .Select(s => $"{s.SeatLocation()}"));
+
             seatsString += i != maxRows ? "\n" : string.Empty;
         }
 
@@ -139,7 +143,8 @@ public class Hall
 
         for (int i = 1; i <= maxRows; i++)
         {
-            for (int j = 1; j <= MaxSeatsInRow(i); j++)
+            int maxSeats = MaxSeatsInRow(i);
+            for (int j = 1; j <= maxSeats; j++)
             {
                 seat = Seats.FirstOrDefault(s => s.RowNumber == i && s.SeatNumber == j);
                 seatsString += (seat is not null ? seat.SeatLocation() : "(X, X)") + " ";

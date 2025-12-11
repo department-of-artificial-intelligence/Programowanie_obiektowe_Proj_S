@@ -12,10 +12,10 @@ public class Author : Person, IPlayManager
     public Author(string firstName, string lastName, List<Play>? plays = null)
         : base(firstName, lastName)
     {
-        Plays = plays ?? new List<Play>();
-        foreach (var play in Plays)
+        if (plays is null) return;
+        foreach (var play in plays)
         {
-            play.Author = this;
+            AddPlay(play);
         }
     }
 
@@ -23,19 +23,19 @@ public class Author : Person, IPlayManager
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
-        play.Author = this;
+        if (play.Author is not null && play.Author != this) throw new InvalidOperationException($"Sztuka \"{play.Title}\" ma już innego autora: {play.Author.FirstName} {play.Author.LastName}");
+        play.Author ??= this;
         Plays.Add(play);
         return true;
     }
     public bool RemovePlay(Play play)
     {
-        if (Plays.Count == 0 || play is null) return false;
+        if (play is null) return false;
         play.Author = null;
         return Plays.Remove(play);
     }
     public bool RemovePlay(int playId)
     {
-        if (Plays.Count == 0) return false;
         var play = Plays.FirstOrDefault(p => p.PlayId == playId);
         if (play is null) return false;
         play.Author = null;
@@ -43,7 +43,7 @@ public class Author : Person, IPlayManager
     }
     public void RemoveAllPlays()
     {
-        foreach (Play play in Plays)
+        foreach (var play in Plays.ToList())
         {
             play.Author = null;
         }
@@ -58,6 +58,6 @@ public class Author : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString();
+        return base.ToString() + $" ({Plays.Count} sztuk)";
     }
 }

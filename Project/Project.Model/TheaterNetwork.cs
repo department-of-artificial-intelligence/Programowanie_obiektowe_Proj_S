@@ -36,7 +36,6 @@ public class TheaterNetwork
     }
     public bool DeleteTheater(int theaterId)
     {
-        if (Theaters.Count == 0) return false;
         var theater = Theaters.FirstOrDefault(t => t.TheaterId == theaterId);
         if (theater is null) return false;
         return Theaters.Remove(theater);

@@ -1,25 +1,25 @@
-﻿//// See https://aka.ms/new-console-template for more information
+﻿// See https://aka.ms/new-console-template for more information
 
-//using Project.ConsoleApp;
-//using Project.Model;
-//using System.Reflection.Metadata;
+using Project.ConsoleApp;
+using Project.Model;
+using System.Reflection.Metadata;
 
-///* ToDo:
-// * ogólne:
-// * faktyczny program.cs
-// * testy jednostkowe
-// * baza danych
-// * 
-// * metody:
-// * wyświetlenie siedzeń zmienić aby było widać które zajęte? tak samo ale D-dostępne, Z-zarezerwowane, S-sprzedane ?
-// * zarządanie biletami
-// */
+/* ToDo:
+ * ogólne:
+ * faktyczny program.cs
+ * testy jednostkowe
+ * baza danych
+ * 
+ * metody:
+ * wyświetlenie siedzeń zmienić aby było widać które zajęte? tak samo ale D-dostępne, Z-zarezerwowane, S-sprzedane ?
+ * zarządanie biletami
+ */
 
 //try
 //{
-//    Console.WriteLine("--------------------------------------------");
-//    Console.WriteLine("System zarządzania siecią teatrów");
-//    Console.WriteLine("--------------------------------------------");
+    Console.WriteLine("--------------------------------------------");
+    Console.WriteLine("System zarządzania siecią teatrów");
+    Console.WriteLine("--------------------------------------------");
 
 //    // ------------------------
 //    // struktura teatrów

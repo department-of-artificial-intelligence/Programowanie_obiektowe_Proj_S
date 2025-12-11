@@ -37,15 +37,14 @@ public class Theater
     }
 
     // Metody tworzenia i usuwania elementów listy Hall
-    public bool CreateHall(List<Performance>? performances = null)
+    public bool CreateHall(string hallName, List<Performance>? performances = null)
     {
-        Hall hall = new Hall(this, performances);
+        Hall hall = new Hall(hallName, this, performances);
         Halls.Add(hall);
         return true;
     }
     public bool DeleteHall(int hallId)
     {
-        if (Halls.Count == 0 || hallId <= 0) return false;
         var hall = Halls.FirstOrDefault(t => t.HallId == hallId);
         if (hall is null) return false;
         return Halls.Remove(hall);

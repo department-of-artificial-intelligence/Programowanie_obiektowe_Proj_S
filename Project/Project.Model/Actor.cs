@@ -12,7 +12,7 @@ public class Actor : Person, IPlayManager
         get => _salary;
         set 
         {
-            if (value < 0) throw new ArgumentException("Płaca nie może być ujemna", nameof(Salary));
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(Salary), "Płaca nie może być ujemna");
             _salary = value;
         }
     }
@@ -25,13 +25,10 @@ public class Actor : Person, IPlayManager
         : base(firstName, lastName)
     {
         Salary = salary;
-        Plays = plays ?? new List<Play>();
-        foreach (var play in Plays)
+        if (plays is null) return;
+        foreach (var play in plays)
         {
-            if (!play.Actors.Contains(this))
-            {
-                play.Actors.Add(this);
-            }
+            AddPlay(play);
         }
     }
 
@@ -48,32 +45,22 @@ public class Actor : Person, IPlayManager
     }
     public bool RemovePlay(Play play)
     {
-        if (Plays.Count == 0 || play is null) return false;
-        if (play.Actors.Contains(this))
-        {
-            play.Actors.Remove(this);
-        }
+        if (play is null) return false;
+        play.Actors.Remove(this);
         return Plays.Remove(play);
     }
     public bool RemovePlay(int playId)
     {
-        if (Plays.Count == 0) return false;
         var play = Plays.FirstOrDefault(p => p.PlayId == playId);
         if (play is null) return false;
-        if (play.Actors.Contains(this))
-        {
-            play.Actors.Remove(this);
-        }
+        play.Actors.Remove(this);
         return Plays.Remove(play);
     }
     public void RemoveAllPlays()
     {
-        foreach (Play play in Plays)
+        foreach (var play in Plays.ToList())
         {
-            if (play.Actors.Contains(this))
-            {
-                play.Actors.Remove(this);
-            }
+            play.Actors.Remove(this);
         }
         Plays.Clear();
     }
