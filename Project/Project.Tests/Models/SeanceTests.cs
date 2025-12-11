@@ -5,188 +5,252 @@ namespace Project.Tests.Models
     public class SeanceTests
     {
         [Fact]
-        public void Seance_Constructor_ValidData_CreatesSeance()
+        public void Constructor_WithValidData_ShouldCreateSeanceWithCorrectProperties()
         {
-            // Arrange
-            var filmId = "film123";
-            var auditoriumId = "auditorium123";
+            // Given
+            var filmId = "film-123";
+            var auditoriumId = "auditorium-123";
             var startTime = DateTime.Now.AddHours(1);
-            var price = 100.0m;
-            var duration = 120u;
+            var price = 250.0m;
+            var durationMinutes = 120u;
 
-            // Act
-            var seance = new Seance(filmId, auditoriumId, startTime, price, duration);
+            // When
+            var seance = new Seance(filmId, auditoriumId, startTime, price, durationMinutes);
 
-            // Assert
+            // Then
             Assert.Equal(filmId, seance.FilmId);
             Assert.Equal(auditoriumId, seance.AuditoriumId);
             Assert.Equal(startTime, seance.StartTime);
             Assert.Equal(price, seance.Price);
-            Assert.Equal(startTime.AddMinutes(duration), seance.EndTime);
+            Assert.Equal(durationMinutes, seance.FilmDurationMinutes);
+            Assert.Equal(startTime.AddMinutes(durationMinutes), seance.EndTime);
+            Assert.Empty(seance.OccupiedSeatIds);
+            Assert.NotEmpty(seance.Id);
         }
 
         [Fact]
-        public void ReserveSeat_ValidSeat_AddsSeat()
+        public void Constructor_WithPastStartTime_ShouldThrowArgumentException()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var pastTime = DateTime.Now.AddHours(-1);
+
+            // When & Then
+            Assert.Throws<ArgumentException>(() => new Seance("film-123", "auditorium-123", pastTime, 250.0m, 120));
+        }
+
+        [Fact]
+        public void Constructor_WithZeroPrice_ShouldThrowArgumentException()
+        {
+            // Given & When & Then
+            Assert.Throws<ArgumentException>(() => new Seance("film-123", "auditorium-123", DateTime.Now.AddHours(1), 0m, 120));
+        }
+
+        [Fact]
+        public void Constructor_WithZeroDuration_ShouldThrowArgumentException()
+        {
+            // Given & When & Then
+            Assert.Throws<ArgumentException>(() => new Seance("film-123", "auditorium-123", DateTime.Now.AddHours(1), 250.0m, 0));
+        }
+
+        [Fact]
+        public void ReserveSeat_WithValidSeatId_ShouldAddSeatToOccupiedList()
+        {
+            // Given
+            var seance = CreateTestSeance();
             var seatId = "A1";
-            var capacity = 100u;
+            var auditoriumCapacity = 100u;
 
-            // Act
-            var result = seance.ReserveSeat(seatId, capacity);
+            // When
+            var result = seance.ReserveSeat(seatId, auditoriumCapacity);
 
-            // Assert
+            // Then
             Assert.True(result);
+            Assert.Single(seance.OccupiedSeatIds);
             Assert.Contains(seatId, seance.OccupiedSeatIds);
         }
 
         [Fact]
-        public void ReserveSeat_DuplicateSeat_ReturnsFalse()
+        public void ReserveSeat_WithDuplicateSeatId_ShouldNotAddSeat()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
             var seatId = "A1";
-            var capacity = 100u;
-            seance.ReserveSeat(seatId, capacity);
+            var auditoriumCapacity = 100u;
+            seance.ReserveSeat(seatId, auditoriumCapacity);
 
-            // Act
-            var result = seance.ReserveSeat(seatId, capacity);
+            // When
+            var result = seance.ReserveSeat(seatId, auditoriumCapacity);
 
-            // Assert
+            // Then
             Assert.False(result);
             Assert.Single(seance.OccupiedSeatIds);
         }
 
         [Fact]
-        public void ReserveSeat_ExceedingCapacity_ReturnsFalse()
+        public void ReserveSeat_WhenCapacityReached_ShouldNotAddSeat()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
-            var capacity = 1u;
-            seance.ReserveSeat("A1", capacity);
+            // Given
+            var seance = CreateTestSeance();
+            var auditoriumCapacity = 2u;
 
-            // Act
-            var result = seance.ReserveSeat("A2", capacity);
+            // Fill capacity
+            seance.ReserveSeat("A1", auditoriumCapacity);
+            seance.ReserveSeat("A2", auditoriumCapacity);
 
-            // Assert
+            // When
+            var result = seance.ReserveSeat("A3", auditoriumCapacity);
+
+            // Then
             Assert.False(result);
-            Assert.Single(seance.OccupiedSeatIds);
+            Assert.Equal(2, seance.OccupiedSeatIds.Count);
         }
 
         [Fact]
-        public void CancelSeatReservation_ExistingSeat_RemovesSeat()
+        public void CancelSeatReservation_WithExistingSeat_ShouldRemoveSeat()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
             var seatId = "A1";
-            var capacity = 100u;
-            seance.ReserveSeat(seatId, capacity);
+            var auditoriumCapacity = 100u;
+            seance.ReserveSeat(seatId, auditoriumCapacity);
 
-            // Act
+            // When
             var result = seance.CancelSeatReservation(seatId);
 
-            // Assert
+            // Then
             Assert.True(result);
-            Assert.DoesNotContain(seatId, seance.OccupiedSeatIds);
+            Assert.Empty(seance.OccupiedSeatIds);
         }
 
         [Fact]
-        public void CancelSeatReservation_NonExistentSeat_ReturnsFalse()
+        public void CancelSeatReservation_WithNonExistingSeat_ShouldReturnFalse()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
 
-            // Act
-            var result = seance.CancelSeatReservation("A1");
+            // When
+            var result = seance.CancelSeatReservation("NonExistingSeat");
 
-            // Assert
+            // Then
             Assert.False(result);
         }
 
         [Fact]
-        public void AvailableSeats_ReturnsCorrectCount()
+        public void AvailableSeats_ShouldReturnCorrectAvailableSeatsCount()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
-            var capacity = 100u;
-            seance.ReserveSeat("A1", capacity);
-            seance.ReserveSeat("A2", capacity);
+            // Given
+            var seance = CreateTestSeance();
+            var auditoriumCapacity = 100u;
+            seance.ReserveSeat("A1", auditoriumCapacity);
+            seance.ReserveSeat("A2", auditoriumCapacity);
+            seance.ReserveSeat("B1", auditoriumCapacity);
 
-            // Act
-            var available = seance.AvailableSeats(capacity);
+            // When
+            var availableSeats = seance.AvailableSeats(auditoriumCapacity);
 
-            // Assert
-            Assert.Equal(98, available);
+            // Then
+            Assert.Equal(97, availableSeats);
         }
 
         [Fact]
-        public void UpdateTime_ValidTime_UpdatesTime()
+        public void UpdateTime_WithValidNewStartTime_ShouldUpdateStartAndEndTime()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
-            var newStartTime = DateTime.Now.AddHours(2);
-            var duration = 120u;
+            // Given
+            var seance = CreateTestSeance();
+            var newStartTime = DateTime.Now.AddHours(3);
+            var durationMinutes = 120u;
 
-            // Act
-            seance.UpdateTime(newStartTime, duration);
+            // When
+            seance.UpdateTime(newStartTime, durationMinutes);
 
-            // Assert
+            // Then
             Assert.Equal(newStartTime, seance.StartTime);
-            Assert.Equal(newStartTime.AddMinutes(duration), seance.EndTime);
+            Assert.Equal(newStartTime.AddMinutes(durationMinutes), seance.EndTime);
         }
 
         [Fact]
-        public void UpdateTime_PastTime_ThrowsException()
+        public void UpdateTime_WithPastTime_ShouldThrowArgumentException()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
             var pastTime = DateTime.Now.AddHours(-1);
 
-            // Act & Assert
+            // When & Then
             Assert.Throws<ArgumentException>(() => seance.UpdateTime(pastTime, 120));
         }
 
         [Fact]
-        public void UpdatePrice_ValidPrice_UpdatesPrice()
+        public void UpdatePrice_WithValidPrice_ShouldUpdatePrice()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
-            var newPrice = 150.0m;
+            // Given
+            var seance = CreateTestSeance();
+            var newPrice = 300.0m;
 
-            // Act
+            // When
             seance.UpdatePrice(newPrice);
 
-            // Assert
+            // Then
             Assert.Equal(newPrice, seance.Price);
         }
 
         [Fact]
-        public void UpdatePrice_InvalidPrice_ThrowsException()
+        public void UpdatePrice_WithZeroPrice_ShouldThrowArgumentException()
         {
-            // Arrange
-            var seance = new Seance("film123", "auditorium123", DateTime.Now.AddHours(1), 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
 
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => seance.UpdatePrice(0));
-            Assert.Throws<ArgumentException>(() => seance.UpdatePrice(-50));
+            // When & Then
+            Assert.Throws<ArgumentException>(() => seance.UpdatePrice(0m));
         }
 
         [Fact]
-        public void ToString_ContainsSeanceInfo()
+        public void UpdatePrice_WithNegativePrice_ShouldThrowArgumentException()
         {
-            // Arrange
-            var startTime = DateTime.Now.AddHours(1);
-            var seance = new Seance("film123", "auditorium123", startTime, 100.0m, 120);
+            // Given
+            var seance = CreateTestSeance();
 
-            // Act
+            // When & Then
+            Assert.Throws<ArgumentException>(() => seance.UpdatePrice(-50.0m));
+        }
+
+        [Fact]
+        public void ToString_ShouldReturnFormattedString()
+        {
+            // Given
+            var seance = CreateTestSeance();
+
+            // When
             var result = seance.ToString();
 
-            // Assert
-            Assert.Contains(startTime.ToString(), result);
-            Assert.Contains("film123", result);
-            Assert.Contains("auditorium123", result);
-            Assert.Contains("100,0", result);
+            // Then
+            Assert.Contains("Seance:", result);
+            Assert.Contains(seance.StartTime.ToString(), result);
+            Assert.Contains(seance.EndTime.ToString(), result);
+            Assert.Contains(seance.Price.ToString(), result);
+            Assert.Contains(seance.FilmId, result);
+            Assert.Contains(seance.AuditoriumId, result);
+            Assert.Contains(seance.Id, result);
+        }
+
+        [Fact]
+        public void MarkAsUpdated_ShouldUpdateUpdatedAtTimestamp()
+        {
+            // Given
+            var seance = CreateTestSeance();
+            var initialUpdatedAt = seance.UpdatedAt;
+
+            System.Threading.Thread.Sleep(10);
+
+            // When
+            seance.MarkAsUpdated();
+
+            // Then
+            Assert.True(seance.UpdatedAt > initialUpdatedAt);
+        }
+
+        private static Seance CreateTestSeance()
+        {
+            return new Seance("film-123", "auditorium-123", DateTime.Now.AddHours(1), 250.0m, 120);
         }
     }
 }

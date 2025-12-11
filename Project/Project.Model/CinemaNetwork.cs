@@ -8,16 +8,15 @@ namespace Project.Models
         public string ManagerName { get; private set; }
         public int TotalCinemas { get; private set; }
 
-        public CinemaNetwork(string companyName, string managerName) : base()
-        {
-            ValidateNetworkData(companyName, managerName);
 
-            CompanyName = companyName;
-            ManagerName = managerName;
+        protected CinemaNetwork()
+        {
+            CompanyName = string.Empty;
+            ManagerName = string.Empty;
+            TotalCinemas = 0;
         }
 
-        public CinemaNetwork(string id, string companyName, string managerName,
-            DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+        public CinemaNetwork(string companyName, string managerName) : base()
         {
             ValidateNetworkData(companyName, managerName);
 
@@ -27,11 +26,8 @@ namespace Project.Models
 
         private static void ValidateNetworkData(string companyName, string managerName)
         {
-            if (string.IsNullOrWhiteSpace(companyName))
-                throw new ArgumentException("Company name is required", nameof(companyName));
-
-            if (string.IsNullOrWhiteSpace(managerName))
-                throw new ArgumentException("Manager name is required", nameof(managerName));
+            if (string.IsNullOrWhiteSpace(companyName)) throw new ArgumentException("Company name is required", nameof(companyName));
+            if (string.IsNullOrWhiteSpace(managerName)) throw new ArgumentException("Manager name is required", nameof(managerName));
         }
 
         public void UpdateInfo(string companyName, string managerName)
@@ -46,8 +42,7 @@ namespace Project.Models
 
         public void SetTotalCinemas(int count)
         {
-            if (count < 0)
-                throw new ArgumentException("Count cannot be negative");
+            if (count < 0) throw new ArgumentException("Count cannot be negative");
 
             TotalCinemas = count;
             MarkAsUpdated();

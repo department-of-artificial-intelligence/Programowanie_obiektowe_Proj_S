@@ -1,65 +1,80 @@
-﻿using Project.Models;
+﻿using Project.DAL;
+using Project.Models;
 
 namespace Project.Services
 {
-    public class SeanceService
+    public static class SeanceService
     {
-        public static List<Seance> FilterSeancesByFilmId(List<Seance> seances, string filmId)
+        public static List<Seance> GetAll(ApplicationDBContext context)
         {
-            if (seances == null || string.IsNullOrEmpty(filmId))
-                return [];
-
-            return [.. seances.Where(s => s.FilmId == filmId)];
+            return [.. context.Seances];
         }
 
-        public static List<Seance> FilterSeancesByAuditoriumId(List<Seance> seances, string auditoriumId)
+        public static Seance? GetById(ApplicationDBContext context, string id)
         {
-            if (seances == null || string.IsNullOrEmpty(auditoriumId))
-                return [];
-
-            return [.. seances.Where(s => s.AuditoriumId == auditoriumId)];
+            return context.Seances.FirstOrDefault(s => s.Id == id);
         }
 
-        public static List<Seance> SortSeancesByStartTime(List<Seance> seances)
+        public static Seance Add(ApplicationDBContext context, string filmId, string auditoriumId, DateTime startTime, decimal price, uint durationMinutes)
         {
-            if (seances == null) return [];
-            return [.. seances.OrderBy(s => s.StartTime)];
+            var seance = new Seance(filmId, auditoriumId, startTime, price, durationMinutes);
+
+            context.Seances.Add(seance);
+            context.SaveChanges();
+
+            return seance;
         }
 
-        public static List<Seance> SortSeancesByPrice(List<Seance> seances)
+        public static void Update(ApplicationDBContext context, Seance seance)
         {
-            if (seances == null) return [];
-            return [.. seances.OrderBy(s => s.Price)];
+            context.Seances.Update(seance);
+            context.SaveChanges();
         }
 
-        public static List<Seance> SortSeancesByOccupiedSeats(List<Seance> seances, List<Auditorium> auditoriums)
+        public static void Delete(ApplicationDBContext context, string seanceId)
         {
-            if (seances == null || auditoriums == null) return [];
+            var seance = context.Seances.FirstOrDefault(s => s.Id == seanceId);
 
-            return [.. seances.OrderByDescending(s =>
-            {
-                var auditorium = auditoriums.FirstOrDefault(a => a.Id == s.AuditoriumId);
-                return auditorium != null && auditorium.Capacity > 0
-                    ? s.OccupiedSeatIds.Count / (double)auditorium.Capacity
-                    : 0;
-            })];
-        }
-
-        public static void DeleteSeance(List<Seance> seances, List<Reservation> reservations,
-                                        List<Ticket> tickets, string seanceId)
-        {
-            var reservationsToDelete = reservations.Where(r => r.SeanceId == seanceId).ToList();
-
-            foreach (var reservation in reservationsToDelete)
-            {
-                ReservationService.DeleteReservation(reservations, tickets, reservation.Id);
-            }
-
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
             if (seance != null)
             {
-                seances.Remove(seance);
+                var reservations = context.Reservations.Where(r => r.SeanceId == seanceId).ToList();
+
+                foreach (var reservation in reservations)
+                {
+                    var tickets = context.Tickets.Where(t => t.ReservationId == reservation.Id).ToList();
+
+                    context.Tickets.RemoveRange(tickets);
+                    context.Reservations.Remove(reservation);
+                }
+
+                context.Seances.Remove(seance);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Seance> FilterByFilmId(ApplicationDBContext context, string filmId)
+        {
+            return [.. context.Seances.Where(s => s.FilmId == filmId)];
+        }
+
+        public static List<Seance> FilterByAuditoriumId(ApplicationDBContext context, string auditoriumId)
+        {
+            return [.. context.Seances.Where(s => s.AuditoriumId == auditoriumId)];
+        }
+
+        public static List<Seance> SortByStartTime(ApplicationDBContext context)
+        {
+            return [.. context.Seances.OrderBy(s => s.StartTime)];
+        }
+
+        public static List<Seance> SortByPrice(ApplicationDBContext context)
+        {
+            return [.. context.Seances.OrderBy(s => s.Price)];
+        }
+
+        public static List<Seance> SortByOccupiedSeats(ApplicationDBContext context)
+        {
+            return [.. context.Seances.OrderByDescending(s => s.OccupiedSeatIds.Count)];
         }
     }
 }

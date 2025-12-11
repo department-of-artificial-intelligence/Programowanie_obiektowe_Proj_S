@@ -1,15 +1,14 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
-
+using Project.Services;
+using Project.Models;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class TicketMenu
     {
-        public static void ShowTicketMenu(List<Ticket> tickets, List<Seance> seances, List<Reservation> reservations,
-            List<Cinema> cinemas, List<Auditorium> auditoriums, List<Film> films)
+        public static void ShowTicketMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -25,21 +24,24 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddTicket(tickets, seances, reservations, cinemas, auditoriums, films); break;
-                    case "2": ViewAllTickets(tickets); break;
-                    case "3": FindTicketById(tickets); break;
-                    case "4": UpdateTicketType(tickets); break;
-                    case "5": ShowTicketSortFilterMenu(tickets); break;
-                    case "6": DeleteTicket(tickets); break;
+                    case "1": AddTicket(context); break;
+                    case "2": ViewAllTickets(context); break;
+                    case "3": FindTicketById(context); break;
+                    case "4": UpdateTicketType(context); break;
+                    case "5": ShowTicketSortFilterMenu(context); break;
+                    case "6": DeleteTicket(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowTicketSortFilterMenu(List<Ticket> tickets)
+        static void ShowTicketSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -58,71 +60,80 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestTickets = BaseService.SortByTimeNewest(tickets);
+                        var newestTickets = BaseService.SortByTimeNewest(TicketService.GetAll(context));
                         DisplayHelper.DisplayTickets(newestTickets, "Tickets (Newest First)");
                         break;
                     case "2":
-                        var oldestTickets = BaseService.SortByTimeOldest(tickets);
+                        var oldestTickets = BaseService.SortByTimeOldest(TicketService.GetAll(context));
                         DisplayHelper.DisplayTickets(oldestTickets, "Tickets (Oldest First)");
                         break;
                     case "3":
-                        var priceTickets = TicketService.SortTicketsByFinalPrice(tickets);
+                        var priceTickets = TicketService.SortByFinalPrice(context);
                         DisplayHelper.DisplayTickets(priceTickets, "Tickets by Final Price");
                         break;
                     case "4":
                         Console.Write("Enter reservation ID to filter: ");
                         string reservationId = ConsoleHelper.ReadRequiredString("Reservation ID");
-                        var reservationTickets = TicketService.FilterTicketsByReservationId(tickets, reservationId);
+
+                        var reservationTickets = TicketService.FilterByReservationId(context, reservationId);
                         DisplayHelper.DisplayTickets(reservationTickets, $"Tickets for reservation {reservationId}");
                         break;
                     case "5":
                         Console.Write("Enter cinema ID to filter: ");
                         string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
-                        var cinemaTickets = TicketService.FilterTicketsByCinemaId(tickets, cinemaId);
+
+                        var cinemaTickets = TicketService.FilterByCinemaId(context, cinemaId);
                         DisplayHelper.DisplayTickets(cinemaTickets, $"Tickets for cinema {cinemaId}");
                         break;
                     case "6":
                         Console.Write("Enter seance ID to filter: ");
                         string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
-                        var seanceTickets = TicketService.FilterTicketsBySeanceId(tickets, seanceId);
+
+                        var seanceTickets = TicketService.FilterBySeanceId(context, seanceId);
                         DisplayHelper.DisplayTickets(seanceTickets, $"Tickets for seance {seanceId}");
                         break;
                     case "7":
                         Console.Write("Enter film ID to filter: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var filmTickets = TicketService.FilterTicketsByFilmId(tickets, filmId);
+
+                        var filmTickets = TicketService.FilterByFilmId(context, filmId);
                         DisplayHelper.DisplayTickets(filmTickets, $"Tickets for film {filmId}");
                         break;
                     case "8":
                         Console.Write("Enter auditorium ID to filter: ");
                         string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
-                        var auditoriumTickets = TicketService.FilterTicketsByAuditoriumId(tickets, auditoriumId);
+
+                        var auditoriumTickets = TicketService.FilterByAuditoriumId(context, auditoriumId);
                         DisplayHelper.DisplayTickets(auditoriumTickets, $"Tickets for auditorium {auditoriumId}");
                         break;
                     case "9":
                         Console.WriteLine("Ticket types: Standard, Student, Senior, Child, VIP");
                         Console.Write("Enter ticket type to filter: ");
                         string ticketTypeInput = ConsoleHelper.ReadRequiredString("Ticket type");
+
                         if (!Enum.TryParse(ticketTypeInput, true, out TicketType ticketType))
                         {
                             Console.WriteLine("Invalid ticket type.");
                             ConsoleHelper.WaitForKey();
                             break;
                         }
-                        var typeTickets = TicketService.FilterTicketsByTicketType(tickets, ticketType);
+
+                        var typeTickets = TicketService.FilterByTicketType(context, ticketType);
                         DisplayHelper.DisplayTickets(typeTickets, $"Tickets of type {ticketType}");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddTicket(List<Ticket> tickets, List<Seance> seances, List<Reservation> reservations,
-            List<Cinema> cinemas, List<Auditorium> auditoriums, List<Film> films)
+        static void AddTicket(ApplicationDBContext context)
         {
             try
             {
@@ -132,7 +143,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Reservation ID: ");
                 string reservationId = ConsoleHelper.ReadRequiredString("Reservation ID");
 
-                var reservation = reservations.FirstOrDefault(r => r.Id == reservationId);
+                var reservation = ReservationService.GetById(context, reservationId);
+
                 if (reservation == null)
                 {
                     Console.WriteLine("Reservation with this ID not found.");
@@ -143,7 +155,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Cinema ID: ");
                 string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-                var cinema = cinemas.FirstOrDefault(c => c.Id == cinemaId);
+                var cinema = CinemaService.GetById(context, cinemaId);
+
                 if (cinema == null)
                 {
                     Console.WriteLine("Cinema with this ID not found.");
@@ -154,7 +167,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Auditorium ID: ");
                 string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-                var auditorium = auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
+                var auditorium = AuditoriumService.GetById(context, auditoriumId);
+
                 if (auditorium == null)
                 {
                     Console.WriteLine("Auditorium with this ID not found.");
@@ -165,7 +179,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Seance ID: ");
                 string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-                var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+                var seance = SeanceService.GetById(context, seanceId);
+
                 if (seance == null)
                 {
                     Console.WriteLine("Seance with this ID not found.");
@@ -176,7 +191,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Film ID: ");
                 string filmId = ConsoleHelper.ReadRequiredString("Film ID");
 
-                var film = films.FirstOrDefault(f => f.Id == filmId);
+                var film = FilmService.GetById(context, filmId);
+
                 if (film == null)
                 {
                     Console.WriteLine("Film with this ID not found.");
@@ -197,8 +213,8 @@ namespace Project.ConsoleApp.Menues
                     ticketType = TicketType.Standard;
                 }
 
-                var ticket = new Ticket(reservationId, cinemaId, auditoriumId, seanceId, filmId, seatId, seance.Price, ticketType);
-                tickets.Add(ticket);
+
+                var ticket = TicketService.Add(context, reservationId, cinemaId, auditoriumId, seanceId, filmId, seatId, seance.Price, ticketType);
 
                 Console.WriteLine($"\nTicket added successfully! ID: {ticket.Id}");
                 Console.WriteLine($"Final Price: {ticket.FinalPrice} (Discount: {ticket.Discount})");
@@ -207,30 +223,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllTickets(List<Ticket> tickets)
+        static void ViewAllTickets(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL TICKETS ===");
-
-            if (tickets.Count == 0)
-            {
-                Console.WriteLine("No tickets found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var ticket in tickets)
-            {
-                Console.WriteLine(ticket.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var tickets = TicketService.GetAll(context);
+            DisplayHelper.DisplayTickets(tickets, "All Tickets");
         }
 
-        static void FindTicketById(List<Ticket> tickets)
+        static void FindTicketById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND TICKET BY ID ===");
@@ -238,7 +241,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter ticket ID: ");
             string id = ConsoleHelper.ReadRequiredString("Ticket ID");
 
-            var ticket = tickets.FirstOrDefault(t => t.Id == id);
+            var ticket = TicketService.GetById(context, id);
+
             if (ticket != null)
             {
                 Console.WriteLine(ticket.ToString());
@@ -247,10 +251,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Ticket with this ID not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateTicketType(List<Ticket> tickets)
+        static void UpdateTicketType(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE TICKET TYPE ===");
@@ -258,7 +263,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter ticket ID: ");
             string id = ConsoleHelper.ReadRequiredString("Ticket ID");
 
-            var ticket = tickets.FirstOrDefault(t => t.Id == id);
+            var ticket = TicketService.GetById(context, id);
+
             if (ticket == null)
             {
                 Console.WriteLine("Ticket with this ID not found.");
@@ -281,16 +287,19 @@ namespace Project.ConsoleApp.Menues
             try
             {
                 ticket.UpdateTicketType(newType);
+                TicketService.Update(context, ticket);
+
                 Console.WriteLine($"Ticket type updated successfully! New price: {ticket.FinalPrice}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteTicket(List<Ticket> tickets)
+        static void DeleteTicket(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE TICKET ===");
@@ -298,16 +307,18 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter ticket ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Ticket ID");
 
-            var ticket = tickets.FirstOrDefault(t => t.Id == id);
+            var ticket = TicketService.GetById(context, id);
+
             if (ticket != null)
             {
                 Console.WriteLine($"\nTicket to delete: {ticket.Type} ticket for seat {ticket.SeatId}");
                 Console.Write("Are you sure you want to delete this ticket? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    TicketService.DeleteTicket(tickets, id);
+                    TicketService.Delete(context, id);
                     Console.WriteLine("Ticket deleted successfully!");
                 }
                 else

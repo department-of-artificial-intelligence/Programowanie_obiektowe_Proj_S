@@ -1,51 +1,81 @@
-﻿using Project.Models;
+﻿using Project.DAL;
+using Project.Models;
 
 namespace Project.Services
 {
-    public class TicketService
+    public static class TicketService
     {
-        public static List<Ticket> FilterTicketsByReservationId(List<Ticket> tickets, string reservationId)
+        public static List<Ticket> GetAll(ApplicationDBContext context)
         {
-            return [.. tickets.Where(t => t.ReservationId == reservationId)];
+            return [.. context.Tickets];
         }
 
-        public static List<Ticket> FilterTicketsByCinemaId(List<Ticket> tickets, string cinemaId)
+        public static Ticket? GetById(ApplicationDBContext context, string id)
         {
-            return [.. tickets.Where(t => t.CinemaId == cinemaId)];
+            return context.Tickets.FirstOrDefault(t => t.Id == id);
         }
 
-        public static List<Ticket> FilterTicketsBySeanceId(List<Ticket> tickets, string seanceId)
+        public static Ticket Add(ApplicationDBContext context, string reservationId, string cinemaId, string auditoriumId, string seanceId, 
+                                 string filmId, string seatId, decimal price, TicketType ticketType)
         {
-            return [.. tickets.Where(t => t.SeanceId == seanceId)];
+            var ticket = new Ticket(reservationId, cinemaId, auditoriumId, seanceId, filmId, seatId, price, ticketType);
+
+            context.Tickets.Add(ticket);
+            context.SaveChanges();
+
+            return ticket;
         }
 
-        public static List<Ticket> FilterTicketsByFilmId(List<Ticket> tickets, string filmId)
+        public static void Update(ApplicationDBContext context, Ticket ticket)
         {
-            return [.. tickets.Where(t => t.FilmId == filmId)];
+            context.Tickets.Update(ticket);
+            context.SaveChanges();
         }
 
-        public static List<Ticket> FilterTicketsByAuditoriumId(List<Ticket> tickets, string auditoriumId)
+        public static void Delete(ApplicationDBContext context, string ticketId)
         {
-            return [.. tickets.Where(t => t.AuditoriumId == auditoriumId)];
-        }
+            var ticket = context.Tickets.FirstOrDefault(t => t.Id == ticketId);
 
-        public static List<Ticket> FilterTicketsByTicketType(List<Ticket> tickets, TicketType ticketType)
-        {
-            return [.. tickets.Where(t => t.Type == ticketType)];
-        }
-
-        public static List<Ticket> SortTicketsByFinalPrice(List<Ticket> tickets)
-        {
-            return [.. tickets.OrderByDescending(t => t.FinalPrice)];
-        }
-
-        public static void DeleteTicket(List<Ticket> tickets, string ticketId)
-        {
-            var ticket = tickets.FirstOrDefault(t => t.Id == ticketId);
             if (ticket != null)
             {
-                tickets.Remove(ticket);
+                context.Tickets.Remove(ticket);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Ticket> FilterByReservationId(ApplicationDBContext context, string reservationId)
+        {
+            return [.. context.Tickets.Where(t => t.ReservationId == reservationId)];
+        }
+
+        public static List<Ticket> FilterByCinemaId(ApplicationDBContext context, string cinemaId)
+        {
+            return [.. context.Tickets.Where(t => t.CinemaId == cinemaId)];
+        }
+
+        public static List<Ticket> FilterBySeanceId(ApplicationDBContext context, string seanceId)
+        {
+            return [.. context.Tickets.Where(t => t.SeanceId == seanceId)];
+        }
+
+        public static List<Ticket> FilterByFilmId(ApplicationDBContext context, string filmId)
+        {
+            return [.. context.Tickets.Where(t => t.FilmId == filmId)];
+        }
+
+        public static List<Ticket> FilterByAuditoriumId(ApplicationDBContext context, string auditoriumId)
+        {
+            return [.. context.Tickets.Where(t => t.AuditoriumId == auditoriumId)];
+        }
+
+        public static List<Ticket> FilterByTicketType(ApplicationDBContext context, TicketType ticketType)
+        {
+            return [.. context.Tickets.Where(t => t.Type == ticketType)];
+        }
+
+        public static List<Ticket> SortByFinalPrice(ApplicationDBContext context)
+        {
+            return [.. context.Tickets.OrderByDescending(t => t.FinalPrice)];
         }
     }
 }

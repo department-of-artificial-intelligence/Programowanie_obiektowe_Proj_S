@@ -1,44 +1,82 @@
 ﻿using Project.Models;
+using Project.DAL;
 
 namespace Project.Services
 {
-    public class AuditoriumService
+    public static class AuditoriumService
     {
-        public static List<Auditorium> FilterAuditoriumsByName(List<Auditorium> auditoriums, string name)
+        public static List<Auditorium> GetAll(ApplicationDBContext context)
         {
-            return [.. auditoriums.Where(a => a.Name.Contains(name, StringComparison.OrdinalIgnoreCase))];
+            return [.. context.Auditoriums];
         }
 
-        public static List<Auditorium> FilterAuditoriumsByFeature(List<Auditorium> auditoriums, string feature)
+        public static Auditorium? GetById(ApplicationDBContext context, string id)
         {
-            return [.. auditoriums.Where(a => a.Items.Any(f => f.Contains(feature, StringComparison.OrdinalIgnoreCase)))];
+            return context.Auditoriums.FirstOrDefault(a => a.Id == id);
         }
 
-        public static List<Auditorium> SortAuditoriumsByFeatures(List<Auditorium> auditoriums)
+        public static Auditorium Add(ApplicationDBContext context, string cinemaId, string name, uint roomNumber, uint rows, uint seatsPerRow)
         {
-            return [.. auditoriums.OrderByDescending(a => a.Items.Count)];
+            Auditorium auditorium = new(cinemaId, name, roomNumber, rows, seatsPerRow);
+
+            context.Auditoriums.Add(auditorium);
+            context.SaveChanges();
+
+            return auditorium;
         }
 
-        public static List<Auditorium> SortAuditoriumsByMaxCapacity(List<Auditorium> auditoriums)
+        public static void Update(ApplicationDBContext context, Auditorium auditorium)
         {
-            return [.. auditoriums.OrderByDescending(a => a.Capacity)];
+            context.Auditoriums.Update(auditorium);
+            context.SaveChanges();
         }
 
-        public static void DeleteAuditorium(List<Auditorium> auditoriums, List<Seance> seances,
-                                            List<Reservation> reservations, List<Ticket> tickets, string auditoriumId)
+        public static void Delete(ApplicationDBContext context, string auditoriumId)
         {
-            var seancesToDelete = seances.Where(s => s.AuditoriumId == auditoriumId).ToList();
+            var auditorium = context.Auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
 
-            foreach (var seance in seancesToDelete)
-            {
-                SeanceService.DeleteSeance(seances, reservations, tickets, seance.Id);
-            }
-
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
             if (auditorium != null)
             {
-                auditoriums.Remove(auditorium);
+                var seances = context.Seances.Where(s => s.AuditoriumId == auditoriumId).ToList();
+
+                foreach (var seance in seances)
+                {
+                    var reservations = context.Reservations.Where(r => r.SeanceId == seance.Id).ToList();
+
+                    foreach (var reservation in reservations)
+                    {
+                        var tickets = context.Tickets.Where(t => t.ReservationId == reservation.Id).ToList();
+
+                        context.Tickets.RemoveRange(tickets);
+                        context.Reservations.Remove(reservation);
+                    }
+
+                    context.Seances.Remove(seance);
+                }
+
+                context.Auditoriums.Remove(auditorium);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Auditorium> FilterByName(ApplicationDBContext context, string name)
+        {
+            return [.. context.Auditoriums.Where(a => a.Name.Contains(name))];
+        }
+
+        public static List<Auditorium> FilterByFeature(ApplicationDBContext context, string feature)
+        {
+            return [.. context.Auditoriums.Where(a => a.Features.Any(f => f.Contains(feature)))];
+        }
+
+        public static List<Auditorium> SortByFeatures(ApplicationDBContext context)
+        {
+            return [.. context.Auditoriums.OrderByDescending(a => a.Features.Count)];
+        }
+
+        public static List<Auditorium> SortByMaxCapacity(ApplicationDBContext context)
+        {
+            return [.. context.Auditoriums.OrderByDescending(a => a.Capacity)];
         }
     }
 }

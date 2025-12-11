@@ -1,14 +1,13 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class AuditoriumMenu
     {
-        public static void ShowAuditoriumMenu(List<Auditorium> auditoriums, List<Cinema> cinemas,
-            List<Seance> seances, List<Reservation> reservations, List<Ticket> tickets)
+        public static void ShowAuditoriumMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -30,22 +29,24 @@ namespace Project.ConsoleApp.Menues
 
                 switch (choice)
                 {
-                    case "1": AddAuditorium(auditoriums, cinemas); break;
-                    case "2": ViewAllAuditoriums(auditoriums); break;
-                    case "3": FindAuditoriumById(auditoriums); break;
-                    case "4": UpdateAuditorium(auditoriums); break;
-                    case "5": AddFeature(auditoriums); break;
-                    case "6": RemoveFeature(auditoriums); break;
-                    case "7": RateAuditorium(auditoriums); break;
-                    case "8": ShowAuditoriumSortFilterMenu(auditoriums); break;
-                    case "9": DeleteAuditorium(auditoriums, seances, reservations, tickets); break;
+                    case "1": AddAuditorium(context); break;
+                    case "2": ViewAllAuditoriums(context); break;
+                    case "3": FindAuditoriumById(context); break;
+                    case "4": UpdateAuditorium(context); break;
+                    case "5": AddFeature(context); break;
+                    case "6": RemoveFeature(context); break;
+                    case "7": RateAuditorium(context); break;
+                    case "8": ShowAuditoriumSortFilterMenu(context); break;
+                    case "9": DeleteAuditorium(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowAuditoriumSortFilterMenu(List<Auditorium> auditoriums)
+        static void ShowAuditoriumSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -67,58 +68,52 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestAuditoriums = BaseService.SortByTimeNewest(auditoriums);
-
+                        var newestAuditoriums = BaseService.SortByTimeNewest(AuditoriumService.GetAll(context));
                         DisplayHelper.DisplayAuditoriums(newestAuditoriums, "Auditoriums (Newest First)");
                         break;
                     case "2":
-                        var oldestAuditoriums = BaseService.SortByTimeOldest(auditoriums);
-
+                        var oldestAuditoriums = BaseService.SortByTimeOldest(AuditoriumService.GetAll(context));
                         DisplayHelper.DisplayAuditoriums(oldestAuditoriums, "Auditoriums (Oldest First)");
                         break;
                     case "3":
-                        var ratedAuditoriums = RatableService.SortByRating(auditoriums);
-
+                        var ratedAuditoriums = RatableService.SortByRating(AuditoriumService.GetAll(context));
                         DisplayHelper.DisplayAuditoriums(ratedAuditoriums, "Auditoriums by Rating");
                         break;
                     case "4":
-                        var popularAuditoriums = RatableService.SortByPopularity(auditoriums);
-
+                        var popularAuditoriums = RatableService.SortByPopularity(AuditoriumService.GetAll(context));
                         DisplayHelper.DisplayAuditoriums(popularAuditoriums, "Auditoriums by Popularity");
                         break;
                     case "5":
-                        var featureCountAuditoriums = AuditoriumService.SortAuditoriumsByFeatures(auditoriums);
-
+                        var featureCountAuditoriums = AuditoriumService.SortByFeatures(context);
                         DisplayHelper.DisplayAuditoriums(featureCountAuditoriums, "Auditoriums by Features Count");
                         break;
                     case "6":
-                        var capacityAuditoriums = AuditoriumService.SortAuditoriumsByMaxCapacity(auditoriums);
-
+                        var capacityAuditoriums = AuditoriumService.SortByMaxCapacity(context);
                         DisplayHelper.DisplayAuditoriums(capacityAuditoriums, "Auditoriums by Max Capacity");
                         break;
                     case "7":
                         Console.Write("Enter auditorium name to filter: ");
-
                         string name = ConsoleHelper.ReadRequiredString("Auditorium name");
-                        var filteredAuditoriums = AuditoriumService.FilterAuditoriumsByName(auditoriums, name);
 
+                        var filteredAuditoriums = AuditoriumService.FilterByName(context, name);
                         DisplayHelper.DisplayAuditoriums(filteredAuditoriums, $"Auditoriums with name containing '{name}'");
                         break;
                     case "8":
                         Console.Write("Enter feature to filter: ");
-
                         string feature = ConsoleHelper.ReadRequiredString("Feature");
-                        var featureAuditoriums = AuditoriumService.FilterAuditoriumsByFeature(auditoriums, feature);
 
+                        var featureAuditoriums = AuditoriumService.FilterByFeature(context, feature);
                         DisplayHelper.DisplayAuditoriums(featureAuditoriums, $"Auditoriums with feature '{feature}'");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddAuditorium(List<Auditorium> auditoriums, List<Cinema> cinemas)
+        static void AddAuditorium(ApplicationDBContext context)
         {
             try
             {
@@ -128,13 +123,12 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Cinema ID: ");
                 string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-                var cinema = cinemas.FirstOrDefault(c => c.Id == cinemaId);
+                var cinema = CinemaService.GetById(context, cinemaId);
 
                 if (cinema == null)
                 {
                     Console.WriteLine("Cinema with this ID not found.");
                     ConsoleHelper.WaitForKey();
-
                     return;
                 }
 
@@ -150,8 +144,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Seats per Row: ");
                 uint seatsPerRow = ConsoleHelper.ReadUInt();
 
-                var auditorium = new Auditorium(cinemaId, name, roomNumber, rows, seatsPerRow);
-                auditoriums.Add(auditorium);
+                
+                var auditorium = AuditoriumService.Add(context, cinemaId, name, roomNumber, rows, seatsPerRow);
 
                 Console.WriteLine($"\nAuditorium added successfully! ID: {auditorium.Id}, Capacity: {auditorium.Capacity}");
             }
@@ -163,29 +157,13 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllAuditoriums(List<Auditorium> auditoriums)
+        static void ViewAllAuditoriums(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL AUDITORIUMS ===");
-
-            if (auditoriums.Count == 0)
-            {
-                Console.WriteLine("No auditoriums found.");
-                ConsoleHelper.WaitForKey();
-
-                return;
-            }
-
-            foreach (var auditorium in auditoriums)
-            {
-                Console.WriteLine(auditorium.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-
-            ConsoleHelper.WaitForKey();
+            var auditoriums = AuditoriumService.GetAll(context);
+            DisplayHelper.DisplayAuditoriums(auditoriums, "All Auditoriums");
         }
 
-        static void FindAuditoriumById(List<Auditorium> auditoriums)
+        static void FindAuditoriumById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND AUDITORIUM BY ID ===");
@@ -193,7 +171,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
 
             if (auditorium != null)
             {
@@ -207,7 +185,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateAuditorium(List<Auditorium> auditoriums)
+        static void UpdateAuditorium(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE AUDITORIUM ===");
@@ -215,7 +193,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID to update: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
 
             if (auditorium == null)
             {
@@ -239,6 +217,8 @@ namespace Project.ConsoleApp.Menues
                 uint seatsPerRow = ConsoleHelper.ReadUInt(auditorium.SeatsPerRow);
 
                 auditorium.UpdateLayout(name, roomNumber, rows, seatsPerRow);
+                AuditoriumService.Update(context, auditorium);
+
                 Console.WriteLine("Auditorium information updated!");
             }
             catch (Exception ex)
@@ -249,7 +229,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void AddFeature(List<Auditorium> auditoriums)
+        static void AddFeature(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== ADD FEATURE ===");
@@ -257,7 +237,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
 
             if (auditorium == null)
             {
@@ -271,6 +251,7 @@ namespace Project.ConsoleApp.Menues
 
             if (auditorium.AddItem(feature))
             {
+                AuditoriumService.Update(context, auditorium);
                 Console.WriteLine("Feature added successfully!");
             }
             else
@@ -281,7 +262,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void RemoveFeature(List<Auditorium> auditoriums)
+        static void RemoveFeature(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== REMOVE FEATURE ===");
@@ -289,13 +270,12 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
 
             if (auditorium == null)
             {
                 Console.WriteLine("Auditorium with this ID not found.");
                 ConsoleHelper.WaitForKey();
-
                 return;
             }
 
@@ -304,6 +284,7 @@ namespace Project.ConsoleApp.Menues
 
             if (auditorium.RemoveItem(feature))
             {
+                AuditoriumService.Update(context, auditorium);
                 Console.WriteLine("Feature removed successfully!");
             }
             else
@@ -314,7 +295,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void RateAuditorium(List<Auditorium> auditoriums)
+        static void RateAuditorium(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== RATE AUDITORIUM ===");
@@ -322,7 +303,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
 
             if (auditorium == null)
             {
@@ -338,17 +319,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Rating must be between 1 and 5.");
                 ConsoleHelper.WaitForKey();
-
                 return;
             }
 
             auditorium.AddRating(rating);
+            AuditoriumService.Update(context, auditorium);
+
             Console.WriteLine($"Auditorium rated successfully! Current rating: {auditorium.Rating}");
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteAuditorium(List<Auditorium> auditoriums, List<Seance> seances,
-            List<Reservation> reservations, List<Ticket> tickets)
+        static void DeleteAuditorium(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE AUDITORIUM ===");
@@ -356,7 +337,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter auditorium ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == id);
+            var auditorium = AuditoriumService.GetById(context, id);
+
             if (auditorium != null)
             {
                 Console.WriteLine($"\nAuditorium to delete: {auditorium.Name}");
@@ -367,9 +349,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this auditorium? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    AuditoriumService.DeleteAuditorium(auditoriums, seances, reservations, tickets, id);
+                    AuditoriumService.Delete(context, id);
                     Console.WriteLine("Auditorium and all related data deleted successfully!");
                 }
                 else

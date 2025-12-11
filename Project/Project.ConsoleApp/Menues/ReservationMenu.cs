@@ -1,13 +1,13 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class ReservationMenu
     {
-        public static void ShowReservationMenu(List<Reservation> reservations, List<Seance> seances, List<Ticket> tickets)
+        public static void ShowReservationMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -23,21 +23,24 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddReservation(reservations, seances); break;
-                    case "2": ViewAllReservations(reservations); break;
-                    case "3": FindReservationById(reservations); break;
-                    case "4": UpdateReservation(reservations); break;
-                    case "5": ShowReservationSortFilterMenu(reservations); break;
-                    case "6": DeleteReservation(reservations, tickets); break;
+                    case "1": AddReservation(context); break;
+                    case "2": ViewAllReservations(context); break;
+                    case "3": FindReservationById(context); break;
+                    case "4": UpdateReservation(context); break;
+                    case "5": ShowReservationSortFilterMenu(context); break;
+                    case "6": DeleteReservation(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowReservationSortFilterMenu(List<Reservation> reservations)
+        static void ShowReservationSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -51,35 +54,40 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestReservations = BaseService.SortByTimeNewest(reservations);
+                        var newestReservations = BaseService.SortByTimeNewest(ReservationService.GetAll(context));
                         DisplayHelper.DisplayReservations(newestReservations, "Reservations (Newest First)");
                         break;
                     case "2":
-                        var oldestReservations = BaseService.SortByTimeOldest(reservations);
+                        var oldestReservations = BaseService.SortByTimeOldest(ReservationService.GetAll(context));
                         DisplayHelper.DisplayReservations(oldestReservations, "Reservations (Oldest First)");
                         break;
                     case "3":
                         Console.Write("Enter seance ID to filter: ");
                         string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
-                        var seanceReservations = ReservationService.FilterReservationsBySeanceId(reservations, seanceId);
+
+                        var seanceReservations = ReservationService.FilterBySeanceId(context, seanceId);
                         DisplayHelper.DisplayReservations(seanceReservations, $"Reservations for seance {seanceId}");
                         break;
                     case "4":
                         Console.Write("Enter payment method to filter: ");
                         string paymentMethod = ConsoleHelper.ReadRequiredString("Payment method");
-                        var paymentReservations = ReservationService.FilterReservationsByPaymentMethod(reservations, paymentMethod);
+
+                        var paymentReservations = ReservationService.FilterByPaymentMethod(context, paymentMethod);
                         DisplayHelper.DisplayReservations(paymentReservations, $"Reservations with payment method '{paymentMethod}'");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddReservation(List<Reservation> reservations, List<Seance> seances)
+        static void AddReservation(ApplicationDBContext context)
         {
             try
             {
@@ -89,7 +97,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Seance ID: ");
                 string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-                var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+                var seance = SeanceService.GetById(context, seanceId);
+
                 if (seance == null)
                 {
                     Console.WriteLine("Seance with this ID not found.");
@@ -112,8 +121,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Payment Method: ");
                 string paymentMethod = ConsoleHelper.ReadRequiredString("Payment method");
 
-                var reservation = new Reservation(seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
-                reservations.Add(reservation);
+
+                var reservation = ReservationService.Add(context, seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
 
                 Console.WriteLine($"\nReservation added successfully! ID: {reservation.Id}");
                 Console.WriteLine($"Customer: {reservation.CustomerFullName}");
@@ -122,30 +131,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllReservations(List<Reservation> reservations)
+        static void ViewAllReservations(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL RESERVATIONS ===");
-
-            if (reservations.Count == 0)
-            {
-                Console.WriteLine("No reservations found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var reservation in reservations)
-            {
-                Console.WriteLine(reservation.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var reservations = ReservationService.GetAll(context);
+            DisplayHelper.DisplayReservations(reservations, "All Reservations");
         }
 
-        static void FindReservationById(List<Reservation> reservations)
+        static void FindReservationById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND RESERVATION BY ID ===");
@@ -153,7 +149,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter reservation ID: ");
             string id = ConsoleHelper.ReadRequiredString("Reservation ID");
 
-            var reservation = reservations.FirstOrDefault(r => r.Id == id);
+            var reservation = ReservationService.GetById(context, id);
+
             if (reservation != null)
             {
                 Console.WriteLine(reservation.ToString());
@@ -162,10 +159,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Reservation with this ID not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateReservation(List<Reservation> reservations)
+        static void UpdateReservation(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE RESERVATION ===");
@@ -173,7 +171,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter reservation ID to update: ");
             string id = ConsoleHelper.ReadRequiredString("Reservation ID");
 
-            var reservation = reservations.FirstOrDefault(r => r.Id == id);
+            var reservation = ReservationService.GetById(context, id);
+
             if (reservation == null)
             {
                 Console.WriteLine("Reservation with this ID not found.");
@@ -196,16 +195,19 @@ namespace Project.ConsoleApp.Menues
                 string phone = Console.ReadLine() ?? reservation.CustomerPhone;
 
                 reservation.UpdateCustomerInfo(firstName, lastName, email, phone);
+                ReservationService.Update(context, reservation);
+
                 Console.WriteLine("Reservation information updated!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteReservation(List<Reservation> reservations, List<Ticket> tickets)
+        static void DeleteReservation(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE RESERVATION ===");
@@ -213,7 +215,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter reservation ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Reservation ID");
 
-            var reservation = reservations.FirstOrDefault(r => r.Id == id);
+            var reservation = ReservationService.GetById(context, id);
+
             if (reservation != null)
             {
                 Console.WriteLine($"\nReservation to delete: {reservation.CustomerFullName}");
@@ -221,9 +224,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this reservation? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    ReservationService.DeleteReservation(reservations, tickets, id);
+                    ReservationService.Delete(context, id);
                     Console.WriteLine("Reservation and all related tickets deleted successfully!");
                 }
                 else

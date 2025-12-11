@@ -1,64 +1,96 @@
-﻿using Project.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.DAL;
+using Project.Models;
 
 namespace Project.Services
 {
-    public class FilmService
+    public static class FilmService
     {
-        public static List<Film> FilterFilmsByDuration(List<Film> films, uint minDuration, uint maxDuration = uint.MaxValue)
+        public static List<Film> GetAll(ApplicationDBContext context)
         {
-            return [.. films.Where(f => f.DurationMinutes >= minDuration && f.DurationMinutes <= maxDuration)];
+            return [.. context.Films];
         }
 
-        public static List<Film> FilterFilmsByGenre(List<Film> films, string genre)
+        public static Film? GetById(ApplicationDBContext context, string id)
         {
-            return [.. films.Where(f => f.Genre.Contains(genre, StringComparison.OrdinalIgnoreCase))];
+            return context.Films.FirstOrDefault(f => f.Id == id);
         }
 
-        public static List<Film> FilterFilmsByAgeRestriction(List<Film> films, bool hasAgeRestriction)
+        public static Film Add(ApplicationDBContext context, string title, string description, uint duration, string director, string genre, 
+                               bool ageRestriction, string posterUrl, string trailerUrl)
         {
-            return [.. films.Where(f => f.HasAgeRestriction == hasAgeRestriction)];
+            var film = new Film(title, description, duration, director, genre, ageRestriction, posterUrl, trailerUrl);
+
+            context.Films.Add(film);
+            context.SaveChanges();
+
+            return film;
         }
 
-        public static List<Film> FilterFilmsByDirector(List<Film> films, string director)
+        public static void Update(ApplicationDBContext context, Film film)
         {
-            return [.. films.Where(f => f.Director.Contains(director, StringComparison.OrdinalIgnoreCase))];
+            context.Films.Update(film);
+            context.SaveChanges();
         }
 
-        public static List<Film> FilterFilmsByTitle(List<Film> films, string title)
+        public static void Delete(ApplicationDBContext context, string filmId)
         {
-            return [.. films.Where(f => f.Title.Contains(title, StringComparison.OrdinalIgnoreCase))];
-        }
-
-        public static List<Film> SortFilmsByNumberOfActors(List<Film> films)
-        {
-            return [.. films.OrderByDescending(f => f.Items.Count)];
-        }
-
-        public static List<Film> FilterFilmsWhereActorIs(List<Film> films, string actorId)
-        {
-            return [.. films.Where(f => f.Items.Contains(actorId))];
-        }
-
-        public static void DeleteFilm(List<Film> films, List<Cinema> cinemas, List<Seance> seances,
-                                      List<Reservation> reservations, List<Ticket> tickets, string filmId)
-        {
-            foreach (var cinema in cinemas)
-            {
-                cinema.RemoveItem(filmId);
-            }
-
-            var seancesToDelete = seances.Where(s => s.FilmId == filmId).ToList();
-
-            foreach (var seance in seancesToDelete)
-            {
-                SeanceService.DeleteSeance(seances, reservations, tickets, seance.Id);
-            }
-
-            var film = films.FirstOrDefault(f => f.Id == filmId);
+            var film = context.Films.FirstOrDefault(f => f.Id == filmId);
             if (film != null)
             {
-                films.Remove(film);
+                var cinemasWithFilm = context.Cinemas.Where(c => c.AvailableFilmIds.Contains(filmId)).ToList();
+
+                foreach (var cinema in cinemasWithFilm)
+                {
+                    cinema.RemoveItem(filmId);
+                    context.Cinemas.Update(cinema);
+                }
+
+                var seances = context.Seances.Where(s => s.FilmId == filmId).ToList();
+
+                foreach (var seance in seances)
+                {
+                    SeanceService.Delete(context, seance.Id);
+                }
+
+                context.Films.Remove(film);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Film> FilterByDuration(ApplicationDBContext context, uint minDuration, uint maxDuration = uint.MaxValue)
+        {
+            return [.. context.Films.Where(f => f.DurationMinutes >= minDuration && f.DurationMinutes <= maxDuration)];
+        }
+
+        public static List<Film> FilterByGenre(ApplicationDBContext context, string genre)
+        {
+            return [.. context.Films.Where(f => f.Genre.Contains(genre))];
+        }
+
+        public static List<Film> FilterByAgeRestriction(ApplicationDBContext context, bool hasAgeRestriction)
+        {
+            return [.. context.Films.Where(f => f.HasAgeRestriction == hasAgeRestriction)];
+        }
+
+        public static List<Film> FilterByDirector(ApplicationDBContext context, string director)
+        {
+            return [.. context.Films.Where(f => f.Director.Contains(director))];
+        }
+
+        public static List<Film> FilterByTitle(ApplicationDBContext context, string title)
+        {
+            return [.. context.Films.Where(f => f.Title.Contains(title))];
+        }
+
+        public static List<Film> SortByNumberOfActors(ApplicationDBContext context)
+        {
+            return [.. context.Films.OrderByDescending(f => f.ActorIds.Count)];
+        }
+
+        public static List<Cinema> GetCinemasWithFilm(ApplicationDBContext context, string filmId)
+        {
+            return [.. context.Cinemas.Where(c => c.AvailableFilmIds.Contains(filmId))];
         }
     }
 }

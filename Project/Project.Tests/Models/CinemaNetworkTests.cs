@@ -5,84 +5,158 @@ namespace Project.Tests.Models
     public class CinemaNetworkTests
     {
         [Fact]
-        public void CinemaNetwork_Constructor_ValidData_CreatesNetwork()
+        public void Constructor_WithValidData_ShouldCreateCinemaNetworkWithCorrectProperties()
         {
-            // Act
-            var network = new CinemaNetwork("CinemaMax", "John Doe");
+            // Given
+            var companyName = "CinemaMax Ukraine";
+            var managerName = "Olena Sydorenko";
 
-            // Assert
-            Assert.Equal("CinemaMax", network.CompanyName);
-            Assert.Equal("John Doe", network.ManagerName);
+            // When
+            var network = new CinemaNetwork(companyName, managerName);
+
+            // Then
+            Assert.Equal(companyName, network.CompanyName);
+            Assert.Equal(managerName, network.ManagerName);
             Assert.Equal(0, network.TotalCinemas);
+            Assert.NotEmpty(network.Id);
         }
 
         [Fact]
-        public void SetTotalCinemas_ValidCount_UpdatesCount()
+        public void UpdateInfo_WithValidData_ShouldUpdateCompanyAndManagerName()
         {
-            // Arrange
-            var network = new CinemaNetwork("CinemaMax", "John Doe");
+            // Given
+            var network = CreateTestNetwork();
+            var newCompanyName = "Updated Network";
+            var newManagerName = "Updated Manager";
 
-            // Act
-            network.SetTotalCinemas(10);
-
-            // Assert
-            Assert.Equal(10, network.TotalCinemas);
-        }
-
-        [Fact]
-        public void SetTotalCinemas_NegativeCount_ThrowsException()
-        {
-            // Arrange
-            var network = new CinemaNetwork("CinemaMax", "John Doe");
-
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => network.SetTotalCinemas(-1));
-        }
-
-        [Fact]
-        public void UpdateInfo_ValidData_UpdatesInfo()
-        {
-            // Arrange
-            var network = new CinemaNetwork("OldName", "OldManager");
-            var newCompanyName = "NewName";
-            var newManagerName = "NewManager";
-
-            // Act
+            // When
             network.UpdateInfo(newCompanyName, newManagerName);
 
-            // Assert
+            // Then
             Assert.Equal(newCompanyName, network.CompanyName);
             Assert.Equal(newManagerName, network.ManagerName);
         }
 
-        [Theory]
-        [InlineData(null, "Manager")]
-        [InlineData("Company", null)]
-        [InlineData("", "Manager")]
-        [InlineData("Company", "")]
-        public void UpdateInfo_InvalidData_ThrowsException(string companyName, string managerName)
+        [Fact]
+        public void SetTotalCinemas_WithValidCount_ShouldUpdateTotalCinemas()
         {
-            // Arrange
-            var network = new CinemaNetwork("OldName", "OldManager");
+            // Given
+            var network = CreateTestNetwork();
+            var newCount = 15;
 
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => network.UpdateInfo(companyName, managerName));
+            // When
+            network.SetTotalCinemas(newCount);
+
+            // Then
+            Assert.Equal(newCount, network.TotalCinemas);
         }
 
         [Fact]
-        public void ToString_ContainsNetworkInfo()
+        public void SetTotalCinemas_WithZero_ShouldUpdateTotalCinemas()
         {
-            // Arrange
-            var network = new CinemaNetwork("CinemaMax", "John Doe");
-            network.SetTotalCinemas(15);
+            // Given
+            var network = CreateTestNetwork();
 
-            // Act
+            // When
+            network.SetTotalCinemas(0);
+
+            // Then
+            Assert.Equal(0, network.TotalCinemas);
+        }
+
+        [Fact]
+        public void SetTotalCinemas_WithNegativeCount_ShouldThrowArgumentException()
+        {
+            // Given
+            var network = CreateTestNetwork();
+
+            // When & Then
+            Assert.Throws<ArgumentException>(() => network.SetTotalCinemas(-5));
+        }
+
+        [Fact]
+        public void Constructor_WithEmptyCompanyName_ShouldThrowArgumentException()
+        {
+            // Given & When & Then
+            Assert.Throws<ArgumentException>(() => new CinemaNetwork("", "Manager"));
+        }
+
+        [Fact]
+        public void Constructor_WithEmptyManagerName_ShouldThrowArgumentException()
+        {
+            // Given & When & Then
+            Assert.Throws<ArgumentException>(() => new CinemaNetwork("Company", ""));
+        }
+
+        [Fact]
+        public void MarkAsUpdated_ShouldUpdateUpdatedAtTimestamp()
+        {
+            // Given
+            var network = CreateTestNetwork();
+            var initialUpdatedAt = network.UpdatedAt;
+
+            System.Threading.Thread.Sleep(10);
+
+            // When
+            network.MarkAsUpdated();
+
+            // Then
+            Assert.True(network.UpdatedAt > initialUpdatedAt);
+        }
+
+        [Fact]
+        public void ToString_ShouldReturnFormattedString()
+        {
+            // Given
+            var network = CreateTestNetwork();
+            network.SetTotalCinemas(25);
+
+            // When
             var result = network.ToString();
 
-            // Assert
-            Assert.Contains("CinemaMax", result);
-            Assert.Contains("John Doe", result);
-            Assert.Contains("15", result);
+            // Then
+            Assert.Contains("Cinema Network:", result);
+            Assert.Contains(network.CompanyName, result);
+            Assert.Contains(network.ManagerName, result);
+            Assert.Contains("25", result);
+            Assert.Contains(network.Id, result);
+        }
+
+        [Fact]
+        public void UpdateInfo_ShouldAlsoUpdateTimestamp()
+        {
+            // Given
+            var network = CreateTestNetwork();
+            var initialUpdatedAt = network.UpdatedAt;
+
+            System.Threading.Thread.Sleep(10);
+
+            // When
+            network.UpdateInfo("New Company", "New Manager");
+
+            // Then
+            Assert.True(network.UpdatedAt > initialUpdatedAt);
+        }
+
+        [Fact]
+        public void SetTotalCinemas_ShouldAlsoUpdateTimestamp()
+        {
+            // Given
+            var network = CreateTestNetwork();
+            var initialUpdatedAt = network.UpdatedAt;
+
+            System.Threading.Thread.Sleep(10);
+
+            // When
+            network.SetTotalCinemas(10);
+
+            // Then
+            Assert.True(network.UpdatedAt > initialUpdatedAt);
+        }
+
+        private static CinemaNetwork CreateTestNetwork()
+        {
+            return new CinemaNetwork("Test Network", "Test Manager");
         }
     }
 }

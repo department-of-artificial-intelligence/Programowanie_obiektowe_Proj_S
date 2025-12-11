@@ -1,6 +1,4 @@
 ﻿using Project.Models;
-using System;
-using System.Collections.Generic;
 
 namespace Project.ConsoleApp.Helpers
 {

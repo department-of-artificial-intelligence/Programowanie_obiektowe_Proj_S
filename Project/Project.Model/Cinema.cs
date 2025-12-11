@@ -1,5 +1,5 @@
-﻿using Project.Interfaces;
-using Project.Models.Common;
+﻿using Project.Models.Common;
+using Project.Interfaces;
 using Project.Utils;
 
 namespace Project.Models
@@ -19,8 +19,19 @@ namespace Project.Models
         public IReadOnlyList<string> AvailableFilmIds => _availableFilmIds.AsReadOnly();
         public IReadOnlyList<string> Items => AvailableFilmIds;
 
-        public Cinema(string name, string address, string contactPhone,
-            string contactEmail, string managerName) : base()
+        protected Cinema()
+        {
+            _availableFilmIds = [];
+            Name = string.Empty;
+            Address = string.Empty;
+            ContactPhone = string.Empty;
+            ContactEmail = string.Empty;
+            ManagerName = string.Empty;
+            Rating = 0;
+            TotalRatings = 0;
+        }
+
+        public Cinema(string name, string address, string contactPhone, string contactEmail, string managerName) : base()
         {
             ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
 
@@ -32,49 +43,22 @@ namespace Project.Models
             _availableFilmIds = [];
         }
 
-        public Cinema(string id, string name, string address, string contactPhone,
-            string contactEmail, string managerName, List<string> availableFilmIds,
-            double rating, uint totalRatings, DateTime createdAt, DateTime updatedAt)
-            : base(id, createdAt, updatedAt)
+        private static void ValidateCinemaData(string name, string address, string contactPhone, string contactEmail, string managerName)
         {
-            ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
-
-            Name = name;
-            Address = address;
-            ContactPhone = contactPhone;
-            ContactEmail = contactEmail;
-            ManagerName = managerName;
-            _availableFilmIds = availableFilmIds ?? [];
-            Rating = rating;
-            TotalRatings = totalRatings;
-        }
-
-        private static void ValidateCinemaData(string name, string address, string contactPhone,
-            string contactEmail, string managerName)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Cinema name is required", nameof(name));
-
-            if (string.IsNullOrWhiteSpace(address))
-                throw new ArgumentException("Address is required", nameof(address));
-
-            if (string.IsNullOrWhiteSpace(contactPhone))
-                throw new ArgumentException("Contact phone is required", nameof(contactPhone));
-
-            if (string.IsNullOrWhiteSpace(contactEmail))
-                throw new ArgumentException("Contact number name is required", nameof(contactEmail));
-
-            if (string.IsNullOrWhiteSpace(managerName))
-                throw new ArgumentException("Manager name is required", nameof(managerName));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Cinema name is required", nameof(name));
+            if (string.IsNullOrWhiteSpace(address)) throw new ArgumentException("Address is required", nameof(address));
+            if (string.IsNullOrWhiteSpace(contactPhone)) throw new ArgumentException("Contact phone is required", nameof(contactPhone));
+            if (string.IsNullOrWhiteSpace(contactEmail)) throw new ArgumentException("Contact email is required", nameof(contactEmail));
+            if (string.IsNullOrWhiteSpace(managerName)) throw new ArgumentException("Manager name is required", nameof(managerName));
         }
 
         public void AddRating(uint rating)
         {
-            if (rating < 1 || rating > 5)
-                throw new ArgumentException("Rating must be between 1 and 5");
+            if (rating < 1 || rating > 5) throw new ArgumentException("Rating must be between 1 and 5");
 
             Rating = RatingCalculator.CalculateNewRating(TotalRatings, Rating, rating);
             TotalRatings++;
+
             MarkAsUpdated();
         }
 
@@ -102,8 +86,7 @@ namespace Project.Models
 
         public string GetItemsAsString() => CollectionHelper.ToString(_availableFilmIds);
 
-        public void UpdateInfo(string name, string address, string contactPhone,
-            string contactEmail, string managerName)
+        public void UpdateInfo(string name, string address, string contactPhone, string contactEmail, string managerName)
         {
             ValidateCinemaData(name, address, contactPhone, contactEmail, managerName);
 

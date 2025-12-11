@@ -1,39 +1,68 @@
-﻿using Project.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.DAL;
+using Project.Models;
 
 namespace Project.Services
 {
-    public class CinemaService
+    public static class CinemaService
     {
-        public static List<Cinema> SortByNumberOfAvailableFilms(List<Cinema> cinemas)
+        public static List<Cinema> GetAll(ApplicationDBContext context)
         {
-            return [.. cinemas.OrderByDescending(c => c.Items.Count)];
+            return [.. context.Cinemas];
         }
 
-        public static List<Cinema> FilterCinemasByName(List<Cinema> cinemas, string name)
+        public static Cinema? GetById(ApplicationDBContext context, string id)
         {
-            return [.. cinemas.Where(c => c.Name.Contains(name, StringComparison.OrdinalIgnoreCase))];
+            return context.Cinemas.FirstOrDefault(c => c.Id == id);
         }
 
-        public static List<Cinema> FilterCinemasWhereFilmAvailable(List<Cinema> cinemas, string? filmId)
+        public static Cinema Add(ApplicationDBContext context, string name, string address, string contactPhone, string contactEmail, string managerName)
         {
-            return [.. cinemas.Where(c => c.Items.Contains(filmId))];
+            var cinema = new Cinema(name, address, contactPhone, contactEmail, managerName);
+
+            context.Cinemas.Add(cinema);
+            context.SaveChanges();
+
+            return cinema;
         }
 
-        public static void DeleteCinema(List<Cinema> cinemas, List<Auditorium> auditoriums,
-                                        List<Seance> seances, List<Reservation> reservations, List<Ticket> tickets, string cinemaId)
+        public static void Update(ApplicationDBContext context, Cinema cinema)
         {
-            var auditoriumsToDelete = auditoriums.Where(a => a.CinemaId == cinemaId).ToList();
+            context.Cinemas.Update(cinema);
+            context.SaveChanges();
+        }
 
-            foreach (var auditorium in auditoriumsToDelete)
-            {
-                AuditoriumService.DeleteAuditorium(auditoriums, seances, reservations, tickets, auditorium.Id);
-            }
+        public static void Delete(ApplicationDBContext context, string cinemaId)
+        {
+            var cinema = context.Cinemas.FirstOrDefault(c => c.Id == cinemaId);
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == cinemaId);
             if (cinema != null)
             {
-                cinemas.Remove(cinema);
+                var auditoriums = context.Auditoriums.Where(a => a.CinemaId == cinemaId).ToList();
+
+                foreach (var auditorium in auditoriums)
+                {
+                    AuditoriumService.Delete(context, auditorium.Id);
+                }
+
+                context.Cinemas.Remove(cinema);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Cinema> SortByNumberOfAvailableFilms(ApplicationDBContext context)
+        {
+            return [.. context.Cinemas.OrderByDescending(c => c.AvailableFilmIds.Count)];
+        }
+
+        public static List<Cinema> FilterByName(ApplicationDBContext context, string name)
+        {
+            return [.. context.Cinemas.Where(c => c.Name.Contains(name))];
+        }
+
+        public static List<Cinema> FilterByFilmAvailability(ApplicationDBContext context, string filmId)
+        {
+            return [.. context.Cinemas.Where(c => c.AvailableFilmIds.Contains(filmId))];
         }
     }
 }

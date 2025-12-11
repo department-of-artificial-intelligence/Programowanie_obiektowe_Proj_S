@@ -1,14 +1,13 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class FilmMenu
     {
-        public static void ShowFilmMenu(List<Film> films, List<Actor> actors, List<Cinema> cinemas,
-            List<Seance> seances, List<Reservation> reservations, List<Ticket> tickets)
+        public static void ShowFilmMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -27,24 +26,27 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddFilm(films); break;
-                    case "2": ViewAllFilms(films); break;
-                    case "3": FindFilmById(films); break;
-                    case "4": UpdateFilm(films); break;
-                    case "5": AddActorToFilm(films, actors); break;
-                    case "6": RemoveActorFromFilm(films); break;
-                    case "7": RateFilm(films); break;
-                    case "8": ShowFilmSortFilterMenu(films, cinemas); break;
-                    case "9": DeleteFilm(films, cinemas, seances, reservations, tickets); break;
+                    case "1": AddFilm(context); break;
+                    case "2": ViewAllFilms(context); break;
+                    case "3": FindFilmById(context); break;
+                    case "4": UpdateFilm(context); break;
+                    case "5": AddActorToFilm(context); break;
+                    case "6": RemoveActorFromFilm(context); break;
+                    case "7": RateFilm(context); break;
+                    case "8": ShowFilmSortFilterMenu(context); break;
+                    case "9": DeleteFilm(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowFilmSortFilterMenu(List<Film> films, List<Cinema> cinemas)
+        static void ShowFilmSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -65,73 +67,83 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestFilms = BaseService.SortByTimeNewest(films);
+                        var newestFilms = BaseService.SortByTimeNewest(FilmService.GetAll(context));
                         DisplayHelper.DisplayFilms(newestFilms, "Films (Newest First)");
                         break;
                     case "2":
-                        var oldestFilms = BaseService.SortByTimeOldest(films);
+                        var oldestFilms = BaseService.SortByTimeOldest(FilmService.GetAll(context));
                         DisplayHelper.DisplayFilms(oldestFilms, "Films (Oldest First)");
                         break;
                     case "3":
-                        var ratedFilms = RatableService.SortByRating(films);
+                        var ratedFilms = RatableService.SortByRating(FilmService.GetAll(context));
                         DisplayHelper.DisplayFilms(ratedFilms, "Films by Rating");
                         break;
                     case "4":
-                        var popularFilms = RatableService.SortByPopularity(films);
+                        var popularFilms = RatableService.SortByPopularity(FilmService.GetAll(context));
                         DisplayHelper.DisplayFilms(popularFilms, "Films by Popularity");
                         break;
                     case "5":
-                        var actorCountFilms = FilmService.SortFilmsByNumberOfActors(films);
+                        var actorCountFilms = FilmService.SortByNumberOfActors(context);
                         DisplayHelper.DisplayFilms(actorCountFilms, "Films by Number of Actors");
                         break;
                     case "6":
                         Console.Write("Enter minimum duration (minutes): ");
                         uint minDuration = ConsoleHelper.ReadUInt();
+
                         Console.Write("Enter maximum duration (minutes, optional): ");
                         uint maxDuration = ConsoleHelper.ReadUInt(uint.MaxValue);
-                        var durationFilms = FilmService.FilterFilmsByDuration(films, minDuration, maxDuration);
+
+                        var durationFilms = FilmService.FilterByDuration(context, minDuration, maxDuration);
                         DisplayHelper.DisplayFilms(durationFilms, $"Films with duration {minDuration}-{maxDuration} minutes");
                         break;
                     case "7":
                         Console.Write("Enter genre: ");
                         string genre = ConsoleHelper.ReadRequiredString("Genre");
-                        var genreFilms = FilmService.FilterFilmsByGenre(films, genre);
+
+                        var genreFilms = FilmService.FilterByGenre(context, genre);
                         DisplayHelper.DisplayFilms(genreFilms, $"Films in genre '{genre}'");
                         break;
                     case "8":
                         Console.Write("Filter by age restriction? (true/false): ");
                         bool ageRestriction = ConsoleHelper.ReadBoolean();
-                        var ageFilms = FilmService.FilterFilmsByAgeRestriction(films, ageRestriction);
+
+                        var ageFilms = FilmService.FilterByAgeRestriction(context, ageRestriction);
                         DisplayHelper.DisplayFilms(ageFilms, $"Films with age restriction: {ageRestriction}");
                         break;
                     case "9":
                         Console.Write("Enter director name: ");
                         string director = ConsoleHelper.ReadRequiredString("Director");
-                        var directorFilms = FilmService.FilterFilmsByDirector(films, director);
+
+                        var directorFilms = FilmService.FilterByDirector(context, director);
                         DisplayHelper.DisplayFilms(directorFilms, $"Films by director '{director}'");
                         break;
                     case "10":
                         Console.Write("Enter title: ");
                         string title = ConsoleHelper.ReadRequiredString("Title");
-                        var titleFilms = FilmService.FilterFilmsByTitle(films, title);
+
+                        var titleFilms = FilmService.FilterByTitle(context, title);
                         DisplayHelper.DisplayFilms(titleFilms, $"Films with title containing '{title}'");
                         break;
                     case "11":
                         Console.Write("Enter film ID: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var cinemasWithFilm = CinemaService.FilterCinemasWhereFilmAvailable(cinemas, filmId);
+
+                        var cinemasWithFilm = FilmService.GetCinemasWithFilm(context, filmId);
                         DisplayHelper.DisplayCinemas(cinemasWithFilm, $"Cinemas showing film {filmId}");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddFilm(List<Film> films)
+        static void AddFilm(ApplicationDBContext context)
         {
             try
             {
@@ -162,8 +174,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Trailer URL: ");
                 string trailerUrl = ConsoleHelper.ReadRequiredString("Trailer URL");
 
-                var film = new Film(title, description, duration, director, genre, ageRestriction, posterUrl, trailerUrl);
-                films.Add(film);
+
+                var film = FilmService.Add(context, title, description, duration, director, genre, ageRestriction, posterUrl, trailerUrl);
 
                 Console.WriteLine($"\nFilm added successfully! ID: {film.Id}");
             }
@@ -171,30 +183,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllFilms(List<Film> films)
+        static void ViewAllFilms(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL FILMS ===");
-
-            if (films.Count == 0)
-            {
-                Console.WriteLine("No films found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var film in films)
-            {
-                Console.WriteLine(film.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var films = FilmService.GetAll(context);
+            DisplayHelper.DisplayFilms(films, "All Films");
         }
 
-        static void FindFilmById(List<Film> films)
+        static void FindFilmById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND FILM BY ID ===");
@@ -202,7 +201,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter film ID: ");
             string id = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == id);
+            var film = FilmService.GetById(context, id);
+
             if (film != null)
             {
                 Console.WriteLine(film.ToString());
@@ -211,10 +211,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Film with this ID not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateFilm(List<Film> films)
+        static void UpdateFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE FILM ===");
@@ -222,7 +223,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter film ID to update: ");
             string id = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == id);
+            var film = FilmService.GetById(context, id);
+
             if (film == null)
             {
                 Console.WriteLine("Film with this ID not found.");
@@ -249,25 +251,28 @@ namespace Project.ConsoleApp.Menues
                 string genre = Console.ReadLine() ?? film.Genre;
 
                 film.UpdateInfo(title, description, duration, director, genre, film.HasAgeRestriction, film.PosterUrl, film.TrailerUrl);
+                FilmService.Update(context, film);
+
                 Console.WriteLine("Film information updated!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void AddActorToFilm(List<Film> films, List<Actor> actors)
+        static void AddActorToFilm(ApplicationDBContext context)
         {
-            ArgumentNullException.ThrowIfNull(actors);
             Console.Clear();
             Console.WriteLine("=== ADD ACTOR TO FILM ===");
 
             Console.Write("Enter film ID: ");
             string filmId = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == filmId);
+            var film = FilmService.GetById(context, filmId);
+
             if (film == null)
             {
                 Console.WriteLine("Film with this ID not found.");
@@ -280,16 +285,18 @@ namespace Project.ConsoleApp.Menues
 
             if (film.AddItem(actorId))
             {
+                FilmService.Update(context, film);
                 Console.WriteLine("Actor successfully added to film!");
             }
             else
             {
                 Console.WriteLine("Failed to add actor. Possibly reached limit (10 actors) or actor already added.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void RemoveActorFromFilm(List<Film> films)
+        static void RemoveActorFromFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== REMOVE ACTOR FROM FILM ===");
@@ -297,7 +304,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter film ID: ");
             string filmId = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == filmId);
+            var film = FilmService.GetById(context, filmId);
+
             if (film == null)
             {
                 Console.WriteLine("Film with this ID not found.");
@@ -310,16 +318,18 @@ namespace Project.ConsoleApp.Menues
 
             if (film.RemoveItem(actorId))
             {
+                FilmService.Update(context, film);
                 Console.WriteLine("Actor successfully removed from film!");
             }
             else
             {
                 Console.WriteLine("Failed to remove actor. Possibly not in the list.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void RateFilm(List<Film> films)
+        static void RateFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== RATE FILM ===");
@@ -327,7 +337,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter film ID: ");
             string id = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == id);
+            var film = FilmService.GetById(context, id);
+
             if (film == null)
             {
                 Console.WriteLine("Film with this ID not found.");
@@ -346,12 +357,13 @@ namespace Project.ConsoleApp.Menues
             }
 
             film.AddRating(rating);
+            FilmService.Update(context, film);
+
             Console.WriteLine($"Film rated successfully! Current rating: {film.Rating}");
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteFilm(List<Film> films, List<Cinema> cinemas, List<Seance> seances,
-            List<Reservation> reservations, List<Ticket> tickets)
+        static void DeleteFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE FILM ===");
@@ -359,7 +371,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter film ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Film ID");
 
-            var film = films.FirstOrDefault(f => f.Id == id);
+            var film = FilmService.GetById(context, id);
+
             if (film != null)
             {
                 Console.WriteLine($"\nFilm to delete: {film.Title}");
@@ -371,9 +384,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this film? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    FilmService.DeleteFilm(films, cinemas, seances, reservations, tickets, id);
+                    FilmService.Delete(context, id);
                     Console.WriteLine("Film and all related data deleted successfully!");
                 }
                 else

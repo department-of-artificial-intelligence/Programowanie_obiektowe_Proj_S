@@ -1,16 +1,14 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class ActorMenu
     {
-        public static void ShowActorMenu(List<Actor> actors, List<Film> films, List<Cinema> cinemas)
+        public static void ShowActorMenu(ApplicationDBContext context)
         {
-            ArgumentNullException.ThrowIfNull(cinemas);
-
             while (true)
             {
                 Console.Clear();
@@ -28,19 +26,21 @@ namespace Project.ConsoleApp.Menues
 
                 switch (choice)
                 {
-                    case "1": AddActor(actors); break;
-                    case "2": ViewAllActors(actors); break;
-                    case "3": FindActorById(actors); break;
-                    case "4": UpdateActor(actors); break;
-                    case "5": DeleteActor(actors, films); break;
-                    case "6": ShowActorSortFilterMenu(actors, films); break;
+                    case "1": AddActor(context); break;
+                    case "2": ViewAllActors(context); break;
+                    case "3": FindActorById(context); break;
+                    case "4": UpdateActor(context); break;
+                    case "5": DeleteActor(context); break;
+                    case "6": ShowActorSortFilterMenu(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowActorSortFilterMenu(List<Actor> actors, List<Film> films)
+        static void ShowActorSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -59,43 +59,40 @@ namespace Project.ConsoleApp.Menues
                 switch (choice)
                 {
                     case "1":
-                        var newestActors = BaseService.SortByTimeNewest(actors);
-
+                        var newestActors = BaseService.SortByTimeNewest(ActorService.GetAll(context));
                         DisplayHelper.DisplayActors(newestActors, "Actors (Newest First)");
                         break;
                     case "2":
-                        var oldestActors = BaseService.SortByTimeOldest(actors);
-
+                        var oldestActors = BaseService.SortByTimeOldest(ActorService.GetAll(context));
                         DisplayHelper.DisplayActors(oldestActors, "Actors (Oldest First)");
                         break;
                     case "3":
-                        var popularActors = ActorService.SortActorsByPopularity(actors);
-
+                        var popularActors = ActorService.SortByPopularity(context);
                         DisplayHelper.DisplayActors(popularActors, "Actors by Popularity");
                         break;
                     case "4":
                         Console.Write("Enter last name to filter: ");
-
                         string lastName = ConsoleHelper.ReadRequiredString("Last name");
-                        var filteredActors = ActorService.FilterActorsByLastName(actors, lastName);
 
+                        var filteredActors = ActorService.FilterByLastName(context, lastName);
                         DisplayHelper.DisplayActors(filteredActors, $"Actors with Last Name containing '{lastName}'");
                         break;
                     case "5":
                         Console.Write("Enter actor ID: ");
-
                         string actorId = ConsoleHelper.ReadRequiredString("Actor ID");
-                        var actorFilms = FilmService.FilterFilmsWhereActorIs(films, actorId);
 
+                        var actorFilms = ActorService.GetFilmsWithActor(context, actorId);
                         DisplayHelper.DisplayFilms(actorFilms, $"Films featuring actor {actorId}");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddActor(List<Actor> actors)
+        static void AddActor(ApplicationDBContext context)
         {
             try
             {
@@ -123,8 +120,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Popularity (0-100): ");
                 double popularity = ConsoleHelper.ReadDouble();
 
-                var actor = new Actor(firstName, lastName, nationality, birthDate, profileImageUrl, biography, popularity);
-                actors.Add(actor);
+ 
+                var actor = ActorService.Add(context, firstName, lastName, nationality, birthDate, profileImageUrl, biography, popularity);
 
                 Console.WriteLine($"\nActor added successfully! ID: {actor.Id}");
                 Console.WriteLine($"Name: {actor.FullName}, Age: {actor.Age}");
@@ -137,29 +134,13 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllActors(List<Actor> actors)
+        static void ViewAllActors(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL ACTORS ===");
-
-            if (actors.Count == 0)
-            {
-                Console.WriteLine("No actors found.");
-                ConsoleHelper.WaitForKey();
-
-                return;
-            }
-
-            foreach (var actor in actors)
-            {
-                Console.WriteLine(actor.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-
-            ConsoleHelper.WaitForKey();
+            var actors = ActorService.GetAll(context);
+            DisplayHelper.DisplayActors(actors, "All Actors");
         }
 
-        static void FindActorById(List<Actor> actors)
+        static void FindActorById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND ACTOR BY ID ===");
@@ -167,7 +148,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter actor ID: ");
             string id = ConsoleHelper.ReadRequiredString("Actor ID");
 
-            var actor = actors.FirstOrDefault(a => a.Id == id);
+            var actor = ActorService.GetById(context, id);
 
             if (actor != null)
             {
@@ -181,7 +162,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateActor(List<Actor> actors)
+        static void UpdateActor(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE ACTOR ===");
@@ -189,7 +170,7 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter actor ID to update: ");
             string id = ConsoleHelper.ReadRequiredString("Actor ID");
 
-            var actor = actors.FirstOrDefault(a => a.Id == id);
+            var actor = ActorService.GetById(context, id);
 
             if (actor == null)
             {
@@ -220,6 +201,8 @@ namespace Project.ConsoleApp.Menues
                 actor.SetPopularity(popularity);
                 actor.UpdatePersonalInfo(firstName, lastName, nationality, actor.BirthDate, actor.ProfileImageUrl);
 
+                ActorService.Update(context, actor);
+
                 Console.WriteLine("Actor information updated successfully!");
             }
             catch (Exception ex)
@@ -230,7 +213,7 @@ namespace Project.ConsoleApp.Menues
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteActor(List<Actor> actors, List<Film> films)
+        static void DeleteActor(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE ACTOR ===");
@@ -238,7 +221,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter actor ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Actor ID");
 
-            var actor = actors.FirstOrDefault(a => a.Id == id);
+            var actor = ActorService.GetById(context, id);
+
             if (actor != null)
             {
                 Console.WriteLine($"\nActor to delete: {actor.FullName}");
@@ -246,9 +230,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this actor? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    ActorService.DeleteActor(actors, films, id);
+                    ActorService.Delete(context, id);
                     Console.WriteLine("Actor deleted successfully!");
                 }
                 else

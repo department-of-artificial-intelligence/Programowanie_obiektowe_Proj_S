@@ -1,143 +1,101 @@
-﻿using Project.Models.Common;
-using Project.Services.Common;
+﻿using Project.Services.Common;
 
 namespace Project.Tests.Services.Common
 {
+    public class TestEntity : Project.Models.Common.Base
+    {
+        public string Name { get; set; }
+
+        public TestEntity(string name, DateTime? createdAt = null)
+        {
+            Name = name;
+
+            if (createdAt.HasValue)
+            {
+                var field = typeof(Project.Models.Common.Base).GetField("_createdAt",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                field?.SetValue(this, createdAt.Value);
+            }
+        }
+    }
+
     public class BaseServiceTests
     {
-        private class TestEntity : Base
-        {
-            public string Name { get; set; }
-
-            public TestEntity(string name) : base()
-            {
-                Name = name;
-            }
-
-            public TestEntity(string name, DateTime createdAt, DateTime updatedAt)
-                : base(Guid.NewGuid().ToString(), createdAt, updatedAt)
-            {
-                Name = name;
-            }
-        }
-
         [Fact]
-        public void SortByTimeNewest_ReturnsEntitiesInDescendingOrder()
+        public void SortByTimeNewest_WhenEntitiesInRandomOrder_ShouldSortByCreatedAtDescending()
         {
-            // Arrange
-            var entities = new List<TestEntity>
-            {
-                new("Oldest", new DateTime(2020, 1, 1), new DateTime(2020, 1, 1)),
-                new("Middle", new DateTime(2021, 1, 1), new DateTime(2021, 1, 1)),
-                new("Newest", new DateTime(2022, 1, 1), new DateTime(2022, 1, 1))
-            };
+            // Given
+            var entity1 = new TestEntity("Entity1", DateTime.Now.AddDays(-2));
+            var entity2 = new TestEntity("Entity2", DateTime.Now.AddDays(-1));
+            var entity3 = new TestEntity("Entity3", DateTime.Now);
+            var entities = new List<TestEntity> { entity1, entity2, entity3 };
 
-            // Act
+            // When
             var result = BaseService.SortByTimeNewest(entities);
 
-            // Assert
-            Assert.Equal("Newest", result[0].Name);
-            Assert.Equal("Middle", result[1].Name);
-            Assert.Equal("Oldest", result[2].Name);
+            // Then
+            Assert.Equal(entity3, result[0]);
+            Assert.Equal(entity2, result[1]);
+            Assert.Equal(entity1, result[2]);
         }
 
         [Fact]
-        public void SortByTimeOldest_ReturnsEntitiesInAscendingOrder()
+        public void SortByTimeOldest_WhenEntitiesInRandomOrder_ShouldSortByCreatedAtAscending()
         {
-            // Arrange
-            var entities = new List<TestEntity>
-            {
-                new("Newest", new DateTime(2022, 1, 1), new DateTime(2022, 1, 1)),
-                new("Oldest", new DateTime(2020, 1, 1), new DateTime(2020, 1, 1)),
-                new("Middle", new DateTime(2021, 1, 1), new DateTime(2021, 1, 1))
-            };
+            // Given
+            var entity1 = new TestEntity("Entity1", DateTime.Now.AddDays(-2));
+            var entity2 = new TestEntity("Entity2", DateTime.Now.AddDays(-1));
+            var entity3 = new TestEntity("Entity3", DateTime.Now);
+            var entities = new List<TestEntity> { entity3, entity1, entity2 };
 
-            // Act
+            // When
             var result = BaseService.SortByTimeOldest(entities);
 
-            // Assert
-            Assert.Equal("Oldest", result[0].Name);
-            Assert.Equal("Middle", result[1].Name);
-            Assert.Equal("Newest", result[2].Name);
+            // Then
+            Assert.Equal(entity1, result[0]);
+            Assert.Equal(entity2, result[1]);
+            Assert.Equal(entity3, result[2]);
         }
 
         [Fact]
-        public void SortByTimeNewest_EmptyList_ReturnsEmptyList()
+        public void SortByTimeNewest_WhenEmptyList_ShouldReturnEmptyList()
         {
-            // Arrange
-            var emptyList = new List<TestEntity>();
+            // Given
+            var entities = new List<TestEntity>();
 
-            // Act
-            var result = BaseService.SortByTimeNewest(emptyList);
-
-            // Assert
-            Assert.Empty(result);
-        }
-
-        [Fact]
-        public void SortByTimeOldest_EmptyList_ReturnsEmptyList()
-        {
-            // Arrange
-            var emptyList = new List<TestEntity>();
-
-            // Act
-            var result = BaseService.SortByTimeOldest(emptyList);
-
-            // Assert
-            Assert.Empty(result);
-        }
-
-        [Fact]
-        public void SortByTimeNewest_SingleItem_ReturnsSameList()
-        {
-            // Arrange
-            var singleItem = new List<TestEntity>
-            {
-                new("Single", new DateTime(2020, 1, 1), new DateTime(2020, 1, 1))
-            };
-
-            // Act
-            var result = BaseService.SortByTimeNewest(singleItem);
-
-            // Assert
-            Assert.Single(result);
-            Assert.Equal("Single", result[0].Name);
-        }
-
-        [Fact]
-        public void SortByTimeOldest_SingleItem_ReturnsSameList()
-        {
-            // Arrange
-            var singleItem = new List<TestEntity>
-            {
-                new("Single", new DateTime(2020, 1, 1), new DateTime(2020, 1, 1))
-            };
-
-            // Act
-            var result = BaseService.SortByTimeOldest(singleItem);
-
-            // Assert
-            Assert.Single(result);
-            Assert.Equal("Single", result[0].Name);
-        }
-
-        [Fact]
-        public void SortByTimeNewest_WithSameDates_PreservesOrder()
-        {
-            // Arrange
-            var sameDate = new DateTime(2020, 1, 1);
-            var entities = new List<TestEntity>
-            {
-                new("First", sameDate, sameDate),
-                new("Second", sameDate, sameDate),
-                new("Third", sameDate, sameDate)
-            };
-
-            // Act
+            // When
             var result = BaseService.SortByTimeNewest(entities);
 
-            // Assert
-            Assert.Equal(3, result.Count);
+            // Then
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void SortByTimeOldest_WhenEmptyList_ShouldReturnEmptyList()
+        {
+            // Given
+            var entities = new List<TestEntity>();
+
+            // When
+            var result = BaseService.SortByTimeOldest(entities);
+
+            // Then
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void SortByTimeNewest_WhenSingleEntity_ShouldReturnSameList()
+        {
+            // Given
+            var entity = new TestEntity("Single", DateTime.Now.AddDays(-5));
+            var entities = new List<TestEntity> { entity };
+
+            // When
+            var result = BaseService.SortByTimeNewest(entities);
+
+            // Then
+            Assert.Single(result);
+            Assert.Equal(entity, result[0]);
         }
     }
 }

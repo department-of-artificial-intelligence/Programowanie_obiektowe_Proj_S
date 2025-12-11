@@ -1,50 +1,23 @@
-﻿using Project.ConsoleApp.Menues;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.ConsoleApp.Helpers;
+using Project.ConsoleApp.Menues;
 using Project.DAL;
 using Project.Models;
-
-
-IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
-{
-    var cns = context.Configuration.GetConnectionString("DefaultConnection");
-    services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(cns));
-}).Build();
-
-
-var context = _host.Services.GetService<ApplicationDBContext>();
-if (context != null)
-{
-    context.Database.Migrate();
-    context.Database.EnsureCreated();
-    var actor = new Actor("Tom", "Hanks", "American", new DateTime(1956, 7, 9), "https://example.com/tom_hanks.jpg", "Famous American actor known for Forrest Gump and Cast Away.", 95.5);
-    context.Actors.Add(actor);
-    context.SaveChanges();
-}
 
 namespace Project.ConsoleApp
 {
     class Program
     {
-        private readonly static List<Actor> actors = [];
-        private readonly static List<Auditorium> auditoriums = [];
-        private readonly static List<Cinema> cinemas = [];
-        private readonly static List<CinemaNetwork> cinemaNetworks = [];
-        private readonly static List<Film> films = [];
-        private readonly static List<Reservation> reservations = [];
-        private readonly static List<Seance> seances = [];
-        private readonly static List<Ticket> tickets = [];
-
         static void Main()
         {
-            SeedSampleData();
-            ShowMainMenu();
+            ApplicationDBContext context = DBManager.BuildDB();
+            DBManager.ClearDB();
+
+            SeedSampleData(context);
+            ShowMainMenu(context);
         }
 
-        static void ShowMainMenu()
+        static void ShowMainMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -62,36 +35,30 @@ namespace Project.ConsoleApp
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": ActorMenu.ShowActorMenu(actors, films, cinemas); break;
-                    case "2": CinemaMenu.ShowCinemaMenu(cinemas, films, auditoriums, seances, reservations, tickets); break;
-                    case "3": AuditoriumMenu.ShowAuditoriumMenu(auditoriums, cinemas, seances, reservations, tickets); break;
-                    case "4": FilmMenu.ShowFilmMenu(films, actors, cinemas, seances, reservations, tickets); break;
-                    case "5": SeanceMenu.ShowSeanceMenu(seances, films, auditoriums, reservations, tickets); break;
-                    case "6": ReservationMenu.ShowReservationMenu(reservations, seances, tickets); break;
-                    case "7": TicketMenu.ShowTicketMenu(tickets, seances, reservations, cinemas, auditoriums, films); break;
-                    case "8": CinemaNetworkMenu.ShowCinemaNetworkMenu(cinemaNetworks); break;
+                    case "1": ActorMenu.ShowActorMenu(context); break;
+                    case "2": CinemaMenu.ShowCinemaMenu(context); break;
+                    case "3": AuditoriumMenu.ShowAuditoriumMenu(context); break;
+                    case "4": FilmMenu.ShowFilmMenu(context); break;
+                    case "5": SeanceMenu.ShowSeanceMenu(context); break;
+                    case "6": ReservationMenu.ShowReservationMenu(context); break;
+                    case "7": TicketMenu.ShowTicketMenu(context); break;
+                    case "8": CinemaNetworkMenu.ShowCinemaNetworkMenu(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); WaitForKey(); break;
+                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
                 }
             }
         }
 
-        // Utility methods
-        static void WaitForKey()
-        {
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
-        }
-
-        static void SeedSampleData()
+        static void SeedSampleData(ApplicationDBContext context)
         {
             try
             {
                 Console.WriteLine("Creating sample data...");
 
-                // Create more actors
+                // Actors
                 var actor1 = new Actor("Tom", "Hanks", "American", new DateTime(1956, 7, 9),
                     "https://example.com/tom_hanks.jpg", "Famous American actor known for Forrest Gump and Cast Away.", 95.5);
                 var actor2 = new Actor("Meryl", "Streep", "American", new DateTime(1949, 6, 22),
@@ -104,15 +71,13 @@ namespace Project.ConsoleApp
                     "https://example.com/denzel.jpg", "Two-time Academy Award winner and renowned dramatic actor.", 94.7);
                 var actor6 = new Actor("Cate", "Blanchett", "Australian", new DateTime(1969, 5, 14),
                     "https://example.com/cate.jpg", "Two-time Academy Award winner known for versatile roles.", 93.2);
-                actors.AddRange([actor1, actor2, actor3, actor4, actor5, actor6]);
 
-                // Create more cinemas
+                // Cinemas
                 var cinema1 = new Cinema("Multiplex Cinema", "123 Main Street, Kyiv", "+380441234567", "info@multiplex.ua", "Ivan Petrenko");
                 var cinema2 = new Cinema("Star Cinema", "456 Central Avenue, Kyiv", "+380441234568", "info@starcinema.ua", "Olena Kovalenko");
                 var cinema3 = new Cinema("City Lights", "789 Broadway, Kyiv", "+380441234569", "info@citylights.ua", "Petro Sydorenko");
-                cinemas.AddRange([cinema1, cinema2, cinema3]);
 
-                // Create more auditoriums
+                // Auditoriums
                 var auditorium1 = new Auditorium(cinema1.Id, "IMAX Hall", 1, 12, 20);
                 auditorium1.AddItem("Dolby Atmos");
                 auditorium1.AddItem("3D Projection");
@@ -132,9 +97,7 @@ namespace Project.ConsoleApp
                 auditorium4.AddItem("Atmos Sound");
                 auditorium4.AddItem("Butler Service");
 
-                auditoriums.AddRange([auditorium1, auditorium2, auditorium3, auditorium4]);
-
-                // Add some ratings to auditoriums
+                // Auditorium Ratings
                 auditorium1.AddRating(5);
                 auditorium1.AddRating(4);
                 auditorium2.AddRating(5);
@@ -142,7 +105,7 @@ namespace Project.ConsoleApp
                 auditorium3.AddRating(4);
                 auditorium3.AddRating(3);
 
-                // Create more films
+                // Films
                 var film1 = new Film("Forrest Gump", "The story of a man with low IQ who accomplished great things in his life",
                     142, "Robert Zemeckis", "Drama", false,
                     "https://example.com/forrest_gump.jpg", "https://example.com/forrest_trailer");
@@ -167,9 +130,7 @@ namespace Project.ConsoleApp
                     128, "Damien Chazelle", "Musical", false,
                     "https://example.com/lalaland.jpg", "https://example.com/lalaland_trailer");
 
-                films.AddRange([film1, film2, film3, film4, film5, film6]);
-
-                // Add actors to films
+                // Adding Actors To Films
                 film1.AddItem(actor1.Id);
                 film2.AddItem(actor3.Id);
                 film2.AddItem(actor4.Id);
@@ -180,7 +141,7 @@ namespace Project.ConsoleApp
                 film6.AddItem(actor3.Id);
                 film6.AddItem(actor6.Id);
 
-                // Add films to cinemas available films
+                // Adding Films To Cinemas
                 cinema1.AddItem(film1.Id);
                 cinema1.AddItem(film2.Id);
                 cinema1.AddItem(film3.Id);
@@ -194,7 +155,7 @@ namespace Project.ConsoleApp
                 cinema3.AddItem(film4.Id);
                 cinema3.AddItem(film6.Id);
 
-                // Add ratings to films
+                // Film Ratings
                 film1.AddRating(5);
                 film1.AddRating(4);
                 film1.AddRating(5);
@@ -213,7 +174,7 @@ namespace Project.ConsoleApp
                 film6.AddRating(4);
                 film6.AddRating(5);
 
-                // Add ratings to cinemas
+                // Cinema Ratings
                 cinema1.AddRating(5);
                 cinema1.AddRating(4);
                 cinema1.AddRating(5);
@@ -223,17 +184,15 @@ namespace Project.ConsoleApp
                 cinema3.AddRating(5);
                 cinema3.AddRating(5);
 
-                // Create more seances with different times and prices
-                var seance1 = new Seance(film1.Id, auditorium1.Id, DateTime.Now.AddHours(2), 250.0m, film1.DurationMinutes);
+                // Seances
+                var seance1 = new Seance(film1.Id, auditorium1.Id, DateTime.Now.AddSeconds(4), 250.0m, film1.DurationMinutes);
                 var seance2 = new Seance(film2.Id, auditorium1.Id, DateTime.Now.AddHours(5), 280.0m, film2.DurationMinutes);
-                var seance3 = new Seance(film3.Id, auditorium2.Id, DateTime.Now.AddHours(3), 350.0m, film3.DurationMinutes);
-                var seance4 = new Seance(film4.Id, auditorium3.Id, DateTime.Now.AddHours(1), 200.0m, film4.DurationMinutes);
-                var seance5 = new Seance(film5.Id, auditorium3.Id, DateTime.Now.AddHours(6), 300.0m, film5.DurationMinutes);
-                var seance6 = new Seance(film6.Id, auditorium4.Id, DateTime.Now.AddHours(4), 400.0m, film6.DurationMinutes);
+                var seance3 = new Seance(film3.Id, auditorium2.Id, DateTime.Now.AddHours(6), 350.0m, film3.DurationMinutes);
+                var seance4 = new Seance(film4.Id, auditorium3.Id, DateTime.Now.AddHours(8), 200.0m, film4.DurationMinutes);
+                var seance5 = new Seance(film5.Id, auditorium3.Id, DateTime.Now.AddHours(10), 300.0m, film5.DurationMinutes);
+                var seance6 = new Seance(film6.Id, auditorium4.Id, DateTime.Now.AddHours(25), 400.0m, film6.DurationMinutes);
 
-                seances.AddRange([seance1, seance2, seance3, seance4, seance5, seance6]);
-
-                // Add some occupied seats to seances
+                // Adding Reservated Seats
                 seance1.ReserveSeat("A1", auditorium1.Capacity);
                 seance1.ReserveSeat("A2", auditorium1.Capacity);
                 seance1.ReserveSeat("B5", auditorium1.Capacity);
@@ -246,23 +205,19 @@ namespace Project.ConsoleApp
                 seance6.ReserveSeat("A1", auditorium4.Capacity);
                 seance6.ReserveSeat("A2", auditorium4.Capacity);
 
-                // Create reservations
+                // Reservations
                 var reservation1 = new Reservation(seance1.Id, "John", "Doe", "john.doe@email.com", "+380501234567", "Credit Card");
                 var reservation2 = new Reservation(seance3.Id, "Jane", "Smith", "jane.smith@email.com", "+380502345678", "Cash");
                 var reservation3 = new Reservation(seance6.Id, "Bob", "Johnson", "bob.johnson@email.com", "+380503456789", "Online Payment");
 
-                reservations.AddRange([reservation1, reservation2, reservation3]);
-
-                // Create tickets for reservations
+                // Tickets
                 var ticket1 = new Ticket(reservation1.Id, cinema1.Id, auditorium1.Id, seance1.Id, film1.Id, "A3", seance1.Price, TicketType.Standard);
                 var ticket2 = new Ticket(reservation1.Id, cinema1.Id, auditorium1.Id, seance1.Id, film1.Id, "A4", seance1.Price, TicketType.Student);
                 var ticket3 = new Ticket(reservation2.Id, cinema1.Id, auditorium2.Id, seance3.Id, film3.Id, "C5", seance3.Price, TicketType.VIP);
                 var ticket4 = new Ticket(reservation3.Id, cinema3.Id, auditorium4.Id, seance6.Id, film6.Id, "A3", seance6.Price, TicketType.VIP);
                 var ticket5 = new Ticket(reservation3.Id, cinema3.Id, auditorium4.Id, seance6.Id, film6.Id, "A4", seance6.Price, TicketType.Standard);
 
-                tickets.AddRange([ticket1, ticket2, ticket3, ticket4, ticket5]);
-
-                // Create cinema networks
+                // Cinema Networks
                 var network1 = new CinemaNetwork("CinemaMax Ukraine", "Olena Sydorenko");
                 network1.SetTotalCinemas(15);
 
@@ -272,18 +227,25 @@ namespace Project.ConsoleApp
                 var network3 = new CinemaNetwork("Film Paradise", "Svitlana Petrenko");
                 network3.SetTotalCinemas(12);
 
-                cinemaNetworks.AddRange([network1, network2, network3]);
+                // Saving To DB
+                context.Actors.AddRange([actor1, actor2, actor3, actor4, actor5, actor6]);
+                context.Cinemas.AddRange([cinema1, cinema2, cinema3]);
+                context.Auditoriums.AddRange([auditorium1, auditorium2, auditorium3, auditorium4]);
+                context.Films.AddRange([film1, film2, film3, film4, film5, film6]);
+                context.Seances.AddRange([seance1, seance2, seance3, seance4, seance5, seance6]);
+                context.Reservations.AddRange([reservation1, reservation2, reservation3]);
+                context.Tickets.AddRange([ticket1, ticket2, ticket3, ticket4, ticket5]);
+                context.CinemaNetworks.AddRange([network1, network2, network3]);
+
+                context.SaveChanges();
 
                 Console.WriteLine("Sample data created successfully!");
-                Console.WriteLine($"Created: {actors.Count} actors, {cinemas.Count} cinemas, {auditoriums.Count} auditoriums,");
-                Console.WriteLine($"{films.Count} films, {seances.Count} seances, {reservations.Count} reservations,");
-                Console.WriteLine($"{tickets.Count} tickets, {cinemaNetworks.Count} cinema networks.");
-                Thread.Sleep(2000);
+                Thread.Sleep(2500);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error creating sample data: {ex.Message}");
-                WaitForKey();
+                ConsoleHelper.WaitForKey();
             }
         }
     }

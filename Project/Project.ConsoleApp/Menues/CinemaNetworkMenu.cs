@@ -1,13 +1,13 @@
 ﻿using Project.ConsoleApp.Helpers;
-using Project.Models;
-using Project.Services;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class CinemaNetworkMenu
     {
-        public static void ShowCinemaNetworkMenu(List<CinemaNetwork> cinemaNetworks)
+        public static void ShowCinemaNetworkMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -24,22 +24,25 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddCinemaNetwork(cinemaNetworks); break;
-                    case "2": ViewAllCinemaNetworks(cinemaNetworks); break;
-                    case "3": FindCinemaNetworkByName(cinemaNetworks); break;
-                    case "4": UpdateCinemaNetwork(cinemaNetworks); break;
-                    case "5": UpdateTotalCinemas(cinemaNetworks); break;
-                    case "6": ShowCinemaNetworkSortFilterMenu(cinemaNetworks); break;
-                    case "7": DeleteCinemaNetwork(cinemaNetworks); break;
+                    case "1": AddCinemaNetwork(context); break;
+                    case "2": ViewAllCinemaNetworks(context); break;
+                    case "3": FindCinemaNetworkByName(context); break;
+                    case "4": UpdateCinemaNetwork(context); break;
+                    case "5": UpdateTotalCinemas(context); break;
+                    case "6": ShowCinemaNetworkSortFilterMenu(context); break;
+                    case "7": DeleteCinemaNetwork(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowCinemaNetworkSortFilterMenu(List<CinemaNetwork> cinemaNetworks)
+        static void ShowCinemaNetworkSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -51,23 +54,26 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestNetworks = BaseService.SortByTimeNewest(cinemaNetworks);
+                        var newestNetworks = BaseService.SortByTimeNewest(CinemaNetworkService.GetAll(context));
                         DisplayHelper.DisplayCinemaNetworks(newestNetworks, "Cinema Networks (Newest First)");
                         break;
                     case "2":
-                        var oldestNetworks = BaseService.SortByTimeOldest(cinemaNetworks);
+                        var oldestNetworks = BaseService.SortByTimeOldest(CinemaNetworkService.GetAll(context));
                         DisplayHelper.DisplayCinemaNetworks(oldestNetworks, "Cinema Networks (Oldest First)");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddCinemaNetwork(List<CinemaNetwork> cinemaNetworks)
+        static void AddCinemaNetwork(ApplicationDBContext context)
         {
             try
             {
@@ -80,8 +86,7 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Manager Name: ");
                 string managerName = ConsoleHelper.ReadRequiredString("Manager name");
 
-                var network = new CinemaNetwork(companyName, managerName);
-                cinemaNetworks.Add(network);
+                var network = CinemaNetworkService.Add(context, companyName, managerName);
 
                 Console.WriteLine($"\nCinema network added successfully! ID: {network.Id}");
             }
@@ -89,30 +94,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllCinemaNetworks(List<CinemaNetwork> cinemaNetworks)
+        static void ViewAllCinemaNetworks(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL CINEMA NETWORKS ===");
-
-            if (cinemaNetworks.Count == 0)
-            {
-                Console.WriteLine("No cinema networks found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var network in cinemaNetworks)
-            {
-                Console.WriteLine(network.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var networks = CinemaNetworkService.GetAll(context);
+            DisplayHelper.DisplayCinemaNetworks(networks, "All Cinema Networks");
         }
 
-        static void FindCinemaNetworkByName(List<CinemaNetwork> cinemaNetworks)
+        static void FindCinemaNetworkByName(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND CINEMA NETWORK BY NAME ===");
@@ -120,8 +112,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter company name: ");
             string name = ConsoleHelper.ReadRequiredString("Company name");
 
-            var network = cinemaNetworks.FirstOrDefault(cn =>
-                cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var network = CinemaNetworkService.GetAll(context).FirstOrDefault(cn => cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+
             if (network != null)
             {
                 Console.WriteLine(network.ToString());
@@ -130,10 +122,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Cinema network with this name not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateCinemaNetwork(List<CinemaNetwork> cinemaNetworks)
+        static void UpdateCinemaNetwork(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE CINEMA NETWORK ===");
@@ -141,8 +134,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter company name to update: ");
             string name = ConsoleHelper.ReadRequiredString("Company name");
 
-            var network = cinemaNetworks.FirstOrDefault(cn =>
-                cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var network = CinemaNetworkService.GetAll(context).FirstOrDefault(cn => cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+
             if (network == null)
             {
                 Console.WriteLine("Cinema network with this name not found.");
@@ -159,16 +152,19 @@ namespace Project.ConsoleApp.Menues
                 string managerName = Console.ReadLine() ?? network.ManagerName;
 
                 network.UpdateInfo(companyName, managerName);
+                CinemaNetworkService.Update(context, network);
+
                 Console.WriteLine("Cinema network information updated!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateTotalCinemas(List<CinemaNetwork> cinemaNetworks)
+        static void UpdateTotalCinemas(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE TOTAL CINEMAS ===");
@@ -176,8 +172,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter company name: ");
             string name = ConsoleHelper.ReadRequiredString("Company name");
 
-            var network = cinemaNetworks.FirstOrDefault(cn =>
-                cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var network = CinemaNetworkService.GetAll(context).FirstOrDefault(cn => cn.CompanyName.Equals(name, StringComparison.OrdinalIgnoreCase));
+
             if (network == null)
             {
                 Console.WriteLine("Cinema network with this name not found.");
@@ -191,16 +187,19 @@ namespace Project.ConsoleApp.Menues
             try
             {
                 network.SetTotalCinemas(count);
+                CinemaNetworkService.Update(context, network);
+
                 Console.WriteLine("Total cinemas count updated!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteCinemaNetwork(List<CinemaNetwork> cinemaNetworks)
+        static void DeleteCinemaNetwork(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE CINEMA NETWORK ===");
@@ -208,7 +207,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema network ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Cinema Network ID");
 
-            var network = cinemaNetworks.FirstOrDefault(cn => cn.Id == id);
+            var network = CinemaNetworkService.GetById(context, id);
+
             if (network != null)
             {
                 Console.WriteLine($"\nCinema Network to delete: {network.CompanyName}");
@@ -216,9 +216,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this cinema network? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    CinemaNetworkService.DeleteCinemaNetwork(cinemaNetworks, id);
+                    CinemaNetworkService.Delete(context, id);
                     Console.WriteLine("Cinema network deleted successfully!");
                 }
                 else

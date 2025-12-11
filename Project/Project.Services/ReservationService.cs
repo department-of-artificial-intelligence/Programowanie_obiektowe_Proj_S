@@ -1,33 +1,59 @@
 ﻿using Project.Models;
+using Project.DAL;
 
 namespace Project.Services
 {
-    public class ReservationService
+    public static class ReservationService
     {
-        public static List<Reservation> FilterReservationsBySeanceId(List<Reservation> reservations, string seanceId)
+        public static List<Reservation> GetAll(ApplicationDBContext context)
         {
-            return [.. reservations.Where(r => r.SeanceId == seanceId)];
+            return [.. context.Reservations];
         }
 
-        public static List<Reservation> FilterReservationsByPaymentMethod(List<Reservation> reservations, string paymentMethod)
+        public static Reservation? GetById(ApplicationDBContext context, string id)
         {
-            return [.. reservations.Where(r => r.PaymentMethod.Contains(paymentMethod, StringComparison.OrdinalIgnoreCase))];
+            return context.Reservations.FirstOrDefault(r => r.Id == id);
         }
 
-        public static void DeleteReservation(List<Reservation> reservations, List<Ticket> tickets, string reservationId)
+        public static Reservation Add(ApplicationDBContext context, string seanceId, string customerFirstName, string customerLastName, string customerEmail, 
+                                      string customerPhone, string paymentMethod)
         {
-            var ticketsToDelete = tickets.Where(t => t.ReservationId == reservationId).ToList();
+            var reservation = new Reservation(seanceId, customerFirstName, customerLastName, customerEmail, customerPhone, paymentMethod);
 
-            foreach (var ticket in ticketsToDelete)
-            {
-                tickets.Remove(ticket);
-            }
+            context.Reservations.Add(reservation);
+            context.SaveChanges();
 
-            var reservation = reservations.FirstOrDefault(r => r.Id == reservationId);
+            return reservation;
+        }
+
+        public static void Update(ApplicationDBContext context, Reservation reservation)
+        {
+            context.Reservations.Update(reservation);
+            context.SaveChanges();
+        }
+
+        public static void Delete(ApplicationDBContext context, string reservationId)
+        {
+            var reservation = context.Reservations.FirstOrDefault(r => r.Id == reservationId);
+
             if (reservation != null)
             {
-                reservations.Remove(reservation);
+                var tickets = context.Tickets.Where(t => t.ReservationId == reservationId).ToList();
+
+                context.Tickets.RemoveRange(tickets);
+                context.Reservations.Remove(reservation);
+                context.SaveChanges();
             }
+        }
+
+        public static List<Reservation> FilterBySeanceId(ApplicationDBContext context, string seanceId)
+        {
+            return [.. context.Reservations.Where(r => r.SeanceId == seanceId)];
+        }
+
+        public static List<Reservation> FilterByPaymentMethod(ApplicationDBContext context, string paymentMethod)
+        {
+            return [.. context.Reservations.Where(r => r.PaymentMethod.Contains(paymentMethod))];
         }
     }
 }

@@ -1,14 +1,13 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class SeanceMenu
     {
-        public static void ShowSeanceMenu(List<Seance> seances, List<Film> films, List<Auditorium> auditoriums,
-            List<Reservation> reservations, List<Ticket> tickets)
+        public static void ShowSeanceMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -27,24 +26,27 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddSeance(seances, films, auditoriums); break;
-                    case "2": ViewAllSeances(seances); break;
-                    case "3": FindSeanceById(seances); break;
-                    case "4": AddOccupiedSeat(seances, auditoriums); break;
-                    case "5": RemoveOccupiedSeat(seances, auditoriums); break;
-                    case "6": UpdateSeanceTime(seances, films); break;
-                    case "7": UpdateSeancePrice(seances); break;
-                    case "8": ShowSeanceSortFilterMenu(seances, auditoriums); break;
-                    case "9": DeleteSeance(seances, reservations, tickets); break;
+                    case "1": AddSeance(context); break;
+                    case "2": ViewAllSeances(context); break;
+                    case "3": FindSeanceById(context); break;
+                    case "4": AddOccupiedSeat(context); break;
+                    case "5": RemoveOccupiedSeat(context); break;
+                    case "6": UpdateSeanceTime(context); break;
+                    case "7": UpdateSeancePrice(context); break;
+                    case "8": ShowSeanceSortFilterMenu(context); break;
+                    case "9": DeleteSeance(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowSeanceSortFilterMenu(List<Seance> seances, List<Auditorium> auditoriums)
+        static void ShowSeanceSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -61,47 +63,52 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestSeances = BaseService.SortByTimeNewest(seances);
+                        var newestSeances = BaseService.SortByTimeNewest(SeanceService.GetAll(context));
                         DisplayHelper.DisplaySeances(newestSeances, "Seances (Newest First)");
                         break;
                     case "2":
-                        var oldestSeances = BaseService.SortByTimeOldest(seances);
+                        var oldestSeances = BaseService.SortByTimeOldest(SeanceService.GetAll(context));
                         DisplayHelper.DisplaySeances(oldestSeances, "Seances (Oldest First)");
                         break;
                     case "3":
-                        var startTimeSeances = SeanceService.SortSeancesByStartTime(seances);
+                        var startTimeSeances = SeanceService.SortByStartTime(context);
                         DisplayHelper.DisplaySeances(startTimeSeances, "Seances by Start Time");
                         break;
                     case "4":
-                        var priceSeances = SeanceService.SortSeancesByPrice(seances);
+                        var priceSeances = SeanceService.SortByPrice(context);
                         DisplayHelper.DisplaySeances(priceSeances, "Seances by Price");
                         break;
                     case "5":
-                        var occupiedSeances = SeanceService.SortSeancesByOccupiedSeats(seances, auditoriums);
+                        var occupiedSeances = SeanceService.SortByOccupiedSeats(context);
                         DisplayHelper.DisplaySeances(occupiedSeances, "Seances by Occupied Seats");
                         break;
                     case "6":
                         Console.Write("Enter film ID to filter: ");
                         string filmId = ConsoleHelper.ReadRequiredString("Film ID");
-                        var filmSeances = SeanceService.FilterSeancesByFilmId(seances, filmId);
+
+                        var filmSeances = SeanceService.FilterByFilmId(context, filmId);
                         DisplayHelper.DisplaySeances(filmSeances, $"Seances for film {filmId}");
                         break;
                     case "7":
                         Console.Write("Enter auditorium ID to filter: ");
                         string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
-                        var auditoriumSeances = SeanceService.FilterSeancesByAuditoriumId(seances, auditoriumId);
+
+                        var auditoriumSeances = SeanceService.FilterByAuditoriumId(context, auditoriumId);
                         DisplayHelper.DisplaySeances(auditoriumSeances, $"Seances in auditorium {auditoriumId}");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddSeance(List<Seance> seances, List<Film> films, List<Auditorium> auditoriums)
+        static void AddSeance(ApplicationDBContext context)
         {
             try
             {
@@ -111,7 +118,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Film ID: ");
                 string filmId = ConsoleHelper.ReadRequiredString("Film ID");
 
-                var film = films.FirstOrDefault(f => f.Id == filmId);
+                var film = FilmService.GetById(context, filmId);
+
                 if (film == null)
                 {
                     Console.WriteLine("Film with this ID not found.");
@@ -122,7 +130,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Auditorium ID: ");
                 string auditoriumId = ConsoleHelper.ReadRequiredString("Auditorium ID");
 
-                var auditorium = auditoriums.FirstOrDefault(a => a.Id == auditoriumId);
+                var auditorium = AuditoriumService.GetById(context, auditoriumId);
+
                 if (auditorium == null)
                 {
                     Console.WriteLine("Auditorium with this ID not found.");
@@ -136,8 +145,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Price: ");
                 decimal price = ConsoleHelper.ReadDecimal();
 
-                var seance = new Seance(filmId, auditoriumId, startTime, price, film.DurationMinutes);
-                seances.Add(seance);
+                
+                var seance = SeanceService.Add(context, filmId, auditoriumId, startTime, price, film.DurationMinutes);
 
                 Console.WriteLine($"\nSeance added successfully! ID: {seance.Id}");
                 Console.WriteLine($"End Time: {seance.EndTime}");
@@ -147,30 +156,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllSeances(List<Seance> seances)
+        static void ViewAllSeances(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL SEANCES ===");
-
-            if (seances.Count == 0)
-            {
-                Console.WriteLine("No seances found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var seance in seances)
-            {
-                Console.WriteLine(seance.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var seances = SeanceService.GetAll(context);
+            DisplayHelper.DisplaySeances(seances, "All Seances");
         }
 
-        static void FindSeanceById(List<Seance> seances)
+        static void FindSeanceById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND SEANCE BY ID ===");
@@ -178,7 +174,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID: ");
             string id = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == id);
+            var seance = SeanceService.GetById(context, id);
+
             if (seance != null)
             {
                 Console.WriteLine(seance.ToString());
@@ -187,10 +184,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Seance with this ID not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void AddOccupiedSeat(List<Seance> seances, List<Auditorium> auditoriums)
+        static void AddOccupiedSeat(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== ADD OCCUPIED SEAT ===");
@@ -198,7 +196,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID: ");
             string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            var seance = SeanceService.GetById(context, seanceId);
+
             if (seance == null)
             {
                 Console.WriteLine("Seance with this ID not found.");
@@ -209,7 +208,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seat ID: ");
             string seatId = ConsoleHelper.ReadRequiredString("Seat ID");
 
-            var auditorium = auditoriums.FirstOrDefault(a => a.Id == seance.AuditoriumId);
+            var auditorium = AuditoriumService.GetById(context, seance.AuditoriumId);
+
             if (auditorium == null)
             {
                 Console.WriteLine("Auditorium for this seance not found.");
@@ -219,6 +219,7 @@ namespace Project.ConsoleApp.Menues
 
             if (seance.ReserveSeat(seatId, auditorium.Capacity))
             {
+                SeanceService.Update(context, seance);
                 Console.WriteLine("Seat successfully reserved!");
                 Console.WriteLine($"Available seats remaining: {seance.AvailableSeats(auditorium.Capacity)}");
             }
@@ -226,10 +227,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Failed to reserve seat. Possibly reached capacity limit or seat already reserved.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void RemoveOccupiedSeat(List<Seance> seances, List<Auditorium> auditoriums)
+        static void RemoveOccupiedSeat(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== REMOVE OCCUPIED SEAT ===");
@@ -237,7 +239,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID: ");
             string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            var seance = SeanceService.GetById(context, seanceId);
+
             if (seance == null)
             {
                 Console.WriteLine("Seance with this ID not found.");
@@ -250,8 +253,11 @@ namespace Project.ConsoleApp.Menues
 
             if (seance.CancelSeatReservation(seatId))
             {
-                var auditorium = auditoriums.FirstOrDefault(a => a.Id == seance.AuditoriumId);
+                SeanceService.Update(context, seance);
+                var auditorium = AuditoriumService.GetById(context, seance.AuditoriumId);
+
                 Console.WriteLine("Seat reservation cancelled successfully!");
+
                 if (auditorium != null)
                 {
                     Console.WriteLine($"Available seats now: {seance.AvailableSeats(auditorium.Capacity)}");
@@ -261,10 +267,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Failed to cancel seat reservation. Possibly not in the list.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateSeanceTime(List<Seance> seances, List<Film> films)
+        static void UpdateSeanceTime(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE SEANCE TIME ===");
@@ -272,7 +279,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID: ");
             string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            var seance = SeanceService.GetById(context, seanceId);
+
             if (seance == null)
             {
                 Console.WriteLine("Seance with this ID not found.");
@@ -283,7 +291,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter new start time (yyyy-mm-dd hh:mm): ");
             DateTime newStartTime = ConsoleHelper.ReadDateTime();
 
-            var film = films.FirstOrDefault(f => f.Id == seance.FilmId);
+            var film = FilmService.GetById(context, seance.FilmId);
+
             if (film == null)
             {
                 Console.WriteLine("Film for this seance not found.");
@@ -294,16 +303,19 @@ namespace Project.ConsoleApp.Menues
             try
             {
                 seance.UpdateTime(newStartTime, film.DurationMinutes);
+                SeanceService.Update(context, seance);
+
                 Console.WriteLine($"Seance time updated successfully! New end time: {seance.EndTime}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateSeancePrice(List<Seance> seances)
+        static void UpdateSeancePrice(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE SEANCE PRICE ===");
@@ -311,7 +323,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID: ");
             string seanceId = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == seanceId);
+            var seance = SeanceService.GetById(context, seanceId);
+
             if (seance == null)
             {
                 Console.WriteLine("Seance with this ID not found.");
@@ -325,16 +338,19 @@ namespace Project.ConsoleApp.Menues
             try
             {
                 seance.UpdatePrice(newPrice);
+                SeanceService.Update(context, seance);
+
                 Console.WriteLine($"Seance price updated successfully! New price: {seance.Price}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteSeance(List<Seance> seances, List<Reservation> reservations, List<Ticket> tickets)
+        static void DeleteSeance(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE SEANCE ===");
@@ -342,7 +358,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter seance ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Seance ID");
 
-            var seance = seances.FirstOrDefault(s => s.Id == id);
+            var seance = SeanceService.GetById(context, id);
+
             if (seance != null)
             {
                 Console.WriteLine($"\nSeance to delete: {seance.StartTime}");
@@ -352,9 +369,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this seance? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    SeanceService.DeleteSeance(seances, reservations, tickets, id);
+                    SeanceService.Delete(context, id);
                     Console.WriteLine("Seance and all related data deleted successfully!");
                 }
                 else

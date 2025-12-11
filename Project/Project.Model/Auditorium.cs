@@ -20,6 +20,18 @@ namespace Project.Models
         public IReadOnlyList<string> Features => _features.AsReadOnly();
         public IReadOnlyList<string> Items => Features;
 
+        protected Auditorium()
+        {
+            _features = [];
+            CinemaId = string.Empty;
+            Name = string.Empty;
+            RoomNumber = 0;
+            Rows = 0;
+            SeatsPerRow = 0;
+            Rating = 0;
+            TotalRatings = 0;
+        }
+
         public Auditorium(string cinemaId, string name, uint roomNumber, uint rows, uint seatsPerRow) : base()
         {
             ValidateAuditoriumData(cinemaId, name, roomNumber, rows, seatsPerRow);
@@ -32,42 +44,17 @@ namespace Project.Models
             _features = [];
         }
 
-        public Auditorium(string id, string cinemaId, string name, uint roomNumber,
-            uint rows, uint seatsPerRow, List<string> features, double rating,
-            uint totalRatings, DateTime createdAt, DateTime updatedAt)
-            : base(id, createdAt, updatedAt)
-        {
-            ValidateAuditoriumData(cinemaId, name, roomNumber, rows, seatsPerRow);
-
-            CinemaId = cinemaId;
-            Name = name;
-            RoomNumber = roomNumber;
-            Rows = rows;
-            SeatsPerRow = seatsPerRow;
-            _features = features ?? [];
-            Rating = rating;
-            TotalRatings = totalRatings;
-        }
-
         private static void ValidateAuditoriumData(string cinemaId, string name, uint roomNumber, uint rows, uint seatsPerRow)
         {
-            if (string.IsNullOrWhiteSpace(cinemaId))
-                throw new ArgumentException("Cinema ID is required", nameof(cinemaId));
-
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Auditorium name is required", nameof(name));
-
-            if(roomNumber == 0)
-                throw new ArgumentException("Room number cannot be 0", nameof(name));
-
-            if (rows == 0 || seatsPerRow == 0)
-                throw new ArgumentException("Rows and seats per row must be greater than 0");
+            if (string.IsNullOrWhiteSpace(cinemaId)) throw new ArgumentException("Cinema ID is required", nameof(cinemaId));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Auditorium name is required", nameof(name));
+            if (roomNumber == 0) throw new ArgumentException("Room number cannot be 0", nameof(roomNumber));
+            if (rows == 0 || seatsPerRow == 0) throw new ArgumentException("Rows and seats per row must be greater than 0");
         }
 
         public void AddRating(uint rating)
         {
-            if (rating < 1 || rating > 5)
-                throw new ArgumentException("Rating must be between 1 and 5");
+            if (rating < 1 || rating > 5) throw new ArgumentException("Rating must be between 1 and 5");
 
             Rating = RatingCalculator.CalculateNewRating(TotalRatings, Rating, rating);
             TotalRatings++;
@@ -101,11 +88,8 @@ namespace Project.Models
 
         public void UpdateLayout(string name, uint roomNumber, uint rows, uint seatsPerRow)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name is required", nameof(name));
-
-            if (rows == 0 || seatsPerRow == 0)
-                throw new ArgumentException("Rows and seats per row must be greater than 0");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required", nameof(name));
+            if (rows == 0 || seatsPerRow == 0) throw new ArgumentException("Rows and seats per row must be greater than 0");
 
             Name = name;
             RoomNumber = roomNumber;

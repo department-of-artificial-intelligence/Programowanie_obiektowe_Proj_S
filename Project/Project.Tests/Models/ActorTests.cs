@@ -5,82 +5,206 @@ namespace Project.Tests.Models
     public class ActorTests
     {
         [Fact]
-        public void Actor_Constructor_ValidData_CreatesActor()
+        public void Constructor_WithValidData_ShouldCreateActorWithCorrectProperties()
         {
-            // Arrange
-            var birthDate = DateTime.Now.AddYears(-30);
+            // Given
+            var firstName = "John";
+            var lastName = "Doe";
+            var nationality = "American";
+            var birthDate = new DateTime(1980, 1, 1);
+            var profileImageUrl = "http://example.com/photo.jpg";
+            var biography = "A great actor";
+            var popularity = 85.5;
 
-            // Act
-            var actor = new Actor("John", "Doe", "American", birthDate,
-                "http://example.com/photo.jpg", "Test biography", 85.5);
+            // When
+            var actor = new Actor(firstName, lastName, nationality, birthDate, profileImageUrl, biography, popularity);
 
-            // Assert
-            Assert.Equal("John", actor.FirstName);
-            Assert.Equal("Doe", actor.LastName);
-            Assert.Equal("John Doe", actor.FullName);
-            Assert.Equal("American", actor.Nationality);
+            // Then
+            Assert.Equal(firstName, actor.FirstName);
+            Assert.Equal(lastName, actor.LastName);
+            Assert.Equal(nationality, actor.Nationality);
             Assert.Equal(birthDate, actor.BirthDate);
-            Assert.Equal("Test biography", actor.Biography);
-            Assert.Equal(85.5, actor.Popularity);
-            Assert.True(actor.Age >= 29 && actor.Age <= 30);
+            Assert.Equal(profileImageUrl, actor.ProfileImageUrl);
+            Assert.Equal(biography, actor.Biography);
+            Assert.Equal(popularity, actor.Popularity);
+            Assert.NotEmpty(actor.Id);
+            Assert.True(actor.Age > 0);
         }
 
         [Fact]
-        public void SetBiography_ValidBiography_UpdatesBiography()
+        public void FullName_ShouldReturnFirstNameAndLastName()
         {
-            // Arrange
-            var actor = new Actor("John", "Doe", "American", DateTime.Now.AddYears(-30),
-                "photo.jpg", "Old bio", 85.5);
+            // Given
+            var actor = CreateTestActor();
 
-            // Act
-            actor.SetBiography("New biography");
+            // When
+            var fullName = actor.FullName;
 
-            // Assert
-            Assert.Equal("New biography", actor.Biography);
+            // Then
+            Assert.Equal("John Doe", fullName);
         }
 
         [Fact]
-        public void SetPopularity_ValidValue_UpdatesPopularity()
+        public void Age_ShouldCalculateCorrectAge()
         {
-            // Arrange
-            var actor = new Actor("John", "Doe", "American", DateTime.Now.AddYears(-30),
-                "photo.jpg", "Bio", 50.0);
+            // Given
+            var birthDate = new DateTime(2000, 6, 15);
+            var actor = new Actor("Test", "Actor", "Test", birthDate, "url", "bio", 50);
 
-            // Act
-            actor.SetPopularity(75.5);
+            // When
+            var age = actor.Age;
 
-            // Assert
-            Assert.Equal(75.5, actor.Popularity);
-        }
+            // Then
+            var expectedAge = DateTime.Now.Year - birthDate.Year;
+            if (DateTime.Now.DayOfYear < birthDate.DayOfYear) expectedAge--;
 
-        [Theory]
-        [InlineData(-1.0)]
-        [InlineData(101.0)]
-        public void SetPopularity_InvalidValue_ThrowsException(double invalidPopularity)
-        {
-            // Arrange
-            var actor = new Actor("John", "Doe", "American", DateTime.Now.AddYears(-30),
-                "photo.jpg", "Bio", 50.0);
-
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => actor.SetPopularity(invalidPopularity));
+            Assert.Equal(expectedAge, age);
         }
 
         [Fact]
-        public void ToString_ReturnsFormattedString()
+        public void SetBiography_WithValidBiography_ShouldUpdateBiography()
         {
-            // Arrange
-            var actor = new Actor("John", "Doe", "American", new DateTime(1990, 1, 1),
-                "photo.jpg", "Test biography", 85.5);
+            // Given
+            var actor = CreateTestActor();
+            var newBiography = "New biography with updated information.";
 
-            // Act
+            // When
+            actor.SetBiography(newBiography);
+
+            // Then
+            Assert.Equal(newBiography, actor.Biography);
+        }
+
+        [Fact]
+        public void SetBiography_WithNull_ShouldThrowArgumentNullException()
+        {
+            // Given
+            var actor = CreateTestActor();
+
+            // When & Then
+            Assert.Throws<ArgumentNullException>(() => actor.SetBiography(null));
+        }
+
+        [Fact]
+        public void SetPopularity_WithValidValue_ShouldUpdatePopularity()
+        {
+            // Given
+            var actor = CreateTestActor();
+            var newPopularity = 95.0;
+
+            // When
+            actor.SetPopularity(newPopularity);
+
+            // Then
+            Assert.Equal(newPopularity, actor.Popularity);
+        }
+
+        [Fact]
+        public void SetPopularity_WithValueLessThanZero_ShouldThrowArgumentException()
+        {
+            // Given
+            var actor = CreateTestActor();
+
+            // When & Then
+            Assert.Throws<ArgumentException>(() => actor.SetPopularity(-5.0));
+        }
+
+        [Fact]
+        public void SetPopularity_WithValueGreaterThan100_ShouldThrowArgumentException()
+        {
+            // Given
+            var actor = CreateTestActor();
+
+            // When & Then
+            Assert.Throws<ArgumentException>(() => actor.SetPopularity(150.0));
+        }
+
+        [Fact]
+        public void UpdatePersonalInfo_WithValidData_ShouldUpdateAllProperties()
+        {
+            // Given
+            var actor = CreateTestActor();
+            var newFirstName = "Jane";
+            var newLastName = "Smith";
+            var newNationality = "Canadian";
+            var newBirthDate = new DateTime(1990, 5, 20);
+            var newProfileImageUrl = "http://example.com/new.jpg";
+
+            // When
+            actor.UpdatePersonalInfo(newFirstName, newLastName, newNationality, newBirthDate, newProfileImageUrl);
+
+            // Then
+            Assert.Equal(newFirstName, actor.FirstName);
+            Assert.Equal(newLastName, actor.LastName);
+            Assert.Equal(newNationality, actor.Nationality);
+            Assert.Equal(newBirthDate, actor.BirthDate);
+            Assert.Equal(newProfileImageUrl, actor.ProfileImageUrl);
+        }
+
+        [Fact]
+        public void Constructor_WithEmptyFirstName_ShouldThrowArgumentException()
+        {
+            // Given
+            // When & Then
+            Assert.Throws<ArgumentException>(() => new Actor("", "Doe", "American", new DateTime(1980, 1, 1), "url", "bio", 50));
+        }
+
+        [Fact]
+        public void Constructor_WithFutureBirthDate_ShouldThrowArgumentException()
+        {
+            // Given
+            var futureDate = DateTime.Now.AddYears(1);
+
+            // When & Then
+            Assert.Throws<ArgumentException>(() => new Actor("John", "Doe", "American", futureDate, "url", "bio", 50));
+        }
+
+        [Fact]
+        public void ToString_ShouldReturnFormattedString()
+        {
+            // Given
+            var actor = CreateTestActor();
+
+            // When
             var result = actor.ToString();
 
-            // Assert
-            Assert.Contains("John Doe", result);
-            Assert.Contains("American", result);
-            Assert.Contains("Test biography", result);
-            Assert.Contains("85,5", result);
+            // Then
+            Assert.Contains("Actor:", result);
+            Assert.Contains(actor.FullName, result);
+            Assert.Contains(actor.Nationality, result);
+            Assert.Contains(actor.Id, result);
+        }
+
+        [Fact]
+        public void MarkAsUpdated_ShouldUpdateUpdatedAt()
+        {
+            // Given
+            var actor = CreateTestActor();
+            var initialUpdatedAt = actor.UpdatedAt;
+
+            System.Threading.Thread.Sleep(10);
+
+            // When
+            actor.MarkAsUpdated();
+
+            // Then
+            Assert.True(actor.UpdatedAt > initialUpdatedAt);
+        }
+
+        [Fact]
+        public void Constructor_WithPopularityAtBoundaryValues_ShouldAccept()
+        {
+            // Given & When & Then
+            var actor1 = new Actor("John", "Doe", "American", new DateTime(1980, 1, 1), "url", "bio", 0.0);
+            var actor2 = new Actor("Jane", "Doe", "American", new DateTime(1980, 1, 1), "url", "bio", 100.0);
+
+            Assert.Equal(0.0, actor1.Popularity);
+            Assert.Equal(100.0, actor2.Popularity);
+        }
+
+        private static Actor CreateTestActor()
+        {
+            return new Actor("John", "Doe", "American", new DateTime(1980, 1, 1), "http://example.com/photo.jpg", "A great actor", 85.5);
         }
     }
 }

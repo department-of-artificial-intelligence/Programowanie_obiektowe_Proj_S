@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Project.ConsoleApp.Helpers
+﻿namespace Project.ConsoleApp.Helpers
 {
     public static class ConsoleHelper
     {

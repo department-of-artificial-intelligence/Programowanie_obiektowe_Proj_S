@@ -1,17 +1,14 @@
-﻿using Project.Models;
-using Project.ConsoleApp.Helpers;
-using Project.Services;
+﻿using Project.ConsoleApp.Helpers;
 using Project.Services.Common;
+using Project.Services;
+using Project.DAL;
 
 namespace Project.ConsoleApp.Menues
 {
     public static class CinemaMenu
     {
-        public static void ShowCinemaMenu(List<Cinema> cinemas, List<Film> films,
-            List<Auditorium> auditoriums, List<Seance> seances, List<Reservation> reservations,
-            List<Ticket> tickets)
+        public static void ShowCinemaMenu(ApplicationDBContext context)
         {
-            ArgumentNullException.ThrowIfNull(films);
             while (true)
             {
                 Console.Clear();
@@ -29,24 +26,27 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
-                    case "1": AddCinema(cinemas); break;
-                    case "2": ViewAllCinemas(cinemas); break;
-                    case "3": FindCinemaById(cinemas); break;
-                    case "4": UpdateCinema(cinemas); break;
-                    case "5": AddAvailableFilm(cinemas); break;
-                    case "6": RemoveAvailableFilm(cinemas); break;
-                    case "7": RateCinema(cinemas); break;
-                    case "8": ShowCinemaSortFilterMenu(cinemas); break;
-                    case "9": DeleteCinema(cinemas, auditoriums, seances, reservations, tickets); break;
+                    case "1": AddCinema(context); break;
+                    case "2": ViewAllCinemas(context); break;
+                    case "3": FindCinemaById(context); break;
+                    case "4": UpdateCinema(context); break;
+                    case "5": AddAvailableFilm(context); break;
+                    case "6": RemoveAvailableFilm(context); break;
+                    case "7": RateCinema(context); break;
+                    case "8": ShowCinemaSortFilterMenu(context); break;
+                    case "9": DeleteCinema(context); break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void ShowCinemaSortFilterMenu(List<Cinema> cinemas)
+        static void ShowCinemaSortFilterMenu(ApplicationDBContext context)
         {
             while (true)
             {
@@ -62,41 +62,45 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Choose an option: ");
 
                 var choice = Console.ReadLine();
+
                 switch (choice)
                 {
                     case "1":
-                        var newestCinemas = BaseService.SortByTimeNewest(cinemas);
+                        var newestCinemas = BaseService.SortByTimeNewest(CinemaService.GetAll(context));
                         DisplayHelper.DisplayCinemas(newestCinemas, "Cinemas (Newest First)");
                         break;
                     case "2":
-                        var oldestCinemas = BaseService.SortByTimeOldest(cinemas);
+                        var oldestCinemas = BaseService.SortByTimeOldest(CinemaService.GetAll(context));
                         DisplayHelper.DisplayCinemas(oldestCinemas, "Cinemas (Oldest First)");
                         break;
                     case "3":
-                        var ratedCinemas = RatableService.SortByRating(cinemas);
+                        var ratedCinemas = RatableService.SortByRating(CinemaService.GetAll(context));
                         DisplayHelper.DisplayCinemas(ratedCinemas, "Cinemas by Rating");
                         break;
                     case "4":
-                        var popularCinemas = RatableService.SortByPopularity(cinemas);
+                        var popularCinemas = RatableService.SortByPopularity(CinemaService.GetAll(context));
                         DisplayHelper.DisplayCinemas(popularCinemas, "Cinemas by Popularity");
                         break;
                     case "5":
-                        var filmCountCinemas = CinemaService.SortByNumberOfAvailableFilms(cinemas);
+                        var filmCountCinemas = CinemaService.SortByNumberOfAvailableFilms(context);
                         DisplayHelper.DisplayCinemas(filmCountCinemas, "Cinemas by Number of Available Films");
                         break;
                     case "6":
                         Console.Write("Enter cinema name to filter: ");
                         string name = ConsoleHelper.ReadRequiredString("Cinema name");
-                        var filteredCinemas = CinemaService.FilterCinemasByName(cinemas, name);
+
+                        var filteredCinemas = CinemaService.FilterByName(context, name);
                         DisplayHelper.DisplayCinemas(filteredCinemas, $"Cinemas with name containing '{name}'");
                         break;
                     case "0": return;
-                    default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
+                    default:  Console.WriteLine("Invalid choice!"); 
+                              ConsoleHelper.WaitForKey(); 
+                              break;
                 }
             }
         }
 
-        static void AddCinema(List<Cinema> cinemas)
+        static void AddCinema(ApplicationDBContext context)
         {
             try
             {
@@ -118,8 +122,8 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Manager Name: ");
                 string managerName = ConsoleHelper.ReadRequiredString("Manager name");
 
-                var cinema = new Cinema(name, address, contactPhone, contactEmail, managerName);
-                cinemas.Add(cinema);
+                
+                var cinema = CinemaService.Add(context, name, address, contactPhone, contactEmail, managerName);
 
                 Console.WriteLine($"\nCinema added successfully! ID: {cinema.Id}");
             }
@@ -127,30 +131,17 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void ViewAllCinemas(List<Cinema> cinemas)
+        static void ViewAllCinemas(ApplicationDBContext context)
         {
-            Console.Clear();
-            Console.WriteLine("=== ALL CINEMAS ===");
-
-            if (cinemas.Count == 0)
-            {
-                Console.WriteLine("No cinemas found.");
-                ConsoleHelper.WaitForKey();
-                return;
-            }
-
-            foreach (var cinema in cinemas)
-            {
-                Console.WriteLine(cinema.ToString());
-                Console.WriteLine("----------------------------------------");
-            }
-            ConsoleHelper.WaitForKey();
+            var cinemas = CinemaService.GetAll(context);
+            DisplayHelper.DisplayCinemas(cinemas, "All Cinemas");
         }
 
-        static void FindCinemaById(List<Cinema> cinemas)
+        static void FindCinemaById(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== FIND CINEMA BY ID ===");
@@ -158,7 +149,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID: ");
             string id = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == id);
+            var cinema = CinemaService.GetById(context, id);
+
             if (cinema != null)
             {
                 Console.WriteLine(cinema.ToString());
@@ -167,10 +159,11 @@ namespace Project.ConsoleApp.Menues
             {
                 Console.WriteLine("Cinema with this ID not found.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void UpdateCinema(List<Cinema> cinemas)
+        static void UpdateCinema(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== UPDATE CINEMA ===");
@@ -178,7 +171,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID to update: ");
             string id = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == id);
+            var cinema = CinemaService.GetById(context, id);
+
             if (cinema == null)
             {
                 Console.WriteLine("Cinema with this ID not found.");
@@ -204,16 +198,19 @@ namespace Project.ConsoleApp.Menues
                 string managerName = Console.ReadLine() ?? cinema.ManagerName;
 
                 cinema.UpdateInfo(name, address, contactPhone, contactEmail, managerName);
+                CinemaService.Update(context, cinema);
+
                 Console.WriteLine("Cinema information updated!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void AddAvailableFilm(List<Cinema> cinemas)
+        static void AddAvailableFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== ADD AVAILABLE FILM ===");
@@ -221,7 +218,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID: ");
             string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == cinemaId);
+            var cinema = CinemaService.GetById(context, cinemaId);
+
             if (cinema == null)
             {
                 Console.WriteLine("Cinema with this ID not found.");
@@ -234,16 +232,18 @@ namespace Project.ConsoleApp.Menues
 
             if (cinema.AddItem(filmId))
             {
+                CinemaService.Update(context, cinema);
                 Console.WriteLine("Film successfully added to available films!");
             }
             else
             {
                 Console.WriteLine("Failed to add film. Possibly reached limit (10 films) or film already added.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void RemoveAvailableFilm(List<Cinema> cinemas)
+        static void RemoveAvailableFilm(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== REMOVE AVAILABLE FILM ===");
@@ -251,7 +251,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID: ");
             string cinemaId = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == cinemaId);
+            var cinema = CinemaService.GetById(context, cinemaId);
+
             if (cinema == null)
             {
                 Console.WriteLine("Cinema with this ID not found.");
@@ -264,16 +265,18 @@ namespace Project.ConsoleApp.Menues
 
             if (cinema.RemoveItem(filmId))
             {
+                CinemaService.Update(context, cinema);
                 Console.WriteLine("Film successfully removed from available films!");
             }
             else
             {
                 Console.WriteLine("Failed to remove film. Possibly it's not in the available list.");
             }
+
             ConsoleHelper.WaitForKey();
         }
 
-        static void RateCinema(List<Cinema> cinemas)
+        static void RateCinema(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== RATE CINEMA ===");
@@ -281,7 +284,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID: ");
             string id = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == id);
+            var cinema = CinemaService.GetById(context, id);
+
             if (cinema == null)
             {
                 Console.WriteLine("Cinema with this ID not found.");
@@ -300,12 +304,13 @@ namespace Project.ConsoleApp.Menues
             }
 
             cinema.AddRating(rating);
+            CinemaService.Update(context, cinema);
+
             Console.WriteLine($"Cinema rated successfully! Current rating: {cinema.Rating}");
             ConsoleHelper.WaitForKey();
         }
 
-        static void DeleteCinema(List<Cinema> cinemas, List<Auditorium> auditoriums,
-            List<Seance> seances, List<Reservation> reservations, List<Ticket> tickets)
+        static void DeleteCinema(ApplicationDBContext context)
         {
             Console.Clear();
             Console.WriteLine("=== DELETE CINEMA ===");
@@ -313,7 +318,8 @@ namespace Project.ConsoleApp.Menues
             Console.Write("Enter cinema ID to delete: ");
             string id = ConsoleHelper.ReadRequiredString("Cinema ID");
 
-            var cinema = cinemas.FirstOrDefault(c => c.Id == id);
+            var cinema = CinemaService.GetById(context, id);
+
             if (cinema != null)
             {
                 Console.WriteLine($"\nCinema to delete: {cinema.Name}");
@@ -325,9 +331,10 @@ namespace Project.ConsoleApp.Menues
                 Console.Write("Are you sure you want to delete this cinema? (yes/no): ");
 
                 string? confirmation = Console.ReadLine()?.ToLower();
+
                 if (confirmation == "yes" || confirmation == "y")
                 {
-                    CinemaService.DeleteCinema(cinemas, auditoriums, seances, reservations, tickets, id);
+                    CinemaService.Delete(context, id);
                     Console.WriteLine("Cinema and all related data deleted successfully!");
                 }
                 else

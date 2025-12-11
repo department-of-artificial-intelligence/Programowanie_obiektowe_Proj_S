@@ -4,8 +4,7 @@
     {
         public static bool AddUniqueItem<T>(List<T> collection, T item, int? maxItems = null)
         {
-            if (collection.Contains(item) || (maxItems.HasValue && collection.Count >= maxItems))
-                return false;
+            if (collection.Contains(item) || (maxItems.HasValue && collection.Count >= maxItems)) return false;
 
             collection.Add(item);
             return true;
