@@ -35,6 +35,23 @@ public class Ticket
         Customer = null;
     }
 
+    // Metody sprawdzające sprawdzający możliwości zarządzania dla klienta
+    public bool CanBeReserved(Customer customer)
+    {
+        if (customer is null) return false;
+        return Status == TicketStatus.Available;
+    }
+    public bool CanBeCanceled(Customer customer)
+    {
+        if (customer is null) return false;
+        return Status == TicketStatus.Reserved && Customer == customer;
+    }
+    public bool CanBeBought(Customer customer)
+    {
+        if (customer is null) return false;
+        return Status == TicketStatus.Available || (Status == TicketStatus.Reserved && Customer == customer);
+    }
+
     // Metody string
     public override string ToString()
     {

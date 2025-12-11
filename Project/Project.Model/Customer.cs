@@ -52,24 +52,6 @@ public class Customer : Person
     }
 
     // Metody zarządzania rezerwacją biletów
-    // Sprawdzanie możliwości
-    public bool CanBeReserved(Ticket ticket)
-    {
-        if (ticket is null || ticket.Status != TicketStatus.Available) return false;
-        return true;
-    }
-    public bool CanBeCanceled(Ticket ticket)
-    {
-        if (ticket is null || ticket.Status != TicketStatus.Reserved || ticket.Customer != this) return false;
-        return true;
-    }
-    public bool CanBeBought(Ticket ticket)
-    {
-        if (ticket is null || ticket.Status == TicketStatus.Sold) return false;
-        if (ticket.Status == TicketStatus.Reserved && ticket.Customer != this) return false;
-        return true;
-    }
-
     // Zadziała tylko gdy jest dostępny
     public bool ReserveTicket(Performance performance, Seat seat)
     {
@@ -77,7 +59,7 @@ public class Customer : Person
         Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
 
         if (ticket is null) return false;
-        if (!CanBeReserved(ticket)) return false;
+        if (!ticket.CanBeReserved(this)) return false;
 
         ticket.Status = TicketStatus.Reserved;
         AddTicket(ticket);
@@ -91,7 +73,7 @@ public class Customer : Person
         Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
 
         if (ticket is null) return false;
-        if (!CanBeBought(ticket)) return false;
+        if (!ticket.CanBeBought(this)) return false;
 
         ticket.Status = TicketStatus.Sold;
         AddTicket(ticket);
@@ -105,7 +87,7 @@ public class Customer : Person
         Ticket? ticket = performance.Tickets.FirstOrDefault(t => t.Seat == seat);
 
         if (ticket is null) return false;
-        if (!CanBeCanceled(ticket)) return false;
+        if (!ticket.CanBeCanceled(this)) return false;
 
         RemoveTicket(ticket);
         return true;
@@ -113,14 +95,14 @@ public class Customer : Person
 
     public bool BuyTicket(Ticket ticket)
     {
-        if (!CanBeBought(ticket)) return false;
+        if (!ticket.CanBeBought(this)) return false;
         ticket.Status = TicketStatus.Sold;
         AddTicket(ticket);
         return true;
     }
     public bool CancelReservation(Ticket ticket)
     {
-        if (!CanBeCanceled(ticket)) return false;
+        if (!ticket.CanBeCanceled(this)) return false;
         RemoveTicket(ticket);
         return true;
     }

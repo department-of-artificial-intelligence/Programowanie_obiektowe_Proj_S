@@ -1,8 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Project.ConsoleApp;
+﻿using Project.ConsoleApp;
 using Project.Model;
-using System.Reflection.Metadata;
 
 /* ToDo:
  * ogólne:
@@ -12,15 +9,14 @@ using System.Reflection.Metadata;
  * 
  * metody:
  * wyświetlenie siedzeń zmienić aby było widać które zajęte? tak samo ale D-dostępne, Z-zarezerwowane, S-sprzedane ?
- * zarządanie biletami
  */
+
+Console.WriteLine("--------------------------------------------");
+Console.WriteLine("System zarządzania siecią teatrów");
+Console.WriteLine("--------------------------------------------");
 
 //try
 //{
-    Console.WriteLine("--------------------------------------------");
-    Console.WriteLine("System zarządzania siecią teatrów");
-    Console.WriteLine("--------------------------------------------");
-
 //    // ------------------------
 //    // struktura teatrów
 //    // ------------------------
