@@ -2,12 +2,26 @@
 
 public class Performance
 {
+    // Pola prywatne
+    private PerformanceStatus _status;
+
     // Właściwości
     public int PerformanceId { get; private set; } // PK
     public Play Play { get; } = default!; 
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
-    public PerformanceStatus Status { get; set; }
+    public PerformanceStatus Status
+    {
+        get => _status;
+        set
+        {
+            if (value == PerformanceStatus.Canceled)
+            {
+                DeleteTickets();
+            }
+            _status = value;
+        }
+    }
     public List<Ticket> Tickets { get; } = new List<Ticket>(); 
     public Hall? Hall { get; set; } 
 
@@ -20,11 +34,6 @@ public class Performance
         Play = play;
         SetTimes(startTime, endTime);
         Status = status;
-        Hall = null;
-    }
-
-    public void RemoveHallReference()
-    {
         Hall = null;
     }
 
@@ -47,11 +56,31 @@ public class Performance
         return true;
     }
     public bool DeleteTicket(Ticket ticket)
-    {
-        if (ticket.Status == TicketStatus.Sold) return false; // nie można usunąć sprzedanego biletu
+    {   
         if (!Tickets.Contains(ticket)) return false;
-        ticket.Customer?.CancelReservation(ticket);
-        return Tickets.Remove(ticket);
+        if (ticket.Customer is null)
+        {
+            Tickets.Remove(ticket);
+            return true;
+        }
+        var customer = ticket.Customer;
+        if (customer.RefundTicket(ticket))
+        {
+            Tickets.Remove(ticket);
+            return true;
+        }
+        if (customer.CancelReservation(ticket))
+        {
+            Tickets.Remove(ticket);
+            return true;
+        }
+        if (ticket.Status == TicketStatus.Sold && Status == PerformanceStatus.Finished)
+        {
+            customer.RemoveTicket(ticket);
+            Tickets.Remove(ticket);
+            return true;
+        }
+        return false;
     }
     public void DeleteTickets()
     {
@@ -90,7 +119,7 @@ public class Performance
 
         for (int r = 1; r <= maxRow; r++)
         {
-            string rowString = $"Rząd {r}: ";
+            string rowString = $"Rząd " + (r<10 ? $"0{r}" : r) + ": ";
 
             for (int s = 1; s <= maxSeat; s++)
             {
@@ -132,7 +161,7 @@ public class Performance
 
                 rowString += $"{symbol} ";
             }
-            ticketsString += rowString + "\n";
+            ticketsString += rowString + (r != maxRow ? "\n" : string.Empty);
         }
 
         return ticketsString;

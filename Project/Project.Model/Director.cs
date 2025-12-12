@@ -60,7 +60,7 @@ public class Director : Person, IPlayManager
     }
     public void RemoveAllPlays()
     {
-        foreach (var play in Plays.ToList())
+        foreach (var play in Plays)
         {
             play.Director = null;
         }

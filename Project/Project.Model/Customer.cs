@@ -21,7 +21,7 @@ public class Customer : Person, ITicketTransactions
         Tickets.Add(ticket);
         return true;
     }
-    private bool RemoveTicket(Ticket ticket)
+    internal bool RemoveTicket(Ticket ticket)
     {
         if (!Tickets.Contains(ticket)) return false;
         ticket.Status = TicketStatus.Available;
@@ -62,16 +62,6 @@ public class Customer : Person, ITicketTransactions
             ticket.Status = TicketStatus.Sold;
         }
     }
-    public void RefundAllBought()
-    {
-        var boughtTickets = Tickets
-            .Where(t => t.Status == TicketStatus.Sold)
-            .ToList();
-        foreach (var ticket in boughtTickets)
-        {
-            RefundTicket(ticket);
-        }
-    }
     public void CancelAllReserved()
     {
         var reservedTickets = Tickets
@@ -80,6 +70,16 @@ public class Customer : Person, ITicketTransactions
         foreach (var ticket in reservedTickets)
         {
             CancelReservation(ticket);
+        }
+    }
+    public void RefundAllBought()
+    {
+        var boughtTickets = Tickets
+            .Where(t => t.Status == TicketStatus.Sold)
+            .ToList();
+        foreach (var ticket in boughtTickets)
+        {
+            RefundTicket(ticket);
         }
     }
 

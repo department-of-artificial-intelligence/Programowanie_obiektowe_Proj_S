@@ -46,7 +46,7 @@ public class Theater
         if(!Halls.Contains(hall)) return false;
         foreach (var performance in hall.Performances)
         {
-            performance.RemoveHallReference();
+            performance.Hall = null;
         }
         return Halls.Remove(hall);
     }

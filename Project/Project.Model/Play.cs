@@ -33,34 +33,8 @@ public class Play
         if (actors is null) return;
         foreach (var actor in actors)
         {
-            AddActor(actor);
+            actor.AddPlay(this);
         }
-    }
-
-    // Metody dodawania i usuwania elementów listy Actor
-    public bool AddActor(Actor actor)
-    {
-        if (actor is null || Actors.Contains(actor)) return false;
-        if (!actor.Plays.Contains(this))
-        {
-            actor.Plays.Add(this);
-        }
-        Actors.Add(actor);
-        return true;
-    }
-    public bool RemoveActor(Actor actor)
-    {
-        if (!Actors.Contains(actor)) return false;
-        actor.Plays.Remove(this);
-        return Actors.Remove(actor);
-    }
-    public void RemoveAllActors()
-    {
-        foreach (var actor in Actors.ToList())
-        {
-            actor.Plays.Remove(this);
-        }
-        Actors.Clear();
     }
 
     // Metody string

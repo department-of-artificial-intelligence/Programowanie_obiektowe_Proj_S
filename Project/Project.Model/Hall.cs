@@ -4,7 +4,6 @@ public class Hall
 {
     // Pola prywatne
     private string _hallName = string.Empty;
-    // private Dictionary<(int, int), Seat> SeatMap { get; } = new Dictionary<(int, int), Seat>(); // możliwa zmiana: mapa siedzeń
 
     // Właściwości
     public int HallId { get; private set; } // PK
@@ -32,10 +31,6 @@ public class Hall
             AddPerformance(performance);
         }
     }
-
-    // Metody zwracające maksymalną ilość miejsc
-    public int MaxRows() => Seats.Any() ? Seats.Max(s => s.RowNumber) : 0;
-    public int MaxSeatsInRow(int row) => Seats.Any() ? Seats.Where(s => s.RowNumber == row).Max(s => s.SeatNumber) : 0;
 
     // Metody tworzenia i usuwania elementów listy Seat
     public bool CreateSeat(int rowNumber, int seatNumber)
@@ -82,7 +77,7 @@ public class Hall
     public bool RemovePerformance(Performance performance)
     {
         if (!Performances.Contains(performance)) return false;
-        performance.RemoveHallReference();
+        performance.Hall = null;
         return Performances.Remove(performance);
     }
     public void RemoveAllPerformances()
@@ -93,52 +88,32 @@ public class Hall
         }
     }
 
-    // Metoda sortująca siedzenia
-    public List<Seat> OrderSeats()
-    {
-        return Seats
-            .OrderBy(s => s.RowNumber)
-            .ThenBy(s => s.SeatNumber)
-            .ToList();
-    }
-
-    // Metody string
-    //public string GetSeatsString() // zwraca tylko istniejące siedzenia
+    //// Metoda sortująca siedzenia => optymalizacja wizualizacji?
+    //public List<Seat> OrderSeats()
     //{
-    //    if (Seats.Count == 0) return "Brak siedzeń w Sali";
-    //    List<Seat> orderedSeats = OrderSeats();
-    //    int maxRows = MaxRows();
-    //    string seatsString = string.Empty;
-
-    //    for (int i = 1; i <= maxRows; i++)
-    //    {
-    //        seatsString += string.Join(" ", orderedSeats
-    //            .Where(s => s.RowNumber == i)
-    //            .Select(s => $"{s.SeatLocation()}"));
-
-    //        seatsString += i != maxRows ? "\n" : string.Empty;
-    //    }
-
-    //    return seatsString;
+    //    return Seats
+    //        .OrderBy(s => s.RowNumber)
+    //        .ThenBy(s => s.SeatNumber)
+    //        .ToList();
     //}
 
-    public string VisualizeSeatsString() // zwraca też puste miejsca pomiędzy jako (X, X)
+    public string VisualizeSeatsString()
     {
         if (Seats.Count == 0) return "Brak siedzeń w Sali";
-        List<Seat> orderedSeats = OrderSeats();
-        int maxRows = MaxRows();
-        string seatsString = $"Wizualizacja miejsc dla Sali: { HallName }\n";
-        Seat? seat;
 
-        for (int i = 1; i <= maxRows; i++)
+        int maxRow = Seats.Max(s => s.RowNumber);
+        int maxSeat = Seats.Max(s => s.SeatNumber);
+
+        string seatsString = $"Wizualizacja miejsc dla Sali: {HallName}\n";
+
+        for (int r = 1; r <= maxRow; r++)
         {
-            int maxSeats = MaxSeatsInRow(i);
-            for (int j = 1; j <= maxSeats; j++)
+            for (int s = 1; s <= maxSeat; s++)
             {
-                seat = Seats.FirstOrDefault(s => s.RowNumber == i && s.SeatNumber == j);
-                seatsString += (seat is not null ? seat.SeatLocation() : "(X, X)") + " ";
+                var foundSeat = Seats.FirstOrDefault(seat => seat.RowNumber == r && seat.SeatNumber == s);
+                seatsString += (foundSeat is not null ? foundSeat.SeatLocation() : "(X, X)") + " ";
             };
-            seatsString += i != maxRows ? "\n" : string.Empty;
+            seatsString += r != maxRow ? "\n" : string.Empty;
         }
 
         return seatsString;

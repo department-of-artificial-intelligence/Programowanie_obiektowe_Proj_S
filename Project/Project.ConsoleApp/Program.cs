@@ -67,8 +67,8 @@ try
     var play1 = new Play("Hamlet", author1, director1);
     var play2 = new Play("Romeo i Julia", author2, director2);
 
-    play1.AddActor(actor1);
-    play1.AddActor(actor2);
+    actor1.AddPlay(play1);
+    actor2.AddPlay(play1);
 
     Console.WriteLine("--------------------------------------------");
     Console.WriteLine("Sztuki:");

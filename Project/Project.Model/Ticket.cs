@@ -1,4 +1,6 @@
-﻿namespace Project.Model;
+﻿using System.Net.Sockets;
+
+namespace Project.Model;
 
 public class Ticket
 {

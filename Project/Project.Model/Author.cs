@@ -36,7 +36,7 @@ public class Author : Person, IPlayManager
     }
     public void RemoveAllPlays()
     {
-        foreach (var play in Plays.ToList())
+        foreach (var play in Plays)
         {
             play.Author = null;
         }
