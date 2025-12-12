@@ -16,7 +16,14 @@ if (context != null)
 {
     context.Database.Migrate();
     context.Database.EnsureCreated();
-    Driver driver = new Driver() { FirstName = "John", LastName = "Smith", LicenseNumber = "A123" };
-    context.Drivers.Add(driver);
+    // Seed()
+    Driver driver1 = new Driver() { FirstName = "John", LastName = "Smith", LicenseNumber = "A123" };
+    Driver driver2 = new Driver() { FirstName = "Jane", LastName = "Doe", LicenseNumber = "A124" };
+    Driver driver3 = new Driver() { FirstName = "Anna", LastName = "Taylor", LicenseNumber = "A125" };
+    Driver driver4 = new Driver() { FirstName = "Adam", LastName = "Williams", LicenseNumber = "A126" };
+    context.Drivers.Add(driver1);
+    context.Drivers.Add(driver2);
+    context.Drivers.Add(driver3);
+    context.Drivers.Add(driver4);
     context.SaveChanges();
 }
