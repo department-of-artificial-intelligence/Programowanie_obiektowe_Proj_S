@@ -8,10 +8,10 @@ namespace Project.Reports.Tests
     {
         public required List<Resident> MockedResidents { get; init; }
 
-        public IEnumerable<IResident> AllResidents { get => this.MockedResidents; }
+        public List<IResident> AllResidents => this.MockedResidents.Cast<IResident>().ToList();
 
-        public IEnumerable<Resident> Residents { get => this.MockedResidents; }
-    
+        public List<Resident> Residents => this.MockedResidents;
+
         public ResidentsMock() { }
 
         [SetsRequiredMembers]

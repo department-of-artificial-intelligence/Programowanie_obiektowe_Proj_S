@@ -2,6 +2,6 @@
 {
     public interface IContainsCurrentResidents
     {
-        IEnumerable<Resident> Residents { get; }
+        List<Resident> Residents { get; }
     }
 }

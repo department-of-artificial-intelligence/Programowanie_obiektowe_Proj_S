@@ -1,4 +1,5 @@
-﻿using Project.Model.Abstract;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Project.Model.Abstract;
 using System.Diagnostics.CodeAnalysis;
 using Project.Model.Utils;
 
@@ -13,10 +14,12 @@ namespace Project.Model
         public required Manager Manager { get; set; }
 
         public required IEnumerable<HotelRoom> Rooms { get; set; }
+        
+        [NotMapped]
+        public List<IResident> AllResidents => this.Rooms.SelectMany(x => x.AllResidents).ToList();
 
-        public IEnumerable<IResident> AllResidents => this.Rooms.SelectMany(x => x.AllResidents);
-
-        public IEnumerable<Resident> Residents => this.Rooms.SelectMany(x => x.Residents);
+        [NotMapped]
+        public List<Resident> Residents => this.Rooms.SelectMany(x => x.Residents).ToList();
 
         public Hotel() : base(UlongIdGenerator.GenerateId()) { }
 

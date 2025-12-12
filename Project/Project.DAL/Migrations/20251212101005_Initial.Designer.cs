@@ -12,7 +12,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251205114607_Initial")]
+    [Migration("20251212101005_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -28,10 +28,7 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.Hotel", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -54,10 +51,7 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.HotelRoom", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<int>("Floor")
                         .HasColumnType("int");
@@ -81,10 +75,7 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.Manager", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("PersonId")
                         .HasColumnType("decimal(20,0)");
@@ -99,10 +90,7 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.Person", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -123,12 +111,6 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.Resident", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal?>("HotelId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal?>("HotelRoomId")
@@ -142,8 +124,6 @@ namespace Project.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelId");
-
                     b.HasIndex("HotelRoomId");
 
                     b.HasIndex("PersonId");
@@ -154,10 +134,7 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.RoomHistoricResident", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal?>("HotelRoomId")
                         .HasColumnType("decimal(20,0)");
@@ -211,10 +188,6 @@ namespace Project.DAL.Migrations
 
             modelBuilder.Entity("Project.Model.Resident", b =>
                 {
-                    b.HasOne("Project.Model.Hotel", null)
-                        .WithMany("Residents")
-                        .HasForeignKey("HotelId");
-
                     b.HasOne("Project.Model.HotelRoom", null)
                         .WithMany("Residents")
                         .HasForeignKey("HotelRoomId");
@@ -245,8 +218,6 @@ namespace Project.DAL.Migrations
 
             modelBuilder.Entity("Project.Model.Hotel", b =>
                 {
-                    b.Navigation("Residents");
-
                     b.Navigation("Rooms");
                 });
 

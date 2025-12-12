@@ -15,8 +15,7 @@ namespace Project.DAL.Migrations
                 name: "People",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -30,8 +29,7 @@ namespace Project.DAL.Migrations
                 name: "Managers",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     PersonId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
@@ -49,8 +47,7 @@ namespace Project.DAL.Migrations
                 name: "Hotels",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ManagerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -70,8 +67,7 @@ namespace Project.DAL.Migrations
                 name: "HotelRooms",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
                     Floor = table.Column<int>(type: "int", nullable: false),
                     PricePerDay = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -91,11 +87,9 @@ namespace Project.DAL.Migrations
                 name: "Residents",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     PersonId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ResidentFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HotelId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     HotelRoomId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
                 },
                 constraints: table =>
@@ -105,11 +99,6 @@ namespace Project.DAL.Migrations
                         name: "FK_Residents_HotelRooms_HotelRoomId",
                         column: x => x.HotelRoomId,
                         principalTable: "HotelRooms",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Residents_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Residents_People_PersonId",
@@ -123,8 +112,7 @@ namespace Project.DAL.Migrations
                 name: "RoomHistoricResidents",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     PersonId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ResidentFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ResidentTo = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -160,11 +148,6 @@ namespace Project.DAL.Migrations
                 name: "IX_Managers_PersonId",
                 table: "Managers",
                 column: "PersonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Residents_HotelId",
-                table: "Residents",
-                column: "HotelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Residents_HotelRoomId",
