@@ -8,21 +8,17 @@ namespace Project.DAL
     {
         private readonly Action<DbContextOptionsBuilder> _action;
 
-        public ApplicationDbContextFactory()
-        {
-            this._action = optionsBuilder =>
-            {
-                var configuration = new ApplicationConfigurationLoader<ApplicationConfiguration>().LoadConfiguration();
-                
-                optionsBuilder.UseSqlServer(configuration.ConnectionString);
-            };
-        }
-        
         public ApplicationDbContextFactory(Action<DbContextOptionsBuilder> action)
         {
             this._action = action;
         }
-        
+
+        public ApplicationDbContextFactory(ApplicationConfiguration configuration)
+            : this(x => x.UseSqlServer(configuration.ConnectionString)) { }
+
+        public ApplicationDbContextFactory()
+            : this(new ApplicationConfigurationLoader<ApplicationConfiguration>().LoadConfiguration()) { }
+
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Configuration;
 using Project.DAL;
 using Project.Model.Utils;
 using Project.Reports.Generators;
@@ -11,14 +12,16 @@ namespace Project.ConsoleApp
         
         private static void Main()
         {
-            var dbContext = new ApplicationDbContextFactory().CreateDbContext([]);
+            var configuration = new ApplicationConfigurationLoader<ApplicationConfiguration>().LoadConfiguration();
+
+            Console.WriteLine($"Using connection string: {configuration.ConnectionString}");
+
+            var dbContext = new ApplicationDbContextFactory(configuration).CreateDbContext([]);
 
             dbContext.Database.Migrate();
             dbContext.Database.EnsureCreated();
 
-            var isHotelExists = dbContext.Hotels.Any();
-
-            if (!isHotelExists)
+            if (!dbContext.Hotels.Any())
             {
                 dbContext.Hotels.Add(s_hotelGenerator.GenerateHotel());
                 dbContext.SaveChanges();
