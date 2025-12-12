@@ -16,7 +16,7 @@ if (context != null)
 {
     context.Database.Migrate();
     context.Database.EnsureCreated();
-    Person driver = new Person() {FirstName = "Jan", LastName = "Kowalski" };
-    context.Persons.Add(driver);
+    Person person = new Person() {FirstName = "Jan", LastName = "Kowalski", Email = "jakis@", Phone ="123456789" };
+    context.Persons.Add(person);
     context.SaveChanges();
 }
