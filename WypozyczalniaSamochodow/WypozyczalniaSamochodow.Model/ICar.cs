@@ -2,7 +2,9 @@
 
 public interface ICar
 {
-    void ShowCars();
-    void AddCar(Car car, int branchId);
-    void RemoveCar(int carId);
+    void ShowCars(Branch branch);
+    void AddCar(Car car, Branch branch);
+    void RemoveCar(int carId, Branch branch);
+    void ShowCarReservations(int carId, Branch branch);
+    bool HasCars(Branch branch);
 }

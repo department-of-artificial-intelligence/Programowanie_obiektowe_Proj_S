@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WypozyczalniaSamochodow.DAL\WypozyczalniaSamochodow.DAL.csproj" />
     <ProjectReference Include="..\WypozyczalniaSamochodow.Model\WypozyczalniaSamochodow.Model.csproj" />
   </ItemGroup>
 

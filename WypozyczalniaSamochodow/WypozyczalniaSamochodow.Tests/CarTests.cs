@@ -1,4 +1,5 @@
-﻿using WypozyczalniaSamochodow.Model;
+﻿using Microsoft.VisualBasic.FileIO;
+using WypozyczalniaSamochodow.Model;
 
 namespace WypozyczalniaSamochodow.Tests
 {
@@ -44,7 +45,7 @@ namespace WypozyczalniaSamochodow.Tests
             var car = new Car(1, "Mercedes", "AMG GT", 2025, 6.3f, 15.5, 720, "Automatyczna", "Benzyna", 800.0, false, 2);
 
             string result = car.ToString();
-            string expected = "[1] Mercedes AMG GT (2025) | 720KM | 800 zł/dzień | Niedostępny";
+            string expected = $"[1]: Mercedes AMG GT (2025) | Cena/dzień: 800zł | Specyfikacja: \n     Moc: 720KM | Pojemność silnika: 6.3l | Średnie spalanie: 15.5l/100km | Skrzynia: Automatyczna | Typ paliwa: Benzyna";
 
             Assert.Equal(expected, result);
         }

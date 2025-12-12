@@ -2,7 +2,8 @@
 
 public interface ICustomer
 {
-    void ShowCustomers();
-    void AddCustomer(Customer customer);
-    void RemoveCustomer(int customerId);
+    void ShowCustomers(Branch branch);
+    void AddCustomer(Customer customer, Branch branch);
+    void RemoveCustomer(int customerId, Branch branch);
+    bool HasCustomers(Branch branch);
 }

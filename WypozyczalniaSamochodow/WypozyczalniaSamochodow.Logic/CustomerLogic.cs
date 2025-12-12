@@ -12,39 +12,75 @@ public class CustomerLogic : ICustomer
         _customers = customers;
     }
 
-    public void ShowCustomers()
+    public void ShowCustomers(Branch branch)
     {
-        if (_customers.Count == 0)
+        if (branch.Customers is null || branch.Customers.Count <= 0)
         {
-            Console.WriteLine("Brak klientów.");
+            Console.WriteLine("\nBrak klientów w tym oddziale.");
             return;
         }
 
-        foreach (var customer in _customers)
+        foreach (var customer in branch.Customers)
         {
             Console.WriteLine(customer);
         }
     }
 
-    public void AddCustomer(Customer customer)
+    public void AddCustomer(Customer customer, Branch branch)
     {
-        int newId = _customers.Count > 0 ? _customers.Max(c => c.Id) + 1 : 1;
-        customer.Id = newId;
+        if (string.IsNullOrWhiteSpace(customer.FirstName) || string.IsNullOrWhiteSpace(customer.LastName))
+        {
+            Console.WriteLine("Imię i nazwisko są wymagane.");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(customer.LicenseNumber))
+        {
+            Console.WriteLine("Numer prawa jazdy jest wymagany.");
+            return;
+        }
+        if (!customer.Email.Contains("@"))
+        {
+            Console.WriteLine("Nieprawidłowy adres email.");
+            return;
+        }
+        if (customer.PhoneNumber.Length is not 9)
+        {
+            Console.WriteLine("Nieprawidłowy numer telefonu.");
+            return;
+        }
+
+        customer.Id = _customers.Any() ? _customers.Max(c => c.Id) + 1 : 1;
+
         _customers.Add(customer);
-        Console.WriteLine($"Dodano klienta: {customer.FirstName} {customer.LastName}");
+        branch.Customers.Add(customer);
+
+        Console.WriteLine($"\nDodano klienta: {customer.FirstName} {customer.LastName} do oddziału {branch.Name} {branch.City}");
     }
 
-    public void RemoveCustomer(int customerId)
+    public void RemoveCustomer(int customerId, Branch branch)
     {
-        var customer = _customers.FirstOrDefault(c => c.Id == customerId);
-        if (customer != null)
+        var customer = branch.Customers.FirstOrDefault(c => c.Id == customerId);
+        if (customer is null)
         {
-            _customers.Remove(customer);
-            Console.WriteLine($"Usunięto klienta {customer.FirstName} {customer.LastName}");
+            Console.WriteLine("\nNie znaleziono klienta w tym oddziale.");
+            return;
         }
-        else
+
+        bool hasActiveRental = branch.Rentals.Any(r => r.Customer?.Id == customerId);
+        if (hasActiveRental)
         {
-            Console.WriteLine("Nie znaleziono klienta.");
+            Console.WriteLine($"\nNie można usunąć klienta {customer.FirstName} {customer.LastName}, ponieważ posiada aktywne wypożyczenia.");
+            return;
         }
+
+        branch.Customers.Remove(customer);
+        _customers.Remove(customer);
+
+        Console.WriteLine($"\nUsunięto klienta {customer.FirstName} {customer.LastName} z oddziału {branch.Name} {branch.City}");
+    }
+
+    public bool HasCustomers(Branch branch)
+    {
+        return branch.Customers is not null && branch.Customers.Count > 0;
     }
 }

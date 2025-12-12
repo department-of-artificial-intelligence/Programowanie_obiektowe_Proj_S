@@ -1,45 +1,66 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using WypozyczalniaSamochodow.DAL;
 using WypozyczalniaSamochodow.Model;
 
-namespace WypozyczalniaSamochodow.Logic;
-public class BranchLogic : IBranch
+namespace WypozyczalniaSamochodow.Logic
 {
-    private readonly List<Branch> _branches;
-
-    public BranchLogic(List<Branch> branches)
+    public class BranchLogic : IBranch
     {
-        _branches = branches;
-    }
-
-    public void ShowBranches()
-    {
-        if (!_branches.Any())
+        private readonly List<Branch> _branches;
+        
+        public BranchLogic(List<Branch> branches)
         {
-            Console.WriteLine("Brak oddziałów.");
-            return;
+            _branches = branches;
         }
 
-        _branches.ForEach(b => Console.WriteLine(b));
-    }
-
-    public void AddBranch(string name, string city)
-    {
-        int newId = _branches.Count > 0 ? _branches.Max(b => b.Id) + 1 : 1;
-        _branches.Add(new Branch(newId, name, city));
-        Console.WriteLine($"Dodano oddział: {name} ({city})");
-    }
-
-    public void RemoveBranch(int branchId)
-    {
-        var branch = _branches.FirstOrDefault(b => b.Id == branchId);
-        if (branch == null)
+        public void ShowBranches()
         {
-            Console.WriteLine("Nie znaleziono oddziału.");
-            return;
+            if (_branches.Count <= 0)
+            {
+                Console.WriteLine("Brak oddziałów.");
+                return;
+            }
+
+            foreach (var branch in _branches)
+            {
+                Console.WriteLine(branch);
+            }
         }
-        _branches.Remove(branch);
-        Console.WriteLine($"Usunięto oddział {branch.Name}");
+
+        public void AddBranch(string name, string city, string address, string contactNumber)
+        {
+            int newId = _branches.Count > 0 ? _branches.Max(b => b.Id) + 1 : 1;
+            var branch = new Branch(newId, name, city, address, contactNumber);
+
+            _branches.Add(branch);
+            Console.WriteLine($"\nDodano oddział: {name} ({city})");
+        }
+
+        public void RemoveBranch(int branchId)
+        {
+            var branch = _branches.FirstOrDefault(b => b.Id == branchId);
+            if (branch == null)
+            {
+                Console.WriteLine("\nNie znaleziono oddziału.");
+                return;
+            }
+
+            if (branch.Rentals.Count > 0)
+            {
+                Console.WriteLine($"\nNie można usunąć oddziału {branch.Name} {branch.City}, ponieważ posiada aktywne wypożyczenia.");
+                return;
+            }
+
+            _branches.Remove(branch);
+            Console.WriteLine($"\nUsunięto oddział {branch.Name} {branch.City}");
+        }
+
+        public bool HasBranches()
+        {
+            return _branches.Count > 0;
+        }
     }
 }

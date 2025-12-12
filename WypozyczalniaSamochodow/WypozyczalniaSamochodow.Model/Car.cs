@@ -6,7 +6,7 @@
         public string Brand { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public int ProductionYear { get; set; }
-        public float EngineVolume { get; set; }
+        public double EngineVolume { get; set; }
         public double AvgConsumption { get; set; }
         public int Power { get; set; }
         public string Gearbox { get; set; } = string.Empty;
@@ -16,7 +16,8 @@
         public bool IsAvailable { get; set; }
 
         public int BranchId { get; set; }
-        //public Branch Branch { get; set; }
+
+        public List<Rental> Reservations { get; set; } = new List<Rental>();
 
         public Car() { }
         public Car(int id, string brand, string model, int productionYear, float engineVolume, double avgConsumption, int power, string gearbox, string fuelType, double pricePerDay, bool isAvailable, int branchId)
@@ -37,7 +38,7 @@
 
         public override string ToString()
         {
-            return $"[{Id}] {Brand} {Model} ({ProductionYear}) | {Power}KM | {PricePerDay} zł/dzień | {(IsAvailable ? "Dostępny" : "Niedostępny")}";
+            return $"[{Id}]: {Brand} {Model} ({ProductionYear}) | Cena/dzień: {PricePerDay}zł | Specyfikacja: \n     Moc: {Power}KM | Pojemność silnika: {EngineVolume}l | Średnie spalanie: {AvgConsumption}l/100km | Skrzynia: {Gearbox} | Typ paliwa: {FuelType}";
         }
     }
 }

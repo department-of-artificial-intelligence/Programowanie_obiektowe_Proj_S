@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WypozyczalniaSamochodow.Mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WypozyczalniaSamochodow.Tests", "WypozyczalniaSamochodow.Tests\WypozyczalniaSamochodow.Tests.csproj", "{C819EBF4-985B-4592-9613-AE5527997804}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WypozyczalniaSamochodow.DAL", "WypozyczalniaSamochodow.DAL\WypozyczalniaSamochodow.DAL.csproj", "{842BF3F4-7395-4C46-9D63-4A282F209110}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C819EBF4-985B-4592-9613-AE5527997804}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C819EBF4-985B-4592-9613-AE5527997804}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C819EBF4-985B-4592-9613-AE5527997804}.Release|Any CPU.Build.0 = Release|Any CPU
+		{842BF3F4-7395-4C46-9D63-4A282F209110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{842BF3F4-7395-4C46-9D63-4A282F209110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{842BF3F4-7395-4C46-9D63-4A282F209110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{842BF3F4-7395-4C46-9D63-4A282F209110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
