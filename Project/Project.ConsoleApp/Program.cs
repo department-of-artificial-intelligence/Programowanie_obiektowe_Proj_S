@@ -1,6 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+
+using Project.DAL;
 using Project.Model;
+
 
 // transactions: commit, rollback
 
@@ -33,4 +39,4 @@ Console.WriteLine(p1);
 
 Console.WriteLine(c1.TicketsSold);
 
-//Console.ReadKey();
+ApplicationDBContext db = new ApplicationDBContext();
