@@ -6,10 +6,11 @@ namespace Project.Model
     {
         public int MaxPayLoadKg { get; init; }
 
-        public Truck(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, int maxPayload)
+        public Truck() { }
+        public Truck(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, int maxPayloadKg)
             : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
-            MaxPayLoadKg = maxPayload;
+            MaxPayLoadKg = maxPayloadKg;
         }
 
         public override VehicleType VType => VehicleType.Truck;

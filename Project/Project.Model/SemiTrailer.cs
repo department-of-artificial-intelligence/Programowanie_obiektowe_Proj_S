@@ -7,6 +7,7 @@ namespace Project.Model
     {
         public float MaxGrossWeightTons { get; init; }
 
+        public SemiTrailer() { }
         public SemiTrailer(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, float maxGrossWeightTons)
             : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
@@ -14,7 +15,6 @@ namespace Project.Model
         }
 
         public override VehicleType VType => VehicleType.SemiTrailer;
-
 
         public override float CalculateWearRate()
         {

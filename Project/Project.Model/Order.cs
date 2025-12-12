@@ -18,6 +18,7 @@ namespace Project.Model
         IDriver? IOrder.AssignedDriver => AssignedDriver;
         IVehicle? IOrder.AssignedVehicle => AssignedVehicle;
 
+        public Order() { }
         public Order(int id, string loadDesc, string loadingAddress, string unloadingAddress)
         {
             Id = id;

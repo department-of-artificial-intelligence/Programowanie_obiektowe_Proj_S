@@ -6,6 +6,7 @@ namespace Project.Model
     {
         public int NumberOfSeats { get; init; }
 
+        public CompanyCar() { }
         public CompanyCar(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, int numberOfSeats)
             : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {

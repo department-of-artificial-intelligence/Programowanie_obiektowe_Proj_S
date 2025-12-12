@@ -13,11 +13,12 @@ public abstract class Vehicle : IVehicle
 
     public VehicleStatus VStatus { get; set; }
     public abstract VehicleType VType { get; }
-
+    
     [NotMapped]
     public IDriver? AssignedDriver { get; set; } = null!;
 
-    public Vehicle(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber)
+    public Vehicle() {}
+    protected Vehicle(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber)
     {
         Id = id;
         VinNumber = vinNumber;

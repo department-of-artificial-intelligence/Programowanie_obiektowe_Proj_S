@@ -6,10 +6,11 @@ namespace Project.Model
     {
         public float MaxVolumeCubicMeters { get; init; }
 
-        public DeliveryVan(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, float maxVolume)
+        public DeliveryVan() { }
+        public DeliveryVan(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber, float maxVolumeCubicMeters)
             : base(id, vinNumber, productionYear, engineSize, mileage, brand, model, registrationNumber)
         {
-            MaxVolumeCubicMeters = maxVolume;
+            MaxVolumeCubicMeters = maxVolumeCubicMeters;
         }
 
         public override VehicleType VType => VehicleType.DeliveryVan;
