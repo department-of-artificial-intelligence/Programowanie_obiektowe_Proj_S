@@ -7,6 +7,9 @@ public class Service
     private string _description;
     private int _numOfGrades;
     private string? _serviceType;
+    public float Quality { get; set; }
+    public float Price { get; set; }
+    public float Overall {  get; set; }
     public int  Id { get => _id; set => _id = value; }
     public string Name { get => _name; set => _name = value; }
     public int NumOfGrades{get => _numOfGrades;}

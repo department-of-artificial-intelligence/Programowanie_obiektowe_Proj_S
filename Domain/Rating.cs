@@ -2,22 +2,24 @@ namespace RatingSystem.Domain;
 
 public class Rating
 {
-    private int _id;
+    private int _RatingId;
     private int _serviceId;
     private int _value;
     private string _comment;
 
-    public Service Service
+
+
+    public Service? Service
     {
         get;
         set;
     }
-    public int Id
+    public int RatingId
     {
-        get => _id;
-        set => _id = value;
+        get => _RatingId;
+        set => _RatingId = value;
     }
-
+    public DateTime Date { get; set; }
     public int ServiceId
     {
         get => _serviceId;
@@ -36,13 +38,13 @@ public class Rating
         set => _comment = value;
     }
 
-    Rating(int id, int serviceId, int value, string comment)
+     public Rating(int id, int serviceId, int value, string comment)
     {
-        _id = id;
+        _ = id;
         _serviceId = serviceId;
         _value = value;
         _comment = comment;
     }
-    Rating():this(0, 0, 0, string.Empty){}
+    public Rating():this(0, 0, 0, string.Empty){}
     
 }
