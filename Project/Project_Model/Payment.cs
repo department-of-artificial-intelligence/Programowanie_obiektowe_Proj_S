@@ -30,7 +30,7 @@ namespace Project.Model
             PaymentDate = DateTime.MinValue;
             Status = PaymentStatuses.Unpaid;
         }
-        public bool PostPaiment()
+        public bool PostPayment()
         {
             if (Status == PaymentStatuses.Unpaid)
             {

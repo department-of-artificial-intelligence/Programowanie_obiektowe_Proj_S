@@ -202,8 +202,14 @@ namespace Project
             var student = manager.GetStudents().FirstOrDefault(s => s.Id == sId);
             if (student == null) return;
 
-            Console.WriteLine("=== Przedmioty ===");
-            foreach (var sub in manager.GetSubjects()) Console.WriteLine(sub);
+            Console.WriteLine($"=== Przedmioty, których uczy {tutor.LastName} {tutor.FirstName} ===");
+            if (!tutor.Specialties.Any()) {
+                Console.WriteLine("Ten nauczyciel nie ma przypisanych żadnych przedmiotów!");
+                return;
+            }
+            foreach (var sub in tutor.Specialties) {
+                Console.WriteLine(sub);
+            }
             Console.Write("ID Przedmiotu: ");
             if (!int.TryParse(Console.ReadLine(), out int subId)) return;
             var subject = manager.GetSubjects().FirstOrDefault(s => s.Id == subId);
@@ -247,8 +253,6 @@ namespace Project
             manager.AddSpecialtyToTutor(t1.Id, math);
 
             var s1 = manager.AddStudent("Anna", "Nowak", "anna@test.com", "Liceum");
-
-
             var slot = manager.AddTimeSlot(t1, DateTime.Now.AddDays(1).Date.AddHours(10), DateTime.Now.AddDays(1).Date.AddHours(11));
 
             Console.WriteLine("Dane startowe załadowane!");

@@ -75,6 +75,15 @@ namespace Project.DAL
 
         public TimeSlot AddTimeSlot(Tutor tutor, DateTime start, DateTime end)
         {
+            bool Nakladasie = _context.TimeSlots.Any(ts =>
+                ts.TutorId==tutor.Id &&
+                start<ts.EndDateTime &&
+                end >ts.StartDateTime
+            );
+            if (Nakladasie) {
+                throw new InvalidOperationException("Nie można dodać terminu- nakłada się na inny");
+            }
+
             var newSlot = new TimeSlot(tutor.Id, start, end);
             _context.TimeSlots.Add(newSlot);
             _context.SaveChanges();
@@ -84,6 +93,10 @@ namespace Project.DAL
         public Reservation? BookLesson(Tutor tutor, Student student, Subject subject, TimeSlot slot)
         {
             if (slot.IsBooked) return null;
+
+            if(!tutor.Specialties.Any(s=>s.Id == subject.Id)){
+                throw new ArgumentException($"Nauczyciel {tutor.LastName} nie prowadzi przedmiotu {subject.Name} ");
+            }
 
             var lesson = new Lesson(tutor, student, subject, slot);
             _context.Lessons.Add(lesson);
