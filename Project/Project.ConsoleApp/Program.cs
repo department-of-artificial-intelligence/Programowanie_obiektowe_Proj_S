@@ -16,7 +16,7 @@ if (context != null)
 {
     context.Database.Migrate();
     context.Database.EnsureCreated();
-    Driver driver = new Driver() { Id = 123, FirstName = "John", LastName = "Smith", LicenseNumber = "A123" };
+    Driver driver = new Driver() { FirstName = "John", LastName = "Smith", LicenseNumber = "A123" };
     context.Drivers.Add(driver);
     context.SaveChanges();
 }
