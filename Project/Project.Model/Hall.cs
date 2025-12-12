@@ -17,7 +17,7 @@ public class Hall
         }
     }
     public List<Seat> Seats { get; } = new List<Seat>(); 
-    public List<Performance> Performances { get; } = new List<Performance>(); 
+    public List<Performance> Performances { get; } = new List<Performance>();
 
     // Konstruktory
     private Hall() { }

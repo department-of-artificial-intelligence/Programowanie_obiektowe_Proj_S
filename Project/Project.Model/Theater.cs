@@ -17,7 +17,7 @@ public class Theater
         }
     }
     public Address Address { get; private set; } = default!;
-    public List<Hall> Halls { get; } = new List<Hall>(); 
+    public List<Hall> Halls { get; } = new List<Hall>();
 
     // Konstruktory
     private Theater() { }

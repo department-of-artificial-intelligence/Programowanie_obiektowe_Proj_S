@@ -3,11 +3,10 @@
 public class Author : Person, IPlayManager
 {
     // Właściwości
-    public int AuthorId { get; private set; } // PK
     public List<Play> Plays { get; } = new List<Play>(); 
 
     // Konstruktory
-    private Author() { }
+    public Author() { }
 
     public Author(string firstName, string lastName, List<Play>? plays = null)
         : base(firstName, lastName)

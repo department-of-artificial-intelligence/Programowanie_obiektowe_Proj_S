@@ -18,10 +18,10 @@ public class Play
     }
     public Author? Author { get; set; } 
     public Director? Director { get; set; } 
-    public List<Actor> Actors { get; } = new List<Actor>(); 
+    public List<Actor> Actors { get; } = new List<Actor>();
 
     // Konstruktory
-    private Play() { }
+    public Play() { }
 
     public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
     {

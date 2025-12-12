@@ -3,7 +3,6 @@
 public class Customer : Person, ITicketTransactions
 {
     // Właściwości
-    public int CustomerId { get; private set; } // PK
     public List<Ticket> Tickets { get; } = new List<Ticket>(); 
 
     // Konstruktory

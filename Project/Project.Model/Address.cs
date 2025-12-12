@@ -3,6 +3,7 @@
 public class Address
 {
     // Właściwości
+    public int AddressId { get; set; }
     public string Country { get; private set; } = string.Empty;
     public string City { get; private set; } = string.Empty;
     public string Street { get; private set; } = string.Empty;

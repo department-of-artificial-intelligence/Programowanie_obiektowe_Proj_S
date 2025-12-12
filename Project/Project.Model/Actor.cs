@@ -6,7 +6,6 @@ public class Actor : Person, IPlayManager
     private decimal _salary;
 
     // Właściwości
-    public int ActorId { get; private set; } // PK
     public decimal Salary 
     { 
         get => _salary;
@@ -19,7 +18,7 @@ public class Actor : Person, IPlayManager
     public List<Play> Plays { get; } = new List<Play>(); 
 
     // Konstruktory
-    private Actor() { }
+    public Actor() { }
 
     public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null) 
         : base(firstName, lastName)

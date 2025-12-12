@@ -23,10 +23,10 @@ public class Performance
         }
     }
     public List<Ticket> Tickets { get; } = new List<Ticket>(); 
-    public Hall? Hall { get; set; } 
+    public Hall? Hall { get; set; }
 
     // Konstruktory
-    private Performance() { }
+    public Performance() { }
 
     public Performance(Play play, DateTime startTime, DateTime endTime, PerformanceStatus status = PerformanceStatus.Scheduled)
     {

@@ -10,7 +10,7 @@ public class Ticket
     public Performance Performance { get; } = default!; 
     public Seat Seat { get; } = default!; 
     public TicketStatus Status { get; set; }
-    public Customer? Customer { get; set; } 
+    public Customer? Customer { get; set; }
 
     // Konstruktory
     private Ticket() { }

@@ -7,7 +7,6 @@ public class Director : Person, IPlayManager
     private decimal _salary;
 
     // Właściwości
-    public int DirectorId { get; private set; } //PK
     public int YearsOfExperience
     {
         get => _yearsOfExperience;
@@ -29,7 +28,7 @@ public class Director : Person, IPlayManager
     public List<Play> Plays { get; } = new List<Play>(); 
 
     // Konstruktory
-    private Director() { }
+    public Director() { }
 
     public Director(string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null)
         : base(firstName, lastName)

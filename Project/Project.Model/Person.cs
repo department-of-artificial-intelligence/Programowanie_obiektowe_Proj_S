@@ -7,6 +7,7 @@ public abstract class Person
     private string _lastName = string.Empty;
 
     // Właściwości
+    public int Id { get; set; } // PK
     public string FirstName
     {
         get => _firstName;

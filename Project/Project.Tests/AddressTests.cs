@@ -1,9 +1,9 @@
-using Project.Model;
+//using Project.Model;
 
-namespace Project.Tests;
+//namespace Project.Tests;
 
-public class AddressTests
-{
-    [Fact]
+//public class AddressTests
+//{
+//    [Fact]
 
-}
+//}
