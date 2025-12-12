@@ -8,16 +8,15 @@ namespace Project.Configuration
         public T LoadConfiguration(string section = "Application", Assembly? assembly = null)
         {
             var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory());
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 
             if (assembly is not null)
             {
                 configurationBuilder.AddUserSecrets(assembly);
             }    
                 
-            configurationBuilder
-                .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
+            configurationBuilder.AddEnvironmentVariables();
             
             return configurationBuilder.Build()
                 .GetSection(section)
