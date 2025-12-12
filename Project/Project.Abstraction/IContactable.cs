@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.ConsoleApp
+namespace Project.Abstraction
 {
     public interface IContactable
     {
-        void UpdateContactInfo(string phone, string email);
+        string? Email { get; }
+        string? Phone { get; }
     }
 }

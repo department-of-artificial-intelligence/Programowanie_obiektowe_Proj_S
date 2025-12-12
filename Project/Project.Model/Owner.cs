@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Owner
+    public class Owner : Person
     {
-        public int Id { get; set; }
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public string? PhoneNumber {  get; set; }
-        public string? Email { get; set; }
-        public string? Address { get; set; }
+        public List<Animal> Animals { get; set; } = new List<Animal>();
 
-        public List<Animal> Animals { get; set; } = new();
+        public Owner() : base() { }
 
-
-        public override string ToString()
+        public Owner(int id, string firstName, string lastName, string? email = null, string? phone = null)
+            : base(id, firstName, lastName, email, phone)
         {
-            return $"{Id} {FirstName} {LastName} {PhoneNumber} {Email} {Address}";
+
+
         }
     }
 }

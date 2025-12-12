@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,24 +7,22 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Treatment
+    public class Treatment : IIdentifiable
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
         public decimal Cost { get; set; }
-        public DateTime ExecutionDate { get; set; }
 
-        public int AppointmentId { get; set; }
-        public Appointment Appointment { get; set; }
+        public Treatment() { }
 
-        public override string ToString()
+        public Treatment(int id, string name, string? description = null, decimal cost = 0m)
         {
-            return $"{Id} - {Name}: {Description}, Cost: {Cost:C}, Executed on: {ExecutionDate:yyyy-MM-dd HH:mm}";
+            Id = id;
+            Name = name;
+            Description = description;
+            Cost = cost;
         }
-
-
-
 
     }
 }

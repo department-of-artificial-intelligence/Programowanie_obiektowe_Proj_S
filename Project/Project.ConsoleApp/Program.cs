@@ -1,7 +1,22 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Project.DAL;
 using Project.Model;
 
-Pracownicy p1 = new Pracownicy() { FirstName = "Jan", LastName = "Kowalski", Age = 40 };
-Console.WriteLine(p1);
-//Console.WriteLine($"{p1.FirstName} {p1.LastName} {p1.Age}");
+IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+{
+    var cns = context.Configuration.GetConnectionString("DefaultConnection");
+    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+}).Build();
+
+var context = _host.Services.GetService<ApplicationDbContext>();
+if (context != null)
+{
+    context.Database.Migrate();
+    context.Database.EnsureCreated();
+    Person driver = new Person() {FirstName = "Jan", LastName = "Kowalski" };
+    context.Persons.Add(driver);
+    context.SaveChanges();
+}

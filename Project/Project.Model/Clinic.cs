@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Project.Abstraction;
+
 
 namespace Project.Model
 {
-    public class Clinic 
+    public class Clinic : IIdentifiable, IContactable
     {
-        public int Id {  get; set; }
-        public required string Name { get; set; }
-        public required string City { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Address { get; set; }
-        public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
-        public string? OpeningHours { get; set; }
-
-
+        public string? Phone { get; set; }
         public List<Veterinarian> Veterinarians { get; set; } = new();
-        public List<Appointment> Appointments { get; set; } = new();
 
-        public override string ToString()
+        public Clinic() { }
+
+        public Clinic(int id, string name, string? address = null, string? email = null, string? phone = null)
         {
-            return $"{Id} {Name} {City} {PhoneNumber}";
+            Id = id;
+            Name = name;
+            Address = address;
+            Email = email;
+            Phone = phone;
         }
-
-    }   
+    }
 }
+

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.ConsoleApp
+namespace Project.Abstraction
 {
     public interface IStatus
     {
-        void ChangeStatus(string newStatus);
+        string? Status { get; set; }
     }
 }
