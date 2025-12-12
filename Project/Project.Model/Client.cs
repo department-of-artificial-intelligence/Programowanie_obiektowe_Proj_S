@@ -6,11 +6,16 @@ public class Client : Person, IReportable
     public double Height { get; set; }
     public string TrainingGoal { get; set; }
     public DateTime JoinDate { get; set; }
-   
-    public List<Workout> PlannedWorkouts { get; set; }
 
-    public Client(int id, string firstName, string lastName, string email, double weight, double height, string goal)
-        : base(id, firstName, lastName, email)
+    public List<Workout> PlannedWorkouts { get; set; }
+    public Client() : base(string.Empty, string.Empty, string.Empty)
+    {
+        // Pamiętaj o inicjalizacji kolekcji
+        PlannedWorkouts = new List<Workout>();
+    }
+
+    public Client(string firstName, string lastName, string email, double weight, double height, string goal)
+        : base(firstName, lastName, email)
     {
         Weight = weight;
         Height = height;

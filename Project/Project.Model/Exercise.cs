@@ -5,9 +5,13 @@ public class Exercise
     public string Name { get; set; }
     public string MuscleGroup { get; set; }
 
-    public Exercise(int id, string name, string muscleGroup)
+    // *******************************************************************
+    // ✅ POPRAWKA: Wymagany przez Entity Framework
+    public Exercise() { }
+    // *******************************************************************
+
+    public Exercise(string name, string muscleGroup)
     {
-        Id = id;
         Name = name;
         MuscleGroup = muscleGroup;
     }

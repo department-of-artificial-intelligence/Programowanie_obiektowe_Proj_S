@@ -7,9 +7,16 @@ public class Workout : IReportable
     public Client Client { get; set; }
     public List<Set> Sets { get; set; }
 
-    public Workout(int id, DateTime date, Client client)
+    // *******************************************************************
+    // ✅ POPRAWKA: Wymagany przez Entity Framework
+    public Workout()
     {
-        Id = id;
+        Sets = new List<Set>();
+    }
+    // *******************************************************************
+
+    public Workout(DateTime date, Client client)
+    {
         Date = date;
         Client = client;
         Sets = new List<Set>();
@@ -28,3 +35,7 @@ public class Workout : IReportable
         }
     }
 }
+
+
+
+
