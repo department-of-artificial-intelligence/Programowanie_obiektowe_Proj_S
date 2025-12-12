@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public interface IPracujacy
+    public interface IWyszukiwaniePracownikow
     {
-        int PassedProjects();
-
-        int NotPassedProjects();
+        void DoEmployeesProjectsCheck();
+        Pracownik FindBestEmployeeByProjectGrade();
     }
 }

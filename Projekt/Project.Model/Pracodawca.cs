@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Pracodawca : Osoba : IWyszukiwaniePracownikow
+    public class Pracodawca : Osoba, IWyszukiwaniePracownikow
     {
-
+        public List<Pracownik> ListaPracownikow {  get; set; } = new List<Pracownik>();
         public List<Dzial> ListaDzialow {  get; set; } = new List<Dzial>();
 
         public Adres Adres { get; set; }
@@ -19,26 +19,26 @@ namespace Project.Model
 
         public string LoadContactInfo()
         {
-            return $"Email firmy: {Email} | Telefon: {Telefon} | Adres siedziby: {Adres.Miasto}"
+            return $"Email firmy: {Email} | Telefon: {Telefon} | Adres siedziby: {Adres.Miasto}";
         }
 
         public void DoEmployeesProjectsCheck()
         {
-            Console.WriteLine($"Szef {B_FirstName} sprawdza projekty")
+            Console.WriteLine($"Szef {FirstName} sprawdza projekty");
             
             foreach(Pracownik prac in ListaPracownikow)
             {
-                Console.WriteLine($"Pracownik {prac.FirstName} {prac.LastName}")
+                Console.WriteLine($"Pracownik {prac.FirstName} {prac.LastName}");
 
-                if(prac.ListaPracownikow.Count == 0)
+                if(prac.ListaProjektow == null || prac.ListaProjektow.Count == 0)
                 {
-                    Console.WriteLine("Brak przypisanych projektow")
+                    Console.WriteLine("Brak przypisanych projektow");
                 }
                 else
                 {
                     foreach(Projekt proj in prac.ListaProjektow)
                     {
-                        Console.WriteLine($"Projekt: '{proj.Name}', Ocena: {proj.Ocena}, Właściciel: {proj.Wlasciciel}")
+                        Console.WriteLine($"Projekt: '{proj.Name}', Ocena: {proj.Ocena}, Właściciel: {proj.Wlasciciel}");
                     }
                 }
             }
@@ -54,8 +54,8 @@ namespace Project.Model
              }
 
              var bestEmployee = ListaPracownikow
-                 .Where(prac => prac.ListaProjektow != null && prac.ListaPracownikow.Any())
-                 .OrderByDescending(prac => prac.ListaProjektow.Avarage(proj => proj.Ocena)
+                 .Where(prac => prac.ListaProjektow != null && prac.ListaProjektow.Any())
+                 .OrderByDescending(prac => prac.ListaProjektow.Average(proj => proj.Ocena)
                  )
                  .FirstOrDefault();
 
@@ -69,7 +69,7 @@ namespace Project.Model
 
             if (MeetingDate == "25.XX.20XX")
             {
-                Console.WriteLine("Dzisiaj odbędzie sie ważne spotkanie o godz. 16:00")
+                Console.WriteLine("Dzisiaj odbędzie sie ważne spotkanie o godz. 16:00");
             }
         }
     }

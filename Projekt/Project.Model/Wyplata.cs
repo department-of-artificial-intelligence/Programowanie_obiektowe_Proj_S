@@ -21,7 +21,7 @@ namespace Project.Model
         private const decimal BestEmployeeBonus = 1000m;
        
        
-        public void DoPayment(Pracownik pracownik, int podstawowaKwota)
+        public void DoPayment(Pracownik pracownik, int podstawowaKwota, bool isBestEmployee)
         {
             decimal premia = 0m;
        
@@ -48,10 +48,10 @@ namespace Project.Model
 
             decimal premiaZaWyniki = 0m;
 
-            if(isbestEmployee)
+            if(isBestEmployee)
             {
                 premiaZaWyniki = BestEmployeeBonus;
-                Console.WriteLine($"Przyznano premię za najlepszego pracownika: {BestEmployeeBonus} PLN")
+                Console.WriteLine($"Przyznano premię za najlepszego pracownika: {BestEmployeeBonus} PLN");
             }
 
             decimal lacznaPremia = premia + premiaZaWyniki;

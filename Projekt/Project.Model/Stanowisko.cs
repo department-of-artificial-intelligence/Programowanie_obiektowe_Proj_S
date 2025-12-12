@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public interface IPracujacy
+    public enum Stanowisko
     {
-        int PassedProjects();
-
-        int NotPassedProjects();
+        Programista,
+        Manager,
+        Tester,
+        Hr
     }
 }

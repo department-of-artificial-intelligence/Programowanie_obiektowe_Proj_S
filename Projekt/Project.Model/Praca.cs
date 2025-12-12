@@ -13,6 +13,12 @@ namespace Project.Model
 
         public required string Typeofjob { get; set; }
 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public int Id { get; set; }
+        public int Age { get; set; }
+
         public void LoadInfoEmployees()
         {
             Console.WriteLine("Podaj imie pracownika: ");
@@ -22,10 +28,17 @@ namespace Project.Model
             LastName = Console.ReadLine();
 
             Console.WriteLine("Podaj Id pracownika: ");
-            Id = Console.ReadLine();
+            if(int.TryParse(Console.ReadLine(), out int id))
+            {
+                Id = id;
+            }
 
             Console.WriteLine("Podaj wiek pracownika: ");
-            Age = Console.ReadLine();
+            if (int.TryParse(Console.ReadLine(), out int age))
+            {
+                Age = age;
+            }
+
 
         }
     }

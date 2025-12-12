@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Pracownik : Osoba : IPracujacy : IKontakt
+    public class Pracownik : Osoba, IPracujacy, IKontakt
     {
         public Adres AdresZamieszkania { get; set; }
         public Stanowisko StanowiskoPracy { get; set; }
        
         public List<Projekt> ListaProjektow { get; set; } = new List<Projekt>();
        
-        public void PassedProjects()
+        public int PassedProjects()
         {
             int amountofpassed = 0;
        
@@ -28,7 +28,7 @@ namespace Project.Model
             return amountofpassed;
         }
        
-        public void NotPassedProjects()
+        public int NotPassedProjects()
         {
             int amountofnotpassed = 0;
        
@@ -48,7 +48,7 @@ namespace Project.Model
        
         public string LoadContactInfo()
         {
-            return $"Email: {Email} | Telefon: {Telefon} | Adres: {Adres.Miasto}, {Adres.Ulica}"
+            return $"Email: {Email} | Telefon: {Telefon} | Adres: {Adres.Miasto}, {Adres.Ulica}";
         }
        
    }    

@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Project.Model;
-using System;
+using System.Collections.Generic;
 
 namespace Project.DAL;
 
 public class ApplicationDbcontext : DbContext
 {
-	public DbSet<Osoba> Osoby {  get; set; }
+	public DbSet<Pracownik> Pracownicy {  get; set; }
 
-	public ApplicationDbContext(DbContextOptionsc<ApplicationDbcontext> options) : base(options)
+	public ApplicationDbContext(DbContextOptions<ApplicationDbcontext> options) : base(options)
 	{
 
 	}
