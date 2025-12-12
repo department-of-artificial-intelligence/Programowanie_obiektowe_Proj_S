@@ -11,7 +11,6 @@ namespace Project.DAL
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Payment> Payments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -25,9 +24,6 @@ namespace Project.DAL
                 .Property(t => t.HourlyRate)
                 .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<Payment>()
-                .Property(p => p.Amount)
-                .HasColumnType("decimal(18,2)");
         }
     }
 }

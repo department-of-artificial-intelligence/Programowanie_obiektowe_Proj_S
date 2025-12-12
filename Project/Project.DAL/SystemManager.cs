@@ -6,7 +6,7 @@ using Project.Model;
 
 namespace Project.DAL
 {
-    public class SystemManager
+    public class SystemManager : ISystemManager
     {
         private readonly ApplicationDbContext _context;
 
@@ -16,8 +16,7 @@ namespace Project.DAL
         }
 
         // --- POBIERANIE DANYCH 
-        public List<Tutor> GetTutors()
-            => _context.Tutors
+        public List<Tutor> GetTutors()  => _context.Tutors
                 .Include(t => t.Specialties)
                 .Include(t => t.Availability)
                 .ToList();
@@ -26,15 +25,13 @@ namespace Project.DAL
 
         public List<Subject> GetSubjects() => _context.Subjects.ToList();
 
-        public List<Lesson> GetLessons()
-            => _context.Lessons
+        public List<Lesson> GetLessons()=> _context.Lessons
                 .Include(l => l.Tutor)
                 .Include(l => l.Student)
                 .Include(l => l.Subject)
                 .ToList();
 
-        public List<Reservation> GetReservations()
-            => _context.Reservations
+        public List<Reservation> GetReservations() =>_context.Reservations
                 .Include(r => r.Lesson)
                 .ToList();
 
@@ -50,6 +47,7 @@ namespace Project.DAL
         public void AddSpecialtyToTutor(int tutorId, Subject subject)
         {
             var tutor = _context.Tutors.Include(t => t.Specialties).FirstOrDefault(t => t.Id == tutorId);
+
             if (tutor != null && subject != null && !tutor.Specialties.Any(s => s.Id == subject.Id))
             {
                 tutor.Specialties.Add(subject);

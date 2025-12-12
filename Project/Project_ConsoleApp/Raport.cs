@@ -7,7 +7,7 @@ namespace Project
 {
     public static class Raport
     {
-        public static void ShowTutorsByRate(SystemManager manager)
+        public static void ShowTutorsByRate(ISystemManager manager)
         {
             Console.WriteLine("=== RAPORT: Korepetytorzy według stawki (rosnąco) ===");
 
@@ -19,9 +19,9 @@ namespace Project
             }
         }
 
-        public static void ShowSubjectPopularity(SystemManager manager)
+        public static void ShowSubjectPopularity(ISystemManager manager)
         {
-            Console.WriteLine("\n=== Popularność przedmiotów ===");
+            Console.WriteLine("\n=== Popularność przedmiotów (najwięcej umówionych lekcji) ===");
 
             var stats = manager.GetLessons()
                 .GroupBy(l => l.Subject.Name)

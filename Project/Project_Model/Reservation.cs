@@ -7,13 +7,11 @@ namespace Project.Model
         public int Id { get; set; }
         public Lesson? Lesson { get; set; }
         public DateTime CreationDate { get; set; }
-        public string Status { get; set; }
 
         public Reservation(Lesson lesson)
         {
             Lesson = lesson;
             CreationDate = DateTime.Now;
-            Status = ReservationStatuses.Pending;
         }
         public Reservation() { }
     }

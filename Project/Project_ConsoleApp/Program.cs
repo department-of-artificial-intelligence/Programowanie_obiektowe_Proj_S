@@ -6,17 +6,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Project.DAL;   
 using Project.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Project
 {
     public class TutoringSystemApp
     {
 
-        private static SystemManager? manager;
+        private static ISystemManager? manager;
 
         static void Main(string[] args)
         {
             var host = Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging=>
+                {
+                    logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error);
+                } )
                 .ConfigureServices((context, services) =>
                 {
                     // Pobranie ConnectionString z appsettings.json
@@ -25,7 +30,7 @@ namespace Project
                     // Rejestracja bazy danych
                     services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
                     // Rejestracja SystemManagera
-                    services.AddScoped<SystemManager>();
+                    services.AddScoped<ISystemManager, SystemManager>();
                 })
                 .Build();
 
@@ -39,10 +44,11 @@ namespace Project
                     var context = services.GetRequiredService<ApplicationDbContext>();
 
                     // To stworzy bazę danych, jeśli jej nie ma
+
                     context.Database.EnsureCreated();
 
                     // Pobieramy naszego managera, który ma już wstrzykniętą bazę
-                    manager = services.GetRequiredService<SystemManager>();
+                    manager = services.GetRequiredService<ISystemManager>();
 
                     //Załaduj dane startowe tylko jeśli baza jest pusta
                     if (!context.Tutors.Any())
@@ -106,7 +112,7 @@ namespace Project
         private static void DisplayMenu()
         {
             Console.Clear();
-            Console.WriteLine("============SYSTEM KOREPETYCJI (SQL)============");
+            Console.WriteLine("============ SYSTEM KOREPETYCJI ============");
             Console.WriteLine("1. Dodaj nowego Korepetytora");
             Console.WriteLine("2. Dodaj nowego Ucznia");
             Console.WriteLine("3. Dodaj wolny termin Korepetytorowi");
@@ -138,18 +144,29 @@ namespace Project
                 Console.WriteLine(s);
             }
 
-            Console.Write("Podaj ID specjalizacji (lub Enter aby pominąć): ");
-            string? subjectInput = Console.ReadLine();
-            if (int.TryParse(subjectInput, out int subjectId))
+            while (true)
             {
-                var subject = manager.GetSubjects().FirstOrDefault(s => s.Id == subjectId);
-                if (subject != null)
+                Console.Write("Podaj ID specjalizacji: ");
+                string? subjectInput = Console.ReadLine();
+                if (int.TryParse(subjectInput, out int subjectId))
                 {
-                    manager.AddSpecialtyToTutor(tutor.Id, subject);
-                    Console.WriteLine($"Dodano specjalizację: {subject.Name}");
+                    var subject = manager.GetSubjects().FirstOrDefault(s => s.Id == subjectId);
+                    if (subject != null)
+                    {
+                        manager.AddSpecialtyToTutor(tutor.Id, subject);
+                        Console.WriteLine($"Dodano specjalizację: {subject.Name}");
+                        break;
+                    }
+                    else{
+                        Console.WriteLine("Błąd: Nie znaleziono przedmiotu o takim ID.");
+                    }
+                }
+                else{
+                    Console.WriteLine("Błąd: To nie jest poprawna liczba.");
                 }
             }
             Console.WriteLine($"Zapisano korepetytora ID: {tutor.Id}");
+
         }
 
         private static void AddStudentMenu()
@@ -232,7 +249,7 @@ namespace Project
             Console.WriteLine("=== Lekcje ===");
             foreach (var l in manager!.GetLessons()) Console.WriteLine(l);
             Console.WriteLine("\n=== Rezerwacje ===");
-            foreach (var r in manager.GetReservations()) Console.WriteLine($"Rezerwacja {r.Id} [Status: {r.Status}]: {r.Lesson}");
+            foreach (var r in manager.GetReservations()) Console.WriteLine($"Rezerwacja {r.Id}: {r.Lesson}");
         }
 
         private static void GenerateReportsMenu()
