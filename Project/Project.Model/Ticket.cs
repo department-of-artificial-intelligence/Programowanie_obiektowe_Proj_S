@@ -7,8 +7,8 @@ public class Ticket
     // Właściwości
     public int TicketId { get; private set; } // PK
     public decimal Price { get; private set; }
-    public Performance Performance { get; } = default!; 
-    public Seat Seat { get; } = default!; 
+    public Performance Performance { get; private set; } = default!; 
+    public Seat Seat { get; private set; } = default!; 
     public TicketStatus Status { get; set; }
     public Customer? Customer { get; set; }
 

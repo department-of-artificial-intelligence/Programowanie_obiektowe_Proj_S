@@ -193,6 +193,9 @@ namespace Project.DAL.Migrations
                     b.Property<int?>("HallId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PlayId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -202,6 +205,8 @@ namespace Project.DAL.Migrations
                     b.HasKey("PerformanceId");
 
                     b.HasIndex("HallId");
+
+                    b.HasIndex("PlayId");
 
                     b.ToTable("Performances");
                 });
@@ -242,6 +247,12 @@ namespace Project.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SeatId"));
 
                     b.Property<int?>("HallId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RowNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatNumber")
                         .HasColumnType("int");
 
                     b.HasKey("SeatId");
@@ -306,12 +317,15 @@ namespace Project.DAL.Migrations
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PerformanceId")
+                    b.Property<int>("PerformanceId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -321,6 +335,8 @@ namespace Project.DAL.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("PerformanceId");
+
+                    b.HasIndex("SeatId");
 
                     b.ToTable("Tickets");
                 });
@@ -353,7 +369,15 @@ namespace Project.DAL.Migrations
                         .WithMany("Performances")
                         .HasForeignKey("HallId");
 
+                    b.HasOne("Project.Model.Play", "Play")
+                        .WithMany()
+                        .HasForeignKey("PlayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Hall");
+
+                    b.Navigation("Play");
                 });
 
             modelBuilder.Entity("Project.Model.Play", b =>
@@ -399,11 +423,23 @@ namespace Project.DAL.Migrations
                         .WithMany("Tickets")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("Project.Model.Performance", null)
+                    b.HasOne("Project.Model.Performance", "Performance")
                         .WithMany("Tickets")
-                        .HasForeignKey("PerformanceId");
+                        .HasForeignKey("PerformanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Project.Model.Seat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
+
+                    b.Navigation("Performance");
+
+                    b.Navigation("Seat");
                 });
 
             modelBuilder.Entity("Project.Model.Author", b =>

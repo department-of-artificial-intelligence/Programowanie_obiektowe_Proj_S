@@ -4,8 +4,8 @@ public class Seat
 {
     // Właściwości
     public int SeatId { get; private set; } // PK
-    public int RowNumber { get; }
-    public int SeatNumber { get; }
+    public int RowNumber { get; private set; }
+    public int SeatNumber { get; private set; }
 
     // Konstruktory
     private Seat() { }

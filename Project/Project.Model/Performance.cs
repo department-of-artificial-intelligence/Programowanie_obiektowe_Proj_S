@@ -7,7 +7,7 @@ public class Performance
 
     // Właściwości
     public int PerformanceId { get; private set; } // PK
-    public Play Play { get; } = default!; 
+    public Play Play { get; private set; } = default!; 
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
     public PerformanceStatus Status

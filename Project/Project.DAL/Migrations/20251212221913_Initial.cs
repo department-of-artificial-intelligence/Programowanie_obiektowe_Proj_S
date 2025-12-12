@@ -198,6 +198,7 @@ namespace Project.DAL.Migrations
                 {
                     PerformanceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayId = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -211,6 +212,12 @@ namespace Project.DAL.Migrations
                         column: x => x.HallId,
                         principalTable: "Halls",
                         principalColumn: "HallId");
+                    table.ForeignKey(
+                        name: "FK_Performances_Plays_PlayId",
+                        column: x => x.PlayId,
+                        principalTable: "Plays",
+                        principalColumn: "PlayId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,6 +226,8 @@ namespace Project.DAL.Migrations
                 {
                     SeatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RowNumber = table.Column<int>(type: "int", nullable: false),
+                    SeatNumber = table.Column<int>(type: "int", nullable: false),
                     HallId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -238,9 +247,10 @@ namespace Project.DAL.Migrations
                     TicketId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    PerformanceId = table.Column<int>(type: "int", nullable: false),
+                    SeatId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: true),
-                    PerformanceId = table.Column<int>(type: "int", nullable: true)
+                    CustomerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,7 +264,14 @@ namespace Project.DAL.Migrations
                         name: "FK_Tickets_Performances_PerformanceId",
                         column: x => x.PerformanceId,
                         principalTable: "Performances",
-                        principalColumn: "PerformanceId");
+                        principalColumn: "PerformanceId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Seats_SeatId",
+                        column: x => x.SeatId,
+                        principalTable: "Seats",
+                        principalColumn: "SeatId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -271,6 +288,11 @@ namespace Project.DAL.Migrations
                 name: "IX_Performances_HallId",
                 table: "Performances",
                 column: "HallId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Performances_PlayId",
+                table: "Performances",
+                column: "PlayId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Plays_AuthorId",
@@ -306,6 +328,11 @@ namespace Project.DAL.Migrations
                 name: "IX_Tickets_PerformanceId",
                 table: "Tickets",
                 column: "PerformanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_SeatId",
+                table: "Tickets",
+                column: "SeatId");
         }
 
         /// <inheritdoc />
@@ -315,16 +342,10 @@ namespace Project.DAL.Migrations
                 name: "ActorPlay");
 
             migrationBuilder.DropTable(
-                name: "Seats");
-
-            migrationBuilder.DropTable(
                 name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "Actors");
-
-            migrationBuilder.DropTable(
-                name: "Plays");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -333,13 +354,19 @@ namespace Project.DAL.Migrations
                 name: "Performances");
 
             migrationBuilder.DropTable(
+                name: "Seats");
+
+            migrationBuilder.DropTable(
+                name: "Plays");
+
+            migrationBuilder.DropTable(
+                name: "Halls");
+
+            migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
                 name: "Directors");
-
-            migrationBuilder.DropTable(
-                name: "Halls");
 
             migrationBuilder.DropTable(
                 name: "Theaters");
