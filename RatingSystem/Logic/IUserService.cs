@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RatingSystem.Logic
 {
-    public  interface Interface1
+    public  interface IUserService
     {
         Task AddUserAsync(User user);
         Task<User> GetUserByIdAsync(int userId);

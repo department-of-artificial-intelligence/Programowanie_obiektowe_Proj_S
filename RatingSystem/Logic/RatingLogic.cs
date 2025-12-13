@@ -47,9 +47,12 @@ namespace RatingSystem.Logic
 
             if (ratings == null || !ratings.Any()) { return 0.0f; }
             float average = ratings.Average(r => r.Value);
-
+            return average;
 
         }
-
+        public async Task<IEnumerable<Rating>> GetRatingsByServiceAsync(int serviceId)
+        {
+            return await _ratingRepository.GetByServiceIdAsync(serviceId);
+        }
     }
 }

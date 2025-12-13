@@ -2,7 +2,8 @@ namespace RatingSystem.Domain;
 
 public class User
 {
-    private string _userName;
-    private int _id;
+    public string? UserName { get; set; }
+    public int UserId { get; set; }
+
     
 }

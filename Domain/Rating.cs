@@ -2,8 +2,9 @@ namespace RatingSystem.Domain;
 
 public class Rating
 {
-    private int _RatingId;
+    private int _ratingId;
     private int _serviceId;
+
     private int _value;
     private string _comment;
 
@@ -14,10 +15,11 @@ public class Rating
         get;
         set;
     }
+    public  int UserId{get;set;}
     public int RatingId
     {
-        get => _RatingId;
-        set => _RatingId = value;
+        get => _ratingId;
+        set => _ratingId = value;
     }
     public DateTime Date { get; set; }
     public int ServiceId
