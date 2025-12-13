@@ -164,28 +164,5 @@ namespace Project.ConsoleApp.Helpers
 
             ConsoleHelper.WaitForKey();
         }
-
-        public static void DisplayCinemaNetworks(List<CinemaNetwork> networksToDisplay, string title)
-        {
-            Console.Clear();
-            Console.WriteLine($"=== {title} ===");
-
-            if (networksToDisplay.Count == 0)
-            {
-                Console.WriteLine("No cinema networks found.");
-            }
-            else
-            {
-                foreach (var network in networksToDisplay)
-                {
-                    Console.WriteLine(network.ToString());
-                    Console.WriteLine("----------------------------------------");
-                }
-
-                Console.WriteLine($"\nTotal: {networksToDisplay.Count} cinema networks");
-            }
-
-            ConsoleHelper.WaitForKey();
-        }
     }
 }

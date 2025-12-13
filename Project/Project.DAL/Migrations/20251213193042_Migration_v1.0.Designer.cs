@@ -12,7 +12,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251211233421_Migration_v1.0")]
+    [Migration("20251213193042_Migration_v1.0")]
     partial class Migration_v10
     {
         /// <inheritdoc />
@@ -146,33 +146,6 @@ namespace Project.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cinemas");
-                });
-
-            modelBuilder.Entity("Project.Models.CinemaNetwork", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ManagerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalCinemas")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CinemaNetworks");
                 });
 
             modelBuilder.Entity("Project.Models.Film", b =>

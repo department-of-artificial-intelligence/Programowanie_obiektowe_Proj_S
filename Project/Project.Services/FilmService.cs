@@ -36,9 +36,10 @@ namespace Project.Services
         public static void Delete(ApplicationDBContext context, string filmId)
         {
             var film = context.Films.FirstOrDefault(f => f.Id == filmId);
+
             if (film != null)
             {
-                var cinemasWithFilm = context.Cinemas.Where(c => c.AvailableFilmIds.Contains(filmId)).ToList();
+                var cinemasWithFilm = context.Cinemas.AsEnumerable().Where(c => c.AvailableFilmIds.Contains(filmId)).ToList();
 
                 foreach (var cinema in cinemasWithFilm)
                 {
@@ -46,7 +47,9 @@ namespace Project.Services
                     context.Cinemas.Update(cinema);
                 }
 
-                var seances = context.Seances.Where(s => s.FilmId == filmId).ToList();
+                var seances = context.Seances
+                    .Where(s => s.FilmId == filmId)
+                    .ToList();
 
                 foreach (var seance in seances)
                 {
@@ -85,12 +88,12 @@ namespace Project.Services
 
         public static List<Film> SortByNumberOfActors(ApplicationDBContext context)
         {
-            return [.. context.Films.OrderByDescending(f => f.ActorIds.Count)];
+            return [.. context.Films.AsEnumerable().OrderByDescending(f => f.ActorIds.Count)];
         }
 
         public static List<Cinema> GetCinemasWithFilm(ApplicationDBContext context, string filmId)
         {
-            return [.. context.Cinemas.Where(c => c.AvailableFilmIds.Contains(filmId))];
+            return [.. context.Cinemas.AsEnumerable().Where(c => c.AvailableFilmIds.Contains(filmId))];
         }
     }
 }

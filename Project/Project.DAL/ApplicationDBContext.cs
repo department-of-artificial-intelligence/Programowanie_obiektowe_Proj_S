@@ -8,7 +8,6 @@ namespace Project.DAL
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Auditorium> Auditoriums { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
-        public DbSet<CinemaNetwork> CinemaNetworks { get; set; }
         public DbSet<Film> Films { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Seance> Seances { get; set; }

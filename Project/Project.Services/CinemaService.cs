@@ -52,7 +52,7 @@ namespace Project.Services
 
         public static List<Cinema> SortByNumberOfAvailableFilms(ApplicationDBContext context)
         {
-            return [.. context.Cinemas.OrderByDescending(c => c.AvailableFilmIds.Count)];
+            return [.. context.Cinemas.AsEnumerable().OrderByDescending(c => c.AvailableFilmIds.Count)];
         }
 
         public static List<Cinema> FilterByName(ApplicationDBContext context, string name)

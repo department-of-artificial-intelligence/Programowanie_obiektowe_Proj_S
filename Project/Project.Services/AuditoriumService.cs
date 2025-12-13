@@ -59,6 +59,16 @@ namespace Project.Services
             }
         }
 
+        public static List<Auditorium> SortByFeatures(ApplicationDBContext context)
+        {
+            return [.. context.Auditoriums.AsEnumerable().OrderByDescending(a => a.Features.Count)];
+        }
+
+        public static List<Auditorium> SortByMaxCapacity(ApplicationDBContext context)
+        {
+            return [.. context.Auditoriums.AsEnumerable().OrderByDescending(a => a.Capacity)];
+        }
+
         public static List<Auditorium> FilterByName(ApplicationDBContext context, string name)
         {
             return [.. context.Auditoriums.Where(a => a.Name.Contains(name))];
@@ -66,17 +76,7 @@ namespace Project.Services
 
         public static List<Auditorium> FilterByFeature(ApplicationDBContext context, string feature)
         {
-            return [.. context.Auditoriums.Where(a => a.Features.Any(f => f.Contains(feature)))];
-        }
-
-        public static List<Auditorium> SortByFeatures(ApplicationDBContext context)
-        {
-            return [.. context.Auditoriums.OrderByDescending(a => a.Features.Count)];
-        }
-
-        public static List<Auditorium> SortByMaxCapacity(ApplicationDBContext context)
-        {
-            return [.. context.Auditoriums.OrderByDescending(a => a.Capacity)];
+            return [.. context.Auditoriums.AsEnumerable().Where(a => a.Features.Any(f => f.Contains(feature)))];
         }
     }
 }

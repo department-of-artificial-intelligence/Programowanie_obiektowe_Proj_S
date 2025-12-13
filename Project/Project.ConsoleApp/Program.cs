@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Project.ConsoleApp.Helpers;
+﻿using Project.ConsoleApp.Helpers;
 using Project.ConsoleApp.Menues;
 using Project.DAL;
 using Project.Models;
@@ -30,7 +29,6 @@ namespace Project.ConsoleApp
                 Console.WriteLine("5. Manage Seances");
                 Console.WriteLine("6. Manage Reservations");
                 Console.WriteLine("7. Manage Tickets");
-                Console.WriteLine("8. Manage Cinema Networks");
                 Console.WriteLine("0. Exit");
                 Console.Write("Choose an option: ");
 
@@ -45,7 +43,6 @@ namespace Project.ConsoleApp
                     case "5": SeanceMenu.ShowSeanceMenu(context); break;
                     case "6": ReservationMenu.ShowReservationMenu(context); break;
                     case "7": TicketMenu.ShowTicketMenu(context); break;
-                    case "8": CinemaNetworkMenu.ShowCinemaNetworkMenu(context); break;
                     case "0": return;
                     default: Console.WriteLine("Invalid choice!"); ConsoleHelper.WaitForKey(); break;
                 }
@@ -217,15 +214,6 @@ namespace Project.ConsoleApp
                 var ticket4 = new Ticket(reservation3.Id, cinema3.Id, auditorium4.Id, seance6.Id, film6.Id, "A3", seance6.Price, TicketType.VIP);
                 var ticket5 = new Ticket(reservation3.Id, cinema3.Id, auditorium4.Id, seance6.Id, film6.Id, "A4", seance6.Price, TicketType.Standard);
 
-                // Cinema Networks
-                var network1 = new CinemaNetwork("CinemaMax Ukraine", "Olena Sydorenko");
-                network1.SetTotalCinemas(15);
-
-                var network2 = new CinemaNetwork("MovieStar Group", "Mykola Ivanov");
-                network2.SetTotalCinemas(8);
-
-                var network3 = new CinemaNetwork("Film Paradise", "Svitlana Petrenko");
-                network3.SetTotalCinemas(12);
 
                 // Saving To DB
                 context.Actors.AddRange([actor1, actor2, actor3, actor4, actor5, actor6]);
@@ -235,7 +223,6 @@ namespace Project.ConsoleApp
                 context.Seances.AddRange([seance1, seance2, seance3, seance4, seance5, seance6]);
                 context.Reservations.AddRange([reservation1, reservation2, reservation3]);
                 context.Tickets.AddRange([ticket1, ticket2, ticket3, ticket4, ticket5]);
-                context.CinemaNetworks.AddRange([network1, network2, network3]);
 
                 context.SaveChanges();
 

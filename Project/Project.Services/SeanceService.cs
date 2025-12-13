@@ -74,7 +74,7 @@ namespace Project.Services
 
         public static List<Seance> SortByOccupiedSeats(ApplicationDBContext context)
         {
-            return [.. context.Seances.OrderByDescending(s => s.OccupiedSeatIds.Count)];
+            return [.. context.Seances.AsEnumerable().OrderByDescending(s => s.OccupiedSeatIds.Count)];
         }
     }
 }

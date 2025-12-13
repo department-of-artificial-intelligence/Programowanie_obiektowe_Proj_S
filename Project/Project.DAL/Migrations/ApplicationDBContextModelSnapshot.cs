@@ -145,33 +145,6 @@ namespace Project.DAL.Migrations
                     b.ToTable("Cinemas");
                 });
 
-            modelBuilder.Entity("Project.Models.CinemaNetwork", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ManagerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalCinemas")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CinemaNetworks");
-                });
-
             modelBuilder.Entity("Project.Models.Film", b =>
                 {
                     b.Property<string>("Id")

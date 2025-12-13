@@ -38,7 +38,7 @@ namespace Project.Services
 
             if (actor != null)
             {
-                var filmsWithActor = context.Films.Where(f => f.ActorIds.Contains(actorId)).ToList();
+                var filmsWithActor = context.Films.AsEnumerable().Where(f => f.ActorIds.Contains(actorId)).ToList();
 
                 foreach (var film in filmsWithActor)
                 {
@@ -63,7 +63,7 @@ namespace Project.Services
 
         public static List<Film> GetFilmsWithActor(ApplicationDBContext context, string actorId)
         {
-            return [.. context.Films.Where(f => f.ActorIds.Contains(actorId))];
+            return [.. context.Films.AsEnumerable().Where(f => f.ActorIds.Contains(actorId))];
         }
     }
 }

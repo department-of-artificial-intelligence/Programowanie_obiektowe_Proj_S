@@ -52,22 +52,6 @@ namespace Project.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CinemaNetworks",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ManagerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalCinemas = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CinemaNetworks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cinemas",
                 columns: table => new
                 {
@@ -179,9 +163,6 @@ namespace Project.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Auditoriums");
-
-            migrationBuilder.DropTable(
-                name: "CinemaNetworks");
 
             migrationBuilder.DropTable(
                 name: "Cinemas");

@@ -37,7 +37,6 @@ namespace Project.DAL
                 if (Context.Actors.Any()) Context.Actors.RemoveRange(Context.Actors);
                 if (Context.Auditoriums.Any()) Context.Auditoriums.RemoveRange(Context.Auditoriums);
                 if (Context.Cinemas.Any()) Context.Cinemas.RemoveRange(Context.Cinemas);
-                if (Context.CinemaNetworks.Any()) Context.CinemaNetworks.RemoveRange(Context.CinemaNetworks);
                 if (Context.Films.Any()) Context.Films.RemoveRange(Context.Films);
                 if (Context.Reservations.Any()) Context.Reservations.RemoveRange(Context.Reservations);
                 if (Context.Seances.Any()) Context.Seances.RemoveRange(Context.Seances);
