@@ -12,7 +12,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251212195606_pierwsza")]
+    [Migration("20251213142721_pierwsza")]
     partial class pierwsza
     {
         /// <inheritdoc />
@@ -80,6 +80,60 @@ namespace Project.DAL.Migrations
                     b.ToTable("Exercises");
                 });
 
+            modelBuilder.Entity("Project.Model.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ScheduledTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("Project.Model.TrainerSlot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("SlotTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("TrainerSlots");
+                });
+
             modelBuilder.Entity("Set", b =>
                 {
                     b.Property<int>("Id")
@@ -97,10 +151,10 @@ namespace Project.DAL.Migrations
                     b.Property<int>("SetCount")
                         .HasColumnType("int");
 
-                    b.Property<double>("WeightUsed")
-                        .HasColumnType("float");
+                    b.Property<decimal>("WeightUsed")
+                        .HasColumnType("decimal(5, 2)");
 
-                    b.Property<int?>("WorkoutId")
+                    b.Property<int>("WorkoutId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -167,6 +221,36 @@ namespace Project.DAL.Migrations
                     b.HasDiscriminator().HasValue("Trainer");
                 });
 
+            modelBuilder.Entity("Project.Model.Reservation", b =>
+                {
+                    b.HasOne("Client", "Client")
+                        .WithMany("ScheduledReservations")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trainer", "Trainer")
+                        .WithMany("ScheduledReservations")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Trainer");
+                });
+
+            modelBuilder.Entity("Project.Model.TrainerSlot", b =>
+                {
+                    b.HasOne("Trainer", "Trainer")
+                        .WithMany()
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Trainer");
+                });
+
             modelBuilder.Entity("Set", b =>
                 {
                     b.HasOne("Project.Model.Exercise", "Exercise")
@@ -177,7 +261,9 @@ namespace Project.DAL.Migrations
 
                     b.HasOne("Workout", null)
                         .WithMany("Sets")
-                        .HasForeignKey("WorkoutId");
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Exercise");
                 });
@@ -201,6 +287,13 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Client", b =>
                 {
                     b.Navigation("PlannedWorkouts");
+
+                    b.Navigation("ScheduledReservations");
+                });
+
+            modelBuilder.Entity("Trainer", b =>
+                {
+                    b.Navigation("ScheduledReservations");
                 });
 #pragma warning restore 612, 618
         }

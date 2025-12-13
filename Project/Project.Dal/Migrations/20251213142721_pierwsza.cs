@@ -48,6 +48,55 @@ namespace Project.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ScheduledTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Persons_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainerSlots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SlotTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainerSlots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainerSlots_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Workouts",
                 columns: table => new
                 {
@@ -73,11 +122,11 @@ namespace Project.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    WorkoutId = table.Column<int>(type: "int", nullable: false),
                     ExerciseId = table.Column<int>(type: "int", nullable: false),
                     Repetitions = table.Column<int>(type: "int", nullable: false),
                     SetCount = table.Column<int>(type: "int", nullable: false),
-                    WeightUsed = table.Column<double>(type: "float", nullable: false),
-                    WorkoutId = table.Column<int>(type: "int", nullable: true)
+                    WeightUsed = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +141,19 @@ namespace Project.DAL.Migrations
                         name: "FK_Sets_Workouts_WorkoutId",
                         column: x => x.WorkoutId,
                         principalTable: "Workouts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_ClientId",
+                table: "Reservations",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_TrainerId",
+                table: "Reservations",
+                column: "TrainerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sets_ExerciseId",
@@ -106,6 +166,11 @@ namespace Project.DAL.Migrations
                 column: "WorkoutId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TrainerSlots_TrainerId",
+                table: "TrainerSlots",
+                column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Workouts_ClientId",
                 table: "Workouts",
                 column: "ClientId");
@@ -115,7 +180,13 @@ namespace Project.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Reservations");
+
+            migrationBuilder.DropTable(
                 name: "Sets");
+
+            migrationBuilder.DropTable(
+                name: "TrainerSlots");
 
             migrationBuilder.DropTable(
                 name: "Exercises");

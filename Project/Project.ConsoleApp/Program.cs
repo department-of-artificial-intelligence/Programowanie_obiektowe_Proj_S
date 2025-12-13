@@ -8,27 +8,27 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-// --- 1. Konfiguracja i budowanie hosta (DI) ---
+///
 
 IHost _host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((context, services) =>
-    {
-        // Pobieranie Connection String z appsettings.json
-        var cns = context.Configuration.GetConnectionString("DefaultConnection");
+  .ConfigureServices((context, services) =>
+  {
+      // Pobieranie Connection String z appsettings.json
+      var cns = context.Configuration.GetConnectionString("DefaultConnection");
 
-        // A. REJESTRACJA ApplicationDbContext
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(cns));
+      // A. REJESTRACJA ApplicationDbContext
+      services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(cns));
 
-        // B. REJESTRACJA serwisów (DataManagement używa DbContext, ReportGenerator logiki)
-        services.AddScoped<DataManagement>();
-        services.AddScoped<ReportGenerator>();
-    })
-    .Build();
+      // B. REJESTRACJA serwisów (DataManagement używa DbContext, ReportGenerator logiki)
+      services.AddScoped<DataManagement>();
+      services.AddScoped<ReportGenerator>();
+      services.AddScoped<BookingManager>(); // <-- DODANIE SERWISU REZERWACJI
+  })
+  .Build();
 
 // --- 2. LOGIKA STARTOWA (Migracja i Seed Data) ---
 
-// Operacje na DbContext muszą być w zakresie (Scope)
 using (var scope = _host.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -37,16 +37,14 @@ using (var scope = _host.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
-        // Uruchamia migracje, tworząc/aktualizując tabele w bazie
         dbContext.Database.Migrate();
         Console.WriteLine("✅ Baza danych zmigrowana pomyślnie.");
 
-        // Inicjalizacja danych startowych TYLKO jeśli baza jest pusta
         if (!dataManager.Clients.Any())
         {
             Console.WriteLine("Inicjalizacja danych startowych...");
             InitializeSampleData(dataManager);
-            Console.WriteLine("✅ Dane startowe dodane do bazy.");
+            Console.WriteLine("✅ Dane startowe dodane do bazy. Baza jest pusta i gotowa do pracy.");
         }
     }
     catch (Exception ex)
@@ -55,16 +53,18 @@ using (var scope = _host.Services.CreateScope())
         return;
     }
 
-    // 3. Uruchomienie głównego menu konsolowego
-    var reports = services.GetRequiredService<ReportGenerator>();
-    RunApplication(dataManager, reports);
+    // 3. Uruchomienie głównego menu konsolowego
+    var reports = services.GetRequiredService<ReportGenerator>();
+    var bookingManager = services.GetRequiredService<BookingManager>(); // <-- POBRANIE SERWISU
+    RunApplication(dataManager, reports, bookingManager); // <-- ZMIENIONA SYGNATURA
 }
 
 // ----------------------------------------------------------------------------------
-// --- Definicje Metod Używane w Aplikacji (przeniesione z Twojego starego pliku) ---
+// --- Definicje Metod Używane w Aplikacji ---
 // ----------------------------------------------------------------------------------
 
-void RunApplication(DataManagement data, ReportGenerator reports)
+// Główna pętla aplikacji obsługująca menu.
+void RunApplication(DataManagement data, ReportGenerator reports, BookingManager booking)
 {
     while (true)
     {
@@ -74,12 +74,13 @@ void RunApplication(DataManagement data, ReportGenerator reports)
         switch (choice)
         {
             case "1": AddClientInteractive(data); break;
-            case "2": AddTrainerInteractive(data); break;
+            case "2": AddTrainerInteractive(data, booking); break;
             case "3": AddExerciseInteractive(data); break;
             case "4": AddWorkoutInteractive(data); break;
-            case "5": reports.GroupClientsByGoal(data.Clients); break;
-            case "6": reports.DisplayAllData(data.Clients, data.Trainers, data.Exercises, data.Workouts); break;
-            case "7": Console.WriteLine("\nZamykanie aplikacji..."); return;
+            case "5": BookSessionInteractive(data, booking); break; // NOWA AKCJA
+            case "6": reports.GroupClientsByGoal(data.Clients); break;
+            case "7": reports.DisplayAllData(data.Clients, data.Trainers, data.Exercises, data.Workouts); break;
+            case "8": Console.WriteLine("\nZamykanie aplikacji..."); return;
             default: Console.WriteLine("\nNieprawidłowy wybór. Spróbuj ponownie."); break;
         }
         Console.WriteLine("\nNaciśnij dowolny klawisz, aby kontynuować...");
@@ -87,45 +88,14 @@ void RunApplication(DataManagement data, ReportGenerator reports)
     }
 }
 
+// Metoda inicjująca dane startowe (obecnie pusta).
 void InitializeSampleData(DataManagement data)
 {
-    // Dodawanie Trenerów
-    var trainer1 = new Trainer("Kamil", "Ważny", "k.w@gym.com", "Strength", 120.00m);
-    var trainer2 = new Trainer("Eryk", "Wysoki", "e.w@gym.com", "Endurance", 100.00m);
-    data.AddTrainer(trainer1);
-    data.AddTrainer(trainer2);
-
-    // Dodawanie Klientów
-    var client1 = new Client("Anna", "Wojcik", "a.w@client.com", 65.5, 1.70, "Mass Gain");
-    var client2 = new Client("Bartek", "Lis", "b.l@client.com", 90.0, 1.85, "Fat Loss");
-    var client3 = new Client("Cecylia", "Kruk", "c.k@client.com", 70.0, 1.65, "Mass Gain");
-    data.AddClient(client1);
-    data.AddClient(client2);
-    data.AddClient(client3);
-
-    // Dodawanie Ćwiczeń
-    var ex1 = new Exercise("Barbell Squat", "Legs");
-    var ex2 = new Exercise("Bench Press", "Chest");
-    var ex3 = new Exercise("Dumbbell Row", "Back");
-    data.AddExercise(ex1);
-    data.AddExercise(ex2);
-    data.AddExercise(ex3);
-
-    // Tworzenie Treningów
-    var workout1 = new Workout(DateTime.Now.Date.AddDays(-2), client1);
-    // UWAGA: Zmieniliśmy Set.cs, aby działał z bazą danych, musimy używać nowych danych (z kluczem)
-    workout1.Sets.Add(new Set(ex1, 10, 3, 60.0));
-    workout1.Sets.Add(new Set(ex2, 8, 3, 50.0));
-    data.AddWorkout(workout1);
-
-    var workout2 = new Workout(DateTime.Now.Date.AddDays(-1), client3);
-    workout2.Sets.Add(new Set(ex1, 12, 4, 55.0));
-    workout2.Sets.Add(new Set(ex3, 15, 3, 20.0));
-    data.AddWorkout(workout2);
-
-    Console.WriteLine($"Zainicjowano: {data.Clients.Count} klientów, {data.Trainers.Count} trenerów.");
+    // Brak logiki inicjalizacyjnej. Dane będą dodawane interaktywnie.
+    Console.WriteLine("Inicjalizacja zakończona. Baza danych nie zawiera startowych Klientów, Trenerów ani Treningów.");
 }
 
+// Wyświetla główne opcje menu konsoli.
 void DisplayMainMenu()
 {
     Console.Clear();
@@ -134,135 +104,209 @@ void DisplayMainMenu()
     Console.WriteLine("1. Dodaj nowego Klienta");
     Console.WriteLine("2. Dodaj nowego Trenera");
     Console.WriteLine("3. Dodaj nowe Ćwiczenie");
-    Console.WriteLine("4. Dodaj nowy Trening");
+    Console.WriteLine("4. Dodaj nowy Trening (Wykonany Workout)");
+    Console.WriteLine("5. ZAREZERWUJ SESJĘ PERSONALNĄ (Reservation)"); // OPCJA 5
+    Console.WriteLine("--------------------------------------------------");
+    Console.WriteLine("6. Raport: Grupowanie Klientów według celu");
+    Console.WriteLine("7. Raport: wszystkie dane");
     Console.WriteLine("--------------------------------------------------");
-    Console.WriteLine("5. Raport: Grupowanie Klientów wg Celów (LINQ)");
-    Console.WriteLine("6. Raport: wszystkie dane");
-    Console.WriteLine("--------------------------------------------------");
-    Console.WriteLine("7. ZAMKNIJ APLIKACJĘ");
-    Console.Write("\nWybierz opcję: ");
+    Console.WriteLine("8. ZAMKNIJ APLIKACJĘ"); // OPCJA 8
+    Console.Write("\nWybierz opcję: ");
 }
 
+// Interaktywna obsługa rezerwacji sesji personalnej.
+void BookSessionInteractive(DataManagement data, BookingManager booking)
+{
+    Console.WriteLine("\n--- REZERWACJA SESJI PERSONALNEJ ---");
+
+    // 1. Wybór Klienta
+    Console.WriteLine("Dostępni Klienci:");
+    data.Clients.ForEach(c => Console.WriteLine($"- ID {c.Id}: {c.FirstName} {c.LastName}"));
+    Console.Write("Podaj ID Klienta: ");
+    if (!int.TryParse(Console.ReadLine(), out int clientId)) return;
+
+    // 2. Wybór Trenera i wyświetlenie jego dostępności
+    Console.WriteLine("Dostępni Trenerzy:");
+    data.Trainers.ForEach(t => Console.WriteLine($"- ID {t.Id}: {t.FirstName} {t.LastName} ({t.Specialization})"));
+    Console.Write("Podaj ID Trenera: ");
+    if (!int.TryParse(Console.ReadLine(), out int trainerId)) return;
+
+    // Używamy GetTrainerById
+    Trainer trainer = data.GetTrainerById(trainerId);
+    if (trainer == null) { Console.WriteLine("Trener o podanym ID nie istnieje."); return; }
+
+    // Wyświetlenie wolnych slotów
+    booking.DisplayTrainerAvailability(trainer);
+
+    // 3. Wybór Terminu
+    Console.Write("Podaj datę i godzinę rezerwacji (YYYY-MM-DD HH:MM): ");
+    if (DateTime.TryParse(Console.ReadLine(), out DateTime slot))
+    {
+        // Wywołanie logiki rezerwacji w BookingManager
+        booking.BookSession(clientId, trainerId, slot);
+    }
+    else
+    {
+        Console.WriteLine("Nieprawidłowy format daty/godziny.");
+    }
+}
+
+// Interaktywne dodawanie nowego Klienta.
 void AddClientInteractive(DataManagement data)
 {
-    Console.WriteLine("\n--- DODAWANIE NOWEGO KLIENTA ---");
-    Console.Write("Podaj imię: ");
+    Console.Write("\nPodaj imię Klienta: ");
     string firstName = Console.ReadLine();
-    Console.Write("Podaj nazwisko: ");
+    Console.Write("Podaj nazwisko Klienta: ");
     string lastName = Console.ReadLine();
     Console.Write("Podaj email: ");
     string email = Console.ReadLine();
-
-    Console.Write("Podaj wagę (kg): ");
-    double weight = double.Parse(Console.ReadLine());
-
-    Console.Write("Podaj wzrost (m): ");
-    double height = double.Parse(Console.ReadLine());
-
-    Console.Write("Podaj cel treningowy (np. redukcja, masa): ");
+    Console.Write("Podaj wagę (np. 75.5): ");
+    if (!double.TryParse(Console.ReadLine(), out double weight)) return;
+    Console.Write("Podaj wzrost (np. 1.80): ");
+    if (!double.TryParse(Console.ReadLine(), out double height)) return;
+    Console.Write("Podaj cel treningowy (masa,redukcja,wydolnosc): ");
     string goal = Console.ReadLine();
 
-    var newClient = new Client(firstName, lastName, email, weight, height, goal);
-    data.AddClient(newClient); // Zapis do bazy
-    Console.WriteLine($"\n Dodano klienta: {newClient.FirstName} {newClient.LastName} (ID: {newClient.Id})");
+    var client = new Client(firstName, lastName, email, weight, height, goal);
+    data.AddClient(client);
+    Console.WriteLine($"Klient {client.FirstName} {client.LastName} dodany pomyślnie.");
 }
 
-void AddTrainerInteractive(DataManagement data)
+// Interaktywne dodawanie nowego Trenera i jego wolnych terminów.
+void AddTrainerInteractive(DataManagement data, BookingManager booking)
 {
-    Console.WriteLine("\n--- DODAWANIE NOWEGO TRENERA ---");
-
-    Console.Write("Podaj imię: ");
+    Console.Write("\nPodaj imię Trenera: ");
     string firstName = Console.ReadLine();
-    Console.Write("Podaj nazwisko: ");
+    Console.Write("Podaj nazwisko Trenera: ");
     string lastName = Console.ReadLine();
     Console.Write("Podaj email: ");
     string email = Console.ReadLine();
-
-    Console.Write("Podaj specjalizację: ");
+    Console.Write("Podaj specjalizację (np.trójbój,cross,kalistenika,pilates): ");
     string specialization = Console.ReadLine();
+    Console.Write("Podaj stawkę godzinową (np. 150.00): ");
 
-    Console.Write("Podaj stawkę godzinową (PLN): ");
-    decimal rate = decimal.Parse(Console.ReadLine());
+    // Walidacja stawki i zakończenie metody w przypadku błędu
+    if (!decimal.TryParse(Console.ReadLine(), out decimal rate))
+    {
+        Console.WriteLine(" Nieprawidłowy format stawki. Anulowano.");
+        return;
+    }
 
-    var newTrainer = new Trainer(firstName, lastName, email, specialization, rate);
-    data.AddTrainer(newTrainer); // Zapis do bazy
-    Console.WriteLine($"\n✅ Dodano trenera: {newTrainer.FirstName} {newTrainer.LastName} (ID: {newTrainer.Id})");
+    // 1. Zapis trenera do bazy danych (uzyskanie ID)
+    var trainer = new Trainer(firstName, lastName, email, specialization, rate);
+    data.AddTrainer(trainer);
+    Console.WriteLine($"Trener {trainer.FirstName} {trainer.LastName} dodany pomyślnie (ID: {trainer.Id}).");
+
+    // 2. Logika interaktywnego dodawania wolnych slotów - ZACZYNA SIĘ NATYCHMIAST
+    Console.WriteLine("\n--- DODAJ WOLNY TERMIN TRENERA (HH:MM) ---");
+
+    bool addingSlots = true;
+    while (addingSlots)
+    {
+        // Pytanie o datę pojawia się od razu
+        Console.Write("Podaj datę i godzinę wolnego slotu (YYYY-MM-DD HH:MM) lub wpisz 'k' aby zakończyć: ");
+        string input = Console.ReadLine();
+
+        // Sprawdzenie warunku wyjścia z pętli
+        if (input != null && input.Trim().ToLower() == "k")
+        {
+            addingSlots = false;
+            continue;
+        }
+
+        if (DateTime.TryParse(input, out DateTime slot))
+        {
+        
+            if (slot < DateTime.Now)
+            {
+                Console.WriteLine("Ostrzeżenie: Nie można dodać terminu w przeszłości.");
+                continue;
+            }
+
+            // Wywołanie metody w BookingManager
+            booking.AddTrainerSlot(trainer.Id, slot);
+        }
+        else
+        {
+            Console.WriteLine("Nieprawidłowy format daty/godziny. Spróbuj YYYY-MM-DD HH:MM.");
+        }
+    }
 }
 
+// Interaktywne dodawanie nowego Ćwiczenia.
 void AddExerciseInteractive(DataManagement data)
 {
-    Console.WriteLine("\n--- DODAWANIE NOWEGO ĆWICZENIA ---");
-
-    Console.Write("Podaj nazwę ćwiczenia: ");
+    Console.Write("\nPodaj nazwę Ćwiczenia: ");
     string name = Console.ReadLine();
     Console.Write("Podaj partię mięśniową: ");
     string muscleGroup = Console.ReadLine();
 
-    var newExercise = new Exercise(name, muscleGroup);
-    data.AddExercise(newExercise); // Zapis do bazy
-    Console.WriteLine($"\n Dodano ćwiczenie: {newExercise.Name} (ID: {newExercise.Id})");
+    var exercise = new Exercise(name, muscleGroup);
+    data.AddExercise(exercise);
+    Console.WriteLine($"Ćwiczenie '{exercise.Name}' dodane pomyślnie.");
 }
 
+// Interaktywne dodawanie ukończonego Treningu (Workout).
 void AddWorkoutInteractive(DataManagement data)
 {
-    Console.WriteLine("\n--- DODAJ NOWY TRENING ---");
+    Console.WriteLine("--- DODAWANIE NOWEGO WYKONANEGO TRENINGU ---");
 
-    // 1. Wybór Klienta
-    List<Client> availableClients = data.Clients; // Pobiera Klientów z bazy
-    Console.WriteLine("Dostępni Klienci:");
-    if (!availableClients.Any())
+    // 1. Wybór Klienta
+    Console.WriteLine("Dostępni Klienci:");
+    data.Clients.ForEach(c => Console.WriteLine($"- ID {c.Id}: {c.FirstName} {c.LastName}"));
+    Console.Write("Podaj ID Klienta: ");
+    if (!int.TryParse(Console.ReadLine(), out int clientId)) return;
+
+    var client = data.GetClientById(clientId);
+    if (client == null) { Console.WriteLine("Klient o podanym ID nie istnieje."); return; }
+
+    var workout = new Workout(DateTime.Now.Date, client);
+
+    // 2. Dodawanie Serii
+    bool addingSets = true;
+    while (addingSets)
     {
-        Console.WriteLine("Brak klientów do przypisania!");
-        return;
-    }
-    foreach (var c in availableClients)
-    {
-        Console.WriteLine($"- ID {c.Id}: {c.FirstName} {c.LastName}");
-    }
-
-    Console.Write("Podaj ID Klienta dla treningu: ");
-    int clientId = int.Parse(Console.ReadLine());
-    Client client = data.GetClientById(clientId);
-
-    if (client == null)
-    {
-        Console.WriteLine("Klient o podanym ID nie istnieje.");
-        return;
-    }
-
-    var newWorkout = new Workout(DateTime.Now.Date, client);
-    Console.WriteLine($"\n✅ Tworzenie treningu dla {client.FirstName} {client.LastName}...");
-
-    // 2. Dodawanie Serii Ćwiczeń
-    Console.WriteLine("\n--- DODAWANIE SERII ---");
-    List<Exercise> availableExercises = data.Exercises; // Pobiera Ćwiczenia z bazy
-    Console.WriteLine("Dostępne Ćwiczenia:");
-    foreach (var e in availableExercises)
-    {
-        Console.WriteLine($"- ID {e.Id}: {e.Name} ({e.MuscleGroup})");
-    }
-
-    Console.Write("Podaj ID Ćwiczenia (lub 0, aby zakończyć): ");
-    int exerciseId = int.Parse(Console.ReadLine());
-
-    if (exerciseId != 0)
-    {
-        Exercise exercise = data.GetExerciseById(exerciseId);
-        if (exercise != null)
+        Console.WriteLine("[Dostępne Ćwiczenia] (ID | Nazwa):");
+        data.Exercises.ForEach(e => Console.WriteLine($"- ID {e.Id}: {e.Name}"));
+        Console.Write("Podaj ID Ćwiczenia do dodania (lub 'q' aby zakończyć): ");
+        string input = Console.ReadLine();
+        if (input.ToLower() == "q")
         {
-            Console.Write("Liczba serii: ");
-            int sets = int.Parse(Console.ReadLine());
-            Console.Write("Liczba powtórzeń: ");
-            int reps = int.Parse(Console.ReadLine());
-            Console.Write("Użyty ciężar (kg): ");
-            double weight = double.Parse(Console.ReadLine());
+            addingSets = false;
+            continue;
+        }
 
-            // UWAGA: Musisz pobrać Exercise, aby Series miało referencję do obiektu Exercise
-            newWorkout.Sets.Add(new Set(exercise, reps, sets, weight));
-            Console.WriteLine($"  -> Dodano serię: {sets}x{reps} {exercise.Name} z ciężarem {weight}kg.");
+        if (int.TryParse(input, out int exerciseId))
+        {
+            var exercise = data.GetExerciseById(exerciseId);
+            if (exercise == null) { Console.WriteLine("Ćwiczenie o podanym ID nie istnieje."); continue; }
+
+            Console.Write("Ilość powtórzeń: ");
+            if (!int.TryParse(Console.ReadLine(), out int reps)) continue;
+            Console.Write("Ilość serii: ");
+            if (!int.TryParse(Console.ReadLine(), out int sets)) continue;
+            Console.Write("Użyty ciężar (kg): ");
+            if (!double.TryParse(Console.ReadLine(), out double weight)) continue;
+
+            // Tworzymy nową Serię (Set)
+            var newSet = new Set(exercise, reps, sets, weight);
+            // newSet.WorkoutId = workout.Id; // To nie jest potrzebne, bo EF zarządza relacją List<Set>
+            workout.Sets.Add(newSet);
+            Console.WriteLine($" Dodano serię: {exercise.Name}");
+        }
+        else
+        {
+            Console.WriteLine("Nieprawidłowy wybór ID.");
         }
     }
 
-    data.AddWorkout(newWorkout); // Zapis do bazy
-    Console.WriteLine($"\n Trening o ID {newWorkout.Id} zapisany i przypisany do {client.FirstName}.");
+    if (workout.Sets.Any())
+    {
+        data.AddWorkout(workout);
+        Console.WriteLine($"Trening z {workout.Sets.Count} seriami dodany pomyślnie do bazy.");
+    }
+    else
+    {
+        Console.WriteLine("Nie dodano żadnych serii. Trening anulowany.");
+    }
 }

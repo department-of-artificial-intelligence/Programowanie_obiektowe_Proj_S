@@ -13,6 +13,8 @@ namespace Project.DAL
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Set> Sets { get; set; }
 
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<TrainerSlot> TrainerSlots { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -38,6 +40,19 @@ namespace Project.DAL
                 .WithMany(c => c.PlannedWorkouts)
                 .IsRequired();
 
+            // Konfiguracja NOWEJ/ZMIENIONEJ encji Reservation
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Client)
+                .WithMany(c => c.ScheduledReservations) // W Client.cs
+                .HasForeignKey(r => r.ClientId)
+                .IsRequired();
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Trainer)
+                .WithMany(t => t.ScheduledReservations) // W Trainer.cs
+                .HasForeignKey(r => r.TrainerId)
+                .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
         }
     }

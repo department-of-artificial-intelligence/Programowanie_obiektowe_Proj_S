@@ -7,7 +7,7 @@ public class ReportGenerator
 
     public void GroupClientsByGoal(List<Client> allClients)
     {
-        Console.WriteLine("\n\n GroupByLambda) ---");
+        Console.WriteLine("grupowanie po celu) ---");
 
         var goalGroups = allClients
             .GroupBy(c => c.TrainingGoal)
@@ -32,7 +32,7 @@ public class ReportGenerator
         Console.WriteLine("-------------------------------------------------");
 
         // 1. Klienci
-        Console.WriteLine($"\n[KLIENCI] (Liczba: {Clients.Count})");
+        Console.WriteLine($"[KLIENCI] (Liczba: {Clients.Count})");
         foreach (var c in Clients)
         {
             Console.WriteLine($"  -> ID: {c.Id} | {c.FirstName} {c.LastName} | Cel: {c.TrainingGoal} | Waga: {c.Weight}kg");
