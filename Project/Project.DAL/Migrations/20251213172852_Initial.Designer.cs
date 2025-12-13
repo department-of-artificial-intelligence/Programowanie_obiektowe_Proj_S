@@ -12,7 +12,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251212221913_Initial")]
+    [Migration("20251213172852_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -63,31 +63,6 @@ namespace Project.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Actors");
-                });
-
-            modelBuilder.Entity("Project.Model.Address", b =>
-                {
-                    b.Property<int>("AddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AddressId");
-
-                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Project.Model.Author", b =>
@@ -273,9 +248,6 @@ namespace Project.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TheaterId"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TheaterName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -284,8 +256,6 @@ namespace Project.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TheaterId");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("TheaterNetworkId");
 
@@ -407,17 +377,37 @@ namespace Project.DAL.Migrations
 
             modelBuilder.Entity("Project.Model.Theater", b =>
                 {
-                    b.HasOne("Project.Model.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Project.Model.TheaterNetwork", null)
                         .WithMany("Theaters")
                         .HasForeignKey("TheaterNetworkId");
 
-                    b.Navigation("Address");
+                    b.OwnsOne("Project.Model.Address", "Address", b1 =>
+                        {
+                            b1.Property<int>("TheaterId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TheaterId");
+
+                            b1.ToTable("Theaters");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TheaterId");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Project.Model.Ticket", b =>

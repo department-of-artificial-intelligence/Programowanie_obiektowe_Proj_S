@@ -27,12 +27,12 @@ public class TheaterNetwork
     }
 
     // Metody tworzenia i usuwania elementów listy Theater
-    public bool CreateTheater(string theaterName, string country, string city, string street)
+    public Theater? CreateTheater(string theaterName, string country, string city, string street)
     {
-        if (string.IsNullOrWhiteSpace(theaterName) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return false;
+        if (string.IsNullOrWhiteSpace(theaterName) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(street)) return null;
         Theater theater = new Theater(theaterName, country, city, street);
         Theaters.Add(theater);
-        return true;
+        return theater;
     }
     public bool DeleteTheater(Theater theater)
     {

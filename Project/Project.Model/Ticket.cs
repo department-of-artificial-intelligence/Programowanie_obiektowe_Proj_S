@@ -19,7 +19,7 @@ public class Ticket
     {
         if (performance is null) throw new ArgumentNullException(nameof(performance), "Przedstawienie nie może być null");
         if (seat is null) throw new ArgumentNullException(nameof(seat), "Siedzenie nie może być null");
-        if (price < 0) throw new ArgumentException("Cena biletu nie może być ujemna", nameof(Price));
+        if (price < 0) throw new ArgumentException("Cena biletu nie może być ujemna", nameof(price));
         Price = price;
         Performance = performance;
         Seat = seat;
@@ -53,6 +53,6 @@ public class Ticket
     public override string ToString()
     {
         string customer = Customer is not null ? (Customer.FirstName + " " + Customer.LastName) : "nieznany";
-        return $"{Price}PLN/{Status}/Sztuka:{Performance.Play.Title}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat}/Właściciel:{customer}";
+        return $"{TicketId}/Sztuka:{Performance.Play.Title}/{Price}PLN/{Status}/Sala:{Performance.Hall?.HallId}/Siedzenie:{Seat}/Klient:{customer}";
     }
 }

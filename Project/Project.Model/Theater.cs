@@ -35,11 +35,11 @@ public class Theater
     }
 
     // Metody tworzenia i usuwania elementów listy Hall
-    public bool CreateHall(string hallName, List<Performance>? performances = null)
+    public Hall? CreateHall(string hallName, List<Performance>? performances = null)
     {
         Hall hall = new Hall(hallName, performances);
         Halls.Add(hall);
-        return true;
+        return hall;
     }
     public bool DeleteHall(Hall hall)
     {
@@ -66,6 +66,6 @@ public class Theater
 
     public override string ToString()
     {
-        return $"{TheaterName}/Adres: {Address}\nSale teatralne:\n" + GetHallsString();
+        return $"{TheaterId}/{TheaterName}/Adres: {Address}";
     }
 }

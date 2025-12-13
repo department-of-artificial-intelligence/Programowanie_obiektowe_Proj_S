@@ -27,21 +27,6 @@ namespace Project.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    AddressId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
                 {
@@ -130,18 +115,14 @@ namespace Project.DAL.Migrations
                     TheaterId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TheaterName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TheaterNetworkId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Theaters", x => x.TheaterId);
-                    table.ForeignKey(
-                        name: "FK_Theaters_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "AddressId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Theaters_TheaterNetworks_TheaterNetworkId",
                         column: x => x.TheaterNetworkId,
@@ -310,11 +291,6 @@ namespace Project.DAL.Migrations
                 column: "HallId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Theaters_AddressId",
-                table: "Theaters",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Theaters_TheaterNetworkId",
                 table: "Theaters",
                 column: "TheaterNetworkId");
@@ -370,9 +346,6 @@ namespace Project.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Theaters");
-
-            migrationBuilder.DropTable(
-                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "TheaterNetworks");

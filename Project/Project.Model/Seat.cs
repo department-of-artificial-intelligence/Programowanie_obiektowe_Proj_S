@@ -27,6 +27,6 @@ public class Seat
     // Metody string
     public override string ToString()
     {
-        return $"rząd:{RowNumber},miejsce:{SeatNumber}";
+        return $"{SeatId}/rząd:{RowNumber},miejsce:{SeatNumber}";
     }
 }

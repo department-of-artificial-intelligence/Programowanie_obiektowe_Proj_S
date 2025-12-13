@@ -45,8 +45,8 @@ public class Play
 
     public override string ToString()
     {
-        return $"\"{Title}\"/" +
-            $"autor: {Author?.FirstName} {Author?.LastName ?? "Nieznany"}/" +
-            $"reżyser: {Director?.FirstName} {Director?.LastName ?? "Nieznany"}";
+        return $"{PlayId}/\"{Title}\"/" +
+            $"autor: {Author?.FirstName + " " ?? "Nieznany"}{Author?.LastName}/" +
+            $"reżyser: {Director?.FirstName + " " ?? "Nieznany"}{Director?.LastName }";
     }
 }

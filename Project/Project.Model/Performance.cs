@@ -47,13 +47,13 @@ public class Performance
     }
 
     // Metody tworzenia i usuwania elementów listy Ticket
-    public bool CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
+    public Ticket? CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
     {
-        if (price < 0 || seat is null || Hall is null) return false;
-        if (!Hall.Seats.Contains(seat)) return false;
+        if (price < 0 || seat is null || Hall is null) return null;
+        if (!Hall.Seats.Contains(seat)) return null;
         Ticket ticket = new Ticket(price, this, seat, status);
         Tickets.Add(ticket);
-        return true;
+        return ticket;
     }
     public bool DeleteTicket(Ticket ticket)
     {   
@@ -114,7 +114,6 @@ public class Performance
         int maxSeat = allSeats.Max(s => s.SeatNumber);
 
         string ticketsString = "";
-        ticketsString += $"Wizualizacja biletów dla sztuki: {Play.Title} | Sala: {Hall.HallName}\n";
         ticketsString += "Legenda: D - Dostępny, Z - Zarezerwowany, S - Sprzedany, B - Brak biletu, X - Brak Siedzenia\n";
 
         for (int r = 1; r <= maxRow; r++)
@@ -170,6 +169,6 @@ public class Performance
     public override string ToString()
     {
         string hallName = Hall?.HallName ?? "nieznana";
-        return $"\"{Play.Title}\"/{Status}/Sala {hallName}/start:{StartTime}/koniec:{EndTime}";
+        return $"{PerformanceId}/\"{Play.Title}\"/{Status}/Sala {hallName}/start:{StartTime}/koniec:{EndTime}";
     }
 }

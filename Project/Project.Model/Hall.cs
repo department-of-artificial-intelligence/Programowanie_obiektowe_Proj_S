@@ -33,13 +33,13 @@ public class Hall
     }
 
     // Metody tworzenia i usuwania elementów listy Seat
-    public bool CreateSeat(int rowNumber, int seatNumber)
+    public Seat? CreateSeat(int rowNumber, int seatNumber)
     {
-        if (rowNumber <= 0 || seatNumber <= 0) return false;
-        if (Seats.Any(s => s.RowNumber == rowNumber && s.SeatNumber == seatNumber)) return false;
+        if (rowNumber <= 0 || seatNumber <= 0) return null;
+        if (Seats.Any(s => s.RowNumber == rowNumber && s.SeatNumber == seatNumber)) return null;
         Seat seat = new Seat(rowNumber, seatNumber);
         Seats.Add(seat);
-        return true;
+        return seat;
     }
     public void CreateSeats(int a, int b)
     {
@@ -88,14 +88,10 @@ public class Hall
         }
     }
 
-    //// Metoda sortująca siedzenia => optymalizacja wizualizacji?
-    //public List<Seat> OrderSeats()
-    //{
-    //    return Seats
-    //        .OrderBy(s => s.RowNumber)
-    //        .ThenBy(s => s.SeatNumber)
-    //        .ToList();
-    //}
+    public string GetSeatsString()
+    {
+        return Seats.ListToString("Brak siedzeń");
+    }
 
     public string VisualizeSeatsString()
     {
@@ -126,6 +122,6 @@ public class Hall
 
     public override string ToString()
     {
-        return $"Sala {HallId}";
+        return $"{HallId}/Sala {HallName}";
     }
 }

@@ -11,7 +11,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Play> Plays { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<TheaterNetwork> TheaterNetworks { get; set; }
-    public DbSet<Address> Addresses { get; set; }
     public DbSet<Theater> Theaters { get; set; }
     public DbSet<Hall> Halls { get; set; }
     public DbSet<Seat> Seats { get; set; }
@@ -25,6 +24,10 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Address ma być częścią tabeli Theater
+        modelBuilder.Entity<Theater>()
+            .OwnsOne(t => t.Address);
+
         // Precyzja
         modelBuilder.Entity<Actor>()
             .Property(a => a.Salary)
