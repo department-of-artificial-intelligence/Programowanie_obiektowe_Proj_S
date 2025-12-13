@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using RatingSystem.Domain;
-namespace RatingSystem.Logic
+using RatingSystem.DAL;
+namespace RatingSystem.BLL
+
 {
     public  class ServiceLogic: IService
     {
@@ -25,7 +27,7 @@ namespace RatingSystem.Logic
         {
             return await _serviceRepository.GetByIdAsync(serviceId);
         }
-        public async Task<IEnumerable<Service>> GetAllServicesByIdAsync()
+        public async Task<IEnumerable<Service>> GetServicesAsync()
         {
             return await _serviceRepository.GetAllAsync(); 
         }

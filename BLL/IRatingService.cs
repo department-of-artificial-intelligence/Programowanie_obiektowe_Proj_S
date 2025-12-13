@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using RatingSystem.Domain;
-namespace RatingSystem.Logic
+using RatingSystem.DAL;
+namespace RatingSystem.BLL
 {
     public  interface IRatingService 
     {
         Task SubmitRating(Rating newRating);
-        Task<IEnumerable<Rating>> GetRatings(int ServiceId);
-        Task<float> CalculateAvgRatingAsync(int ServiceId);
+        //Task<IEnumerable<Rating>> GetRatings(int ServiceId);
+        Task<double> CalculateAvgRatingAsync(int ServiceId);
 
     }
 }

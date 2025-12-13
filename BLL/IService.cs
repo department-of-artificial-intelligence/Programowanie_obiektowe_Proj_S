@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RatingSystem.Logic
+using RatingSystem.DAL;
+namespace RatingSystem.BLL
 {
     public  interface IService
     {
-        Task AddServiceAsync(IService service);
-        Task <IEnumerable<IService>> GetServicesAsync();
+        Task AddServiceAsync(Service service);
+        Task <IEnumerable<Service>> GetServicesAsync();
         Task<Service> GetServiceByIdAsync(int serviceId);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.WebSockets;
+
 using System.Text;
+using RatingSystem.DAL;
 using RatingSystem.Domain;
-namespace RatingSystem.Logic
+
+namespace RatingSystem.BLL
 {
     public  class RatingService: IRatingService
     {
@@ -40,13 +42,13 @@ namespace RatingSystem.Logic
             await _ratingRepository.AddAsync(rating);
 
         }
-        public async Task<float> CalculateAvgRatingAsync(int serviceId)
+        public async Task<double> CalculateAvgRatingAsync(int serviceId)
         {
             if (serviceId <= 0) throw new ArgumentException("wrong id");
             var ratings = await _ratingRepository.GetByServiceIdAsync(serviceId);
 
             if (ratings == null || !ratings.Any()) { return 0.0f; }
-            float average = ratings.Average(r => r.Value);
+            double average = ratings.Average(r => r.Value);
             return average;
 
         }

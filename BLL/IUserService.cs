@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-namespace RatingSystem.Logic
-{
+using RatingSystem.DAL;
+namespace RatingSystem.BLL { 
     public  interface IUserService
     {
         Task AddUserAsync(User user);

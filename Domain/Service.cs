@@ -7,6 +7,7 @@ public class Service
     private string _description;
     private int _numOfGrades;
     private string? _serviceType;
+    public Rating rating {  get; set; }
     public float Quality { get; set; }
     public float Price { get; set; }
     public float Overall {  get; set; }
