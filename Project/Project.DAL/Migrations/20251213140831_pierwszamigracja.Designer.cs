@@ -12,8 +12,8 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209221246_pierwsza")]
-    partial class pierwsza
+    [Migration("20251213140831_pierwszamigracja")]
+    partial class pierwszamigracja
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,34 +59,6 @@ namespace Project.DAL.Migrations
                     b.ToTable("Lessons");
                 });
 
-            modelBuilder.Entity("Project.Model.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("Project.Model.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -100,10 +72,6 @@ namespace Project.DAL.Migrations
 
                     b.Property<int?>("LessonId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -262,15 +230,6 @@ namespace Project.DAL.Migrations
                     b.Navigation("Subject");
 
                     b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("Project.Model.Payment", b =>
-                {
-                    b.HasOne("Project.Model.Reservation", "Reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationId");
-
-                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("Project.Model.Reservation", b =>

@@ -13,7 +13,9 @@ namespace Project
     public class TutoringSystemApp
     {
 
-        private static ISystemManager? manager;
+        private static IUserService? _userService;
+        private static ICatalogService? _catalogService;
+        private static IBookingService? _bookingService;
 
         static void Main(string[] args)
         {
@@ -22,6 +24,7 @@ namespace Project
                 {
                     logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error);
                 } )
+
                 .ConfigureServices((context, services) =>
                 {
                     // Pobranie ConnectionString z appsettings.json
@@ -30,7 +33,9 @@ namespace Project
                     // Rejestracja bazy danych
                     services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
                     // Rejestracja SystemManagera
-                    services.AddScoped<ISystemManager, SystemManager>();
+                    services.AddScoped<IUserService, UserService>();
+                    services.AddScoped<ICatalogService, CatalogService>();
+                    services.AddScoped<IBookingService, BookingService>();
                 })
                 .Build();
 
@@ -45,10 +50,12 @@ namespace Project
 
                     // To stworzy bazę danych, jeśli jej nie ma
 
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
 
                     // Pobieramy naszego managera, który ma już wstrzykniętą bazę
-                    manager = services.GetRequiredService<ISystemManager>();
+                    _userService = services.GetRequiredService<IUserService>();
+                    _catalogService= services.GetRequiredService<ICatalogService>();
+                    _bookingService= services.GetRequiredService<IBookingService>();
 
                     //Załaduj dane startowe tylko jeśli baza jest pusta
                     if (!context.Tutors.Any())
@@ -136,10 +143,10 @@ namespace Project
 
             if (!IsNotEmpty(first) || !IsNotEmpty(last) || !IsNotEmpty(email)) { Console.WriteLine("Niepoprawne dane!"); return; }
 
-            var tutor = manager!.AddTutor(first!, last!, email!, rate);
+            var tutor = _userService!.AddTutor(first!, last!, email!, rate);
 
             Console.WriteLine("--- Dostępne przedmioty ---");
-            foreach (var s in manager.GetSubjects())
+            foreach (var s in _catalogService!.GetSubjects())
             {
                 Console.WriteLine(s);
             }
@@ -150,10 +157,10 @@ namespace Project
                 string? subjectInput = Console.ReadLine();
                 if (int.TryParse(subjectInput, out int subjectId))
                 {
-                    var subject = manager.GetSubjects().FirstOrDefault(s => s.Id == subjectId);
+                    var subject = _catalogService.GetSubjects().FirstOrDefault(s => s.Id == subjectId);
                     if (subject != null)
                     {
-                        manager.AddSpecialtyToTutor(tutor.Id, subject);
+                        _userService.AddSpecialtyToTutor(tutor.Id, subject);
                         Console.WriteLine($"Dodano specjalizację: {subject.Name}");
                         break;
                     }
@@ -178,19 +185,19 @@ namespace Project
 
             if (!IsNotEmpty(first) || !IsNotEmpty(last) || !IsNotEmpty(level)) { Console.WriteLine("Dane niekompletne."); return; }
 
-            var student = manager!.AddStudent(first!, last!, email!, level!);
+            var student = _userService!.AddStudent(first!, last!, email!, level!);
             Console.WriteLine($"Dodano studenta ID: {student.Id}");
         }
 
         private static void AddTimeSlotMenu()
         {
             Console.WriteLine("Dostępni korepetytorzy:");
-            foreach (var t in manager!.GetTutors()) Console.WriteLine(t);
+            foreach (var t in _userService!.GetTutors()) Console.WriteLine(t);
 
             Console.Write("ID korepetytora: ");
             if (!int.TryParse(Console.ReadLine(), out int id)) return;
 
-            var tutor = manager.GetTutors().FirstOrDefault(t => t.Id == id);
+            var tutor = _userService.GetTutors().FirstOrDefault(t => t.Id == id);
             if (tutor == null) { Console.WriteLine("Nie znaleziono korepetytora!"); return; }
 
             Console.Write("Start (rrrr-mm-dd hh:mm): ");
@@ -198,7 +205,7 @@ namespace Project
             Console.Write("Koniec (rrrr-mm-dd hh:mm): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime end)) return;
 
-            var slot = manager.AddTimeSlot(tutor, start, end);
+            var slot = _bookingService!.AddTimeSlot(tutor, start, end);
             Console.WriteLine("Dodano termin ID: " + slot.Id);
         }
 
@@ -206,17 +213,27 @@ namespace Project
         {
 
             Console.WriteLine("=== Korepetytorzy ===");
-            foreach (var t in manager!.GetTutors()) Console.WriteLine(t);
+            foreach (var t in _userService!.GetTutors()) {
+                string przedmioty;
+                if( t.Specialties.Any()){
+                    przedmioty = string.Join(", ", t.Specialties.Select(s => s.Name));
+                }
+                else { przedmioty = "Brak przypisanych przedmiotów"; }
+                Console.WriteLine($"{t.Id}: {t.FirstName} {t.LastName} ({t.HourlyRate:C}/h)  Specjalizacje: {przedmioty}");
+            }
             Console.Write("ID Korepetytora: ");
-            if (!int.TryParse(Console.ReadLine(), out int tId)) return;
-            var tutor = manager.GetTutors().FirstOrDefault(t => t.Id == tId);
+            if (!int.TryParse(Console.ReadLine(), out int tId)) 
+                return;
+            var tutor = _userService.GetTutors().FirstOrDefault(t => t.Id == tId);
             if (tutor == null) return;
 
             Console.WriteLine("=== Uczniowie ===");
-            foreach (var s in manager.GetStudents()) Console.WriteLine(s);
+            foreach (var s in _userService.GetStudents()) {
+                Console.WriteLine(s);
+            }
             Console.Write("ID Ucznia: ");
             if (!int.TryParse(Console.ReadLine(), out int sId)) return;
-            var student = manager.GetStudents().FirstOrDefault(s => s.Id == sId);
+            var student = _userService.GetStudents().FirstOrDefault(s => s.Id == sId);
             if (student == null) return;
 
             Console.WriteLine($"=== Przedmioty, których uczy {tutor.LastName} {tutor.FirstName} ===");
@@ -229,7 +246,7 @@ namespace Project
             }
             Console.Write("ID Przedmiotu: ");
             if (!int.TryParse(Console.ReadLine(), out int subId)) return;
-            var subject = manager.GetSubjects().FirstOrDefault(s => s.Id == subId);
+            var subject = _catalogService!.GetSubjects().FirstOrDefault(s => s.Id == subId);
 
             Console.WriteLine("=== Dostępne terminy ===");
             foreach (var slot in tutor.Availability.Where(a => !a.IsBooked)) Console.WriteLine(slot);
@@ -239,40 +256,68 @@ namespace Project
 
             if (timeSlot == null || subject == null) { Console.WriteLine("Błąd danych."); return; }
 
-            var reservation = manager.BookLesson(tutor, student, subject, timeSlot);
-            if (reservation != null)
-                Console.WriteLine("Zarezerwowano! ID: " + reservation.Id);
+            Lesson? lesson = _bookingService!.BookLesson(tutor, student, subject, timeSlot);
+            if (lesson != null)
+                Console.WriteLine("Zarezerwowano! ID: " + lesson.Id);
+            else
+                Console.WriteLine("Nieudana rezerwacja ");
         }
 
         private static void DisplayAllLessons()
         {
             Console.WriteLine("=== Lekcje ===");
-            foreach (var l in manager!.GetLessons()) Console.WriteLine(l);
-            Console.WriteLine("\n=== Rezerwacje ===");
-            foreach (var r in manager.GetReservations()) Console.WriteLine($"Rezerwacja {r.Id}: {r.Lesson}");
+            foreach (var l in _bookingService!.GetLessons())
+            {
+                Console.WriteLine(l);
+            }
         }
 
         private static void GenerateReportsMenu()
         {
-            Raport.ShowTutorsByRate(manager!);
+            Raport.ShowTutorsByRate(_userService!);
             Console.WriteLine();
-            Raport.ShowSubjectPopularity(manager!);
+            Raport.ShowSubjectPopularity(_bookingService!);
         }
 
         private static void SetupInitialData()
         {
 
-            var math = manager!.AddSubject("Matematyka", "Algebra, geometria");
-            var physics = manager.AddSubject("Fizyka", "Mechanika");
-            var english = manager.AddSubject("Angielski", "B2/C1");
+            // Dodawanie przedmiotów
+            var mat = _catalogService!.AddSubject("Matematyka", "Algebra, Geometria");
+            var pol = _catalogService.AddSubject("Język Polski", "Literatura, Gramatyka");
+            var fiz = _catalogService.AddSubject("Fizyka", "Mechanika, Twierdzenia fizycne");
+            var ang = _catalogService.AddSubject("Język Angielski", "Konwersacje, Czasy angielskie");
+            var geo = _catalogService.AddSubject("Geografia", "Mapy, Pogoda");
+            //Dodawanie nauczycieli 
+            var t1 = _userService!.AddTutor("Adam", "Nowak", "adam.nowak@test.com", 100);
+            var t2 = _userService.AddTutor("Barbara", "Kowalska", "basia@test.com", 80);
+            var t3 = _userService.AddTutor("Cezary", "Wiśniewski", "czarek@test.com", 70);
+            var t4 = _userService.AddTutor("Dorota", "Wójcik", "dorota@test.com", 120);
+            //Dodawanie specjalności
+            _userService.AddSpecialtyToTutor(t1.Id, mat);
+            _userService.AddSpecialtyToTutor(t1.Id, fiz);
 
-            var t1 = manager.AddTutor("Jan", "Kowalski", "jan@test.com", 80);
-            manager.AddSpecialtyToTutor(t1.Id, math);
+            _userService.AddSpecialtyToTutor(t2.Id, pol);
+            _userService.AddSpecialtyToTutor(t3.Id, geo);
+            _userService.AddSpecialtyToTutor(t4.Id, ang);
+            //Dodawanie studentow
+            _userService.AddStudent("Marcin", "Lis", "marcinlis@student.com", "Liceum");
+            _userService.AddStudent("Filip", "Najman", "filip@student.com", "Technikum");
+            _userService.AddStudent("Kamil", "Piotrowski", "kamil@student.com", "Podstawówka");
+            _userService.AddStudent("Jan", "Mazur", "hania@student.com", "Technikum");
+            //Dodawanie wolnych terminów nauczycielom
+            _bookingService!.AddTimeSlot(t1, new DateTime(2026, 1, 15, 16, 0, 0), new DateTime(2026, 1, 15, 17, 0, 0));
+            _bookingService.AddTimeSlot(t1, new DateTime(2026, 2, 10, 16, 0, 0), new DateTime(2026, 2, 10, 17, 0, 0));
 
-            var s1 = manager.AddStudent("Anna", "Nowak", "anna@test.com", "Liceum");
-            var slot = manager.AddTimeSlot(t1, DateTime.Now.AddDays(1).Date.AddHours(10), DateTime.Now.AddDays(1).Date.AddHours(11));
+            _bookingService.AddTimeSlot(t2, new DateTime(2026, 1, 20, 10, 0, 0), new DateTime(2026, 1, 20, 11, 30, 0));
+            _bookingService.AddTimeSlot(t2, new DateTime(2026, 2, 12, 12, 0, 0), new DateTime(2026, 2, 12, 13, 30, 0));
 
-            Console.WriteLine("Dane startowe załadowane!");
+            _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 18, 0, 0), new DateTime(2026, 1, 5, 19, 0, 0));
+            _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 19, 0, 0), new DateTime(2026, 1, 5, 20, 0, 0));
+
+            _bookingService.AddTimeSlot(t4, new DateTime(2026, 1, 25, 8, 0, 0), new DateTime(2026, 1, 25, 9, 0, 0));
+            _bookingService.AddTimeSlot(t4, new DateTime(2026, 2, 2, 9, 0, 0), new DateTime(2026, 2, 2, 10, 0, 0));
+            Console.WriteLine("Dane załadowane");
         }
     }
 }

@@ -7,11 +7,11 @@ namespace Project
 {
     public static class Raport
     {
-        public static void ShowTutorsByRate(ISystemManager manager)
+        public static void ShowTutorsByRate(IUserService userService)
         {
             Console.WriteLine("=== RAPORT: Korepetytorzy według stawki (rosnąco) ===");
 
-            var list = manager.GetTutors().OrderBy(t => t.HourlyRate);
+            var list = userService.GetTutors().OrderBy(t => t.HourlyRate);
 
             foreach (var t in list)
             {
@@ -19,11 +19,11 @@ namespace Project
             }
         }
 
-        public static void ShowSubjectPopularity(ISystemManager manager)
+        public static void ShowSubjectPopularity(IBookingService bookingService)
         {
             Console.WriteLine("\n=== Popularność przedmiotów (najwięcej umówionych lekcji) ===");
 
-            var stats = manager.GetLessons()
+            var stats = bookingService.GetLessons()
                 .GroupBy(l => l.Subject.Name)
                 .Select(g => new { Subject = g.Key, Count = g.Count() })
                 .OrderByDescending(x => x.Count);

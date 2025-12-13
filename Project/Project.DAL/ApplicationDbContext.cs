@@ -10,7 +10,6 @@ namespace Project.DAL
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

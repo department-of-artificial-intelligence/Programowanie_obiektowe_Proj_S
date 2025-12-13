@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Project.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class pierwsza : Migration
+    public partial class pierwszamigracja : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -151,8 +151,7 @@ namespace Project.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LessonId = table.Column<int>(type: "int", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,27 +160,6 @@ namespace Project.DAL.Migrations
                         name: "FK_Reservations_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationId = table.Column<int>(type: "int", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
                         principalColumn: "Id");
                 });
 
@@ -199,11 +177,6 @@ namespace Project.DAL.Migrations
                 name: "IX_Lessons_TutorId",
                 table: "Lessons",
                 column: "TutorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_ReservationId",
-                table: "Payments",
-                column: "ReservationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_LessonId",
@@ -230,16 +203,13 @@ namespace Project.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "SubjectTutor");
 
             migrationBuilder.DropTable(
                 name: "TimeSlots");
-
-            migrationBuilder.DropTable(
-                name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Lessons");
