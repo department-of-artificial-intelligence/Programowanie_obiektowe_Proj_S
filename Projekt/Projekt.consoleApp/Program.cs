@@ -95,7 +95,6 @@ static void InicjalizujDane(ApplicationDbContext db)
 
     db.SaveChanges();
     Console.WriteLine("Dane zostały załadowane do bazy SQL.");
-    System.Threading.Thread.Sleep(2000);
 }
 
 static void MenuGlowne(ApplicationDbContext db)
