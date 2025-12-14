@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Project.DAL;
+using Project.Model;
 
 namespace Project.Model
 {
@@ -10,6 +16,40 @@ namespace Project.Model
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Inicjalizacja systemu i bazy danych...");
+
+            IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+            {
+                var cns = context.Configuration.GetConnectionString("DefaultConnection");
+
+                if (string.IsNullOrEmpty(cns))
+                {
+                    cns = "Server=(localdb)\\mssqllocaldb;Database=HotelManagementDB;Trusted_Connection=True;";
+                }
+
+                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+            }).Build();
+
+            using (var scope = _host.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                if (context != null)
+                {
+                    context.Database.Migrate();
+                    context.Database.EnsureCreated();
+
+                    if (!context.Persons.Any(p => p.LastName == "Kowalski"))
+                    {
+                        Person person = new Person() { FirstName = "Jan", LastName = "Kowalski" };
+                        context.Persons.Add(person);
+                        context.SaveChanges();
+                    }
+                }
+            }
+
+            Console.WriteLine("\nSystem gotowy. Wciśnij dowolny klawisz, aby przejść do menu...");
+            Console.ReadKey();
+
             while (true)
             {
                 Console.Clear();
