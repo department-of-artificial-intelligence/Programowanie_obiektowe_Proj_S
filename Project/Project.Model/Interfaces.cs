@@ -4,7 +4,7 @@ public interface IPlayManager
 {
     bool AddPlay(Play play);
     bool RemovePlay(Play play);
-    void RemoveAllPlays();
+    bool RemoveAllPlays();
     string GetPlaysString();
 }
 

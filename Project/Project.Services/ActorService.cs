@@ -13,16 +13,14 @@ public class ActorService
         _context = context;
     }
 
-    public List<Actor> GetActors()
+    public List<Actor> GetActorsWithPlays()
     {
         return _context.Actors
-            .ToList();
-    }
-
-    public List<Actor> GetAllActors()
-    {
-        return _context.Actors
+            .AsSplitQuery()
             .Include(a => a.Plays)
+                .ThenInclude(p => p.Author)
+            .Include(a => a.Plays)
+                .ThenInclude(p => p.Director)
             .ToList();
     }
 
@@ -36,5 +34,42 @@ public class ActorService
         _context.SaveChanges();
 
         return true;
+    }
+
+    public bool AddPlay(Actor actor, Play play)
+    {
+        if (actor is null || play is null) return false;
+
+        if (actor.AddPlay(play))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+    public bool RemovePlay(Actor actor, Play play)
+    {
+        if (actor is null || play is null) return false;
+
+        if (actor.RemovePlay(play))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+    public bool RemoveAllPlays(Actor actor)
+    {
+        if (actor is null) return false;
+
+        if (actor.RemoveAllPlays())
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
     }
 }

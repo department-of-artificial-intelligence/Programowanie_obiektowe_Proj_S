@@ -13,14 +13,6 @@ public class TheaterService
         _context = context;
     }
 
-    public TheaterNetwork? GetAllTheaters()
-    {
-        return _context.TheaterNetworks
-                    .Include(t => t.Theaters)
-                    .OrderBy(t => t.TheaterNetworkId)
-                    .FirstOrDefault();
-    }
-
     public Theater? GetTheaterById(int id)
     {
         return _context.Theaters.FirstOrDefault(t => t.TheaterId == id);

@@ -14,7 +14,7 @@ public class CustomerService
         _context = context;
     }
 
-    public List<Customer> GetAllCustomers()
+    public List<Customer> GetCustomers()
     {
         return _context.Customers
             .AsSplitQuery()

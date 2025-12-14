@@ -46,7 +46,7 @@ public class Director : Person, IPlayManager
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
-        if (play.Director is not null && play.Director != this) throw new InvalidOperationException($"Sztuka \"{play.Title}\" ma już innego reżysera: {play.Director.FirstName} {play.Director.LastName}");
+        if (play.Director is not null && play.Director != this) return false;
         play.Director ??= this;
         Plays.Add(play);
         return true;
@@ -57,13 +57,15 @@ public class Director : Person, IPlayManager
         play.Director = null;
         return Plays.Remove(play);
     }
-    public void RemoveAllPlays()
+    public bool RemoveAllPlays()
     {
+        if (Plays.Count == 0) return false;
         foreach (var play in Plays)
         {
             play.Director = null;
         }
         Plays.Clear();
+        return true;
     }
 
     // Metody string

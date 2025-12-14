@@ -21,21 +21,6 @@ public class PerformanceService
             .Include(p => p.Hall)
             .FirstOrDefault(p => p.PerformanceId == id);
     }
-    public Hall? GetHallById(int id)
-    {
-        return _context.Halls
-            .Include(h => h.Seats)
-            .FirstOrDefault(h => h.HallId == id);
-    }
-
-    public List<Performance> GetAllPerformances()
-    {
-        return _context.Performances
-            .AsSplitQuery()
-            .Include(p => p.Play)
-            .Include(p => p.Hall)
-            .ToList();
-    }
 
     public List<Performance> GetAllPerformancesWithoutHall()
     {

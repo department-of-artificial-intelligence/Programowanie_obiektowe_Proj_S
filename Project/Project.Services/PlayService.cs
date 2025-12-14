@@ -13,12 +13,22 @@ public class PlayService
         _context = context;
     }
 
-    public List<Play> GetAllPlays()
+    public List<Play> GetPlays()
     {
         return _context.Plays
             .AsSplitQuery()
             .Include(p => p.Author)
             .Include(p => p.Director)
+            .ToList();
+    }
+
+    public List<Play> GetPlaysWithActors()
+    {
+        return _context.Plays
+            .AsSplitQuery()
+            .Include(p => p.Author)
+            .Include(p => p.Director)
+            .Include(p => p.Actors)
             .ToList();
     }
 

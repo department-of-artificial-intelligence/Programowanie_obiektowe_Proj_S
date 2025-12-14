@@ -48,13 +48,15 @@ public class Actor : Person, IPlayManager
         play.Actors.Remove(this);
         return Plays.Remove(play);
     }
-    public void RemoveAllPlays()
+    public bool RemoveAllPlays()
     {
+        if (Plays.Count == 0) return false;
         foreach (var play in Plays.ToList())
         {
             play.Actors.Remove(this);
         }
         Plays.Clear();
+        return true;
     }
 
     // Metody string

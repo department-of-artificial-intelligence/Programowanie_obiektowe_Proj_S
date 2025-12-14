@@ -175,6 +175,7 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("========== Management Menu 3.2 ==========");
+        Console.WriteLine("0 - pokaż listę sztuk autora");
         Console.WriteLine("1 - dodaj sztukę do listy autora");
         Console.WriteLine("2 - usuń sztukę z listy autora");
         Console.WriteLine("3 - usuń wszystkie sztuki z listy autora");
@@ -186,6 +187,7 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("=========== Management Menu 3.3 ===========");
+        Console.WriteLine("0 - pokaż listę sztuk reżysera");
         Console.WriteLine("1 - dodaj sztukę do listy reżysera");
         Console.WriteLine("2 - usuń sztukę z listy reżysera");
         Console.WriteLine("3 - usuń wszystkie sztuki z listy reżysera");
@@ -197,6 +199,7 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("========== Management Menu 3.4 ==========");
+        Console.WriteLine("0 - pokaż listę sztuk aktora");
         Console.WriteLine("1 - dodaj sztukę do listy aktora");
         Console.WriteLine("2 - usuń sztukę z listy aktora");
         Console.WriteLine("3 - usuń wszystkie sztuki z listy aktora");

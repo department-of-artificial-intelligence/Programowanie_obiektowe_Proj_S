@@ -6,7 +6,6 @@ using Project.ConsoleApp;
 using Project.DAL;
 using Project.Model;
 using Project.Services;
-using System;
 
 IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
 {
@@ -90,35 +89,35 @@ void ViewMenu1()
                 ViewMenu1_1(network);
                 break;
             case "2": // wyświetl listę autorów
-                List<Author> authors = authorService.GetAllAuthors();
+                List<Author> authors = authorService.GetAuthorsWithPlays();
                 Console.WriteLine("Lista autorów:");
                 Console.WriteLine(authors.ListToString("Brak autorów", '-'));
                 if (authors.Count == 0) break;
                 ViewMenu1_2(authors);
                 break;
             case "3": // wyświetl listę reżyserów
-                List<Director> directors = directorService.GetAllDirectors();
+                List<Director> directors = directorService.GetDirectorsWithPlays();
                 Console.WriteLine("Lista reżyserów:");
                 Console.WriteLine(directors.ListToString("Brak reżyserów", '-'));
                 if (directors.Count == 0) break;
                 ViewMenu1_3(directors);
                 break;
             case "4": // wyświetl listę aktorów
-                List<Actor> actors = actorService.GetAllActors();
+                List<Actor> actors = actorService.GetActorsWithPlays();
                 Console.WriteLine("Lista aktorów:");
                 Console.WriteLine(actors.ListToString("Brak aktorów", '-'));
                 if (actors.Count == 0) break;
                 ViewMenu1_4(actors);
                 break;
             case "5": // wyświetl listę klientów
-                List<Customer> customers = customerService.GetAllCustomers();
+                List<Customer> customers = customerService.GetCustomers();
                 Console.WriteLine("Lista klientów:");
                 Console.WriteLine(customers.ListToString("Brak klientów", '-'));
                 if (customers.Count == 0) break;
                 ViewMenu1_5(customers);
                 break;
             case "6": // wyświetl listę sztuk
-                List<Play> plays = playService.GetAllPlays();
+                List<Play> plays = playService.GetPlays();
                 Console.WriteLine("Lista sztuk:");
                 Console.WriteLine(plays.ListToString("Brak sztuk", '-'));
                 break;
@@ -515,7 +514,7 @@ void CreationMenu2_2()
                 title = ConsoleHelper.UserInput("Podaj tytuł: ");
                 if (ConsoleHelper.UserInputBool("Czy chcesz dodać autora?"))
                 {
-                    List<Author> authors = authorService.GetAllAuthors();
+                    List<Author> authors = authorService.GetAuthorsWithPlays();
                     Console.WriteLine(authors.ListToString("Brak autorów", '-'));
                     if (authors.Count == 0) break;
                     author = ConsoleHelper.GetById(authors, a => a.Id, "Podaj ID autora: ");
@@ -526,7 +525,7 @@ void CreationMenu2_2()
                 }
                 if (ConsoleHelper.UserInputBool("Czy chcesz dodać reżysera?"))
                 {
-                    List<Director> directors = directorService.GetAllDirectors();
+                    List<Director> directors = directorService.GetDirectorsWithPlays();
                     Console.WriteLine(directors.ListToString("Brak reżyserów", '-'));
                     if (directors.Count == 0) break;
                     director = ConsoleHelper.GetById(directors, d => d.Id, "Podaj ID reżysera: ");
@@ -545,7 +544,7 @@ void CreationMenu2_2()
                 }
                 break;
             case "2": // stwórz przedstawienie
-                List<Play> plays = playService.GetAllPlays();
+                List<Play> plays = playService.GetPlays();
                 Console.WriteLine(plays.ListToString("Nie można stworzyć przedstawienia przez brak sztuk", '-'));
                 if (plays.Count == 0) break;
                 play = ConsoleHelper.GetById(plays, p => p.PlayId, "Podaj ID sztuki: ");
@@ -761,7 +760,7 @@ void ManagementMenu3()
         switch (input)
         {
             case "1":
-                List<Customer> customers = customerService.GetAllCustomers();
+                List<Customer> customers = customerService.GetCustomers();
                 Console.WriteLine("Lista klientów:");
                 Console.WriteLine(customers.ListToString("Brak klientów", '-'));
                 if (customers.Count == 0) break;
@@ -771,7 +770,7 @@ void ManagementMenu3()
                 ManagementMenu3_1(customer);
                 break;
             case "2":
-                List<Author> authors = authorService.GetAllAuthors();
+                List<Author> authors = authorService.GetAuthorsWithPlays();
                 Console.WriteLine("Lista autorów:");
                 Console.WriteLine(authors.ListToString("Brak autorów", '-'));
                 if (authors.Count == 0) break;
@@ -779,7 +778,7 @@ void ManagementMenu3()
                 ManagementMenu3_2(author);
                 break;
             case "3":
-                List<Director> directors = directorService.GetAllDirectors();
+                List<Director> directors = directorService.GetDirectorsWithPlays();
                 Console.WriteLine("Lista reżyserów:");
                 Console.WriteLine(directors.ListToString("Brak reżyserów", '-'));
                 if (directors.Count == 0) break;
@@ -787,7 +786,7 @@ void ManagementMenu3()
                 ManagementMenu3_3(director);
                 break;
             case "4":
-                List<Actor> actors = actorService.GetAllActors();
+                List<Actor> actors = actorService.GetActorsWithPlays();
                 Console.WriteLine("Lista aktorów:");
                 Console.WriteLine(actors.ListToString("Brak aktorów", '-'));
                 if (actors.Count == 0) break;
@@ -895,7 +894,7 @@ void ManagementMenu3_1(Customer customer)
             case "2": // anuluj rezerwację
                 Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Reserved));
                 if (!customer.Tickets.Any(t => t.Status == TicketStatus.Reserved)) break;
-                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+                ticket = ConsoleHelper.GetById(customer.Tickets.Where(t => t.Status == TicketStatus.Reserved), c => c.TicketId, "Podaj ID biletu: ");
 
                 if (customerService.CancelReservation(customer, ticket))
                 {
@@ -970,7 +969,7 @@ void ManagementMenu3_1(Customer customer)
             case "5": // kup zarezerwowany bilet
                 Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Reserved));
                 if (!customer.Tickets.Any(t => t.Status == TicketStatus.Reserved)) break;
-                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+                ticket = ConsoleHelper.GetById(customer.Tickets.Where(t => t.Status == TicketStatus.Reserved), c => c.TicketId, "Podaj ID biletu: ");
 
                 if (customerService.BuyTicket(customer, ticket))
                 {
@@ -994,7 +993,7 @@ void ManagementMenu3_1(Customer customer)
             case "7": // zwróć bilet
                 Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Sold));
                 if (!customer.Tickets.Any(t => t.Status == TicketStatus.Sold)) break;
-                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+                ticket = ConsoleHelper.GetById(customer.Tickets.Where(t => t.Status == TicketStatus.Sold), c => c.TicketId, "Podaj ID biletu: ");
 
                 if (customerService.RefundTicket(customer, ticket))
                 {
@@ -1030,13 +1029,47 @@ void ManagementMenu3_2(Author author)
     {
         DisplayMenu.Management3_2();
         string input = ConsoleHelper.UserInput();
+        Play play;
+        List<Play> plays = playService.GetPlays();
         switch (input)
         {
+            case "0":
+                Console.WriteLine(author.GetPlaysString());
+                break;
             case "1": // dodaj sztukę do listy autora
+                Console.WriteLine(plays.Where(t => t.Author == null).ToList().ListToString("Brak sztuk", '-'));
+                if (plays.Where(t => t.Author == null).ToList().Count == 0) break;
+                play = ConsoleHelper.GetById(plays.Where(t => t.Author == null), p => p.PlayId, "Podaj ID sztuki: ");
+                if (authorService.AddPlay(author, play))
+                {
+                    Console.WriteLine("Poprawnie przypisano sztukę do listy autora");
+                }
+                else
+                {
+                    Console.WriteLine("Przypisanie sztuki do listy autora nie powiodło się");
+                }
                 break;
             case "2": // usuń sztukę z listy autora
+                Console.WriteLine(author.GetPlaysString());
+                play = ConsoleHelper.GetById(author.Plays, p => p.PlayId, "Podaj ID sztuki: ");
+                if (authorService.RemovePlay(author, play))
+                {
+                    Console.WriteLine("Poprawnie usunięto sztukę z listy autora");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie sztuki z listy autora nie powiodło się");
+                }
                 break;
             case "3": // usuń wszystkie sztuki z listy autora
+                if (authorService.RemoveAllPlays(author))
+                {
+                    Console.WriteLine("Poprawnie usunięto wszystkie sztuki z listy autora");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie wszystkich sztuk z listy autora nie powiodło się");
+                }
                 break;
             case "x":
                 return;
@@ -1053,13 +1086,47 @@ void ManagementMenu3_3(Director director)
     {
         DisplayMenu.Management3_3();
         string input = ConsoleHelper.UserInput();
+        Play play;
+        List<Play> plays = playService.GetPlays();
         switch (input)
         {
+            case "0":
+                Console.WriteLine(director.GetPlaysString());
+                break;
             case "1": // dodaj sztukę do listy reżysera
+                Console.WriteLine(plays.Where(t => t.Director == null).ToList().ListToString("Brak sztuk", '-'));
+                if (plays.Where(t => t.Director == null).ToList().Count == 0) break;
+                play = ConsoleHelper.GetById(plays.Where(t => t.Director == null), p => p.PlayId, "Podaj ID sztuki: ");
+                if (directorService.AddPlay(director, play))
+                {
+                    Console.WriteLine("Poprawnie przypisano sztukę do listy reżysera");
+                }
+                else
+                {
+                    Console.WriteLine("Przypisanie sztuki do listy reżysera nie powiodło się");
+                }
                 break;
             case "2": // usuń sztukę z listy reżysera
+                Console.WriteLine(director.GetPlaysString());
+                play = ConsoleHelper.GetById(director.Plays, p => p.PlayId, "Podaj ID sztuki: ");
+                if (directorService.RemovePlay(director, play))
+                {
+                    Console.WriteLine("Poprawnie usunięto sztukę z listy reżysera");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie sztuki z listy reżysera nie powiodło się");
+                }
                 break;
             case "3": // usuń wszystkie sztuki z listy reżysera
+                if (directorService.RemoveAllPlays(director))
+                {
+                    Console.WriteLine("Poprawnie usunięto wszystkie sztuki z listy reżysera");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie wszystkich sztuk z listy reżysera nie powiodło się");
+                }
                 break;
             case "x":
                 return;
@@ -1076,13 +1143,47 @@ void ManagementMenu3_4(Actor actor)
     {
         DisplayMenu.Management3_4();
         string input = ConsoleHelper.UserInput();
+        Play play;
+        List<Play> plays = playService.GetPlays();
         switch (input)
         {
+            case "0":
+                Console.WriteLine(actor.GetPlaysString());
+                break;
             case "1": // dodaj sztukę do listy aktora
+                Console.WriteLine(plays.Where(t => !t.Actors.Contains(actor)).ToList().ListToString("Brak sztuk", '-'));
+                if (plays.Where(t => !t.Actors.Contains(actor)).ToList().Count == 0) break;
+                play = ConsoleHelper.GetById(plays.Where(t => !t.Actors.Contains(actor)), p => p.PlayId, "Podaj ID sztuki: ");
+                if (actorService.AddPlay(actor, play))
+                {
+                    Console.WriteLine("Poprawnie przypisano sztukę do listy aktora");
+                }
+                else
+                {
+                    Console.WriteLine("Przypisanie sztuki do listy aktora nie powiodło się");
+                }
                 break;
             case "2": // usuń sztukę z listy aktora
+                Console.WriteLine(actor.GetPlaysString());
+                play = ConsoleHelper.GetById(actor.Plays, p => p.PlayId, "Podaj ID sztuki: ");
+                if (actorService.RemovePlay(actor, play))
+                {
+                    Console.WriteLine("Poprawnie usunięto sztukę z listy aktora");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie sztuki z listy aktora nie powiodło się");
+                }
                 break;
             case "3": // usuń wszystkie sztuki z listy aktora
+                if (actorService.RemoveAllPlays(actor))
+                {
+                    Console.WriteLine("Poprawnie usunięto wszystkie sztuki z listy aktora");
+                }
+                else
+                {
+                    Console.WriteLine("Usunięcie wszystkich sztuk z listy aktora nie powiodło się");
+                }
                 break;
             case "x":
                 return;

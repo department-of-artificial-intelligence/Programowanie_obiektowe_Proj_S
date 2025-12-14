@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Project.DAL;
 using Project.Model;
+using System.IO;
 
 namespace Project.Services;
 
@@ -13,10 +14,11 @@ public class DirectorService
         _context = context;
     }
 
-    public List<Director> GetAllDirectors()
+    public List<Director> GetDirectorsWithPlays()
     {
         return _context.Directors
             .Include(d => d.Plays)
+                .ThenInclude(p => p.Author)
             .ToList();
     }
 
@@ -30,5 +32,42 @@ public class DirectorService
         _context.SaveChanges();
 
         return true;
+    }
+
+    public bool AddPlay(Director director, Play play)
+    {
+        if (director is null || play is null) return false;
+
+        if (director.AddPlay(play))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+    public bool RemovePlay(Director director, Play play)
+    {
+        if (director is null || play is null) return false;
+
+        if (director.RemovePlay(play))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+    public bool RemoveAllPlays(Director director)
+    {
+        if (director is null) return false;
+
+        if (director.RemoveAllPlays())
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
     }
 }

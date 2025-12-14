@@ -22,7 +22,7 @@ public class Author : Person, IPlayManager
     public bool AddPlay(Play play)
     {
         if (play is null || Plays.Contains(play)) return false;
-        if (play.Author is not null && play.Author != this) throw new InvalidOperationException($"Sztuka \"{play.Title}\" ma już innego autora: {play.Author.FirstName} {play.Author.LastName}");
+        if (play.Author is not null && play.Author != this) return false;
         play.Author ??= this;
         Plays.Add(play);
         return true;
@@ -33,13 +33,15 @@ public class Author : Person, IPlayManager
         play.Author = null;
         return Plays.Remove(play);
     }
-    public void RemoveAllPlays()
+    public bool RemoveAllPlays()
     {
+        if (Plays.Count == 0) return false;
         foreach (var play in Plays)
         {
             play.Author = null;
         }
         Plays.Clear();
+        return true;
     }
 
     // Metody string
