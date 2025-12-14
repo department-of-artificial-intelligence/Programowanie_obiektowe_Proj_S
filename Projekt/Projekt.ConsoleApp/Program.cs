@@ -12,12 +12,17 @@ IHost _host =Host.CreateDefaultBuilder().ConfigureServices((context, services) =
     }).Build();
 var context=_host.Services.GetRequiredService<ApplicationDbContext>();
 if (context != null) 
-{
+{   
+    context.Database.EnsureDeleted();
     context.Database.Migrate();
     context.Database.EnsureCreated();
     Car car = new Car("Toyota", "Corolla", 50000, 1.8, 2018, "Petrol", "XYZ1234", 4, "Sedan");
-    context.Car.Add(car);
+    Motorbike motorbike = new Motorbike("Honda", "CBR600RR", 15000, 0.6, 2020, "Petrol", "MOTO5678", 600,"naked");
+    Driver driver = new Driver("John", "Doe", "D1234567"); 
+    context.Add(driver);
+    car.PrzypisanyKierowca = driver;
+    context.Add(car);
+    context.Add(motorbike);
+    motorbike.PrzypisanyKierowca=driver;
     context.SaveChanges();
 }
-
-

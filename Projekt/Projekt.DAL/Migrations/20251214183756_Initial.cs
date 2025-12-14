@@ -12,7 +12,7 @@ namespace Projekt.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Driver",
+                name: "Drivers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,17 +23,15 @@ namespace Projekt.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Driver", x => x.Id);
+                    table.PrimaryKey("PK_Drivers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Car",
+                name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LiczbaDrzwi = table.Column<int>(type: "int", nullable: false),
-                    Nadwozie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Marka = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Przebieg = table.Column<int>(type: "int", nullable: false),
@@ -41,21 +39,28 @@ namespace Projekt.DAL.Migrations
                     Rocznik = table.Column<int>(type: "int", nullable: false),
                     Paliwo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Tablica = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrzypisanyKierowcaId = table.Column<int>(type: "int", nullable: false)
+                    PrzypisanyKierowcaId = table.Column<int>(type: "int", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    LiczbaDrzwi = table.Column<int>(type: "int", nullable: true),
+                    Nadwozie = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PojemnoscSilnikaCm3 = table.Column<int>(type: "int", nullable: true),
+                    TypRamy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ladownosc = table.Column<double>(type: "float", nullable: true),
+                    LiczbaOsi = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Car", x => x.Id);
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Car_Driver_PrzypisanyKierowcaId",
+                        name: "FK_Vehicles_Drivers_PrzypisanyKierowcaId",
                         column: x => x.PrzypisanyKierowcaId,
-                        principalTable: "Driver",
+                        principalTable: "Drivers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Service",
+                name: "Services",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,40 +68,40 @@ namespace Projekt.DAL.Migrations
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Koszt = table.Column<double>(type: "float", nullable: false),
-                    CarId = table.Column<int>(type: "int", nullable: true)
+                    VehicleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Service", x => x.Id);
+                    table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Service_Car_CarId",
-                        column: x => x.CarId,
-                        principalTable: "Car",
+                        name: "FK_Services_Vehicles_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "Vehicles",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Car_PrzypisanyKierowcaId",
-                table: "Car",
-                column: "PrzypisanyKierowcaId");
+                name: "IX_Services_VehicleId",
+                table: "Services",
+                column: "VehicleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Service_CarId",
-                table: "Service",
-                column: "CarId");
+                name: "IX_Vehicles_PrzypisanyKierowcaId",
+                table: "Vehicles",
+                column: "PrzypisanyKierowcaId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Service");
+                name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Car");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "Driver");
+                name: "Drivers");
         }
     }
 }
