@@ -41,16 +41,18 @@ public class Hall
         Seats.Add(seat);
         return seat;
     }
-    public void CreateSeats(int a, int b)
+    public List<Seat> CreateSeats(int a, int b)
     {
+        List<Seat> createdSeats = new List<Seat>();
         for (int i = 1; i <= a; i++)
         {
             for (int j = 1; j <= b; j++)
             {
-                CreateSeat(i, j);
+                Seat? seat = CreateSeat(i, j);
+                if (seat is not null) createdSeats.Add(seat);
             }
-                
         }
+        return createdSeats;
     }
     public bool DeleteSeat(Seat seat)
     {
@@ -63,6 +65,11 @@ public class Hall
         {
             DeleteSeat(seat);
         }
+    }
+
+    public Seat? GetSeatByLocation(int row, int seat) 
+    {
+        return Seats.FirstOrDefault(s => s.RowNumber == row && s.SeatNumber == seat);
     }
 
     // Metody dodawania i usuwania elementów listy Performance
@@ -100,7 +107,7 @@ public class Hall
         int maxRow = Seats.Max(s => s.RowNumber);
         int maxSeat = Seats.Max(s => s.SeatNumber);
 
-        string seatsString = $"Wizualizacja miejsc dla Sali: {HallName}\n";
+        string seatsString = "";
 
         for (int r = 1; r <= maxRow; r++)
         {

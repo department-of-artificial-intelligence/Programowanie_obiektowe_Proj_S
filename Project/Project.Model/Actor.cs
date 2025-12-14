@@ -65,6 +65,6 @@ public class Actor : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $"/{Salary}PLN";
+        return base.ToString() + $"/{Salary}PLN (l.sztuk:{Plays.Count})";
     }
 }

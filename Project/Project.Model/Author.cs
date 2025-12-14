@@ -50,6 +50,6 @@ public class Author : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $" ({Plays.Count} sztuk)";
+        return base.ToString() + $" (l.sztuk:{Plays.Count})";
     }
 }

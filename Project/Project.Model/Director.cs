@@ -74,6 +74,6 @@ public class Director : Person, IPlayManager
 
     public override string ToString()
     {
-        return base.ToString() + $"/{YearsOfExperience}/{Salary}PLN";
+        return base.ToString() + $"/{YearsOfExperience}/{Salary}PLN (l.sztuk:{Plays.Count})";
     }
 }

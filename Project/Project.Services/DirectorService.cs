@@ -19,4 +19,16 @@ public class DirectorService
             .Include(d => d.Plays)
             .ToList();
     }
+
+    public bool AddNewDirector(string firstName, string lastName, int yearsOfExperience, decimal salary)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || yearsOfExperience < 0 || salary < 0) return false;
+
+        Director director = new Director(firstName, lastName, yearsOfExperience,salary);
+
+        _context.Directors.Add(director);
+        _context.SaveChanges();
+
+        return true;
+    }
 }

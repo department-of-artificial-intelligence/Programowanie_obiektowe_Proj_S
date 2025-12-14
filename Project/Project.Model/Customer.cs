@@ -1,4 +1,6 @@
-﻿namespace Project.Model;
+﻿using System.Numerics;
+
+namespace Project.Model;
 
 public class Customer : Person, ITicketTransactions
 {
@@ -90,6 +92,6 @@ public class Customer : Person, ITicketTransactions
 
     public override string ToString()
     {
-        return base.ToString();
+        return base.ToString() + $" (l.biletów:{Tickets.Count})";
     }
 }

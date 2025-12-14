@@ -19,4 +19,16 @@ public class ActorService
             .Include(a => a.Plays)
             .ToList();
     }
+
+    public bool AddNewActor(string firstName, string lastName, decimal salary)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || salary < 0) return false;
+
+        Actor actor = new Actor(firstName, lastName, salary);
+
+        _context.Actors.Add(actor);
+        _context.SaveChanges();
+
+        return true;
+    }
 }

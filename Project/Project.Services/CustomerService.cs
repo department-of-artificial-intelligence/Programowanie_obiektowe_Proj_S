@@ -28,4 +28,16 @@ public class CustomerService
                 .ThenInclude(t => t.Seat)
             .ToList();
     }
+
+    public bool AddNewCustomer(string firstName, string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName)) return false;
+
+        Customer customer = new Customer(firstName, lastName);
+
+        _context.Customers.Add(customer);
+        _context.SaveChanges();
+
+        return true;
+    }
 }

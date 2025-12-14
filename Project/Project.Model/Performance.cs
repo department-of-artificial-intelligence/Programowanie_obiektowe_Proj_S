@@ -89,19 +89,30 @@ public class Performance
             DeleteTicket(ticket);
         }
     }
-    public void CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
+    public List<Ticket> CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
     {
-        if (Hall is null) return;
+        List<Ticket> createdSeats = new List<Ticket>();
+        if (Hall is null) return createdSeats;
         foreach (var seat in Hall.Seats)
         {
-            CreateTicket(price, seat, status);
+            Ticket? ticket = CreateTicket(price, seat, status);
+            if (ticket is not null) createdSeats.Add(ticket);
         }
+        return createdSeats;
+    }
+
+    public List<Ticket> OrderTickets()
+    {
+        return Tickets
+            .OrderBy(t => t.Seat.RowNumber)
+            .ThenBy(t => t.Seat.SeatNumber)
+            .ToList();
     }
 
     // Metody string
     public string GetTicketsString()
     {
-        return Tickets.ListToString("Brak biletów", '-');
+        return OrderTickets().ListToString("Brak biletów", '-');
     }
 
     public string VisualizeTicketsString()
@@ -158,7 +169,7 @@ public class Performance
                     }
                 }
 
-                rowString += $"{symbol} ";
+                rowString += $"{s}{symbol} ";
             }
             ticketsString += rowString + (r != maxRow ? "\n" : string.Empty);
         }

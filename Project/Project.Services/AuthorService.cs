@@ -19,4 +19,16 @@ public class AuthorService
             .Include(a => a.Plays)
             .ToList();
     }
+
+    public bool AddNewAuthor(string firstName, string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName)) return false;
+
+        Author author = new Author(firstName, lastName);
+
+        _context.Authors.Add(author);
+        _context.SaveChanges();
+
+        return true;
+    }
 }
