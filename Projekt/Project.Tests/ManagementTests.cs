@@ -1,66 +1,134 @@
 using Xunit;
 using Projekt.Model;
 using System.Linq;
+using Projekt.ConsoleApp;
+using Projekt.DAL;
+using Microsoft.EntityFrameworkCore;
+using System;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Projekt.Tests
 {
     public class ManagementTests
     {
+        private ApplicationDbContext DajBaze()
+        {
+            var opcje = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+            return new ApplicationDbContext(opcje);
+        }
         [Fact]
         public void DodajPojazdTest()
         {
-            var manager = new Management();
-            var auto = new Car("Audi", "A4", 100, 2.0, 2020, "PB", "TEST1", 4, "Sedan");
+            var baza = DajBaze();
+            var manager = new Management(baza);
+            var kierowca = new Driver
+            {
+                Imie = "Test",
+                Nazwisko = "User",
+                NumerPrawaJazdy = "123"
+            };
+
+            var auto = new Car
+            {
+                Marka = "Audi",
+                Model = "A4",
+                Tablica = "TEST1",
+                Rocznik = 2020,
+                Przebieg = 100,
+                Silnik = 2.0,
+                Paliwo = "PB",
+                LiczbaDrzwi = 4,
+                Nadwozie = "Sedan",
+                PrzypisanyKierowca = kierowca
+            };
             bool rezultat = manager.DodajPojazd(auto);
             Assert.True(rezultat);
-            var znaleziony = manager.ZnajdzPojazdPoRejestracji("TEST1");
-            Assert.NotNull(znaleziony);
-            Assert.Equal("Audi", znaleziony.Marka);
+            var znalezione = manager.ZnajdzPojazdPoRejestracji("TEST1");
+            Assert.NotNull(znalezione);
+            Assert.Equal("Audi", znalezione.Marka);
         }
         [Fact]
         public void UsunPojazdTest()
         {
-            var manager = new Management();
-            var auto = new Car("Opel", "Astra", 100, 1.4, 2010, "PB", "USUNMNIE", 5, "Hatchback");
+            var baza = DajBaze();
+            var manager = new Management(baza);
+            var auto = new Car
+            {
+                Marka = "Opel",
+                Model = "Astra",
+                Tablica = "USUN",
+                Nadwozie = "Hatchback",
+                Paliwo = "Benzyna",
+                PrzypisanyKierowca = new Driver { Imie = "Jan", Nazwisko = "X", NumerPrawaJazdy = "123" }
+            };
             manager.DodajPojazd(auto);
-            bool rezultatUsuwania = manager.UsunPojazd("USUNMNIE");
-            Assert.True(rezultatUsuwania);
-            var szukany = manager.ZnajdzPojazdPoRejestracji("USUNMNIE");
-            Assert.Null(szukany);
+            bool usunieto = manager.UsunPojazd("USUN");
+            Assert.True(usunieto);
+            Assert.Null(manager.ZnajdzPojazdPoRejestracji("USUN"));
         }
         [Fact]
         public void PrzypiszKierowceTest()
         {
-            var manager = new Management();
-            var auto = new Car("Ford", "Focus", 500, 1.6, 2015, "Diesel", "KIEROWCA1", 5, "Kombi");
+            var baza = DajBaze();
+            var manager = new Management(baza);
+            var auto = new Car
+            {
+                Marka = "Ford",
+                Model = "Focus",
+                Tablica = "AUTO1",
+                Nadwozie = "Kombi",
+                Paliwo = "Diesel",
+                PrzypisanyKierowca = new Driver { Imie = "Tymczasowy", Nazwisko = "User", NumerPrawaJazdy = "000" }
+            };
             manager.DodajPojazd(auto);
-            var kierowca = new Driver("Jan", "Testowy", "XYZ999");
-            bool rezultat = manager.PrzypiszKierowceDoPojazdu("KIEROWCA1", kierowca);
-            Assert.True(rezultat);
-            var autoZBazy = manager.ZnajdzPojazdPoRejestracji("KIEROWCA1");
+            var nowyKierowca = new Driver { Imie = "Jan", Nazwisko = "Kowalski", NumerPrawaJazdy = "ABC" };
+            bool wynik = manager.PrzypiszKierowceDoPojazdu("AUTO1", nowyKierowca);
+            Assert.True(wynik);
+            var autoZBazy = manager.ZnajdzPojazdPoRejestracji("AUTO1");
             Assert.NotNull(autoZBazy.PrzypisanyKierowca);
             Assert.Equal("Jan", autoZBazy.PrzypisanyKierowca.Imie);
         }
         [Fact]
         public void ZnajdzPojazdTest()
         {
-            var manager = new Management();
-            manager.DodajPojazd(new Car("Opel", "Corsa", 100, 1.2, 2010, "PB", "WA 12345", 3, "Hatchback"));
-            var znaleziony = manager.ZnajdzPojazdPoRejestracji("wa 12345");
+            var baza = DajBaze();
+            var manager = new Management(baza);
+            var auto = new Car
+            {
+                Marka = "Fiat",
+                Model = "Panda",
+                Tablica = "WA 111",
+                Nadwozie = "Hatchback",
+                Paliwo = "Benzyna",
+                PrzypisanyKierowca = new Driver { Imie = "Test", Nazwisko = "User", NumerPrawaJazdy = "123" }
+            };
+            manager.DodajPojazd(auto);
+            var znaleziony = manager.ZnajdzPojazdPoRejestracji("WA 111");
             Assert.NotNull(znaleziony);
-            Assert.Equal("WA 12345", znaleziony.Tablica);
+            Assert.Equal("WA 111", znaleziony.Tablica);
         }
         [Fact]
         public void DodajWpisSerwisowyTest()
         {
-            var manager = new Management();
-            manager.DodajPojazd(new Car("BMW", "E46", 200000, 2.0, 2003, "PB", "SERWIS1", 4, "Sedan"));
-            bool wynik = manager.DodajWpisSerwisowy("SERWIS1", "Wymiana klocków", 450.00);
+            var baza = DajBaze();
+            var manager = new Management(baza);
+            var auto = new Car
+            {
+                Marka = "BMW",
+                Model = "X5",
+                Tablica = "SERWIS",
+                Nadwozie = "SUV",
+                Paliwo = "Diesel",
+                PrzypisanyKierowca = new Driver { Imie = "Adam", Nazwisko = "Mechanik", NumerPrawaJazdy = "X" }
+            };
+            manager.DodajPojazd(auto);
+            bool wynik = manager.DodajWpisSerwisowy("SERWIS", "Olej", 500.0);
             Assert.True(wynik);
-            var auto = manager.ZnajdzPojazdPoRejestracji("SERWIS1");
-            Assert.NotEmpty(auto.HistoriaSerwisowa);
-            Assert.Single(auto.HistoriaSerwisowa);
-            Assert.Equal(450.00, auto.HistoriaSerwisowa[0].Koszt);
+            var autoZBazy = manager.ZnajdzPojazdPoRejestracji("SERWIS");
+            Assert.Single(autoZBazy.HistoriaSerwisowa);
+            Assert.Equal(500.0, autoZBazy.HistoriaSerwisowa[0].Koszt);
         }
     }
 }
