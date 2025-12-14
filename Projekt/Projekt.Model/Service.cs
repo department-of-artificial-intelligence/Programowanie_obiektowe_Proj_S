@@ -8,6 +8,7 @@ namespace Projekt.Model
 {
     public class Service
     {
+        public int Id { get; set; }
         public DateTime Data { get; set; }
         public string Opis { get; set; }
         public double Koszt { get; set; }

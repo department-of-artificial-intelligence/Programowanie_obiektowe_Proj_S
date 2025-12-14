@@ -9,7 +9,7 @@ namespace Projekt.Model
 {
     public class Vehicle
     {
-
+        public int Id { get; set; }
         public string Marka { get; set; }
         public string Model { get; set; }
         public int Przebieg { get; set; }
@@ -19,6 +19,10 @@ namespace Projekt.Model
         public string Tablica { get; set; }
         public Driver PrzypisanyKierowca { get; set; }
         public List<Service> HistoriaSerwisowa { get; set; }
+        public Vehicle()
+        {
+            HistoriaSerwisowa = new List<Service>();
+        }
         public Vehicle(string marka, string model, int przebieg, double silnik, int rocznik, string paliwo, string tablica)
         {
             Marka = marka;

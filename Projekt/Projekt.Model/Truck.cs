@@ -10,7 +10,10 @@ namespace Projekt.Model
     {
         public double Ladownosc { get; set; }
         public int LiczbaOsi { get; set; }
+        public Truck()
+        {
 
+        }
         public Truck(string marka, string model, int przebieg, double silnik, int rocznik, string paliwo, string tablica,
         double ladownosc, int liczbaosi) : base(marka, model, przebieg, silnik, rocznik, paliwo, tablica)
         {

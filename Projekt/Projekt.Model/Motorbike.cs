@@ -10,6 +10,10 @@ namespace Projekt.Model
     {
         public int PojemnoscSilnikaCm3 { get; set; }
         public string TypRamy { get; set; }
+        public Motorbike()
+        {
+
+        }
 
         public Motorbike(string marka, string model, int przebieg, double silnik, int rocznik, string paliwo, string tablica, int pojemnoscSilnikaCm3, string typRamy)
         : base(marka, model, przebieg, silnik, rocznik, paliwo, tablica)
