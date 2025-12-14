@@ -1,6 +1,4 @@
-﻿using System.Net.Sockets;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Ticket
 {
@@ -46,7 +44,7 @@ public class Ticket
     public bool CanBeRefunded(Customer customer)
     {
         if (customer is null) return false;
-        return Status == TicketStatus.Sold && Customer == customer;
+        return Status == TicketStatus.Sold && Customer == customer && Performance.Status == PerformanceStatus.Scheduled;
     }
 
     // Metody string

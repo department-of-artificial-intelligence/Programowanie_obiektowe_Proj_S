@@ -40,4 +40,81 @@ public class CustomerService
 
         return true;
     }
+
+    public bool ReserveTicket(Customer customer, Ticket ticket)
+    {
+        if (customer is null || ticket is null) return false;
+        if (customer.ReserveTicket(ticket))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool CancelReservation(Customer customer, Ticket ticket)
+    {
+        if (customer is null || ticket is null) return false;
+        if (customer.CancelReservation(ticket)) 
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool BuyTicket(Customer customer, Ticket ticket)
+    {
+        if (customer is null || ticket is null) return false;
+        if (customer.BuyTicket(ticket))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool RefundTicket(Customer customer, Ticket ticket)
+    {
+        if (customer is null || ticket is null) return false;
+        if (customer.RefundTicket(ticket)) 
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool BuyAllReserved(Customer customer)
+    {
+        if (customer is null) return false;
+        if (customer.BuyAllReserved())
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool CancelAllReserved(Customer customer)
+    {
+        if (customer is null) return false;
+        if (customer.CancelAllReserved())
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public bool RefundAllBought(Customer customer)
+    {
+        if (customer is null) return false;
+        if (customer.RefundAllBought())
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
 }

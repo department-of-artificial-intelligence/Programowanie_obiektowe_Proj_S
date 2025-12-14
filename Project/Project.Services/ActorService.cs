@@ -13,6 +13,12 @@ public class ActorService
         _context = context;
     }
 
+    public List<Actor> GetActors()
+    {
+        return _context.Actors
+            .ToList();
+    }
+
     public List<Actor> GetAllActors()
     {
         return _context.Actors

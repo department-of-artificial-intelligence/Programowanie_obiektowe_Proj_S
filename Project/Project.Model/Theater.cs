@@ -28,12 +28,6 @@ public class Theater
         Address = new Address(country, city, street);
     }
 
-    // Metoda zmiany adresu
-    public void ChangeAddress(string country, string city, string street)
-    {
-        Address = new Address(country, city, street);
-    }
-
     // Metody tworzenia i usuwania elementów listy Hall
     public Hall? CreateHall(string hallName, List<Performance>? performances = null)
     {

@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Project.Model;
+﻿namespace Project.Model;
 
 public class Customer : Person, ITicketTransactions
 {
@@ -53,38 +51,51 @@ public class Customer : Person, ITicketTransactions
         if (!ticket.CanBeCanceled(this)) return false;
         return RemoveTicket(ticket);
     }
-    public void BuyAllReserved()
+    public bool BuyAllReserved()
     {
         var reservedTickets = Tickets
             .Where(t => t.Status == TicketStatus.Reserved)
             .ToList();
+        if (reservedTickets.Count == 0) return false;
         foreach (var ticket in reservedTickets)
         {
             ticket.Status = TicketStatus.Sold;
         }
+        return true;
     }
-    public void CancelAllReserved()
+    public bool CancelAllReserved()
     {
         var reservedTickets = Tickets
             .Where(t => t.Status == TicketStatus.Reserved)
             .ToList();
+        if (reservedTickets.Count == 0) return false;
         foreach (var ticket in reservedTickets)
         {
             CancelReservation(ticket);
         }
+        return true;
     }
-    public void RefundAllBought()
+    public bool RefundAllBought()
     {
         var boughtTickets = Tickets
-            .Where(t => t.Status == TicketStatus.Sold)
+            .Where(t => t.Status == TicketStatus.Sold && t.Performance.Status == PerformanceStatus.Scheduled)
             .ToList();
+        if (boughtTickets.Count == 0) return false;
         foreach (var ticket in boughtTickets)
         {
             RefundTicket(ticket);
         }
+        return true;
     }
 
     // Metody string
+    public string GetTicketsWithStatusString(TicketStatus status)
+    {
+        return Tickets
+            .Where(t => t.Status == status)
+            .ToList()
+            .ListToString("Brak biletów", '-');
+    }
     public string GetTicketsString()
     {
         return Tickets.ListToString("Brak biletów", '-');

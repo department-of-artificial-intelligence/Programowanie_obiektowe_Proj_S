@@ -1,12 +1,12 @@
-using Xunit;
+﻿using Xunit;
 using Project.Model;
 
 namespace Project.Tests;
 
-public class AddressTests
+public class TheaterTests
 {
     [Fact]
-    public void AddressUnitTest()
+    public void TheaterUnitTest()
     {
 
     }

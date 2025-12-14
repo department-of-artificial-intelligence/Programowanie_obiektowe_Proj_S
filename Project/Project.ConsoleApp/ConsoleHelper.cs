@@ -1,7 +1,4 @@
-﻿using Microsoft.Identity.Client;
-using Project.Model;
-using System.Globalization;
-using System.Net;
+﻿using System.Globalization;
 
 namespace Project.ConsoleApp;
 

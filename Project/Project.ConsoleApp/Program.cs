@@ -6,6 +6,7 @@ using Project.ConsoleApp;
 using Project.DAL;
 using Project.Model;
 using Project.Services;
+using System;
 
 IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
 {
@@ -51,11 +52,14 @@ while (true)
     string input = ConsoleHelper.UserInput();
     switch (input)
     {
-        case "1": // wyświetl
+        case "1": // wyświetlanie
             ViewMenu1();
             break;
-        case "2": // stwórz
+        case "2": // tworzenie
             CreationMenu2(); 
+            break;
+        case "3": // zarządzanie
+            ManagementMenu3();
             break;
         case "x":
             return;
@@ -738,6 +742,370 @@ void CreationMenu2_3()
                 {
                     Console.WriteLine("Stworzenie nowego klienta nie powiodło się");
                 }
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3()
+{
+    while (true)
+    {
+        DisplayMenu.Management3();
+        string input = ConsoleHelper.UserInput();
+        switch (input)
+        {
+            case "1":
+                List<Customer> customers = customerService.GetAllCustomers();
+                Console.WriteLine("Lista klientów:");
+                Console.WriteLine(customers.ListToString("Brak klientów", '-'));
+                if (customers.Count == 0) break;
+                Customer customer = ConsoleHelper.GetById(customers, a => a.Id, "Podaj ID klienta: ");
+                Console.WriteLine("Lista biletów klienta:");
+                Console.WriteLine(customer.GetTicketsString());
+                ManagementMenu3_1(customer);
+                break;
+            case "2":
+                List<Author> authors = authorService.GetAllAuthors();
+                Console.WriteLine("Lista autorów:");
+                Console.WriteLine(authors.ListToString("Brak autorów", '-'));
+                if (authors.Count == 0) break;
+                Author author = ConsoleHelper.GetById(authors, a => a.Id, "Podaj ID autora: ");
+                ManagementMenu3_2(author);
+                break;
+            case "3":
+                List<Director> directors = directorService.GetAllDirectors();
+                Console.WriteLine("Lista reżyserów:");
+                Console.WriteLine(directors.ListToString("Brak reżyserów", '-'));
+                if (directors.Count == 0) break;
+                Director director = ConsoleHelper.GetById(directors, a => a.Id, "Podaj ID reżysera: ");
+                ManagementMenu3_3(director);
+                break;
+            case "4":
+                List<Actor> actors = actorService.GetAllActors();
+                Console.WriteLine("Lista aktorów:");
+                Console.WriteLine(actors.ListToString("Brak aktorów", '-'));
+                if (actors.Count == 0) break;
+                Actor actor = ConsoleHelper.GetById(actors, a => a.Id, "Podaj ID aktora: ");
+                ManagementMenu3_4(actor);
+                break;
+            case "5":
+                TheaterNetwork? network = theaterNetworkService?.GetFullTheaterNetwork(); // możliwa zmiana
+                if (network is null)
+                {
+                    Console.WriteLine("Nie znaleziono sieci");
+                    break;
+                }
+                Console.WriteLine("Lista teatrów:");
+                Console.WriteLine(network.GetTheatersString());
+                if (network.Theaters.Count == 0) break;
+
+                Theater theater = ConsoleHelper.GetById(network.Theaters, t => t.TheaterId, "Podaj ID teatru: ");
+                Console.WriteLine($"Lista sal w teatrze {theater.TheaterName}:");
+                Console.WriteLine(theater.GetHallsString());
+                if (theater.Halls.Count == 0) break;
+
+                Hall hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+
+                ManagementMenu3_5(hall);
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3_1(Customer customer)
+{
+    while (true)
+    {
+        DisplayMenu.Management3_1();
+        string input = ConsoleHelper.UserInput();
+        int rowNumber;
+        int seatNumber;
+        TheaterNetwork? network;
+        Theater? theater;
+        Hall? hall;
+        Performance? performance;
+        Ticket? ticket;
+        switch (input)
+        {
+            case "0":
+                Console.WriteLine(customer.GetTicketsString());
+                break;
+            case "1": // zarezerwuj bilet
+                network = theaterNetworkService?.GetFromNetworkToTicket();
+                if (network is null)
+                {
+                    Console.WriteLine("Nie znaleziono sieci");
+                    break;
+                }
+                Console.WriteLine(network.GetTheatersString());
+                if (network.Theaters.Count == 0) break;
+
+                theater = ConsoleHelper.GetById(network.Theaters, t => t.TheaterId, "Podaj ID teatru: ");
+                Console.WriteLine(theater.GetHallsString());
+                if (theater.Halls.Count == 0) break;
+
+                hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+                Console.WriteLine(hall.GetPerformancesString());
+                if (hall.Performances.Count == 0) break;
+
+                performance = ConsoleHelper.GetById(hall.Performances, p => p.PerformanceId, "Podaj ID przedstawienia: ");
+                if (performance.Tickets.All(t => t.Status != TicketStatus.Available))
+                {
+                    Console.WriteLine("Wszystkie bilety są niedostępne");
+                    break;
+                }
+                Console.WriteLine(performance.VisualizeTicketsString());
+                if (performance.Tickets.Count == 0) break;
+
+                while (true)
+                {
+                    rowNumber = ConsoleHelper.UserInputInt("Podaj numer rzędu siedzenia: ");
+                    seatNumber = ConsoleHelper.UserInputInt("Podaj numer siedzenia: ");
+                    ticket = performance.GetTicketBySeatLocation(rowNumber, seatNumber);
+                    if (ticket is null || ticket.Status != TicketStatus.Available)
+                    {
+                        Console.WriteLine("Bilet nie istnieje lub jest niedostępny");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (customerService.ReserveTicket(customer, ticket))
+                {
+                    Console.WriteLine("Poprawnie zarezerwowano bilet");
+                }
+                else
+                {
+                    Console.WriteLine("Anulowanie rezerwacji nie powiodło się");
+                }
+                break;
+            case "2": // anuluj rezerwację
+                Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Reserved));
+                if (!customer.Tickets.Any(t => t.Status == TicketStatus.Reserved)) break;
+                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+
+                if (customerService.CancelReservation(customer, ticket))
+                {
+                    Console.WriteLine("Poprawnie anulowano rezerwację biletu");
+                }
+                else
+                {
+                    Console.WriteLine("Anulowanie rezerwacji nie powiodło się");
+                }
+                break;
+            case "3": // anuluj wszystkie rezerwacje
+                if (customerService.CancelAllReserved(customer))
+                {
+                    Console.WriteLine("Poprawnie anulowano wszystkie zarezerwowane bilety");
+                }
+                else
+                {
+                    Console.WriteLine("Anulowanie wszystkich zarezerwowanych biletów nie powiodło się");
+                }
+                break;
+            case "4": // kup dostępny bilet
+                network = theaterNetworkService?.GetFromNetworkToTicket();
+                if (network is null)
+                {
+                    Console.WriteLine("Nie znaleziono sieci");
+                    break;
+                }
+                Console.WriteLine(network.GetTheatersString());
+                if (network.Theaters.Count == 0) break;
+
+                theater = ConsoleHelper.GetById(network.Theaters, t => t.TheaterId, "Podaj ID teatru: ");
+                Console.WriteLine(theater.GetHallsString());
+                if (theater.Halls.Count == 0) break;
+
+                hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+                Console.WriteLine(hall.GetPerformancesString());
+                if (hall.Performances.Count == 0) break;
+
+                performance = ConsoleHelper.GetById(hall.Performances, p => p.PerformanceId, "Podaj ID przedstawienia: ");
+                if (performance.Tickets.All(t => t.Status != TicketStatus.Available))
+                {
+                    Console.WriteLine("Wszystkie bilety są niedostępne");
+                    break;
+                }
+                Console.WriteLine(performance.VisualizeTicketsString());
+                if (performance.Tickets.Count == 0) break;
+
+                while (true)
+                {
+                    rowNumber = ConsoleHelper.UserInputInt("Podaj numer rzędu siedzenia: ");
+                    seatNumber = ConsoleHelper.UserInputInt("Podaj numer siedzenia: ");
+                    ticket = performance.GetTicketBySeatLocation(rowNumber, seatNumber);
+                    if (ticket is null || ticket.Status != TicketStatus.Available)
+                    {
+                        Console.WriteLine("Bilet nie istnieje lub jest niedostępny");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (customerService.BuyTicket(customer, ticket))
+                {
+                    Console.WriteLine("Poprawnie kupiono bilet");
+                }
+                else
+                {
+                    Console.WriteLine("Kupno biletu nie powiodło się");
+                }
+                break;
+            case "5": // kup zarezerwowany bilet
+                Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Reserved));
+                if (!customer.Tickets.Any(t => t.Status == TicketStatus.Reserved)) break;
+                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+
+                if (customerService.BuyTicket(customer, ticket))
+                {
+                    Console.WriteLine("Poprawnie kupiono bilet");
+                }
+                else
+                {
+                    Console.WriteLine("Kupno biletu nie powiodło się");
+                }
+                break;
+            case "6": // kup wszystkie zarezerwowane
+                if (customerService.BuyAllReserved(customer))
+                {
+                    Console.WriteLine("Poprawnie kupiono wszystkie zarezerwowane bilety");
+                }
+                else
+                {
+                    Console.WriteLine("Kupno wszystkich zarezerwowanych biletów nie powiodło się");
+                }
+                break;
+            case "7": // zwróć bilet
+                Console.WriteLine(customer.GetTicketsWithStatusString(TicketStatus.Sold));
+                if (!customer.Tickets.Any(t => t.Status == TicketStatus.Sold)) break;
+                ticket = ConsoleHelper.GetById(customer.Tickets, c => c.TicketId, "Podaj ID biletu: ");
+
+                if (customerService.RefundTicket(customer, ticket))
+                {
+                    Console.WriteLine("Poprawnie zwrócono bilet");
+                }
+                else
+                {
+                    Console.WriteLine("Zwrot biletu nie powiódł się");
+                }
+                break;
+            case "8": // zwróć wszystkie kupione
+                if (customerService.RefundAllBought(customer))
+                {
+                    Console.WriteLine("Poprawnie zwrócono wszystkie kupione bilety");
+                } 
+                else
+                {
+                    Console.WriteLine("Zwrot wszystkich kupionych biletów nie powiódł się");
+                }
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3_2(Author author)
+{
+    while (true)
+    {
+        DisplayMenu.Management3_2();
+        string input = ConsoleHelper.UserInput();
+        switch (input)
+        {
+            case "1": // dodaj sztukę do listy autora
+                break;
+            case "2": // usuń sztukę z listy autora
+                break;
+            case "3": // usuń wszystkie sztuki z listy autora
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3_3(Director director)
+{
+    while (true)
+    {
+        DisplayMenu.Management3_3();
+        string input = ConsoleHelper.UserInput();
+        switch (input)
+        {
+            case "1": // dodaj sztukę do listy reżysera
+                break;
+            case "2": // usuń sztukę z listy reżysera
+                break;
+            case "3": // usuń wszystkie sztuki z listy reżysera
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3_4(Actor actor)
+{
+    while (true)
+    {
+        DisplayMenu.Management3_4();
+        string input = ConsoleHelper.UserInput();
+        switch (input)
+        {
+            case "1": // dodaj sztukę do listy aktora
+                break;
+            case "2": // usuń sztukę z listy aktora
+                break;
+            case "3": // usuń wszystkie sztuki z listy aktora
+                break;
+            case "x":
+                return;
+            default:
+                Console.WriteLine("Zły wybór");
+                break;
+        }
+    }
+}
+
+void ManagementMenu3_5(Hall hall)
+{
+    while (true)
+    {
+        DisplayMenu.Management3_5();
+        string input = ConsoleHelper.UserInput();
+        switch (input)
+        {
+            case "1": // dodaj przedstawienie
+                break;
+            case "2": // usuń zaplanowane
+                break;
+            case "3": // usuń wszystkie zaplanowane
                 break;
             case "x":
                 return;

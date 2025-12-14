@@ -11,9 +11,10 @@ public interface IPlayManager
 public interface ITicketTransactions
 {
     bool BuyTicket(Ticket ticket);
+    bool RefundTicket(Ticket ticket);
     bool ReserveTicket(Ticket ticket);
     bool CancelReservation(Ticket ticket);
-
-    void BuyAllReserved();
-    void CancelAllReserved();
+    bool BuyAllReserved();
+    bool CancelAllReserved();
+    bool RefundAllBought();
 }

@@ -6,8 +6,9 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("===== Main Menu =====");
-        Console.WriteLine("1 - wyświetl");
-        Console.WriteLine("2 - stwórz");
+        Console.WriteLine("1 - wyświetlanie");
+        Console.WriteLine("2 - tworzenie");
+        Console.WriteLine("3 - zarządzanie");
         Console.WriteLine("x - zakończ program");
         Console.WriteLine("---------------------");
     }
@@ -138,5 +139,79 @@ internal static class DisplayMenu
         Console.WriteLine("4 - stwórz klienta");
         Console.WriteLine("x - cofnij");
         Console.WriteLine("---------------------------");
+    }
+
+    internal static void Management3()
+    {
+        Console.WriteLine();
+        Console.WriteLine("==== Management Menu 3 ====");
+        Console.WriteLine("1 - zarządzaj klientem");
+        Console.WriteLine("2 - zarządzaj autorem");
+        Console.WriteLine("3 - zarządzaj reżyserem");
+        Console.WriteLine("4 - zarządzaj aktorem");
+        Console.WriteLine("5 - zarządzaj salą");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("---------------------------");
+    }
+
+    internal static void Management3_1()
+    {
+        Console.WriteLine();
+        Console.WriteLine("======= Management Menu 3.1 =======");
+        Console.WriteLine("0 - pokaż listę posiadanych biletów");
+        Console.WriteLine("1 - zarezerwuj bilet");
+        Console.WriteLine("2 - anuluj rezerwację");
+        Console.WriteLine("3 - anuluj wszystkie rezerwacje");
+        Console.WriteLine("4 - kup dostępny bilet");
+        Console.WriteLine("5 - kup zarezerwowany bilet");
+        Console.WriteLine("6 - kup wszystkie zarezerwowane");
+        Console.WriteLine("7 - zwróć bilet");
+        Console.WriteLine("8 - zwróć wszystkie kupione");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("---------------------------------");
+    }
+
+    internal static void Management3_2()
+    {
+        Console.WriteLine();
+        Console.WriteLine("========== Management Menu 3.2 ==========");
+        Console.WriteLine("1 - dodaj sztukę do listy autora");
+        Console.WriteLine("2 - usuń sztukę z listy autora");
+        Console.WriteLine("3 - usuń wszystkie sztuki z listy autora");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("-----------------------------------------");
+    }
+
+    internal static void Management3_3()
+    {
+        Console.WriteLine();
+        Console.WriteLine("=========== Management Menu 3.3 ===========");
+        Console.WriteLine("1 - dodaj sztukę do listy reżysera");
+        Console.WriteLine("2 - usuń sztukę z listy reżysera");
+        Console.WriteLine("3 - usuń wszystkie sztuki z listy reżysera");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("-------------------------------------------");
+    }
+
+    internal static void Management3_4()
+    {
+        Console.WriteLine();
+        Console.WriteLine("========== Management Menu 3.4 ==========");
+        Console.WriteLine("1 - dodaj sztukę do listy aktora");
+        Console.WriteLine("2 - usuń sztukę z listy aktora");
+        Console.WriteLine("3 - usuń wszystkie sztuki z listy aktora");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("-----------------------------------------");
+    }
+
+    internal static void Management3_5()
+    {
+        Console.WriteLine();
+        Console.WriteLine("===== Management Menu 3.5 =====");
+        Console.WriteLine("1 - dodaj przedstawienie");
+        Console.WriteLine("2 - usuń zaplanowane");
+        Console.WriteLine("3 - usuń wszystkie zaplanowane");
+        Console.WriteLine("x - cofnij");
+        Console.WriteLine("-------------------------------");
     }
 }

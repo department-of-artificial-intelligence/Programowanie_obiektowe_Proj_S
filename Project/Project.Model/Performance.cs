@@ -109,6 +109,11 @@ public class Performance
             .ToList();
     }
 
+    public Ticket? GetTicketBySeatLocation(int row, int seat)
+    {
+        return Tickets.FirstOrDefault(t => t.Seat.RowNumber == row && t.Seat.SeatNumber == seat);
+    }
+
     // Metody string
     public string GetTicketsString()
     {
