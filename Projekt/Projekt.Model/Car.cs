@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-
-namespace Projekt.Model
+﻿namespace Projekt.Model
 {  
     public class Car
     {

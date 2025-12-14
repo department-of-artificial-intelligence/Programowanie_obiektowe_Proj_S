@@ -1,28 +1,58 @@
 using Projekt.Model;
-
 namespace Project.Test
 {
-    public class CarTest
+    public class CarTests
     {
         [Fact]
-        static void TestujCar()
+        public void TestDanych()
         {
-            var auto = new Car
+            var branch = new Branch { Name = "Warszawa Centrum" };
+            var car = new Car
             {
                 Id = 1,
-                Marka = "TestAudi",
-                Model = "A4",
-                Year = 2020,
-                RegistrationNumber = "T1 TEST",
+                Marka = "Toyota",
+                Model = "Corolla",
+                RegistrationNumber = "WA 12345",
                 Status = CarStatus.Available,
-                DailyRate = 200
+                CurrentBranch = branch
             };
 
-            Assert.True(auto.Marka == "TestAudi", "Marka powinna byæ 'TestAudi'");
-            Assert.True(auto.Status == CarStatus.Available, "Domyœlny status to Available");
+            var result = car.ToString();
 
-            string opis = auto.ToString();
-            Assert.True(opis.Contains("TestAudi") && opis.Contains("A4"), "ToString musi zawieraæ markê i model");
+
+            Assert.Contains("Oddzia³: Warszawa Centrum", result);
+            Assert.Contains("[1] Toyota Corolla", result);
+        }
+
+        [Fact]
+        public void TestBraacha()
+        {
+
+            var car = new Car
+            {
+                Id = 2,
+                Marka = "Ford",
+                Model = "Focus",
+                RegistrationNumber = "KR 99999",
+                Status = CarStatus.Rented,
+                CurrentBranch = null
+            };
+
+            var result = car.ToString();
+
+            Assert.Contains("Oddzia³: Brak", result);
+
+            Assert.Contains("Ford Focus", result);
+        }
+
+        [Fact]
+        public void TestKosztu()
+        {
+            var car = new Car();
+            decimal expectedRate = 150.50m;
+            car.DailyRate = expectedRate;
+
+            Assert.Equal(expectedRate, car.DailyRate);
         }
     }
 }
