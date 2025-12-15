@@ -12,7 +12,6 @@ public class Client : Person, IReportable
     public Client() : base(string.Empty, string.Empty, string.Empty)
   
     {
-        // Pamiętaj o inicjalizacji kolekcji
         PlannedWorkouts = new List<Workout>();
         ScheduledReservations = new List<Reservation>();
     }
@@ -25,7 +24,7 @@ public class Client : Person, IReportable
         TrainingGoal = goal;
         JoinDate = DateTime.Now.Date;
         PlannedWorkouts = new List<Workout>();
-        ScheduledReservations = new List<Reservation>(); // Inicjalizacja
+        ScheduledReservations = new List<Reservation>(); 
     }
 
     public string ReportDescription

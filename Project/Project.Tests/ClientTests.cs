@@ -29,7 +29,7 @@ namespace Project.Tests
             string imie = "Marta";
             string nazwisko = "Zając";
             double waga = 62.5;
-            string cel = "Fat Loss";
+            string cel = "redukcja";
 
             // Działanie (Act)
             var klient = new Client(imie, nazwisko, "marta@gym.pl", waga, 1.68, cel);
@@ -44,9 +44,9 @@ namespace Project.Tests
         public void OpisRaportu_ZwrociPoprawnyFormat()
         {
             // Przygotowanie
-            var klient = new Client("Piotr", "Lis", "p@l.com", 80, 1.80, "Mass Gain");
+            var klient = new Client("Piotr", "Lis", "p@l.com", 80, 1.80, "masa");
             klient.Id = 15;
-            string oczekiwanyFragment = "CLIENT (ID: 15): Piotr Lis | Goal: Mass Gain";
+            string oczekiwanyFragment = "CLIENT (ID: 15): Piotr Lis | Goal: masa";
 
             // Działanie
             string wynik = klient.ReportDescription;

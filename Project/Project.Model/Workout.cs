@@ -7,13 +7,10 @@ public class Workout : IReportable
     public Client Client { get; set; }
     public List<Set> Sets { get; set; }
 
-    // *******************************************************************
-    // ✅ POPRAWKA: Wymagany przez Entity Framework
     public Workout()
     {
         Sets = new List<Set>();
     }
-    // *******************************************************************
 
     public Workout(DateTime date, Client client)
     {
@@ -23,7 +20,7 @@ public class Workout : IReportable
     }
     public string ReportDescription
     {
-        get { return $"WORKOUT (ID: {Id}): {Date.ToShortDateString()} | Client: {Client.LastName}"; }
+        get { return $"WORKOUT (ID: {Id}): {Date.ToString("yyyy-MM-dd")} | Client: {Client.LastName}"; }
     }
 
     public void DisplayDetails()

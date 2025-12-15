@@ -16,20 +16,21 @@ namespace Project.DAL
             _context = context;
         }
 
-        // =========================================================
-        // 1. READ PROPERTIES (Pobieranie wszystkich kolekcji)
-        // =========================================================
+       //Pobieranie kolekcji z bazy danych (dziedziczenie TPH)
 
-        // Pobiera wszystkich Klientów z relacjami (Dziedziczenie TPH).
+        // Pobiera wszystkich Klientów z relacjami
         public List<Client> Clients => _context.Persons.OfType<Client>().Include(c => c.PlannedWorkouts).ToList();
 
-        // Pobiera wszystkich Trenerów z relacjami (Dziedziczenie TPH).
+        // Pobiera wszystkich Trenerów 
         public List<Trainer> Trainers => _context.Persons.OfType<Trainer>().Include(t => t.ScheduledReservations).ToList();
 
         // Pobiera wszystkie Ćwiczenia.
         public List<Exercise> Exercises => _context.Exercises.ToList();
 
-        // Pobiera wszystkie Treningi z detalami Klienta i Serii (zagnieżdżone Include).
+        // Pobiera Trenerów
+        public List<TrainerSlot> TrainerSlots => _context.TrainerSlots.Include(ts => ts.Trainer).ToList();
+
+        //Łączy treningi z trenerami, klientami i seriami
         public List<Workout> Workouts => _context.Workouts
             .Include(w => w.Client)
             .Include(w => w.Sets)
@@ -42,82 +43,74 @@ namespace Project.DAL
             .Include(r => r.Trainer)
             .ToList();
 
-        // Pobiera wszystkie dostępne sloty Trenerów (TrainerSlot).
-        public List<TrainerSlot> TrainerSlots => _context.TrainerSlots.Include(ts => ts.Trainer).ToList();
-
-        // =========================================================
-        // 2. RETRIEVAL METHODS (Pobieranie po ID)
-        // =========================================================
+       // 2 Pobieranie danych po id
 
         // Pobiera Klienta po ID.
         public Client GetClientById(int id)
         {
-            return _context.Persons.OfType<Client>().FirstOrDefault(c => c.Id == id);
+            return _context.Persons.OfType<Client>().FirstOrDefault(c => c.Id == id)!;
         }
 
         // Pobiera Trenera po ID.
         public Trainer GetTrainerById(int id)
         {
-            return _context.Persons.OfType<Trainer>().FirstOrDefault(t => t.Id == id);
+            return _context.Persons.OfType<Trainer>().FirstOrDefault(t => t.Id == id)!;
         }
 
         // Pobiera Ćwiczenie po ID.
         public Exercise GetExerciseById(int id)
         {
-            return _context.Exercises.FirstOrDefault(e => e.Id == id);
+            return _context.Exercises.FirstOrDefault(e => e.Id == id)!;
         }
 
-        // =========================================================
-        // 3. ADD METHODS (Dodawanie i zapis do bazy)
-        // =========================================================
-
-        // Dodaje nowego Klienta i zapisuje zmiany (dodanie do tabeli Persons).
+        // 3. Metody do dodawania do bazy-----------------
+  
+        // Dodaje nowego Klienta
         public void AddClient(Client client)
         {
             _context.Persons.Add(client);
             _context.SaveChanges();
         }
 
-        // Dodaje nowego Trenera i zapisuje zmiany (dodanie do tabeli Persons).
+        // Dodaje nowego Trenera.
         public void AddTrainer(Trainer trainer)
         {
             _context.Persons.Add(trainer);
             _context.SaveChanges();
         }
 
-        // Dodaje nowe Ćwiczenie i zapisuje zmiany.
+        // Dodaje nowe Ćwiczenie
         public void AddExercise(Exercise exercise)
         {
             _context.Exercises.Add(exercise);
             _context.SaveChanges();
         }
 
-        // Dodaje nowy Trening (Workout) i zapisuje zmiany.
+        // Dodaje nowy Trening 
         public void AddWorkout(Workout workout)
         {
             _context.Workouts.Add(workout);
             _context.SaveChanges();
         }
 
-        // Dodaje nową Rezerwację (Reservation) i zapisuje zmiany.
+        // Dodaje nową Rezerwację
         public void AddReservation(Reservation reservation)
         {
             _context.Reservations.Add(reservation);
             _context.SaveChanges();
         }
 
-        // Dodaje nowy wolny Slot Trenera (TrainerSlot) i zapisuje zmiany.
+        // Dodaje nowy wolny Slot Trenera 
         public void AddTrainerSlot(TrainerSlot slot)
         {
+           
             _context.TrainerSlots.Add(slot);
             _context.SaveChanges();
         }
 
-        // =========================================================
-        // 4. REMOVE METHODS (Usuwanie i zapis do bazy)
-        // =========================================================
-
-        // Usuwa wolny termin Trenera z bazy danych (używane po zarezerwowaniu slotu).
+        // 4.Usuwanie danych
+      
+        // Usuwa wolny termin Trenera z bazy danych podczas gdy woly termin stanie się zajęty.
         public void RemoveTrainerSlot(TrainerSlot slot)
         {
             _context.TrainerSlots.Remove(slot);

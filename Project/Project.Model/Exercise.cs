@@ -5,10 +5,8 @@ public class Exercise
     public string Name { get; set; }
     public string MuscleGroup { get; set; }
 
-    // *******************************************************************
-    // ✅ POPRAWKA: Wymagany przez Entity Framework
     public Exercise() { }
-    // *******************************************************************
+   
 
     public Exercise(string name, string muscleGroup)
     {

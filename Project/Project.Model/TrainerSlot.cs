@@ -13,9 +13,9 @@ namespace Project.Model
 
         // Relacja do Trenera
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer Trainer { get; set; }//referencja do trenera
 
-        // Opcjonalnie: status (np. 'Available', 'Booked')
+       //ustaw termin jako dostęny domyślnie
         public string Status { get; set; } = "Available";
 
         public TrainerSlot() { }

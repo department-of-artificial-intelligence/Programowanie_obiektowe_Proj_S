@@ -14,7 +14,8 @@ namespace Project.Model
 
         // Relacje do Trenera
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer Trainer { get; set; } // referencja do trenera
+
 
         // Relacje do Klienta
         public int ClientId { get; set; }
@@ -25,10 +26,11 @@ namespace Project.Model
         public Reservation(Trainer trainer, Client client, DateTime scheduledTime)
         {
             Trainer = trainer;
+            TrainerId = trainer.Id;
             ClientId = client.Id;
             Client = client;
             ScheduledTime = scheduledTime;
-            CreationDate = DateTime.Now; // Dodajemy to jako metadane rezerwacji
+            CreationDate = DateTime.Now; 
         }
     }
 }

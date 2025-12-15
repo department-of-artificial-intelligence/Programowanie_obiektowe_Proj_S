@@ -1,59 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore; // <-- BRAKOWAŁO TEGO DLA DbContext/DbSet
+﻿using Microsoft.EntityFrameworkCore; 
 using Project.Model;
-using Project.DAL; // Czasem pomaga, jeśli klasa jest w tej przestrzeni nazw
-//...
+using Project.DAL; 
 
+// definicja tabel i relacji
 namespace Project.DAL
 {
     public class ApplicationDbContext : DbContext
     {
-        // 1. Zbiory (DbSet) dla encji w bazie
-        public DbSet<Person> Persons { get; set; } // Obejmuje Client i Trainer
+        // Definiuje tabele bazy
+        public DbSet<Person> Persons { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Set> Sets { get; set; }
 
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<TrainerSlot> TrainerSlots { get; set; }
+
+        //przekazuje opcje połączenia
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        // W pliku ApplicationDbContext.cs
+        // Instrukcje do tabel
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 2. Konfiguracja dziedziczenia TPH (Table Per Hierarchy)
+            // model builder mówi jak tworzyć z klienta i trenera tabele Person
             modelBuilder.Entity<Person>()
                 .HasDiscriminator<string>("Type")
                 .HasValue<Client>("Client")
                 .HasValue<Trainer>("Trainer");
 
-            // ***************************************************************
-            // ✅ POPRAWKA: Konfiguracja typu dla decimal w encji Trainer
+          //konfiguracja typu decimal (bez tego miałem błędy)
             modelBuilder.Entity<Trainer>()
                 .Property(t => t.HourlyRate)
                 .HasColumnType("decimal(6, 2)"); // np. do 9999.99
 
-            // 3. Konfiguracja relacji 1:W (Workout:Client)
+            // relacja 1:W (Workout:Client)
             modelBuilder.Entity<Workout>()
                 .HasOne(w => w.Client)
                 .WithMany(c => c.PlannedWorkouts)
                 .IsRequired();
 
-            // Konfiguracja NOWEJ/ZMIENIONEJ encji Reservation
+            // Konfiguracja relacji rezerwaci, i trenera
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Client)
-                .WithMany(c => c.ScheduledReservations) // W Client.cs
+                .WithMany(c => c.ScheduledReservations) 
                 .HasForeignKey(r => r.ClientId)
                 .IsRequired();
 
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Trainer)
-                .WithMany(t => t.ScheduledReservations) // W Trainer.cs
+                .WithMany(t => t.ScheduledReservations) //kazda rezerwacja moze mieć jednego trenera, a jeden trener wiele rezerwacji
                 .HasForeignKey(r => r.TrainerId)
                 .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-            base.OnModelCreating(modelBuilder);
+            .OnDelete(DeleteBehavior.Restrict);//blokuje operacje usunięcia  trenera 
+            base.OnModelCreating(modelBuilder); //jesli ma jakieś rezerwacje
         }
     }
 }
