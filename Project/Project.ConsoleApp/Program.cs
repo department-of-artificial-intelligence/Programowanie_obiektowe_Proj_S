@@ -6,4 +6,4 @@ Customer customer = new { "Jan", "Kowalski" }
 
 Customer customer = new { "Adam", "Janik" }
 
-                                            dwdwdw
+                                         
