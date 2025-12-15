@@ -11,7 +11,8 @@ namespace Project
         {
             Console.WriteLine("=== Korepetytorzy według stawki (rosnąco) ===");
 
-            var list = userService.GetTutors().OrderBy(t => t.HourlyRate);
+            var list = userService.GetTutors()
+                .OrderBy(t => t.HourlyRate);
 
             foreach (var t in list)
             {

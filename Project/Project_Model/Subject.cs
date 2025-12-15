@@ -6,8 +6,7 @@ namespace Project.Model
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        // relacja do tutors 
-        public List<Tutor> Tutors { get; set; } = new();
+        public List<Tutor> Tutors { get; set; } = new(); //relacja do Tutor
 
         public Subject(string name, string description)
         {

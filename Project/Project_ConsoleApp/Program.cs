@@ -32,7 +32,7 @@ namespace Project
 
                     // Rejestracja bazy danych
                     services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
-                    // rejestracja serwisów w zakresie
+
                     services.AddScoped<IUserService, UserService>();
                     services.AddScoped<ICatalogService, CatalogService>();
                     services.AddScoped<IBookingService, BookingService>();
@@ -49,7 +49,7 @@ namespace Project
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     // migracja automatyczna
                     context.Database.Migrate();
-                    //pobranie instancji serwisów
+
                     _userService = services.GetRequiredService<IUserService>();
                     _catalogService= services.GetRequiredService<ICatalogService>();
                     _bookingService= services.GetRequiredService<IBookingService>();
@@ -58,7 +58,6 @@ namespace Project
                     {
                         SetupInitialData();
                     }
-                    //Uruchomienie pętli programu
                     RunMenu();
                 }
                 catch (Exception ex)
@@ -88,7 +87,7 @@ namespace Project
                         case "6": GenerateReportsMenu(); break;
                         case "0":
                             running = false;
-                            Console.WriteLine("Zamykanie systemu. Do zobaczenia!");
+                            Console.WriteLine("Zamykanie systemu.");
                             break;
                         default:
                             Console.WriteLine("Nieprawidłowy wybór. Spróbuj ponownie.");
@@ -109,7 +108,6 @@ namespace Project
         }
 
         // --- Menu----------------
-
         private static void DisplayMenu()
         {
             Console.Clear();
@@ -127,7 +125,6 @@ namespace Project
         private static bool IsEmpty(string? text){
             return string.IsNullOrWhiteSpace(text);
         }
-        
         private static void AddTutorMenu()
         {
             Console.Write("Imię: "); 
@@ -316,7 +313,6 @@ namespace Project
             //Dodawanie specjalności
             _userService.AddSpecialtyToTutor(t1.Id, mat);
             _userService.AddSpecialtyToTutor(t1.Id, fiz);
-
             _userService.AddSpecialtyToTutor(t2.Id, pol);
             _userService.AddSpecialtyToTutor(t3.Id, geo);
             _userService.AddSpecialtyToTutor(t4.Id, ang);
