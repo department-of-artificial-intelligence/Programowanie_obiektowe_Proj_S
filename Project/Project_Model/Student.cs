@@ -4,8 +4,7 @@ namespace Project.Model
 {
     public class Student : User
     {
-        public string EducationalLevel { get; set; }
-        public List<Subject> Interests { get; set; } = new();
+        public string? EducationalLevel { get; set; }
 
         public Student(string firstName, string lastName, string email, string educationalLevel)
             : base(firstName, lastName, email)

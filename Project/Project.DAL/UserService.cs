@@ -7,28 +7,31 @@ namespace Project.DAL
 {
     public class UserService: IUserService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;  //dostęp do bazy
         public UserService(ApplicationDbContext context)
         {
             _context = context;
         }
         public Tutor AddTutor(string firstName, string lastName, string email, decimal hourlyRate)
         {
-            var newTutor=new Tutor(firstName, lastName, email, hourlyRate);
+            var newTutor=new Tutor(firstName, lastName, email, hourlyRate);//utworzenie nauczyciela
             _context.Tutors.Add(newTutor);
             _context.SaveChanges();
             return newTutor;
         }
         public Student AddStudent(string firstName, string lastName, string email, string educationalLevel)
         {
-            var newStudent=new Student(firstName, lastName, email, educationalLevel);
+            var newStudent=new Student(firstName, lastName, email, educationalLevel); //utworzenie studenta
             _context.Students.Add(newStudent);
             _context.SaveChanges();
             return newStudent;
         }
         public void AddSpecialtyToTutor(int tutorId, Subject subject)
         {
-            var tutor=_context.Tutors.Include(t=>t.Specialties) .FirstOrDefault(t => t.Id== tutorId);
+            var tutor=_context.Tutors
+                .Include(t=>t.Specialties) 
+                .FirstOrDefault(t => t.Id== tutorId);
+
             if(tutor !=null && subject!= null && !tutor.Specialties.Any(s=> s.Id == subject.Id))
             {
                 tutor.Specialties.Add(subject);

@@ -6,8 +6,8 @@ namespace Project.Model
     public class Tutor : User
     {
         public decimal HourlyRate { get; set; }
-        public List<Subject> Specialties { get; set; } = new();
-        public List<TimeSlot> Availability { get; set; } = new();
+        public List<Subject> Specialties { get; set; } = new(); //relacja do subject
+        public List<TimeSlot> Availability { get; set; } = new(); //relacja do TimeSlot
 
         public Tutor(string firstname, string lastname, string email, decimal hourlyRate)
             : base(firstname, lastname, email)

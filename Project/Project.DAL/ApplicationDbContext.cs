@@ -20,8 +20,8 @@ namespace Project.DAL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Tutor>()
-                .Property(t => t.HourlyRate)
-                .HasColumnType("decimal(18,2)");
+                .Property(t => t.HourlyRate)// typ kolumny dla stawki korepetytora 
+                .HasColumnType("decimal(12,2)");
 
         }
     }

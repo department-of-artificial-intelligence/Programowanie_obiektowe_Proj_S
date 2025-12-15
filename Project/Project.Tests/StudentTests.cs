@@ -14,8 +14,7 @@ namespace Project.Tests
             // Assert
             Assert.Equal(string.Empty, student.FirstName);
             Assert.Equal(string.Empty, student.LastName);
-            Assert.NotNull(student.Interests); // Lista powinna byc zainicjalizowana
-            Assert.Empty(student.Interests);
+
         }
 
         [Fact]

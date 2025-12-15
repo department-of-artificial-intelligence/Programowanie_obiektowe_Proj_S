@@ -5,7 +5,8 @@ namespace Project.Model
     public class TimeSlot
     {
         public int Id { get; set; }
-        public int TutorId { get; set; }
+        public int TutorId { get; set; }// do relacji z Tutor
+        public Tutor Tutor { get; set; } = null!;
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public bool IsBooked { get; set; } = false;

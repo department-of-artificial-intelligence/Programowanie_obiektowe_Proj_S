@@ -101,12 +101,7 @@ namespace Project.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Subjects");
                 });
@@ -155,7 +150,7 @@ namespace Project.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("HourlyRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -208,13 +203,6 @@ namespace Project.DAL.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("Project.Model.Subject", b =>
-                {
-                    b.HasOne("Project.Model.Student", null)
-                        .WithMany("Interests")
-                        .HasForeignKey("StudentId");
-                });
-
             modelBuilder.Entity("Project.Model.TimeSlot", b =>
                 {
                     b.HasOne("Project.Model.Tutor", null)
@@ -237,11 +225,6 @@ namespace Project.DAL.Migrations
                         .HasForeignKey("TutorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Project.Model.Student", b =>
-                {
-                    b.Navigation("Interests");
                 });
 
             modelBuilder.Entity("Project.Model.Tutor", b =>

@@ -12,8 +12,8 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251213140831_pierwszamigracja")]
-    partial class pierwszamigracja
+    [Migration("20251215174151_PierwszaMigracja")]
+    partial class PierwszaMigracja
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,27 +57,6 @@ namespace Project.DAL.Migrations
                     b.HasIndex("TutorId");
 
                     b.ToTable("Lessons");
-                });
-
-            modelBuilder.Entity("Project.Model.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("LessonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Project.Model.Student", b =>
@@ -125,12 +104,7 @@ namespace Project.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Subjects");
                 });
@@ -179,7 +153,7 @@ namespace Project.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("HourlyRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -232,22 +206,6 @@ namespace Project.DAL.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("Project.Model.Reservation", b =>
-                {
-                    b.HasOne("Project.Model.Lesson", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId");
-
-                    b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("Project.Model.Subject", b =>
-                {
-                    b.HasOne("Project.Model.Student", null)
-                        .WithMany("Interests")
-                        .HasForeignKey("StudentId");
-                });
-
             modelBuilder.Entity("Project.Model.TimeSlot", b =>
                 {
                     b.HasOne("Project.Model.Tutor", null)
@@ -270,11 +228,6 @@ namespace Project.DAL.Migrations
                         .HasForeignKey("TutorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Project.Model.Student", b =>
-                {
-                    b.Navigation("Interests");
                 });
 
             modelBuilder.Entity("Project.Model.Tutor", b =>

@@ -8,7 +8,7 @@ namespace Project.DAL
 {
     public class BookingService : IBookingService
     {
-        public readonly ApplicationDbContext _context;
+        public readonly ApplicationDbContext _context; //dostęp do bazy
 
         public BookingService(ApplicationDbContext context)
         {
@@ -30,7 +30,7 @@ namespace Project.DAL
                 throw new InvalidOperationException("Nie można dodać terminu, nakłada się na inny ");
             }
 
-            var newSlot = new TimeSlot(tutor.Id, start, end);
+            var newSlot = new TimeSlot(tutor.Id, start, end);// stworzenie nowego wolnego terminu
             _context.TimeSlots.Add(newSlot);
             _context.SaveChanges();
             return newSlot;
@@ -38,12 +38,13 @@ namespace Project.DAL
 
         public Lesson? BookLesson(Tutor tutor, Student student, Subject subject, TimeSlot slot)
         {
-            if (slot.IsBooked) { return null; }
-            if (!tutor.Specialties.Any(s => s.Id == subject.Id))
-            {
+            if (slot.IsBooked) { 
+                return null; 
+            }
+            if (!tutor.Specialties.Any(s => s.Id == subject.Id)){// czy korepetytor uczy tego przedmiotu
                 throw new ArgumentException($"Nauczyciel {tutor.LastName} nie uczy {subject.Name}");
             }
-            var lesson = new Lesson(tutor, student, subject, slot);
+            var lesson = new Lesson(tutor, student, subject, slot);// stworzenie nowej lekcji
             _context.Lessons.Add(lesson);
 
             slot.IsBooked = true;

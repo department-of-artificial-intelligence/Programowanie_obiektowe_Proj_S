@@ -9,7 +9,7 @@ namespace Project
     {
         public static void ShowTutorsByRate(IUserService userService)
         {
-            Console.WriteLine("=== RAPORT: Korepetytorzy według stawki (rosnąco) ===");
+            Console.WriteLine("=== Korepetytorzy według stawki (rosnąco) ===");
 
             var list = userService.GetTutors().OrderBy(t => t.HourlyRate);
 
@@ -19,19 +19,5 @@ namespace Project
             }
         }
 
-        public static void ShowSubjectPopularity(IBookingService bookingService)
-        {
-            Console.WriteLine("\n=== Popularność przedmiotów (najwięcej umówionych lekcji) ===");
-
-            var stats = bookingService.GetLessons()
-                .GroupBy(l => l.Subject.Name)
-                .Select(g => new { Subject = g.Key, Count = g.Count() })
-                .OrderByDescending(x => x.Count);
-
-            foreach (var s in stats)
-            {
-                Console.WriteLine($"{s.Subject}: {s.Count}");
-            }
-        }
     }
 }

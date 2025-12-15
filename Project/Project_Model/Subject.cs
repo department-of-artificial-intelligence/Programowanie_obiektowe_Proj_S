@@ -6,7 +6,7 @@ namespace Project.Model
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        // Relacja zwrotna dla EF 
+        // relacja do tutors 
         public List<Tutor> Tutors { get; set; } = new();
 
         public Subject(string name, string description)
