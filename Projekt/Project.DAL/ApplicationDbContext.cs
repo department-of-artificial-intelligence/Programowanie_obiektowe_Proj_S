@@ -19,6 +19,8 @@ namespace Projekt.DAL
         {
             base.OnModelCreating(modelBuilder);
 
+            // Konfiguracja typów danych dla wartości pieniężnych.
+
             modelBuilder.Entity<Car>()
                 .Property(c => c.DailyRate)
                 .HasColumnType("decimal(18,2)");
@@ -27,17 +29,23 @@ namespace Projekt.DAL
                 .Property(r => r.TotalCost)
                 .HasColumnType("decimal(18,2)");
 
+            // Relacja: Wypożyczenie -> Samochód
+
             modelBuilder.Entity<Rental>()
                 .HasOne(r => r.Car)
                 .WithMany()
                 .HasForeignKey(r => r.CarId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Relacja: Wypożyczenie -> Klient
+
             modelBuilder.Entity<Rental>()
                 .HasOne(r => r.Customer)
                 .WithMany(c => c.RentalHistory)
                 .HasForeignKey(r => r.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Relacja: Wypożyczenie -> Oddział
 
             modelBuilder.Entity<Rental>()
                 .HasOne(r => r.PickupBranch)
