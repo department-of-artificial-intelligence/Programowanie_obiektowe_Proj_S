@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Projekt.DAL;
@@ -56,6 +55,7 @@ namespace Projekt.ConsoleApp
         {
             var wszystkiePojazdy = _context.Vehicles
                 .Include(v => v.PrzypisanyKierowca)
+                .AsNoTracking()
                 .ToList();
             if (!wszystkiePojazdy.Any())
             {

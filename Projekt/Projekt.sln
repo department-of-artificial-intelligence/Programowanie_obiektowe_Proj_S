@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projekt.ConsoleApp", "Projekt.ConsoleApp\Projekt.ConsoleApp.csproj", "{A490E763-B50D-43E3-829A-BF4034E94457}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.ConsoleApp", "Projekt.ConsoleApp\Project.ConsoleApp.csproj", "{A490E763-B50D-43E3-829A-BF4034E94457}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projekt.Model", "Projekt.Model\Projekt.Model.csproj", "{3E71B9E5-B996-4F31-916F-77B5ED9A38D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Model", "Projekt.Model\Project.Model.csproj", "{3E71B9E5-B996-4F31-916F-77B5ED9A38D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projekt.Tests", "Project.Tests\Projekt.Tests.csproj", "{40CF19A5-2CC9-4574-97F4-973BC1354615}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Tests", "Project.Tests\Project.Tests.csproj", "{40CF19A5-2CC9-4574-97F4-973BC1354615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projekt.DAL", "Projekt.DAL\Projekt.DAL.csproj", "{6266D332-E688-42A5-BE4F-D78C747DEBA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.DAL", "Projekt.DAL\Project.DAL.csproj", "{6266D332-E688-42A5-BE4F-D78C747DEBA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -16,69 +16,81 @@ class Program
             {
                 var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(connectionString));
+                {
+                    options.UseSqlServer(connectionString);
+            });
+            services.AddScoped<IManagement, Management>();
             })
             .Build();
         using (var scope = host.Services.CreateScope())
         {
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            context.Database.Migrate();
-            Management manager = new Management(context);
-            bool dziala = true;
-            while (dziala)
+            var services = scope.ServiceProvider;
+            try
             {
-                Console.Clear();
-                Console.WriteLine("=== MENU GŁÓWNE BAZY POJAZDÓW ===");
-                Console.WriteLine("1. Dodaj SAMOCHÓD OSOBOWY");
-                Console.WriteLine("2. Dodaj CIĘŻARÓWKĘ");
-                Console.WriteLine("3. Dodaj MOTOCYKL");
-                Console.WriteLine("4. Pokaż wszystkie pojazdy");
-                Console.WriteLine("5. Usuń pojazd po tablicy");
-                Console.WriteLine("6. Dodaj wpis serwisowy");
-                Console.WriteLine("7. Pokaż historię serwisową");
-                Console.WriteLine("0. Wyjdź");
-                Console.Write("\nWybierz opcję: ");
-                string wybor = Console.ReadLine();
-                try
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+                IManagement manager = services.GetRequiredService<IManagement>();
+                bool dziala = true;
+                while (dziala)
                 {
-                    switch (wybor)
+                    Console.Clear();
+                    Console.WriteLine("MENU GŁÓWNE");
+                    Console.WriteLine("1. Dodaj SAMOCHÓD OSOBOWY");
+                    Console.WriteLine("2. Dodaj CIĘŻARÓWKĘ");
+                    Console.WriteLine("3. Dodaj MOTOCYKL");
+                    Console.WriteLine("4. Pokaż wszystkie pojazdy");
+                    Console.WriteLine("5. Usuń pojazd po tablicy");
+                    Console.WriteLine("6. Dodaj wpis serwisowy");
+                    Console.WriteLine("7. Pokaż historię serwisową");
+                    Console.WriteLine("0. Wyjdź");
+                    Console.Write("\nWybierz opcję: ");
+                    string wybor = Console.ReadLine();
+                    try
                     {
-                        case "1": DodajSamochodInteraktywnie(manager); break;
-                        case "2": DodajCiezarowkeInteraktywnie(manager); break;
-                        case "3": DodajMotocyklInteraktywnie(manager); break;
-                        case "4":
-                            Console.WriteLine("\n--- LISTA POJAZDÓW ---");
-                            manager.PokazWszystkie();
-                            CzekajNaEnter();
-                            break;
-                        case "5":
-                            Console.Write("\nPodaj tablicę do usunięcia: ");
-                            manager.UsunPojazd(Console.ReadLine());
-                            CzekajNaEnter();
-                            break;
-                        case "6":
-                            ObslugaSerwisu(manager);
-                            break;
-                        case "7":
-                            Console.Write("\nPodaj tablicę pojazdu: ");
-                            manager.PokazSerwisPojazdu(Console.ReadLine());
-                            CzekajNaEnter();
-                            break;
-                        case "0": dziala = false; break;
-                        default: Console.WriteLine("Nieznana opcja."); CzekajNaEnter(); break;
+                        switch (wybor)
+                        {
+                            case "1": DodajSamochodInteraktywnie(manager); break;
+                            case "2": DodajCiezarowkeInteraktywnie(manager); break;
+                            case "3": DodajMotocyklInteraktywnie(manager); break;
+                            case "4":
+                                Console.WriteLine("\n--- LISTA POJAZDÓW ---");
+                                manager.PokazWszystkie();
+                                CzekajNaEnter();
+                                break;
+                            case "5":
+                                Console.Write("\nPodaj tablicę do usunięcia: ");
+                                manager.UsunPojazd(Console.ReadLine());
+                                CzekajNaEnter();
+                                break;
+                            case "6":
+                                ObslugaSerwisu(manager);
+                                break;
+                            case "7":
+                                Console.Write("\nPodaj tablicę pojazdu: ");
+                                manager.PokazSerwisPojazdu(Console.ReadLine());
+                                CzekajNaEnter();
+                                break;
+                            case "0": dziala = false; break;
+                            default: Console.WriteLine("Nieznana opcja."); CzekajNaEnter(); break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\nBŁĄD: {ex.Message}");
+                        if (ex.InnerException != null) Console.WriteLine($"Szczegóły: {ex.InnerException.Message}");
+                        CzekajNaEnter();
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"\nBŁĄD: {ex.Message}");
-                    CzekajNaEnter();
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Krytyczny błąd startu: {ex.Message}");
             }
         }
     }
-    static void DodajSamochodInteraktywnie(Management manager)
+    static void DodajSamochodInteraktywnie(IManagement manager)
     {
-        Console.WriteLine("\n--- DODAWANIE OSOBÓWKI ---");
+        Console.WriteLine("\nDODAWANIE OSOBÓWKI");
         Console.Write("Marka: "); string marka = Console.ReadLine();
         Console.Write("Model: "); string model = Console.ReadLine();
         Console.Write("Tablica: "); string tablica = Console.ReadLine();
@@ -88,7 +100,6 @@ class Program
         Console.Write("Paliwo: "); string paliwo = Console.ReadLine();
         Console.Write("Liczba drzwi: "); int.TryParse(Console.ReadLine(), out int drzwi);
         Console.Write("Nadwozie (Sedan/Kombi): "); string nadwozie = Console.ReadLine();
-
         Car auto = new Car
         {
             Marka = marka,
@@ -100,21 +111,21 @@ class Program
             Paliwo = paliwo,
             LiczbaDrzwi = drzwi,
             Nadwozie = nadwozie,
-            PrzypisanyKierowca = StworzKierowceInteraktywnie()
+            PrzypisanyKierowca = StworzKierowce()
         };
         manager.DodajPojazd(auto);
-        Console.WriteLine("\nDodano Samochód");
+        Console.WriteLine("\nDodano Samochód!");
         CzekajNaEnter();
     }
-    static void DodajCiezarowkeInteraktywnie(Management manager)
+    static void DodajCiezarowkeInteraktywnie(IManagement manager)
     {
-        Console.WriteLine("\n--- DODAWANIE CIĘŻARÓWKI ---");
+        Console.WriteLine("\nDODAWANIE CIĘŻARÓWKI");
         Console.Write("Marka: "); string marka = Console.ReadLine();
         Console.Write("Model: "); string model = Console.ReadLine();
         Console.Write("Tablica: "); string tablica = Console.ReadLine();
         Console.Write("Rocznik: "); int.TryParse(Console.ReadLine(), out int rocznik);
         Console.Write("Przebieg: "); int.TryParse(Console.ReadLine(), out int przebieg);
-        Console.Write("Silnik (np 12.0): "); double.TryParse(Console.ReadLine(), out double silnik);
+        Console.Write("Silnik: "); double.TryParse(Console.ReadLine(), out double silnik);
         Console.Write("Paliwo: "); string paliwo = Console.ReadLine();
         Console.Write("Ładowność (kg): "); double.TryParse(Console.ReadLine(), out double ladownosc);
         Truck truck = new Truck
@@ -127,15 +138,15 @@ class Program
             Silnik = silnik,
             Paliwo = paliwo,
             Ladownosc = ladownosc,
-            PrzypisanyKierowca = StworzKierowceInteraktywnie()
+            PrzypisanyKierowca = StworzKierowce()
         };
         manager.DodajPojazd(truck);
-        Console.WriteLine("\nDodano Ciężarówkę");
+        Console.WriteLine("\nDodano Ciężarówkę!");
         CzekajNaEnter();
     }
-    static void DodajMotocyklInteraktywnie(Management manager)
+    static void DodajMotocyklInteraktywnie(IManagement manager)
     {
-        Console.WriteLine("\n--- DODAWANIE MOTOCYKLA ---");
+        Console.WriteLine("\nDODAWANIE MOTOCYKLA");
         Console.Write("Marka: "); string marka = Console.ReadLine();
         Console.Write("Model: "); string model = Console.ReadLine();
         Console.Write("Tablica: "); string tablica = Console.ReadLine();
@@ -143,7 +154,7 @@ class Program
         Console.Write("Przebieg: "); int.TryParse(Console.ReadLine(), out int przebieg);
         Console.Write("Paliwo: "); string paliwo = Console.ReadLine();
         Console.Write("Pojemność (cm3): "); int.TryParse(Console.ReadLine(), out int pojemnosc);
-        Console.Write("Typ motocykla (np. Chopper, Sport, Enduro): ");
+        Console.Write("Typ motocykla (np. Chopper): ");
         string typ = Console.ReadLine();
         Motorbike motor = new Motorbike
         {
@@ -156,13 +167,13 @@ class Program
             Paliwo = paliwo,
             PojemnoscSilnikaCm3 = pojemnosc,
             TypRamy = typ,
-            PrzypisanyKierowca = StworzKierowceInteraktywnie()
+            PrzypisanyKierowca = StworzKierowce()
         };
         manager.DodajPojazd(motor);
-        Console.WriteLine("\nDodano Motocykl");
+        Console.WriteLine("\nDodano Motocykl!");
         CzekajNaEnter();
     }
-    static Driver StworzKierowceInteraktywnie()
+    static Driver StworzKierowce()
     {
         Console.WriteLine("\n> DANE KIEROWCY:");
         Console.Write("Imię: "); string imie = Console.ReadLine();
@@ -170,7 +181,8 @@ class Program
         Console.Write("Nr Prawa Jazdy: "); string prawko = Console.ReadLine();
         return new Driver { Imie = imie, Nazwisko = nazwisko, NumerPrawaJazdy = prawko };
     }
-    static void ObslugaSerwisu(Management manager)
+
+    static void ObslugaSerwisu(IManagement manager)
     {
         Console.Write("\nPodaj tablicę pojazdu: "); string tab = Console.ReadLine();
         Console.Write("Opis: "); string opis = Console.ReadLine();
@@ -180,6 +192,7 @@ class Program
         else Console.WriteLine("Błędna cena.");
         CzekajNaEnter();
     }
+
     static void CzekajNaEnter()
     {
         Console.WriteLine("\nWciśnij Enter...");

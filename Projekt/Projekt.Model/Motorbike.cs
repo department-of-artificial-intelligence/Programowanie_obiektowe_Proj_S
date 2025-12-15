@@ -29,7 +29,7 @@ namespace Projekt.Model
         }
         public override string ToString()
         {
-            return $"[Motocykl] {base.ToString()} | Pojemność: {PojemnoscSilnikaCm3}cm3 | Typ: {TypRamy}";
+            return $"Motocykl {base.ToString()} | Pojemność: {PojemnoscSilnikaCm3}cm3 | Typ: {TypRamy}";
         }
 
     }

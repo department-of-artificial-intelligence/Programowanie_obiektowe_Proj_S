@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Projekt.ConsoleApp\Projekt.ConsoleApp.csproj" />
-    <ProjectReference Include="..\Projekt.DAL\Projekt.DAL.csproj" />
-    <ProjectReference Include="..\Projekt.Model\Projekt.Model.csproj" />
+    <ProjectReference Include="..\Projekt.ConsoleApp\Project.ConsoleApp.csproj" />
+    <ProjectReference Include="..\Projekt.DAL\Project.DAL.csproj" />
+    <ProjectReference Include="..\Projekt.Model\Project.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
