@@ -40,6 +40,26 @@ public class PerformanceService
             .Include(p => p.Hall)
             .FirstOrDefault(p => p.PerformanceId == id);
     }
+    
+    public void UpdateStatuses()
+    {
+        List<Performance> performances = _context.Performances
+            .Where(p => (p.Status == PerformanceStatus.Scheduled) || (p.Status == PerformanceStatus.InProgress))
+            .ToList();
+        var now = DateTime.Now;
+        foreach (var performance in performances)
+        {
+            if (performance.EndTime <= now)
+            {
+                performance.Status = PerformanceStatus.Finished;
+            }
+            else if (performance.StartTime <= now)
+            {
+                performance.Status = PerformanceStatus.InProgress;
+            }
+        }
+        _context.SaveChanges();
+    }
 
     public bool AddNewPerformance(Play play, DateTime startTime, DateTime endTime)
     {

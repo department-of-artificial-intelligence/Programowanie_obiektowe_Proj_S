@@ -6,9 +6,6 @@ using Project.ConsoleApp;
 using Project.DAL;
 using Project.Model;
 using Project.Services;
-using System;
-using System.Net;
-using System.Numerics;
 
 IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
 {
@@ -43,6 +40,8 @@ if (theaterNetworkService.GetNetwork() is null)
     context.Add(new TheaterNetwork(networkName));
     context.SaveChanges();
 }
+
+performanceService.UpdateStatuses();
 
 Console.WriteLine("-------------------------------------------------------------");
 Console.WriteLine($"System zarządzania siecią teatrów: {theaterNetworkService?.GetNetwork()?.NetworkName}");
@@ -125,6 +124,7 @@ void ViewMenu1()
                 Console.WriteLine(plays.ListToString("Brak sztuk", '-'));
                 break;
             case "7": // wyświetl listę przedstawień bez sali
+                performanceService.UpdateStatuses();
                 List<Performance> performances = performanceService.GetPerformancesWithoutHall();
                 Console.WriteLine("Lista przedstawień bez sali:");
                 Console.WriteLine(performances.ListToString("Brak przedstawień", '-'));
@@ -192,6 +192,7 @@ void ViewMenu1_1_1(Theater theater)
                 if (theater.Halls.Count == 0) break;
                 hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
                 Console.WriteLine($"Lista przedstawień w sali {hall.HallName}:");
+                performanceService.UpdateStatuses();
                 Console.WriteLine(hall.GetPerformancesString());
                 ViewMenu1_1_1_3(hall);
                 break;
@@ -211,6 +212,7 @@ void ViewMenu1_1_1_3(Hall hall)
         DisplayMenu.View1_1_1_3();
         string input = ConsoleHelper.UserInput();
         Performance performance;
+        performanceService.UpdateStatuses();
         switch (input)
         {
             case "1": // wyświetl listę biletów
@@ -590,6 +592,7 @@ void CreationMenu2_2()
                     Console.WriteLine("Sala nie ma żadnych siedzeń");
                     break;
                 }
+                performanceService.UpdateStatuses();
                 Console.WriteLine(hall.GetPerformancesString());
                 if (hall.Performances.Count == 0) break;
 
@@ -655,6 +658,7 @@ void CreationMenu2_2()
                     Console.WriteLine("Sala nie ma żadnych siedzeń");
                     break;
                 }
+                performanceService.UpdateStatuses();
                 Console.WriteLine(hall.GetPerformancesString());
                 if (hall.Performances.Count == 0) break;
 
@@ -772,7 +776,7 @@ void ManagementMenu3()
         string input = ConsoleHelper.UserInput();
         switch (input)
         {
-            case "1":
+            case "1": // zarządaj klientami
                 List<Customer> customers = customerService.GetCustomers();
                 Console.WriteLine("Lista klientów:");
                 Console.WriteLine(customers.ListToString("Brak klientów", '-'));
@@ -782,7 +786,7 @@ void ManagementMenu3()
                 Console.WriteLine(customer.GetTicketsString());
                 ManagementMenu3_1(customer);
                 break;
-            case "2":
+            case "2": // zarządaj autorami
                 List<Author> authors = authorService.GetAuthorsWithPlays();
                 Console.WriteLine("Lista autorów:");
                 Console.WriteLine(authors.ListToString("Brak autorów", '-'));
@@ -790,7 +794,7 @@ void ManagementMenu3()
                 Author author = ConsoleHelper.GetById(authors, a => a.Id, "Podaj ID autora: ");
                 ManagementMenu3_2(author);
                 break;
-            case "3":
+            case "3": // zarządzaj reżyserami
                 List<Director> directors = directorService.GetDirectorsWithPlays();
                 Console.WriteLine("Lista reżyserów:");
                 Console.WriteLine(directors.ListToString("Brak reżyserów", '-'));
@@ -798,7 +802,7 @@ void ManagementMenu3()
                 Director director = ConsoleHelper.GetById(directors, a => a.Id, "Podaj ID reżysera: ");
                 ManagementMenu3_3(director);
                 break;
-            case "4":
+            case "4": // zarządzaj aktorami
                 List<Actor> actors = actorService.GetActorsWithPlays();
                 Console.WriteLine("Lista aktorów:");
                 Console.WriteLine(actors.ListToString("Brak aktorów", '-'));
@@ -806,8 +810,9 @@ void ManagementMenu3()
                 Actor actor = ConsoleHelper.GetById(actors, a => a.Id, "Podaj ID aktora: ");
                 ManagementMenu3_4(actor);
                 break;
-            case "5":
+            case "5": // zarządzaj zaplanowanymi przedstawieniami
                 Performance performance;
+                performanceService.UpdateStatuses();
                 List<Performance> performances = performanceService.GetPerformancesWithStatus(PerformanceStatus.Scheduled);
                 Console.WriteLine(performances.ListToString("Brak sztuk", '-'));
                 if (performances.Count == 0) break;
@@ -856,6 +861,7 @@ void ManagementMenu3_1(Customer customer)
                 if (theater.Halls.Count == 0) break;
 
                 hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+                performanceService.UpdateStatuses();
                 Console.WriteLine(hall.GetPerformancesString());
                 if (hall.Performances.Count == 0) break;
 
@@ -936,6 +942,7 @@ void ManagementMenu3_1(Customer customer)
                 if (theater.Halls.Count == 0) break;
 
                 hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+                performanceService.UpdateStatuses();
                 Console.WriteLine(hall.GetPerformancesString());
                 if (hall.Performances.Count == 0) break;
 
