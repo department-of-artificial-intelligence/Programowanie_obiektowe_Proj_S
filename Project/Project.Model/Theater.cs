@@ -35,22 +35,6 @@ public class Theater
         Halls.Add(hall);
         return hall;
     }
-    public bool DeleteHall(Hall hall)
-    {
-        if(!Halls.Contains(hall)) return false;
-        foreach (var performance in hall.Performances)
-        {
-            performance.Hall = null;
-        }
-        return Halls.Remove(hall);
-    }
-    public void DeleteAllHalls()
-    {
-        foreach (var hall in Halls.ToList())
-        {
-            DeleteHall(hall);
-        }
-    }
 
     // Metody string
     public string GetHallsString()

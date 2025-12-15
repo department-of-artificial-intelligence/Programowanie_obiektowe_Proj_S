@@ -22,13 +22,33 @@ public class PlayService
             .ToList();
     }
 
-    public List<Play> GetPlaysWithActors()
+    public List<Play> GetPlaysWithoutAuthor(Author author)
     {
         return _context.Plays
             .AsSplitQuery()
             .Include(p => p.Author)
             .Include(p => p.Director)
-            .Include(p => p.Actors)
+            .Where(p => p.Author != author)
+            .ToList();
+    }
+
+    public List<Play> GetPlaysWithoutDirector(Director director)
+    {
+        return _context.Plays
+            .AsSplitQuery()
+            .Include(p => p.Author)
+            .Include(p => p.Director)
+            .Where(p => p.Director != director)
+            .ToList();
+    }
+
+    public List<Play> GetPlaysWithoutActor(Actor actor)
+    {
+        return _context.Plays
+            .AsSplitQuery()
+            .Include(p => p.Author)
+            .Include(p => p.Director)
+            .Where(p => !p.Actors.Contains(actor))
             .ToList();
     }
 

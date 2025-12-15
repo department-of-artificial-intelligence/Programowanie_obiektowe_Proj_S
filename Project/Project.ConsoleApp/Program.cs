@@ -6,6 +6,9 @@ using Project.ConsoleApp;
 using Project.DAL;
 using Project.Model;
 using Project.Services;
+using System;
+using System.Net;
+using System.Numerics;
 
 IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
 {
@@ -121,8 +124,8 @@ void ViewMenu1()
                 Console.WriteLine("Lista sztuk:");
                 Console.WriteLine(plays.ListToString("Brak sztuk", '-'));
                 break;
-            case "7":
-                List<Performance> performances = performanceService.GetAllPerformancesWithoutHall();
+            case "7": // wyświetl listę przedstawień bez sali
+                List<Performance> performances = performanceService.GetPerformancesWithoutHall();
                 Console.WriteLine("Lista przedstawień bez sali:");
                 Console.WriteLine(performances.ListToString("Brak przedstawień", '-'));
                 break;
@@ -436,7 +439,7 @@ void CreationMenu2_1()
 
                 rowNumber = ConsoleHelper.UserInputInt("Podaj numer rzędu nowego siedzenia: ");
                 seatNumber = ConsoleHelper.UserInputInt("Podaj numer nowego siedzenia: ");
-                seat = hallService.CreateNewSeat(rowNumber, seatNumber, hall.HallId);
+                seat = hallService.CreateNewSeat(rowNumber, seatNumber, hall);
 
                 if (seat is not null)
                 {
@@ -468,7 +471,7 @@ void CreationMenu2_1()
                 rows = ConsoleHelper.UserInputInt("Podaj ilość rzędów: ");
                 seatsPerRow = ConsoleHelper.UserInputInt("Podaj ilość siedzeń na rząd: ");
 
-                if (hallService.CreateNewSeats(rows, seatsPerRow, hall.HallId))
+                if (hallService.CreateNewSeats(rows, seatsPerRow, hall))
                 {
                     Console.WriteLine("Poprawnie stworzono nowe siedzenia");
                 }
@@ -591,9 +594,14 @@ void CreationMenu2_2()
                 if (hall.Performances.Count == 0) break;
 
                 performance = ConsoleHelper.GetById(hall.Performances, p => p.PerformanceId, "Podaj ID przedstawienia: ");
-                if (performance.Tickets.Count == hall.Seats.Count)
+                if (performance.Tickets.Count >= hall.Seats.Count)
                 {
                     Console.WriteLine("Wszystkie siedzenia na to przedstawienie mają bilet");
+                    break;
+                }
+                if (performance.Status != PerformanceStatus.Scheduled)
+                {
+                    Console.WriteLine("Przedstawienie jest odwołane, jest w trakcie lub skończyło się");
                     break;
                 }
                 Console.WriteLine(performance.VisualizeTicketsString());
@@ -615,7 +623,7 @@ void CreationMenu2_2()
                 
                 price = ConsoleHelper.UserInputDecimal("Podaj cenę biletu: ");
                 
-                ticket = performanceService.CreateNewTicket(price, seat, performance.PerformanceId);
+                ticket = performanceService.CreateNewTicket(price, seat, performance);
 
                 if (seat is not null)
                 {
@@ -651,16 +659,21 @@ void CreationMenu2_2()
                 if (hall.Performances.Count == 0) break;
 
                 performance = ConsoleHelper.GetById(hall.Performances, p => p.PerformanceId, "Podaj ID przedstawienia: ");
-                if (performance.Tickets.Count == hall.Seats.Count)
+                if (performance.Tickets.Count >= hall.Seats.Count)
                 {
                     Console.WriteLine("Wszystkie siedzenia na to przedstawienie mają bilet");
+                    break;
+                }
+                if (performance.Status != PerformanceStatus.Scheduled)
+                {
+                    Console.WriteLine("Przedstawienie jest odwołane, jest w trakcie lub skończyło się");
                     break;
                 }
                 Console.WriteLine(performance.VisualizeTicketsString());
 
                 price = ConsoleHelper.UserInputDecimal("Podaj cenę dla wszystkich biletów: ");
 
-                if (performanceService.CreateNewTickets(price, performance.PerformanceId))
+                if (performanceService.CreateNewTickets(price, performance))
                 {
                     Console.WriteLine("Poprawnie stworzono nowe bilety");
                 }
@@ -794,24 +807,12 @@ void ManagementMenu3()
                 ManagementMenu3_4(actor);
                 break;
             case "5":
-                TheaterNetwork? network = theaterNetworkService?.GetFullTheaterNetwork(); // możliwa zmiana
-                if (network is null)
-                {
-                    Console.WriteLine("Nie znaleziono sieci");
-                    break;
-                }
-                Console.WriteLine("Lista teatrów:");
-                Console.WriteLine(network.GetTheatersString());
-                if (network.Theaters.Count == 0) break;
-
-                Theater theater = ConsoleHelper.GetById(network.Theaters, t => t.TheaterId, "Podaj ID teatru: ");
-                Console.WriteLine($"Lista sal w teatrze {theater.TheaterName}:");
-                Console.WriteLine(theater.GetHallsString());
-                if (theater.Halls.Count == 0) break;
-
-                Hall hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
-
-                ManagementMenu3_5(hall);
+                Performance performance;
+                List<Performance> performances = performanceService.GetPerformancesWithStatus(PerformanceStatus.Scheduled);
+                Console.WriteLine(performances.ListToString("Brak sztuk", '-'));
+                if (performances.Count == 0) break;
+                performance = ConsoleHelper.GetById(performances, p => p.PerformanceId, "Podaj ID przedstawienia: ");
+                ManagementMenu3_5(performance);
                 break;
             case "x":
                 return;
@@ -862,6 +863,11 @@ void ManagementMenu3_1(Customer customer)
                 if (performance.Tickets.All(t => t.Status != TicketStatus.Available))
                 {
                     Console.WriteLine("Wszystkie bilety są niedostępne");
+                    break;
+                }
+                if (performance.Status != PerformanceStatus.Scheduled)
+                {
+                    Console.WriteLine("Przedstawienie jest odwołane, jest w trakcie lub skończyło się");
                     break;
                 }
                 Console.WriteLine(performance.VisualizeTicketsString());
@@ -937,6 +943,11 @@ void ManagementMenu3_1(Customer customer)
                 if (performance.Tickets.All(t => t.Status != TicketStatus.Available))
                 {
                     Console.WriteLine("Wszystkie bilety są niedostępne");
+                    break;
+                }
+                if (performance.Status != PerformanceStatus.Scheduled)
+                {
+                    Console.WriteLine("Przedstawienie jest odwołane, jest w trakcie lub skończyło się");
                     break;
                 }
                 Console.WriteLine(performance.VisualizeTicketsString());
@@ -1037,16 +1048,17 @@ void ManagementMenu3_2(Author author)
                 Console.WriteLine(author.GetPlaysString());
                 break;
             case "1": // dodaj sztukę do listy autora
+
                 Console.WriteLine(plays.Where(t => t.Author == null).ToList().ListToString("Brak sztuk", '-'));
                 if (plays.Where(t => t.Author == null).ToList().Count == 0) break;
                 play = ConsoleHelper.GetById(plays.Where(t => t.Author == null), p => p.PlayId, "Podaj ID sztuki: ");
                 if (authorService.AddPlay(author, play))
                 {
-                    Console.WriteLine("Poprawnie przypisano sztukę do listy autora");
+                    Console.WriteLine("Poprawnie przypisano sztukę do autora");
                 }
                 else
                 {
-                    Console.WriteLine("Przypisanie sztuki do listy autora nie powiodło się");
+                    Console.WriteLine("Przypisanie sztuki do autora nie powiodło się");
                 }
                 break;
             case "2": // usuń sztukę z listy autora
@@ -1099,11 +1111,11 @@ void ManagementMenu3_3(Director director)
                 play = ConsoleHelper.GetById(plays.Where(t => t.Director == null), p => p.PlayId, "Podaj ID sztuki: ");
                 if (directorService.AddPlay(director, play))
                 {
-                    Console.WriteLine("Poprawnie przypisano sztukę do listy reżysera");
+                    Console.WriteLine("Poprawnie przypisano sztukę do reżysera");
                 }
                 else
                 {
-                    Console.WriteLine("Przypisanie sztuki do listy reżysera nie powiodło się");
+                    Console.WriteLine("Przypisanie sztuki do reżysera nie powiodło się");
                 }
                 break;
             case "2": // usuń sztukę z listy reżysera
@@ -1156,15 +1168,16 @@ void ManagementMenu3_4(Actor actor)
                 play = ConsoleHelper.GetById(plays.Where(t => !t.Actors.Contains(actor)), p => p.PlayId, "Podaj ID sztuki: ");
                 if (actorService.AddPlay(actor, play))
                 {
-                    Console.WriteLine("Poprawnie przypisano sztukę do listy aktora");
+                    Console.WriteLine("Poprawnie przypisano sztukę do aktora");
                 }
                 else
                 {
-                    Console.WriteLine("Przypisanie sztuki do listy aktora nie powiodło się");
+                    Console.WriteLine("Przypisanie sztuki do aktora nie powiodło się");
                 }
                 break;
             case "2": // usuń sztukę z listy aktora
                 Console.WriteLine(actor.GetPlaysString());
+                if (actor.Plays.Count == 0) break;
                 play = ConsoleHelper.GetById(actor.Plays, p => p.PlayId, "Podaj ID sztuki: ");
                 if (actorService.RemovePlay(actor, play))
                 {
@@ -1194,7 +1207,7 @@ void ManagementMenu3_4(Actor actor)
     }
 }
 
-void ManagementMenu3_5(Hall hall)
+void ManagementMenu3_5(Performance performance)
 {
     while (true)
     {
@@ -1202,12 +1215,42 @@ void ManagementMenu3_5(Hall hall)
         string input = ConsoleHelper.UserInput();
         switch (input)
         {
-            case "1": // dodaj przedstawienie
+            case "1": // dodaj salę
+                if (performance.Hall is not null)
+                {
+                    Console.WriteLine("Przedstawienie ma już przypisaną salę");
+                    break;
+                }
+                TheaterNetwork? network = theaterNetworkService?.GetFullTheaterNetwork();
+                if (network is null)
+                {
+                    Console.WriteLine("Nie znaleziono sieci");
+                    break;
+                }
+                Console.WriteLine("Lista teatrów:");
+                Console.WriteLine(network.GetTheatersString());
+                if (network.Theaters.Count == 0) break;
+
+                Theater theater = ConsoleHelper.GetById(network.Theaters, t => t.TheaterId, "Podaj ID teatru: ");
+                Console.WriteLine($"Lista sal w teatrze {theater.TheaterName}:");
+                Console.WriteLine(theater.GetHallsString());
+                if (theater.Halls.Count == 0) break;
+
+                Hall hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
+
+                if (performanceService.AddHall(hall, performance))
+                {
+                    Console.WriteLine("Poprawnie przypisano przedstawienie do sali");
+                }
+                else
+                {
+                    Console.WriteLine("Przypisanie przedstawienia do sali nie powiodło się");
+                }
                 break;
-            case "2": // usuń zaplanowane
-                break;
-            case "3": // usuń wszystkie zaplanowane
-                break;
+            case "2": // odwołaj przedstawienie
+                performance.Status = PerformanceStatus.Canceled;
+                Console.WriteLine("Przedstawienie zostało odwołane i bilety zostały zwrócone");
+                return;
             case "x":
                 return;
             default:

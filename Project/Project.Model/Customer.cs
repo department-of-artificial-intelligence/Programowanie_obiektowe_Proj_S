@@ -15,7 +15,7 @@ public class Customer : Person, ITicketTransactions
     private bool AddTicket(Ticket ticket)
     {
         if (ticket is null || Tickets.Contains(ticket)) return false;
-        if (ticket.Customer is not null && ticket.Customer != this) throw new InvalidOperationException($"Bilet ma już właściciela: {ticket}");
+        if (ticket.Customer is not null && ticket.Customer != this) return false;
         ticket.Customer ??= this;
         Tickets.Add(ticket);
         return true;

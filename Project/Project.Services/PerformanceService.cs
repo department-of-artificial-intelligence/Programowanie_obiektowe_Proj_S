@@ -13,6 +13,25 @@ public class PerformanceService
         _context = context;
     }
 
+    public List<Performance> GetPerformancesWithStatus(PerformanceStatus status)
+    {
+        return _context.Performances
+            .AsSplitQuery()
+            .Include(p => p.Play)
+            .Include(p => p.Tickets)
+                .ThenInclude(t => t.Customer)
+            .Where(p => p.Status == status)
+            .ToList();
+    }
+
+    public List<Performance> GetPerformancesWithoutHall()
+    {
+        return _context.Performances
+            .Include(p => p.Play)
+            .Where(p => p.Hall == null)
+            .ToList();
+    }
+
     public Performance? GetPerformanceById(int id)
     {
         return _context.Performances
@@ -20,15 +39,6 @@ public class PerformanceService
             .Include(p => p.Tickets)
             .Include(p => p.Hall)
             .FirstOrDefault(p => p.PerformanceId == id);
-    }
-
-    public List<Performance> GetAllPerformancesWithoutHall()
-    {
-        return _context.Performances
-            .AsSplitQuery()
-            .Include(p => p.Play)
-            .Where(p => p.Hall == null)
-            .ToList();
     }
 
     public bool AddNewPerformance(Play play, DateTime startTime, DateTime endTime)
@@ -43,11 +53,11 @@ public class PerformanceService
         return true;
     }
 
-    public Ticket? CreateNewTicket(decimal price, Seat seat, int performanceId)
+    public Ticket? CreateNewTicket(decimal price, Seat seat, Performance performance)
     {
-        if (seat is null || price < 0 || performanceId < 1) return null;
+        if (price < 0 || seat is null || performance is null) return null;
 
-        Ticket? ticket = GetPerformanceById(performanceId)?.CreateTicket(price, seat);
+        Ticket? ticket = performance.CreateTicket(price, seat);
         if (ticket is null) return null;
 
         _context.Tickets.Add(ticket);
@@ -56,11 +66,11 @@ public class PerformanceService
         return ticket;
     }
 
-    public bool CreateNewTickets(decimal price, int performanceId)
+    public bool CreateNewTickets(decimal price, Performance performance)
     {
-        if (price < 0 || performanceId < 1) return false;
+        if (price < 0 || performance is null) return false;
 
-        List<Ticket>? createdTickets = GetPerformanceById(performanceId)?.CreateTicketForEverySeat(price);
+        List<Ticket>? createdTickets = performance.CreateTicketForEverySeat(price);
 
         if (createdTickets is null || createdTickets.Count == 0) return false;
 
@@ -68,5 +78,18 @@ public class PerformanceService
         _context.SaveChanges();
 
         return true;
+    }
+
+    public bool AddHall(Hall hall, Performance performance)
+    {
+        if (hall is null || performance is null) return false;
+
+        if (performance.AddHall(hall))
+        {
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
     }
 }

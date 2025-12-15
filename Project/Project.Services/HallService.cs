@@ -20,11 +20,11 @@ public class HallService
             .FirstOrDefault(h => h.HallId == id);
     }
 
-    public Seat? CreateNewSeat(int rowNumber, int seatNumber, int hallId)
+    public Seat? CreateNewSeat(int rowNumber, int seatNumber, Hall hall)
     {
-        if (rowNumber < 0 || seatNumber < 0 || hallId < 1) return null;
+        if (rowNumber < 0 || seatNumber < 0 || hall is null) return null;
 
-        Seat? seat = GetHallById(hallId)?.CreateSeat(rowNumber, seatNumber);
+        Seat? seat = hall.CreateSeat(rowNumber, seatNumber);
         if (seat is null) return null;
 
         _context.Seats.Add(seat);
@@ -33,11 +33,11 @@ public class HallService
         return seat;
     }
 
-    public bool CreateNewSeats(int rows, int seatsPerRow, int hallId)
+    public bool CreateNewSeats(int rows, int seatsPerRow, Hall hall)
     {
-        if (rows < 0 || seatsPerRow < 0 || hallId < 1) return false;
+        if (rows < 0 || seatsPerRow < 0 || hall is null) return false;
 
-        List<Seat>? createdSeats = GetHallById(hallId)?.CreateSeats(rows, seatsPerRow);
+        List<Seat>? createdSeats = hall.CreateSeats(rows, seatsPerRow);
 
         if (createdSeats is null || createdSeats.Count == 0) return false;
 

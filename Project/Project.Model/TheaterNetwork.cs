@@ -34,14 +34,6 @@ public class TheaterNetwork
         Theaters.Add(theater);
         return theater;
     }
-    public bool DeleteTheater(Theater theater)
-    {
-        return Theaters.Remove(theater);
-    }
-    public void DeleteAllTheaters()
-    {
-        Theaters.Clear();
-    }
 
     // Metody string
     public string GetTheatersString()

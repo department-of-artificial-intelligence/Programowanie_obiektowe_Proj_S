@@ -17,7 +17,11 @@ public class Performance
         {
             if (value == PerformanceStatus.Canceled)
             {
-                DeleteTickets();
+                foreach (var ticket in Tickets)
+                {
+                    if (ticket.CanBeCanceled(ticket.Customer)) ticket.Customer?.CancelReservation(ticket);
+                    if (ticket.CanBeRefunded(ticket.Customer)) ticket.Customer?.RefundTicket(ticket);
+                }
             }
             _status = value;
         }
@@ -46,7 +50,7 @@ public class Performance
         EndTime = end;
     }
 
-    // Metody tworzenia i usuwania elementów listy Ticket
+    // Metody tworzenia biletów
     public Ticket? CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
     {
         if (price < 0 || seat is null || Hall is null) return null;
@@ -54,40 +58,6 @@ public class Performance
         Ticket ticket = new Ticket(price, this, seat, status);
         Tickets.Add(ticket);
         return ticket;
-    }
-    public bool DeleteTicket(Ticket ticket)
-    {   
-        if (!Tickets.Contains(ticket)) return false;
-        if (ticket.Customer is null)
-        {
-            Tickets.Remove(ticket);
-            return true;
-        }
-        var customer = ticket.Customer;
-        if (customer.RefundTicket(ticket))
-        {
-            Tickets.Remove(ticket);
-            return true;
-        }
-        if (customer.CancelReservation(ticket))
-        {
-            Tickets.Remove(ticket);
-            return true;
-        }
-        if (ticket.Status == TicketStatus.Sold && Status == PerformanceStatus.Finished)
-        {
-            customer.RemoveTicket(ticket);
-            Tickets.Remove(ticket);
-            return true;
-        }
-        return false;
-    }
-    public void DeleteTickets()
-    {
-        foreach (var ticket in Tickets.ToList())
-        {
-            DeleteTicket(ticket);
-        }
     }
     public List<Ticket> CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
     {
@@ -99,6 +69,12 @@ public class Performance
             if (ticket is not null) createdSeats.Add(ticket);
         }
         return createdSeats;
+    }
+
+    public bool AddHall(Hall hall)
+    {
+        if (hall is null || Hall is not null) return false;
+        return hall.AddPerformance(this);
     }
 
     public List<Ticket> OrderTickets()

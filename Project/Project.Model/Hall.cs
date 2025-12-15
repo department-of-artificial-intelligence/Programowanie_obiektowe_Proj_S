@@ -1,4 +1,6 @@
-﻿namespace Project.Model;
+﻿using System.Numerics;
+
+namespace Project.Model;
 
 public class Hall
 {
@@ -32,7 +34,7 @@ public class Hall
         }
     }
 
-    // Metody tworzenia i usuwania elementów listy Seat
+    // Metody tworzenia siedzeń
     public Seat? CreateSeat(int rowNumber, int seatNumber)
     {
         if (rowNumber <= 0 || seatNumber <= 0) return null;
@@ -54,45 +56,20 @@ public class Hall
         }
         return createdSeats;
     }
-    public bool DeleteSeat(Seat seat)
-    {
-        if (!Seats.Contains(seat)) return false;
-        return Seats.Remove(seat);
-    }
-    public void DeleteAllSeats()
-    {
-        foreach (var seat in Seats.ToList())
-        {
-            DeleteSeat(seat);
-        }
-    }
 
     public Seat? GetSeatByLocation(int row, int seat) 
     {
         return Seats.FirstOrDefault(s => s.RowNumber == row && s.SeatNumber == seat);
     }
 
-    // Metody dodawania i usuwania elementów listy Performance
+    // Metody dodawania przedstawień
     public bool AddPerformance(Performance performance)
     {
         if (performance is null || Performances.Contains(performance)) return false;
-        if (performance.Hall is not null && performance.Hall != this) throw new InvalidOperationException($"Przedstawienie ma już salę: {performance}");
+        if (performance.Hall is not null && performance.Hall != this) return false;
         performance.Hall ??= this;
         Performances.Add(performance);
         return true;
-    }
-    public bool RemovePerformance(Performance performance)
-    {
-        if (!Performances.Contains(performance)) return false;
-        performance.Hall = null;
-        return Performances.Remove(performance);
-    }
-    public void RemoveAllPerformances()
-    {
-        foreach (var performance in Performances.ToList())
-        {
-            RemovePerformance(performance);
-        }
     }
 
     public string GetSeatsString()

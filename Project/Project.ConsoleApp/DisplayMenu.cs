@@ -17,11 +17,11 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("============== View Menu 1 ==============");
-        Console.WriteLine("1 - wyświetl listę teatrów"); // -> wyświetl listę sali -> wywietl listę siedzeń / wyświetl wizualizację siedzeń / (wyświetl listę przedstawień -> wyświetl listę biletów)
-        Console.WriteLine("2 - wyświetl listę autorów"); // -> wyświetl listę sztuk autora
-        Console.WriteLine("3 - wyświetl listę reżyserów"); // -> wyświetl listę sztuk reżysera
-        Console.WriteLine("4 - wyświetl listę aktorów"); // -> wyświetl listę sztuk aktora
-        Console.WriteLine("5 - wyświetl listę klientów"); // -> wyświetl listę biletów klienta
+        Console.WriteLine("1 - wyświetl listę teatrów");
+        Console.WriteLine("2 - wyświetl listę autorów");
+        Console.WriteLine("3 - wyświetl listę reżyserów");
+        Console.WriteLine("4 - wyświetl listę aktorów");
+        Console.WriteLine("5 - wyświetl listę klientów");
         Console.WriteLine("6 - wyświetl listę sztuk");
         Console.WriteLine("7 - wyświetl listę przedstawień bez sali");
         Console.WriteLine("x - cofnij");
@@ -32,7 +32,7 @@ internal static class DisplayMenu
     {
         Console.WriteLine();
         Console.WriteLine("====== View Menu 1.1 ======");
-        Console.WriteLine("1 - wyświetl listę sali"); // wybierz salę
+        Console.WriteLine("1 - wyświetl listę sali");
         Console.WriteLine("x - cofnij");
         Console.WriteLine("---------------------------");
     }
@@ -43,7 +43,7 @@ internal static class DisplayMenu
         Console.WriteLine("======== View Menu 1.1.1 ========");
         Console.WriteLine("1 - wyświetl listę siedzeń");
         Console.WriteLine("2 - wizualizuj siedzenia");
-        Console.WriteLine("3 - wyświetl listę przedstawień"); // wybierz przedstawienie
+        Console.WriteLine("3 - wyświetl listę przedstawień");
         Console.WriteLine("x - cofnij");
         Console.WriteLine("---------------------------------");
     }
@@ -108,11 +108,11 @@ internal static class DisplayMenu
     internal static void Creation2_1()
     {
         Console.WriteLine();
-        Console.WriteLine("============== Creation Menu 2.1 =============="); // struktura teatru
-        Console.WriteLine("1 - stwórz teatr"); // potrzebne: sieć
-        Console.WriteLine("2 - stwórz salę"); // potrzebne: sieć->teatr
-        Console.WriteLine("3 - stwórz siedzenie"); // potrzebne: sieć->teatr->sala->siedzenia
-        Console.WriteLine("4 - stwórz siedzenia sali o podanych wymiarach"); // potrzebne: sieć->teatr->sala->siedzenia
+        Console.WriteLine("============== Creation Menu 2.1 ==============");
+        Console.WriteLine("1 - stwórz teatr");
+        Console.WriteLine("2 - stwórz salę");
+        Console.WriteLine("3 - stwórz siedzenie");
+        Console.WriteLine("4 - stwórz siedzenia sali o podanych wymiarach");
         Console.WriteLine("x - cofnij");
         Console.WriteLine("-----------------------------------------------");
     }
@@ -120,11 +120,11 @@ internal static class DisplayMenu
     internal static void Creation2_2()
     {
         Console.WriteLine();
-        Console.WriteLine("=========== Creation Menu 2.2 ==========="); // przedstawienia
-        Console.WriteLine("1 - stwórz sztukę"); // potrzebne: autor, reżyser
-        Console.WriteLine("2 - stwórz przedstawienie"); // potrzebne: przedstawienie
-        Console.WriteLine("3 - stwórz bilet"); // potrzebne: sala->siedzenie, przedstawienie
-        Console.WriteLine("4 - stwórz bilety dla wszystkich siedzeń"); // potrzebne: sala->siedzenie, przedstawienie
+        Console.WriteLine("=========== Creation Menu 2.2 ===========");
+        Console.WriteLine("1 - stwórz sztukę");
+        Console.WriteLine("2 - stwórz przedstawienie");
+        Console.WriteLine("3 - stwórz bilet");
+        Console.WriteLine("4 - stwórz bilety dla wszystkich siedzeń");
         Console.WriteLine("x - cofnij");
         Console.WriteLine("-----------------------------------------");
     }
@@ -132,7 +132,7 @@ internal static class DisplayMenu
     internal static void Creation2_3()
     {
         Console.WriteLine();
-        Console.WriteLine("==== Creation Menu 2.3 ===="); // osoby
+        Console.WriteLine("==== Creation Menu 2.3 ====");
         Console.WriteLine("1 - stwórz autora");
         Console.WriteLine("2 - stwórz reżysera");
         Console.WriteLine("3 - stwórz aktora");
@@ -144,14 +144,14 @@ internal static class DisplayMenu
     internal static void Management3()
     {
         Console.WriteLine();
-        Console.WriteLine("==== Management Menu 3 ====");
+        Console.WriteLine("===== Management Menu 3 =====");
         Console.WriteLine("1 - zarządzaj klientem");
         Console.WriteLine("2 - zarządzaj autorem");
         Console.WriteLine("3 - zarządzaj reżyserem");
         Console.WriteLine("4 - zarządzaj aktorem");
-        Console.WriteLine("5 - zarządzaj salą");
+        Console.WriteLine("5 - zarządzaj przedstawieniem");
         Console.WriteLine("x - cofnij");
-        Console.WriteLine("---------------------------");
+        Console.WriteLine("-----------------------------");
     }
 
     internal static void Management3_1()
@@ -210,11 +210,10 @@ internal static class DisplayMenu
     internal static void Management3_5()
     {
         Console.WriteLine();
-        Console.WriteLine("===== Management Menu 3.5 =====");
-        Console.WriteLine("1 - dodaj przedstawienie");
-        Console.WriteLine("2 - usuń zaplanowane");
-        Console.WriteLine("3 - usuń wszystkie zaplanowane");
+        Console.WriteLine("======== Management Menu 3.5 ========");
+        Console.WriteLine("1 - dodaj przedstawienie do sali");
+        Console.WriteLine("2 - odwołaj przedstawienie");
         Console.WriteLine("x - cofnij");
-        Console.WriteLine("-------------------------------");
+        Console.WriteLine("-------------------------------------");
     }
 }

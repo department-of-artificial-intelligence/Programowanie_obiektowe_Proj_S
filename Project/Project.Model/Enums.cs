@@ -4,7 +4,8 @@ public enum PerformanceStatus
 {
     Scheduled,
     Canceled,
-    Finished
+    Finished,
+    InProgress
 }
 
 public enum TicketStatus
