@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 
 namespace Project.ConsoleApp;
-
 internal static class ConsoleHelper
 {
     internal static string UserInput(string? prompt = null)

@@ -39,6 +39,21 @@ public class TheaterNetworkService
                     .FirstOrDefault();
     }
 
+    public TheaterNetwork? GetFromNetworkToPlay()
+    {
+        return _context.TheaterNetworks
+                    .AsSplitQuery()
+                    .Include(t => t.Theaters)
+                        .ThenInclude(t => t.Halls)
+                            .ThenInclude(h => h.Seats)
+                    .Include(t => t.Theaters)
+                        .ThenInclude(t => t.Halls)
+                            .ThenInclude(h => h.Performances)
+                                .ThenInclude(p => p.Play)
+                    .OrderBy(t => t.TheaterNetworkId)
+                    .FirstOrDefault();
+    }
+
     public TheaterNetwork? GetFromNetworkToTicket()
     {
         return _context.TheaterNetworks

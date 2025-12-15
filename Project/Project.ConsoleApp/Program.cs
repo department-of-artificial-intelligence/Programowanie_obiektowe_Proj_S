@@ -1228,7 +1228,7 @@ void ManagementMenu3_5(Performance performance)
                     Console.WriteLine("Przedstawienie ma już przypisaną salę");
                     break;
                 }
-                TheaterNetwork? network = theaterNetworkService?.GetFullTheaterNetwork();
+                TheaterNetwork? network = theaterNetworkService?.GetFromNetworkToPlay();
                 if (network is null)
                 {
                     Console.WriteLine("Nie znaleziono sieci");
@@ -1245,14 +1245,22 @@ void ManagementMenu3_5(Performance performance)
 
                 Hall hall = ConsoleHelper.GetById(theater.Halls, h => h.HallId, "Podaj ID sali: ");
 
-                if (performanceService.AddHall(hall, performance))
+                try
                 {
-                    Console.WriteLine("Poprawnie przypisano przedstawienie do sali");
+                    if (performanceService.AddHall(hall, performance))
+                    {
+                        Console.WriteLine("Poprawnie przypisano przedstawienie do sali");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Przypisanie przedstawienia do sali nie powiodło się");
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    Console.WriteLine("Przypisanie przedstawienia do sali nie powiodło się");
+                    Console.WriteLine($"{ex.Message}");
                 }
+                
                 break;
             case "2": // odwołaj przedstawienie
                 performance.Status = PerformanceStatus.Canceled;

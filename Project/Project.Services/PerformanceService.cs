@@ -103,6 +103,20 @@ public class PerformanceService
     public bool AddHall(Hall hall, Performance performance)
     {
         if (hall is null || performance is null) return false;
+        if (performance.Status != PerformanceStatus.Scheduled) return false;
+
+        var overlappingPerformances = hall.Performances
+            .Where(p => p.Status == PerformanceStatus.Scheduled)
+            .Where(p =>
+                (performance.StartTime >= p.StartTime && performance.StartTime <= p.EndTime) || // zaczyna się w trakcie
+                (performance.EndTime >= p.StartTime && performance.EndTime <= p.EndTime) || // kończy się w trakcie
+                (performance.StartTime <= p.StartTime && performance.EndTime >= p.EndTime)) // zaczyna się przed i kończy po
+            .ToList();
+
+        if (overlappingPerformances.Any()) // jeśli cokolwiek jest w liście to nowe przedstawienie pokrywa się z istniejącym
+        {
+            throw new Exception("Nie można dodać przedstawienia. W tym czasie jest już jakieś przedstawienie.");
+        }
 
         if (performance.AddHall(hall))
         {
