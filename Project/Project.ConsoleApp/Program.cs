@@ -3,3 +3,5 @@ using Project.Model;
 
 Console.WriteLine("Hello, World!");
 Customer customer = new { "Jan", "Kowalski" }
+
+Customer customer = new { "Adam", "Janik" }
