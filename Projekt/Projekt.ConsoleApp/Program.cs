@@ -22,12 +22,15 @@ class Program
             services.AddScoped<IManagement, Management>();
             })
             .Build();
+        //scope w ktorym sa serwisy
         using (var scope = host.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
             try
             {
+                //pobranie kontekstu i migracja
                 var context = services.GetRequiredService<ApplicationDbContext>();
+                //migrajcje
                 context.Database.Migrate();
                 IManagement manager = services.GetRequiredService<IManagement>();
                 bool dziala = true;
@@ -49,9 +52,9 @@ class Program
                     {
                         switch (wybor)
                         {
-                            case "1": DodajSamochodInteraktywnie(manager); break;
-                            case "2": DodajCiezarowkeInteraktywnie(manager); break;
-                            case "3": DodajMotocyklInteraktywnie(manager); break;
+                            case "1": DodajSamochod(manager); break;
+                            case "2": DodajCiezarowke(manager); break;
+                            case "3": DodajMotocykl(manager); break;
                             case "4":
                                 Console.WriteLine("\n--- LISTA POJAZDÓW ---");
                                 manager.PokazWszystkie();
@@ -88,7 +91,7 @@ class Program
             }
         }
     }
-    static void DodajSamochodInteraktywnie(IManagement manager)
+    static void DodajSamochod(IManagement manager)
     {
         Console.WriteLine("\nDODAWANIE OSOBÓWKI");
         Console.Write("Marka: "); string marka = Console.ReadLine();
@@ -117,7 +120,7 @@ class Program
         Console.WriteLine("\nDodano Samochód!");
         CzekajNaEnter();
     }
-    static void DodajCiezarowkeInteraktywnie(IManagement manager)
+    static void DodajCiezarowke(IManagement manager)
     {
         Console.WriteLine("\nDODAWANIE CIĘŻARÓWKI");
         Console.Write("Marka: "); string marka = Console.ReadLine();
@@ -144,7 +147,7 @@ class Program
         Console.WriteLine("\nDodano Ciężarówkę!");
         CzekajNaEnter();
     }
-    static void DodajMotocyklInteraktywnie(IManagement manager)
+    static void DodajMotocykl(IManagement manager)
     {
         Console.WriteLine("\nDODAWANIE MOTOCYKLA");
         Console.Write("Marka: "); string marka = Console.ReadLine();

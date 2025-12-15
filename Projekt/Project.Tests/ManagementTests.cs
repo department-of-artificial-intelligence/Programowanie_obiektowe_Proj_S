@@ -11,6 +11,7 @@ namespace Projekt.Tests
 {
     public class ManagementTests
     {
+        //pomocnicza metoda tworzy baze zeby inne testy nie kolidowaly ze soba
         private ApplicationDbContext DajBaze()
         {
             var opcje = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -23,6 +24,7 @@ namespace Projekt.Tests
         {
             var baza = DajBaze();
             var manager = new Management(baza);
+            //trzeba stworzyc kierowce bo jest wymagany przez klucz obcy
             var kierowca = new Driver
             {
                 Imie = "Test",
@@ -44,7 +46,9 @@ namespace Projekt.Tests
                 PrzypisanyKierowca = kierowca
             };
             bool rezultat = manager.DodajPojazd(auto);
+            //sprawdzenie
             Assert.True(rezultat);
+            ///sprawdzenie czy sie zapisalo
             var znalezione = manager.ZnajdzPojazdPoRejestracji("TEST1");
             Assert.NotNull(znalezione);
             Assert.Equal("Audi", znalezione.Marka);
@@ -54,6 +58,7 @@ namespace Projekt.Tests
         {
             var baza = DajBaze();
             var manager = new Management(baza);
+            //trzeba dodac zeby usunac
             var auto = new Car
             {
                 Marka = "Opel",
@@ -83,9 +88,12 @@ namespace Projekt.Tests
                 PrzypisanyKierowca = new Driver { Imie = "Tymczasowy", Nazwisko = "User", NumerPrawaJazdy = "000" }
             };
             manager.DodajPojazd(auto);
+            //nowy kierowca do przypisania
             var nowyKierowca = new Driver { Imie = "Jan", Nazwisko = "Kowalski", NumerPrawaJazdy = "ABC" };
+            //zmiana kierowcy
             bool wynik = manager.PrzypiszKierowceDoPojazdu("AUTO1", nowyKierowca);
             Assert.True(wynik);
+            //sprawdzenie czy kierowca sie zmienil
             var autoZBazy = manager.ZnajdzPojazdPoRejestracji("AUTO1");
             Assert.NotNull(autoZBazy.PrzypisanyKierowca);
             Assert.Equal("Jan", autoZBazy.PrzypisanyKierowca.Imie);
@@ -99,6 +107,7 @@ namespace Projekt.Tests
             {
                 Marka = "Fiat",
                 Model = "Panda",
+                //duze litery zeby szukalo dokladnie tego
                 Tablica = "WA 111",
                 Nadwozie = "Hatchback",
                 Paliwo = "Benzyna",
@@ -114,6 +123,7 @@ namespace Projekt.Tests
         {
             var baza = DajBaze();
             var manager = new Management(baza);
+            //dodanie pojazdu zeby bylo do czego dodac wpis
             var auto = new Car
             {
                 Marka = "BMW",
@@ -127,7 +137,9 @@ namespace Projekt.Tests
             bool wynik = manager.DodajWpisSerwisowy("SERWIS", "Olej", 500.0);
             Assert.True(wynik);
             var autoZBazy = manager.ZnajdzPojazdPoRejestracji("SERWIS");
+            //sprawdzenie czy wpis sie dodal
             Assert.Single(autoZBazy.HistoriaSerwisowa);
+            //sprawdzenie czy kwota sie zgadza
             Assert.Equal(500.0, autoZBazy.HistoriaSerwisowa[0].Koszt);
         }
     }
