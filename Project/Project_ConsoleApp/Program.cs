@@ -12,59 +12,76 @@ namespace Project
 {
     public class TutoringSystemApp
     {
-
         private static IUserService? _userService;
         private static ICatalogService? _catalogService;
         private static IBookingService? _bookingService;
 
         static void Main(string[] args)
         {
-            var host = Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging=>
-                { //Wyłączenie logów w konsoli, tylko błędy
-                    logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Error);
-                } )
-
+            IHost host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    // pobranie ConnectionString z appsettings.json
-                    var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+                var cs = context.Configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
 
-                    // Rejestracja bazy danych
-                    services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
+            })
+            .Build();
 
-                    services.AddScoped<IUserService, UserService>();
-                    services.AddScoped<ICatalogService, CatalogService>();
-                    services.AddScoped<IBookingService, BookingService>();
-                })
-                .Build();
+            var context = host.Services.GetService<ApplicationDbContext>();
+            if (context != null) {
 
-            //Uruchomienie zakresu do pracy z bazą
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    //pobranie kontekstu bazy
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    // migracja danych
-                    context.Database.Migrate();
-
-                    _userService = services.GetRequiredService<IUserService>();
-                    _catalogService= services.GetRequiredService<ICatalogService>();
-                    _bookingService= services.GetRequiredService<IBookingService>();
-
-                    if (!context.Tutors.Any())
-                    {
-                        SetupInitialData();
-                    }
-                    RunMenu();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Wystąpił błąd podczas uruchamiania: {ex.Message}");
-                }
+               context.Database.Migrate();
             }
+            else
+            {
+                Console.WriteLine("Błąd ");
+                return;
+            }
+            _userService = new UserService(context);
+            _catalogService = new CatalogService(context);
+            _bookingService = new BookingService(context);
+
+            if (!context.Tutors.Any())
+            {
+                // Dodawanie przedmiotów
+                var mat = _catalogService.AddSubject("Matematyka", "Algebra, Geometria");
+                var pol = _catalogService.AddSubject("Język Polski", "Literatura, Gramatyka");
+                var fiz = _catalogService.AddSubject("Fizyka", "Mechanika, Twierdzenia fizycne");
+                var ang = _catalogService.AddSubject("Język Angielski", "Konwersacje, Czasy angielskie");
+                var geo = _catalogService.AddSubject("Geografia", "Mapy, Pogoda");
+                //Dodawanie nauczycieli 
+                var t1 = _userService.AddTutor("Adam", "Nowak", "adam.nowak@test.com", 100);
+                var t2 = _userService.AddTutor("Barbara", "Kowalska", "basia@test.com", 80);
+                var t3 = _userService.AddTutor("Cezary", "Wiśniewski", "czarek@test.com", 70);
+                var t4 = _userService.AddTutor("Dorota", "Wójcik", "dorota@test.com", 120);
+                //Dodawanie specjalności
+                _userService.AddSpecialtyToTutor(t1.Id, mat);
+                _userService.AddSpecialtyToTutor(t1.Id, fiz);
+                _userService.AddSpecialtyToTutor(t2.Id, pol);
+                _userService.AddSpecialtyToTutor(t3.Id, geo);
+                _userService.AddSpecialtyToTutor(t4.Id, ang);
+                //Dodawanie studentow
+                _userService.AddStudent("Marcin", "Lis", "marcinlis@student.com", "Liceum");
+                _userService.AddStudent("Filip", "Najman", "filip@student.com", "Technikum");
+                _userService.AddStudent("Kamil", "Piotrowski", "kamil@student.com", "Podstawówka");
+                _userService.AddStudent("Jan", "Mazur", "jasiu@student.com", "Technikum");
+                //Dodawanie wolnych terminów nauczycielom
+                _bookingService.AddTimeSlot(t1, new DateTime(2026, 1, 15, 16, 0, 0), new DateTime(2026, 1, 15, 17, 0, 0));
+                _bookingService.AddTimeSlot(t1, new DateTime(2026, 2, 10, 16, 0, 0), new DateTime(2026, 2, 10, 17, 0, 0));
+
+                _bookingService.AddTimeSlot(t2, new DateTime(2026, 1, 20, 10, 0, 0), new DateTime(2026, 1, 20, 11, 30, 0));
+                _bookingService.AddTimeSlot(t2, new DateTime(2026, 2, 12, 12, 0, 0), new DateTime(2026, 2, 12, 13, 30, 0));
+
+                _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 18, 0, 0), new DateTime(2026, 1, 5, 19, 0, 0));
+                _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 19, 0, 0), new DateTime(2026, 1, 5, 20, 0, 0));
+
+                _bookingService.AddTimeSlot(t4, new DateTime(2026, 1, 25, 8, 0, 0), new DateTime(2026, 1, 25, 9, 0, 0));
+                _bookingService.AddTimeSlot(t4, new DateTime(2026, 2, 2, 9, 0, 0), new DateTime(2026, 2, 2, 10, 0, 0));
+                context.SaveChanges();
+                Console.WriteLine("Dane załadowane");
+            }
+
+            RunMenu();
         }
 
         private static void RunMenu()
@@ -200,7 +217,7 @@ namespace Project
                 Console.WriteLine("Błędne ID");
                 return;}
 
-            var tutor = _userService!.GetTutors().FirstOrDefault(t => t.Id == id);
+            var tutor = _userService.GetTutors().FirstOrDefault(t => t.Id == id);
             if (tutor == null) { 
                 Console.WriteLine("Nie znaleziono korepetytora"); 
                 return; }
@@ -233,8 +250,9 @@ namespace Project
             }
 
             Console.Write("ID Korepetytora: ");
-            if (!int.TryParse(Console.ReadLine(), out int tId))
-                return;
+            if (!int.TryParse(Console.ReadLine(), out int tId)) {
+                Console.WriteLine("Nieprawidłowa wartość"); return;
+            }
             var tutor = _userService.GetTutors().FirstOrDefault(t => t.Id == tId);//szukanie
             if (tutor == null) return; //nie znaleziono
 
@@ -243,8 +261,9 @@ namespace Project
                 Console.WriteLine(s);
             }
             Console.Write("ID Ucznia: ");
-            if (!int.TryParse(Console.ReadLine(), out int sId))
-                return;
+            if (!int.TryParse(Console.ReadLine(), out int sId)) {
+                Console.WriteLine("Nieprawidłowa wartość"); return;
+            }
             var student = _userService.GetStudents().FirstOrDefault(s => s.Id == sId);
             if (student == null) return;//nie znaleziono
 
@@ -258,8 +277,9 @@ namespace Project
             }
 
             Console.Write("ID Przedmiotu: ");
-            if (!int.TryParse(Console.ReadLine(), out int subId))
-                return;
+            if (!int.TryParse(Console.ReadLine(), out int subId)) {
+                Console.WriteLine("Nieprawidłowa wartość"); return; 
+            }
             var subject = _catalogService!.GetSubjects().FirstOrDefault(s => s.Id == subId);
 
             Console.WriteLine("=== Dostępne terminy ===");
@@ -273,10 +293,10 @@ namespace Project
             var timeSlot = tutor.Availability.FirstOrDefault(a => a.Id == slotId);
 
             if (timeSlot == null || subject == null) { 
-                Console.WriteLine("Błąd danych."); 
+                Console.WriteLine("Niepoprawne dane."); 
                 return; }
 
-            Lesson? lesson = _bookingService!.BookLesson(tutor, student, subject, timeSlot);
+            Lesson? lesson = _bookingService!.BookLesson(tutor, student, subject, timeSlot); //utworzenie lekcji
             if (lesson != null)
                 Console.WriteLine("Zarezerwowano! ID: " + lesson.Id);
             else
@@ -293,47 +313,14 @@ namespace Project
         }
         private static void GenerateReportsMenu()
         {
-            Raport.ShowTutorsByRate(_userService!);
+            Console.WriteLine("=== Korepetytorzy według stawki (rosnąco) ===");
+
+            foreach (var t in _userService!.GetTutorsOrderedByRate())
+            {
+                Console.WriteLine($"{t.FirstName} {t.LastName} - {t.HourlyRate} PLN");
+            }
             Console.WriteLine();
         }
-        private static void SetupInitialData()
-        {
-
-            // Dodawanie przedmiotów
-            var mat = _catalogService!.AddSubject("Matematyka", "Algebra, Geometria");
-            var pol = _catalogService.AddSubject("Język Polski", "Literatura, Gramatyka");
-            var fiz = _catalogService.AddSubject("Fizyka", "Mechanika, Twierdzenia fizycne");
-            var ang = _catalogService.AddSubject("Język Angielski", "Konwersacje, Czasy angielskie");
-            var geo = _catalogService.AddSubject("Geografia", "Mapy, Pogoda");
-            //Dodawanie nauczycieli 
-            var t1 = _userService!.AddTutor("Adam", "Nowak", "adam.nowak@test.com", 100);
-            var t2 = _userService.AddTutor("Barbara", "Kowalska", "basia@test.com", 80);
-            var t3 = _userService.AddTutor("Cezary", "Wiśniewski", "czarek@test.com", 70);
-            var t4 = _userService.AddTutor("Dorota", "Wójcik", "dorota@test.com", 120);
-            //Dodawanie specjalności
-            _userService.AddSpecialtyToTutor(t1.Id, mat);
-            _userService.AddSpecialtyToTutor(t1.Id, fiz);
-            _userService.AddSpecialtyToTutor(t2.Id, pol);
-            _userService.AddSpecialtyToTutor(t3.Id, geo);
-            _userService.AddSpecialtyToTutor(t4.Id, ang);
-            //Dodawanie studentow
-            _userService.AddStudent("Marcin", "Lis", "marcinlis@student.com", "Liceum");
-            _userService.AddStudent("Filip", "Najman", "filip@student.com", "Technikum");
-            _userService.AddStudent("Kamil", "Piotrowski", "kamil@student.com", "Podstawówka");
-            _userService.AddStudent("Jan", "Mazur", "jasiu@student.com", "Technikum");
-            //Dodawanie wolnych terminów nauczycielom
-            _bookingService!.AddTimeSlot(t1, new DateTime(2026, 1, 15, 16, 0, 0), new DateTime(2026, 1, 15, 17, 0, 0));
-            _bookingService.AddTimeSlot(t1, new DateTime(2026, 2, 10, 16, 0, 0), new DateTime(2026, 2, 10, 17, 0, 0));
-
-            _bookingService.AddTimeSlot(t2, new DateTime(2026, 1, 20, 10, 0, 0), new DateTime(2026, 1, 20, 11, 30, 0));
-            _bookingService.AddTimeSlot(t2, new DateTime(2026, 2, 12, 12, 0, 0), new DateTime(2026, 2, 12, 13, 30, 0));
-
-            _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 18, 0, 0), new DateTime(2026, 1, 5, 19, 0, 0));
-            _bookingService.AddTimeSlot(t3, new DateTime(2026, 1, 5, 19, 0, 0), new DateTime(2026, 1, 5, 20, 0, 0));
-
-            _bookingService.AddTimeSlot(t4, new DateTime(2026, 1, 25, 8, 0, 0), new DateTime(2026, 1, 25, 9, 0, 0));
-            _bookingService.AddTimeSlot(t4, new DateTime(2026, 2, 2, 9, 0, 0), new DateTime(2026, 2, 2, 10, 0, 0));
-            Console.WriteLine("Dane załadowane");
-        }
+       
     }
 }

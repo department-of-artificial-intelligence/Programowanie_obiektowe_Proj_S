@@ -39,6 +39,15 @@ namespace Project.DAL
             }
         }
 
+        public List<Tutor> GetTutorsOrderedByRate()
+        {
+            return _context.Tutors
+                .Include(t => t.Specialties)
+                .Include(t => t.Availability)
+                .OrderBy(t => t.HourlyRate)
+                .ToList();
+        }
+
         public List<Tutor> GetTutors()=> _context.Tutors
             .Include(t=> t.Specialties)
             .Include(t=> t.Availability)

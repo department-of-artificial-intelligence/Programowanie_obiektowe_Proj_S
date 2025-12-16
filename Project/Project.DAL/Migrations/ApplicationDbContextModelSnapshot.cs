@@ -65,7 +65,6 @@ namespace Project.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EducationalLevel")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -205,11 +204,13 @@ namespace Project.DAL.Migrations
 
             modelBuilder.Entity("Project.Model.TimeSlot", b =>
                 {
-                    b.HasOne("Project.Model.Tutor", null)
+                    b.HasOne("Project.Model.Tutor", "Tutor")
                         .WithMany("Availability")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tutor");
                 });
 
             modelBuilder.Entity("SubjectTutor", b =>

@@ -11,6 +11,7 @@ namespace Project.DAL
         void AddSpecialtyToTutor(int tutorId, Subject subject);
         List<Tutor> GetTutors();
         List<Student>GetStudents();
+        List<Tutor> GetTutorsOrderedByRate();
     }
 
     public interface ICatalogService

@@ -12,8 +12,8 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251215174151_PierwszaMigracja")]
-    partial class PierwszaMigracja
+    [Migration("20251216210251_MigracjaJeden")]
+    partial class MigracjaJeden
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,7 +68,6 @@ namespace Project.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EducationalLevel")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -208,11 +207,13 @@ namespace Project.DAL.Migrations
 
             modelBuilder.Entity("Project.Model.TimeSlot", b =>
                 {
-                    b.HasOne("Project.Model.Tutor", null)
+                    b.HasOne("Project.Model.Tutor", "Tutor")
                         .WithMany("Availability")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tutor");
                 });
 
             modelBuilder.Entity("SubjectTutor", b =>

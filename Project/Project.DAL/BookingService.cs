@@ -38,7 +38,8 @@ namespace Project.DAL
 
         public Lesson? BookLesson(Tutor tutor, Student student, Subject subject, TimeSlot slot)
         {
-            if (slot.IsBooked) { 
+            if (slot.IsBooked) {
+                Console.WriteLine("Termin jest już zarezerwowany");
                 return null; 
             }
             if (!tutor.Specialties.Any(s => s.Id == subject.Id)){// czy korepetytor uczy tego przedmiotu

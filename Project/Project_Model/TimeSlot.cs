@@ -6,7 +6,7 @@ namespace Project.Model
     {
         public int Id { get; set; }
         public int TutorId { get; set; }// do relacji z Tutor
-        public Tutor Tutor { get; set; } = null!;
+        public Tutor? Tutor { get; set; } 
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public bool IsBooked { get; set; } = false;
