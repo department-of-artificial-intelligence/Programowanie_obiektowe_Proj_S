@@ -8,7 +8,7 @@ namespace Project.DAL
 {
     public class BookingService : IBookingService
     {
-        public readonly ApplicationDbContext _context; //dostęp do bazy
+        private readonly ApplicationDbContext _context; //dostęp do bazy
 
         public BookingService(ApplicationDbContext context)
         {

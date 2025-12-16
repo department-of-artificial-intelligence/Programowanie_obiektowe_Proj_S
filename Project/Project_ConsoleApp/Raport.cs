@@ -19,6 +19,5 @@ namespace Project
                 Console.WriteLine($"{t.FirstName} {t.LastName} - {t.HourlyRate} PLN");
             }
         }
-
     }
 }

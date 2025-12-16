@@ -47,7 +47,7 @@ namespace Project
                 {
                     //pobranie kontekstu bazy
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    // migracja automatyczna
+                    // migracja danych
                     context.Database.Migrate();
 
                     _userService = services.GetRequiredService<IUserService>();

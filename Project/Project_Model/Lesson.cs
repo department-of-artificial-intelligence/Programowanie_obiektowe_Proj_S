@@ -5,9 +5,9 @@ namespace Project.Model
     public class Lesson
     {
         public int Id { get; set; }
-        public Tutor Tutor { get; set; } = null!;
-        public Student Student { get; set; } = null!;
-        public Subject Subject { get; set; } = null!;
+        public Tutor Tutor { get; set; } = new Tutor();
+        public Student Student { get; set; } = new Student();
+        public Subject Subject { get; set; } = new Subject();
         public DateTime StartDateTime { get; set; }
         public TimeSpan Duration { get; set; }
         public Lesson(Tutor tutor, Student student, Subject subject, TimeSlot slot)
