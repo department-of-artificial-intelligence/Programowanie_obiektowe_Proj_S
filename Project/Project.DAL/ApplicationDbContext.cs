@@ -30,12 +30,12 @@ namespace Project.DAL
                 .HasValue<Client>("Client")
                 .HasValue<Trainer>("Trainer");
 
-          //konfiguracja typu decimal (bez tego miałem błędy)
+          //konfiguracja typu decimal
             modelBuilder.Entity<Trainer>()
                 .Property(t => t.HourlyRate)
-                .HasColumnType("decimal(6, 2)"); // np. do 9999.99
+                .HasColumnType("decimal(6, 2)"); 
 
-            // relacja 1:W (Workout:Client)
+            // relacja 1:W Workout:Client
             modelBuilder.Entity<Workout>()
                 .HasOne(w => w.Client)
                 .WithMany(c => c.PlannedWorkouts)

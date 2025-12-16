@@ -72,7 +72,7 @@ namespace Project.Model
         }
 
         
-        // 3. Rezerwacja terminów treningów
+        // Rezerwacja terminów treningów
       
 
         // Rezerwuje sesję, usuwając slot z dostępności----------------

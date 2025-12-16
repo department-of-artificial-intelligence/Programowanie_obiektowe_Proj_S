@@ -16,18 +16,16 @@ namespace Project.DAL
             _context = context;
         }
 
-       //Pobieranie kolekcji z bazy danych (dziedziczenie TPH)
+       //Pobieranie kolekcji z bazy danych
 
-        // Pobiera wszystkich Klientów z relacjami
+        
         public List<Client> Clients => _context.Persons.OfType<Client>().Include(c => c.PlannedWorkouts).ToList();
 
-        // Pobiera wszystkich Trenerów 
         public List<Trainer> Trainers => _context.Persons.OfType<Trainer>().Include(t => t.ScheduledReservations).ToList();
 
-        // Pobiera wszystkie Ćwiczenia.
         public List<Exercise> Exercises => _context.Exercises.ToList();
 
-        // Pobiera Trenerów
+       
         public List<TrainerSlot> TrainerSlots => _context.TrainerSlots.Include(ts => ts.Trainer).ToList();
 
         //Łączy treningi z trenerami, klientami i seriami
@@ -43,57 +41,46 @@ namespace Project.DAL
             .Include(r => r.Trainer)
             .ToList();
 
-       // 2 Pobieranie danych po id
+       //Pobieranie danych po id
 
-        // Pobiera Klienta po ID.
         public Client GetClientById(int id)
         {
             return _context.Persons.OfType<Client>().FirstOrDefault(c => c.Id == id)!;
         }
 
-        // Pobiera Trenera po ID.
+    
         public Trainer GetTrainerById(int id)
         {
             return _context.Persons.OfType<Trainer>().FirstOrDefault(t => t.Id == id)!;
         }
 
-        // Pobiera Ćwiczenie po ID.
         public Exercise GetExerciseById(int id)
         {
             return _context.Exercises.FirstOrDefault(e => e.Id == id)!;
         }
 
         // 3. Metody do dodawania do bazy-----------------
-  
-        // Dodaje nowego Klienta
         public void AddClient(Client client)
         {
             _context.Persons.Add(client);
             _context.SaveChanges();
         }
 
-        // Dodaje nowego Trenera.
         public void AddTrainer(Trainer trainer)
         {
             _context.Persons.Add(trainer);
             _context.SaveChanges();
         }
-
-        // Dodaje nowe Ćwiczenie
         public void AddExercise(Exercise exercise)
         {
             _context.Exercises.Add(exercise);
             _context.SaveChanges();
         }
-
-        // Dodaje nowy Trening 
         public void AddWorkout(Workout workout)
         {
             _context.Workouts.Add(workout);
             _context.SaveChanges();
         }
-
-        // Dodaje nową Rezerwację
         public void AddReservation(Reservation reservation)
         {
             _context.Reservations.Add(reservation);
@@ -108,9 +95,7 @@ namespace Project.DAL
             _context.SaveChanges();
         }
 
-        // 4.Usuwanie danych
-      
-        // Usuwa wolny termin Trenera z bazy danych podczas gdy woly termin stanie się zajęty.
+        // Usuwanie danych w momecie przypisania treningu do klasy
         public void RemoveTrainerSlot(TrainerSlot slot)
         {
             _context.TrainerSlots.Remove(slot);

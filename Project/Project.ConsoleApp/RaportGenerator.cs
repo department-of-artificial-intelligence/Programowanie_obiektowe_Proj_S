@@ -33,21 +33,18 @@ public class ReportGenerator
         Console.WriteLine("--- ZESTAWIENIE WSZYSTKICH DANYCH SYSTEMU ---");
         Console.WriteLine("-------------------------------------------------");
 
-        // 1. Klienci
+        
         Console.WriteLine($"[KLIENCI] (Liczba: {Clients.Count})");
         foreach (var c in Clients)
         {
             Console.WriteLine($"  -> ID: {c.Id} | {c.FirstName} {c.LastName} | Cel: {c.TrainingGoal} | Waga: {c.Weight}kg");
         }
 
-        // 2. Trenerzy
         Console.WriteLine($"[TRENERZY] (Liczba: {Trainers.Count})");
         foreach (var t in Trainers)
         {
             Console.WriteLine($"  -> ID: {t.Id} | {t.FirstName} {t.LastName} | Specjalizacja: {t.Specialization} | Stawka: {t.HourlyRate:C}");
         }
-
-        // 3. Ćwiczenia
         Console.WriteLine($"[ĆWICZENIA] (Liczba: {Exercises.Count})");
         foreach (var e in Exercises)
         {

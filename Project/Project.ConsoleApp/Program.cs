@@ -41,7 +41,7 @@ using (var scope = _host.Services.CreateScope())
         dbContext.Database.Migrate();
         Console.WriteLine("Baza danych zmigrowana pomyślnie.");
 
-        if (!dataManager.Clients.Any())//jeśłi baza jest pusta wrzuć podstawowe dane startowe
+        if (!dataManager.Clients.Any())
         {
             Console.WriteLine("Inicjalizacja danych startowych...");
             InitializeSampleData(dataManager);
