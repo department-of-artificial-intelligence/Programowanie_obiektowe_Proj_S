@@ -56,6 +56,7 @@ namespace Project.Dal.Migrations
                     TypeOfMedicine = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPrescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PharmacyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -104,8 +105,7 @@ namespace Project.Dal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Pharmacies_AddressId",
                 table: "Pharmacies",
-                column: "AddressId",
-                unique: true);
+                column: "AddressId");
         }
 
         /// <inheritdoc />

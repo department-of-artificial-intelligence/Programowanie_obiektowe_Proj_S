@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Project.Model
@@ -23,11 +25,18 @@ namespace Project.Model
             if (!_source.AddNewDrug(nowy)) return false;
             return true;
         }
+        public bool AddPrescriptionDrug(string nazwa, string typ, string cena, string opis, Pharmacy phar)
+        {
+            if (phar is null) return false;
+            Drug drug = new PrescriptionDrug(nazwa, typ, cena, opis, phar);
+            if (!_source.AddNewDrug(drug)) return false;
+            return true;
+        }
         public bool RemoveDrug(int id, Pharmacy phar)
         {
             if (phar is null) return false;
             var lista = _source.AllDrugs().Where(x => x.PharmacyId == phar.Id).ToList();
-            Drug? doUsuniecia = lista.FirstOrDefault(x => x.DrugId == id && x.Pharmacy == phar);
+            Drug? doUsuniecia = lista.FirstOrDefault(x => x.DrugId == id);
             if (doUsuniecia is null) return false;
             if (!_source.RemoveDrug(doUsuniecia)) return false;
             return true;
@@ -42,13 +51,16 @@ namespace Project.Model
                 Console.WriteLine($"{group.Key}: {polaczone}");
             }
         }
-        public void sortWhetherDrugIsOnPrescription(Pharmacy phar)
+        public void sortByTypeOfDrug(Pharmacy phar)
         {
             if (phar is null) return;
             var lista = _source.AllDrugs().Where(x => x.PharmacyId == phar.Id);
-            var pogrupowane = lista.Where(x => x is PrescriptionDrug);
-            string polaczone = string.Join(", ", pogrupowane.Select(x => x.Name));
-            Console.WriteLine($"Leki Na Recepte: {polaczone}");
+            var pogrupowane = lista.GroupBy(x => x.TypeOfMedicine).OrderBy(x => x.Key);
+            foreach(var grupa in pogrupowane)
+            {
+                string polaczone = string.Join(", ", grupa.Select(x => x.Name));
+                Console.WriteLine($"{grupa.Key} : {polaczone}");
+            }
         }
     }
 }

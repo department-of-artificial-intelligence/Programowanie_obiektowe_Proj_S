@@ -11,7 +11,7 @@ using Project.Dal;
 namespace Project.Dal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251207154732_Initial")]
+    [Migration("20251216194419_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -61,6 +61,10 @@ namespace Project.Dal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DrugId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsPrescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -133,8 +137,7 @@ namespace Project.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Pharmacies");
                 });
@@ -164,18 +167,12 @@ namespace Project.Dal.Migrations
             modelBuilder.Entity("Project.Model.Pharmacy", b =>
                 {
                     b.HasOne("Project.Model.Address", "Address")
-                        .WithOne("Pharmacy")
-                        .HasForeignKey("Project.Model.Pharmacy", "AddressId")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Project.Model.Address", b =>
-                {
-                    b.Navigation("Pharmacy")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Project.Model.Pharmacy", b =>

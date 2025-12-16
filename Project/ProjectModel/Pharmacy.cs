@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
+
     public class Pharmacy
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // Klucz glowny
         public string Name { get; set; }
-        public Address Address { get; private set; }
-        public int AddressId { get; set; }
+        public Address Address { get; private set;}
+        public int AddressId { get; set; } // Klucz obcy
         public List<Employee> Employees { get; set; } = new List<Employee>();
         public List<Drug> Drugs { get; set; } = new List<Drug>();
 

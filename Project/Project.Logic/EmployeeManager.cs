@@ -26,7 +26,7 @@ namespace Project.Model
         {
             if (phar is null) return false;
             var lista = _source.AllEmployees().Where(e => e.PharmacyId == phar.Id).ToList();
-            Employee? doUsuniecia = lista.FirstOrDefault(x => x.Id == id && x.Pharmacy == phar);
+            Employee? doUsuniecia = lista.FirstOrDefault(x => x.Id == id);
             if (doUsuniecia is null) return false;
             if (!_source.RemoveEmployee(doUsuniecia)) return false;
             return true;

@@ -16,7 +16,6 @@ IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) 
 var context = _host.Services.GetService<ApplicationDbContext>();
 if (context != null)
 {
-    context.Database.EnsureCreated();
     context.Database.Migrate();
     if (!context.Pharmacies.Any())
     {
@@ -27,11 +26,10 @@ if (context != null)
         Employee e1 = new Employee("Jan", "Kowalski", "Wlasciciel", phar1);
         Employee e2 = new Employee("Olek", "Szczepanik", "Magister Farmacji", phar1);
         Employee e3 = new Employee("Mateusz", "Wyrazik", "Technik Farmacji", phar1);
-        Drug d1 = new Drug("Apap", "Przeciwbolowy", "12.50zł", "Przeciwbolowy lek oparty na paracetamolu", phar1);
+        Drug d1 = new Drug("Apap", "Przeciwbólowy", "12.50zł", "Przeciwbolowy lek oparty na paracetamolu", phar1);
         Drug d2 = new PrescriptionDrug("Betesda", "Przeciwdepresyjny", "50.21zł", "Antydepresyjny lek", phar1);
         Drug d3 = new PrescriptionDrug("Abirateron", "Przeciwnowotworowe", "1200.51zł", "Stosowany w leczeniu raka", phar1);
         Drug d4 = new Drug("Paracetamol", "Przeciwbólowy", "12.99zł", "Paracetamol jest lekiem stosowanym w leczeniu bólu o łagodnym i umiarkowanym nasileniu, takim jak bóle głowy", phar1);
-        context.Pharmacies.Add(phar1);
         phar1.Employees.Add(e1);
         phar1.Employees.Add(e2);
         phar1.Employees.Add(e3);
@@ -39,6 +37,7 @@ if (context != null)
         phar1.Drugs.Add(d2);
         phar1.Drugs.Add(d3);
         phar1.Drugs.Add(d4);
+        context.Pharmacies.Add(phar1);
         context.SaveChanges();
     }
 }
@@ -72,7 +71,7 @@ static void sekcjaLeki()
         "2.Dodaj nowy lek do apteki.\n" +
         "3.Usun lek z apteki - usuwamy po id\n" +
         "4.Wypisz alfabetycznie wszystkie leki\n" +
-        "5.Wypisz leki na recepte\n" +
+        "5.Wypisz posortowane leki po typie\n" +
         "6.Wróc do wyboru opcji z apteki\n" +
         "7.Wróc do wyboru apteki"
     );
@@ -133,7 +132,7 @@ while (start_program)
         {
             case 1:
                 Console.WriteLine(choosed.Address.ToString());
-                Console.WriteLine("\nNacisnij enter aby kontynuoowac");
+                Console.WriteLine("\nNacisnij enter aby kontynuowac");
                 Console.ReadKey();
                 Console.Clear();
                 break;
@@ -146,18 +145,18 @@ while (start_program)
                     if (!int.TryParse(Console.ReadLine(), out int wybor1))
                     {
                         Console.WriteLine("Nie wpisałeś cyfry");
-                        Console.WriteLine("Nacisnij enter aby kontynuoowac");
+                        Console.WriteLine("Nacisnij enter aby kontynuowac");
                         Console.ReadKey();
                         continue;
                     }
                     switch (wybor1)
                     {
                         case 1:
-                            foreach(var e in empSource.AllEmployees())
+                            foreach (var e in empSource.AllEmployees().Where(x => x.Pharmacy == choosed))
                             {
                                 Console.WriteLine(e);
                             }
-                            Console.WriteLine("\n" + "Nacisnij enter aby kontynuoowac");
+                            Console.WriteLine("\n" + "Nacisnij enter aby kontynuowac");
                             Console.ReadKey();
                             break;
                         case 2:
@@ -176,13 +175,13 @@ while (start_program)
                             if (empManager.AddEmployee(imie, nazwisko, stanowisko, choosed))
                             {
                                 Console.WriteLine($"Pomyslnie dodano nowego pracownika {imie}, {nazwisko}, {stanowisko} Do apteki {choosed.Id}");
-                                Console.WriteLine("Nacisnij enter aby kontynuoowac");
+                                Console.WriteLine("Nacisnij enter aby kontynuowac");
                                 Console.ReadKey();
                             }
                             else
                             {
                                 Console.WriteLine("Blad podczas dodawania nowego pracownika");
-                                Console.WriteLine("Nacisnij enter aby kontynuoowac");
+                                Console.WriteLine("Nacisnij enter aby kontynuowac");
                                 Console.ReadKey();
                                 continue;
                             }
@@ -242,7 +241,7 @@ while (start_program)
                     switch (wybor1)
                     {
                         case 1:
-                            foreach(var d in drugSource.AllDrugs())
+                            foreach (var d in drugSource.AllDrugs().Where(x => x.Pharmacy == choosed))
                             {
                                 Console.WriteLine(d);
                             }
@@ -250,6 +249,7 @@ while (start_program)
                             Console.ReadKey();
                             break;
                         case 2:
+                            //bool czyRecepta
                             Console.Write("Podaj nazwe dodawanego leku: ");
                             string? nazwa = Console.ReadLine();
                             Console.Write("Podaj typ dodawanego leku: ");
@@ -258,33 +258,53 @@ while (start_program)
                             string? cena = Console.ReadLine();
                             Console.Write("Podaj opis dodawanego leku: ");
                             string? opis = Console.ReadLine();
-                            if (string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis))
+                            Console.Write("Czy ten lek jest na recepte (tak/nie): ");
+                            string? warunek = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(nazwa) || string.IsNullOrWhiteSpace(typ) || string.IsNullOrWhiteSpace(cena) || string.IsNullOrWhiteSpace(opis) || string.IsNullOrWhiteSpace(warunek))
                             {
                                 Console.WriteLine("Nie wprowadziles ktorejs z danych bądz wproawdziles to blednie");
+                                Console.ReadLine();
                                 continue;
                             }
                             else
                             {
-                                if (drugManager.AddDrug(nazwa, typ, cena, opis, choosed))
+                                if(warunek == "tak")
                                 {
-                                    Console.WriteLine($"Pomyslnie dodano nowy lek: {nazwa} {typ} {cena} {opis} do apteki {choosed.Id}");
-                                }
-                                else
+                                    if(drugManager.AddPrescriptionDrug(nazwa, typ, cena, opis, choosed))
+                                    {
+                                        Console.WriteLine($"Pomyslnie dodano nowy lek na recepte: {nazwa} {typ} {cena} {opis} do apteki {choosed.Id}");
+                                    }else
+                                    {
+                                        Console.WriteLine("Posiadamy w aptece juz lek o takiej nazwie, dodawanie sie nie powiodlo.");
+                                    }
+                                }else if(warunek == "nie")
                                 {
-                                    Console.WriteLine("Posiadamy w aptece juz lek o takiej nazwie, dodawanie sie nie powiodlo");
+                                    if (drugManager.AddDrug(nazwa, typ, cena, opis, choosed))
+                                    {
+                                        Console.WriteLine($"Pomyslnie dodano nowy lek: {nazwa} {typ} {cena} {opis} do apteki {choosed.Id}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Posiadamy w aptece juz lek o takiej nazwie, dodawanie sie nie powiodlo.");
+                                    }
+                                }else
+                                {
+                                    Console.WriteLine("Podales w polu na recepte cos innego niz tak/nie");
                                 }
+
                             }
                             Console.WriteLine("Nacisnij enter aby kontynuoowac");
                             Console.ReadKey();
                             break;
                         case 3:
                             Console.Write("Podaj id leku do usuniecia: ");
-                            if(!int.TryParse(Console.ReadLine(), out int doUsuniecia))
+                            if (!int.TryParse(Console.ReadLine(), out int doUsuniecia))
                             {
                                 Console.WriteLine("nie wpisales cyfry. Nacisnij entery aby kontynuoowac");
                                 Console.ReadKey();
                                 continue;
-                            }else
+                            }
+                            else
                             {
                                 if (drugManager.RemoveDrug(doUsuniecia, choosed))
                                 {
@@ -305,7 +325,7 @@ while (start_program)
                             Console.Clear();
                             break;
                         case 5:
-                            drugManager.sortWhetherDrugIsOnPrescription(choosed);
+                            drugManager.sortByTypeOfDrug(choosed);
                             Console.WriteLine("Nacisnij enter aby kontynuoowca");
                             Console.ReadKey();
                             Console.Clear();

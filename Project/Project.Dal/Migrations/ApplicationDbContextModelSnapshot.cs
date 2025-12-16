@@ -61,6 +61,10 @@ namespace Project.Dal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IsPrescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -130,8 +134,7 @@ namespace Project.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Pharmacies");
                 });
@@ -161,18 +164,12 @@ namespace Project.Dal.Migrations
             modelBuilder.Entity("Project.Model.Pharmacy", b =>
                 {
                     b.HasOne("Project.Model.Address", "Address")
-                        .WithOne("Pharmacy")
-                        .HasForeignKey("Project.Model.Pharmacy", "AddressId")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Project.Model.Address", b =>
-                {
-                    b.Navigation("Pharmacy")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Project.Model.Pharmacy", b =>

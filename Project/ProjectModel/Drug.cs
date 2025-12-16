@@ -15,6 +15,7 @@ namespace Project.Model
         public string Price { get; set; }
         public string Description { get; set; }
 
+        public string IsPrescription { get; set; } = "Nie";
         public int PharmacyId { get; set; } // Klucz obcy
         public Pharmacy Pharmacy { get; set; }
 
