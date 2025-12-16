@@ -31,24 +31,24 @@ public class Customer : Person, ITicketTransactions
     // Metody zarządzania rezerwacją/kupnem biletów
     public bool BuyTicket(Ticket ticket)
     {
-        if (!ticket.CanBeBought(this)) return false;
+        if (ticket is null || !ticket.CanBeBought(this)) return false;
         ticket.Status = TicketStatus.Sold;
         return AddTicket(ticket);
     }
     public bool RefundTicket(Ticket ticket)
     {
-        if (!ticket.CanBeRefunded(this)) return false;
+        if (ticket is null || !ticket.CanBeRefunded(this)) return false;
         return RemoveTicket(ticket);
     }
     public bool ReserveTicket(Ticket ticket)
     {
-        if (!ticket.CanBeReserved(this)) return false;
+        if (ticket is null || !ticket.CanBeReserved(this)) return false;
         ticket.Status = TicketStatus.Reserved;
         return AddTicket(ticket);
     }
     public bool CancelReservation(Ticket ticket)
     {
-        if (!ticket.CanBeCanceled(this)) return false;
+        if (ticket is null || !ticket.CanBeCanceled(this)) return false;
         return RemoveTicket(ticket);
     }
     public bool BuyAllReserved()

@@ -44,7 +44,7 @@ public class Ticket
     public bool CanBeRefunded(Customer? customer)
     {
         if (customer is null) return false;
-        return Status == TicketStatus.Sold && Customer == customer && Performance.Status == PerformanceStatus.Scheduled;
+        return Status == TicketStatus.Sold && Customer == customer && ( Performance.Status == PerformanceStatus.Scheduled || Performance.Status == PerformanceStatus.Canceled );
     }
 
     // Metody string
