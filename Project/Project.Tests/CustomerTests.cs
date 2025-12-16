@@ -6,7 +6,7 @@ namespace Project.Tests;
 public class CustomerTests
 {
     [Fact]
-    public void CustomerUnitTest()
+    public void Constructor()
     {
 
     }

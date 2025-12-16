@@ -23,18 +23,13 @@ public class Play
     // Konstruktory
     public Play() { }
 
-    public Play(string title, Author? author = null, Director? director = null, List<Actor>? actors = null)
+    public Play(string title, Author? author = null, Director? director = null)
     {
         Title = title;
         Author = author;
         Author?.AddPlay(this);
         Director = director;
         Director?.AddPlay(this);
-        if (actors is null) return;
-        foreach (var actor in actors)
-        {
-            actor.AddPlay(this);
-        }
     }
 
     // Metody string

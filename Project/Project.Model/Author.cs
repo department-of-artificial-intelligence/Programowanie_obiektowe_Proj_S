@@ -8,15 +8,8 @@ public class Author : Person, IPlayManager
     // Konstruktory
     public Author() { }
 
-    public Author(string firstName, string lastName, List<Play>? plays = null)
-        : base(firstName, lastName)
-    {
-        if (plays is null) return;
-        foreach (var play in plays)
-        {
-            AddPlay(play);
-        }
-    }
+    public Author(string firstName, string lastName)
+        : base(firstName, lastName) { }
 
     // Metody dodawania i usuwania elementów listy Play
     public bool AddPlay(Play play)

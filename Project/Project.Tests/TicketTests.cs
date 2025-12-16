@@ -6,7 +6,7 @@ namespace Project.Tests;
 public class TicketTests
 {
     [Fact]
-    public void TicketUnitTest()
+    public void Composition()
     {
 
     }

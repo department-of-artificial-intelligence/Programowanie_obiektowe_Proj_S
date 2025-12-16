@@ -29,9 +29,10 @@ public class Theater
     }
 
     // Metody tworzenia i usuwania elementów listy Hall
-    public Hall? CreateHall(string hallName, List<Performance>? performances = null)
+    public Hall? CreateHall(string hallName)
     {
-        Hall hall = new Hall(hallName, performances);
+        if (string.IsNullOrWhiteSpace(hallName)) return null;
+        Hall hall = new Hall(hallName);
         Halls.Add(hall);
         return hall;
     }

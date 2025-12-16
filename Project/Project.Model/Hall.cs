@@ -24,14 +24,9 @@ public class Hall
     // Konstruktory
     private Hall() { }
 
-    internal Hall(string hallName, List<Performance>? performances = null)
+    internal Hall(string hallName)
     {
         HallName = hallName;
-        if (performances is null) return;
-        foreach (var performance in performances)
-        {
-            AddPerformance(performance);
-        }
     }
 
     // Metody tworzenia siedzeń

@@ -20,15 +20,10 @@ public class Actor : Person, IPlayManager
     // Konstruktory
     public Actor() { }
 
-    public Actor(string firstName, string lastName, decimal salary, List<Play>? plays = null) 
+    public Actor(string firstName, string lastName, decimal salary) 
         : base(firstName, lastName)
     {
         Salary = salary;
-        if (plays is null) return;
-        foreach (var play in plays)
-        {
-            AddPlay(play);
-        }
     }
 
     // Metody dodawania i usuwania elementów listy Play

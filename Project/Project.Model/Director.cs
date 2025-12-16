@@ -30,16 +30,11 @@ public class Director : Person, IPlayManager
     // Konstruktory
     public Director() { }
 
-    public Director(string firstName, string lastName, int yearsOfExperience, decimal salary, List<Play>? plays = null)
+    public Director(string firstName, string lastName, int yearsOfExperience, decimal salary)
         : base(firstName, lastName)
     {
         YearsOfExperience = yearsOfExperience;
         Salary = salary;
-        if (plays is null) return;
-        foreach (var play in plays)
-        {
-            AddPlay(play);
-        }
     }
 
     // Metody dodawania i usuwania elementów listy Play

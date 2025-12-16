@@ -13,7 +13,7 @@ public class Ticket
     // Konstruktory
     private Ticket() { }
 
-    internal Ticket(decimal price, Performance performance, Seat seat, TicketStatus status = TicketStatus.Available)
+    internal Ticket(decimal price, Performance performance, Seat seat)
     {
         if (performance is null) throw new ArgumentNullException(nameof(performance), "Przedstawienie nie może być null");
         if (seat is null) throw new ArgumentNullException(nameof(seat), "Siedzenie nie może być null");
@@ -21,7 +21,7 @@ public class Ticket
         Price = price;
         Performance = performance;
         Seat = seat;
-        Status = status;
+        Status = TicketStatus.Available;
         Customer = null;
     }
 

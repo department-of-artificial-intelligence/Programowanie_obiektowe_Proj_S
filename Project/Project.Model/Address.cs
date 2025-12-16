@@ -8,9 +8,9 @@ public class Address
     public string Street { get; private set; } = string.Empty;
 
     // Konstruktory
-    public Address() { }
+    private Address() { }
 
-    public Address(string country, string city, string street)
+    internal Address(string country, string city, string street)
     {
         if (string.IsNullOrWhiteSpace(country)) throw new ArgumentException("Kraj nie może być null lub pusty", nameof(country));
         if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("Miasto nie może być null lub puste", nameof(city));

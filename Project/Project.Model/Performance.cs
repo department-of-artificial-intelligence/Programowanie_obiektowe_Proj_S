@@ -51,21 +51,21 @@ public class Performance
     }
 
     // Metody tworzenia biletów
-    public Ticket? CreateTicket(decimal price, Seat seat, TicketStatus status = TicketStatus.Available)
+    public Ticket? CreateTicket(decimal price, Seat seat)
     {
         if (price < 0 || seat is null || Hall is null) return null;
         if (!Hall.Seats.Contains(seat)) return null;
-        Ticket ticket = new Ticket(price, this, seat, status);
+        Ticket ticket = new Ticket(price, this, seat);
         Tickets.Add(ticket);
         return ticket;
     }
-    public List<Ticket> CreateTicketForEverySeat(decimal price, TicketStatus status = TicketStatus.Available)
+    public List<Ticket> CreateTicketForEverySeat(decimal price)
     {
         List<Ticket> createdSeats = new List<Ticket>();
         if (Hall is null) return createdSeats;
         foreach (var seat in Hall.Seats)
         {
-            Ticket? ticket = CreateTicket(price, seat, status);
+            Ticket? ticket = CreateTicket(price, seat);
             if (ticket is not null) createdSeats.Add(ticket);
         }
         return createdSeats;
