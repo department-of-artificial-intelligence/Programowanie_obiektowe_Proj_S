@@ -13,7 +13,7 @@ namespace Project.Model
 
         // Relacja do Trenera
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }//referencja do trenera
+        public Trainer Trainer { get; set; } = null!;//referencja do trenera
 
        //ustaw termin jako dostęny domyślnie
         public string Status { get; set; } = "Available";

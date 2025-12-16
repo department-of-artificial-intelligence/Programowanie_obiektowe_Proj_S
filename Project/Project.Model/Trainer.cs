@@ -2,10 +2,10 @@
 
 public class Trainer : Person, IReportable 
 {
-    public string Specialization { get; set; }
+    public string Specialization { get; set; } = string.Empty;
     public decimal HourlyRate { get; set; }
 
-    public List<Reservation> ScheduledReservations { get; set; }
+    public List<Reservation> ScheduledReservations { get; set; } = null!;
     public Trainer() : base(string.Empty, string.Empty, string.Empty)
     {
         ScheduledReservations = new List<Reservation>();
@@ -22,7 +22,8 @@ public class Trainer : Person, IReportable
     {
         get { return $"TRAINER (ID: {Id}): {FirstName} {LastName} | Specialization: {Specialization}"; }
     }
-    //wyświetlenie rezerwacji o ile one są
+    //wyświetlenie rezerwacji o ile one sąto jest moj plik trainer.cs
+    
     public void DisplayDetails()
     {
         Console.WriteLine($"  -> Rate: {HourlyRate:C} | Specializes in: {Specialization}");

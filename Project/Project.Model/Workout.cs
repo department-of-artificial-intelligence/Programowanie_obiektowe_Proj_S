@@ -4,7 +4,7 @@ public class Workout : IReportable
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }
-    public Client Client { get; set; }
+    public Client Client { get; set; } = null!;
     public List<Set> Sets { get; set; }
 
     public Workout()

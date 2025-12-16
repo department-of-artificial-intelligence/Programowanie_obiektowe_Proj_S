@@ -14,12 +14,12 @@ namespace Project.Model
 
         // Relacje do Trenera
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; } // referencja do trenera
+        public Trainer Trainer { get; set; } = null!;// referencja do trenera
 
 
         // Relacje do Klienta
         public int ClientId { get; set; }
-        public Client Client { get; set; }
+        public Client Client { get; set; } = null!;
 
         public Reservation() { }
 

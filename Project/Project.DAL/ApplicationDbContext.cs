@@ -7,7 +7,7 @@ namespace Project.DAL
 {
     public class ApplicationDbContext : DbContext
     {
-        // Definiuje tabele bazy
+        
         public DbSet<Person> Persons { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Workout> Workouts { get; set; }
@@ -24,7 +24,7 @@ namespace Project.DAL
         // Instrukcje do tabel
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // model builder mówi jak tworzyć z klienta i trenera tabele Person
+            
             modelBuilder.Entity<Person>()
                 .HasDiscriminator<string>("Type")
                 .HasValue<Client>("Client")

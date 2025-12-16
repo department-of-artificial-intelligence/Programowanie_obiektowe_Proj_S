@@ -87,7 +87,7 @@ namespace Project.DAL
             _context.SaveChanges();
         }
 
-        // Dodaje nowy wolny Slot Trenera 
+        
         public void AddTrainerSlot(TrainerSlot slot)
         {
            
@@ -95,7 +95,7 @@ namespace Project.DAL
             _context.SaveChanges();
         }
 
-        // Usuwanie danych w momecie przypisania treningu do klasy
+        // Usuwanie terminu gdy przypisujemy go do klienta
         public void RemoveTrainerSlot(TrainerSlot slot)
         {
             _context.TrainerSlots.Remove(slot);

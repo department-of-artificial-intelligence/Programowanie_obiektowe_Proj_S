@@ -1,115 +1,84 @@
 ﻿using Project.DAL;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    // Klasa do dodawania slotów, wyświetlania dostępności i rezerwacji sesji.
     public class BookingManager
     {
-        private readonly DataManagement _dataManager;
+        private readonly ApplicationDbContext _context;
 
-        // Dostępność jest teraz pobierana i zapisywana bezpośrednio w bazie danych (DataManagement).
-
-        public BookingManager(DataManagement dataManager)
+        public BookingManager(ApplicationDbContext context)
         {
-            _dataManager = dataManager;
+            _context = context;
         }
 
-
-        // Zapisuje nowy wolny termin w bazie danych.
         public void AddTrainerSlot(int trainerId, DateTime slot)
         {
-            // Sprawdzenie, czy slot już istnieje (walidacja na poziomie bazy)
-            bool exists = _dataManager.TrainerSlots //wynik sprawdzenia
+            bool exists = _context.Set<TrainerSlot>()
                 .Any(ts => ts.TrainerId == trainerId && ts.SlotTime == slot);
 
             if (exists)
             {
-                Console.WriteLine("Ostrzeżenie: Ten termin już istnieje w bazie i nie został dodany ponownie.");
+                Console.WriteLine("Ten termin już istnieje.");
                 return;
             }
 
-            // Utworzenie nowej encji TrainerSlot
-            var newSlot = new TrainerSlot(trainerId, slot);
+            _context.Set<TrainerSlot>().Add(new TrainerSlot(trainerId, slot));
+            _context.SaveChanges();
 
-            // ZAPIS DO BAZY
-            _dataManager.AddTrainerSlot(newSlot);
-
-            Console.WriteLine($"Dodano nowy wolny termin: {slot.ToString("yyyy-MM-dd HH:mm")}. Zapisano w bazie.");
+            Console.WriteLine($"Dodano wolny termin: {slot:yyyy-MM-dd HH:mm}");
         }
 
-        
-        // 2. Widok wolnych terminów trenera
-       
+    
 
         public void DisplayTrainerAvailability(Trainer trainer)
         {
-            Console.WriteLine($"--- DOSTĘPNOŚĆ TRENERA {trainer.LastName} ({trainer.Specialization}) ---");
+            Console.WriteLine($"--- DOSTĘPNOŚĆ TRENERA {trainer.LastName} ---");
 
-            // Pobranie przyszłe wone terminy z bazy danych
-            var futureAvailableSlots = _dataManager.TrainerSlots
-                .Where(ts => ts.TrainerId == trainer.Id &&
-                             ts.SlotTime > DateTime.Now) 
+            var slots = _context.Set<TrainerSlot>()
+                .Where(ts => ts.TrainerId == trainer.Id && ts.SlotTime > DateTime.Now)
                 .OrderBy(ts => ts.SlotTime)
                 .ToList();
 
-            if (futureAvailableSlots.Any())
+            if (!slots.Any())
             {
-                foreach (var slot in futureAvailableSlots)
-                {
-                    // Wyświetlenie ID slotu
-                    Console.WriteLine($"ID: {slot.Id} -> {slot.SlotTime.ToString("yyyy-MM-dd HH:mm")}");
-                }
+                Console.WriteLine("Brak wolnych terminów.");
+                return;
             }
-            else
-            {
-                Console.WriteLine("Brak wolnych terminów w przyszłości.");
-            }
+
+            foreach (var slot in slots)
+                Console.WriteLine($"ID {slot.Id} → {slot.SlotTime:yyyy-MM-dd HH:mm}");
         }
 
-        
-        // Rezerwacja terminów treningów
-      
 
-        // Rezerwuje sesję, usuwając slot z dostępności----------------
         public bool BookSession(int clientId, int trainerId, DateTime slot)
         {
-            // Pobranie obiektów Klienta i Trenera
-            var client = _dataManager.GetClientById(clientId);
-            var trainer = _dataManager.GetTrainerById(trainerId);
+            
+            var client = _context.Set<Client>().Find(clientId);
+            var trainer = _context.Set<Trainer>().Find(trainerId);
 
             if (client == null || trainer == null)
             {
-                Console.WriteLine("Błąd: Nie znaleziono klienta lub trenera.");
+                Console.WriteLine("Nie znaleziono klienta lub trenera.");
                 return false;
             }
 
-            // Sprawdzenie, czy data jest wolna w bazie
-            var availableSlot = _dataManager.TrainerSlots
-                .FirstOrDefault(ts => ts.TrainerId == trainerId &&
-                                      ts.SlotTime == slot);
+            var freeSlot = _context.Set<TrainerSlot>()
+                .FirstOrDefault(ts => ts.TrainerId == trainerId && ts.SlotTime == slot);
 
-            if (availableSlot != null)
+            if (freeSlot == null)
             {
-                //  Usunięcie wolnej daty 
-                _dataManager.RemoveTrainerSlot(availableSlot);
-
-                //  Utworzenie nowej rezerwacji i zapis do bazy danych
-                var newReservation = new Reservation(trainer, client, slot);
-                _dataManager.AddReservation(newReservation);
-
-                Console.WriteLine($"Zarezerwowano termin dla {client.FirstName} {client.LastName} u Trenera {trainer.LastName} na: {slot.ToString("yyyy-MM-dd HH:mm")}.");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Błąd rezerwacji: Wybrany termin jest już zajęty lub podałeś niepoprawną date.");
+                Console.WriteLine("Termin jest już zajęty.");
                 return false;
             }
+
+            _context.Set<TrainerSlot>().Remove(freeSlot);
+            _context.Set<Reservation>().Add(new Reservation(trainer, client, slot));
+            _context.SaveChanges();
+
+            Console.WriteLine("Rezerwacja zapisana poprawnie.");
+            return true;
         }
     }
 }

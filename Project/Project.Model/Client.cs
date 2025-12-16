@@ -4,14 +4,17 @@ public class Client : Person, IReportable
 {
     public double Weight { get; set; }
     public double Height { get; set; }
-    public string TrainingGoal { get; set; }
+    public string TrainingGoal { get; set; } = string.Empty;
     public DateTime JoinDate { get; set; }
 
     public List<Workout> PlannedWorkouts { get; set; }
     public List<Reservation> ScheduledReservations { get; set; }
+
+
     public Client() : base(string.Empty, string.Empty, string.Empty)
   
     {
+        TrainingGoal = string.Empty;
         PlannedWorkouts = new List<Workout>();
         ScheduledReservations = new List<Reservation>();
     }

@@ -2,6 +2,7 @@
 using System.Linq;
 
 
+
 public class ReportGenerator
 {
     //metoda do grupowania klientów według celu treningowego
@@ -11,7 +12,7 @@ public class ReportGenerator
 
         var goalGroups = allClients
             .GroupBy(c => c.TrainingGoal);
-            
+
 
         foreach (var group in goalGroups)
         {
@@ -24,16 +25,17 @@ public class ReportGenerator
     }
 
     //metoda do wyświetlenia wszystich danych
-        public void DisplayAllData(
-        List<Client> Clients,
-        List<Trainer> Trainers,
-        List<Exercise> Exercises,
-        List<Workout> Workouts)
+    public void DisplayAllData(
+    List<Client> Clients,
+    List<Trainer> Trainers,
+    List<Exercise> Exercises,
+    List<Workout> Workouts,
+    List<Reservation> Reservations)
     {
         Console.WriteLine("--- ZESTAWIENIE WSZYSTKICH DANYCH SYSTEMU ---");
         Console.WriteLine("-------------------------------------------------");
 
-        
+
         Console.WriteLine($"[KLIENCI] (Liczba: {Clients.Count})");
         foreach (var c in Clients)
         {
@@ -58,9 +60,14 @@ public class ReportGenerator
             // Wyświetlanie szczegółów serii dla każdego treningu
             foreach (var set in w.Sets)
             {
-                
+
                 Console.WriteLine($"  -> {set.Exercise.Name}: {set.SetCount} serii po {set.Repetitions} powtórzeń ({set.WeightUsed}kg)");
             }
+        }
+        foreach (var res in Reservations)
+        {
+            
+            Console.WriteLine($"  -> Termin: {res.ScheduledTime:yyyy-MM-dd HH:mm} | Trener: {res.Trainer.LastName} | Klient: {res.Client.LastName}");
         }
         Console.WriteLine("\n-------------------------------------------------");
     }
