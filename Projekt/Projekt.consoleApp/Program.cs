@@ -348,6 +348,7 @@ static void PokazHistorie(ApplicationDbContext db, bool czekaj = true)
 }
 
 ///Dodanie nowego klienta do bazy
+
 static void DodajKlienta(ApplicationDbContext db)
 {
     Console.Clear();
