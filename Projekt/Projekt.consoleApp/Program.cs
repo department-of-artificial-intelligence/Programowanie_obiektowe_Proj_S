@@ -24,13 +24,9 @@ var host = Host.CreateDefaultBuilder()
     .Build();
 
 var context = host.Services.GetService<ApplicationDbContext>();
-        
-        /// Automatyczna migracja bazy danych.
-        
+                
 context.Database.Migrate();
-        
-        ///wypełnienie bazy danymi startowymi
-        
+      
 InicjalizujDane(context);
 MenuGlowne(context);
 
@@ -94,7 +90,7 @@ static void InicjalizujDane(ApplicationDbContext db)
     cust1.RentalHistory.Add(rental1);
 
     db.SaveChanges();
-    Console.WriteLine("Dane zostały załadowane do bazy SQL.");
+    Console.WriteLine("Dane zostały załadowane do bazy");
 }
 
 static void MenuGlowne(ApplicationDbContext db)
@@ -112,8 +108,9 @@ static void MenuGlowne(ApplicationDbContext db)
         Console.WriteLine("5. Pokaż oddziały");
         Console.WriteLine("6. Pokaż klientów");
         Console.WriteLine("7. Pokaż historię wypożyczeń");
+        Console.WriteLine("8. Dodaj nowego klienta");
         Console.WriteLine("---------------------------------------------");
-        Console.WriteLine("9.  Zakończ program");
+        Console.WriteLine("0.  Zakończ program");
         Console.Write("\nWybierz opcję: ");
 
         string wybor = Console.ReadLine();
@@ -134,7 +131,9 @@ static void MenuGlowne(ApplicationDbContext db)
                 break;
             case "7": PokazHistorie(db); 
                 break;
-            case "9": dziala = false; 
+            case "8": DodajKlienta(db); 
+                break;
+            case "0": dziala = false; 
                 break;
             default: Powiadomienie("Nieznana opcja."); 
                 break;
@@ -288,7 +287,7 @@ static void PokazWszystkieSamochody(ApplicationDbContext db, bool czekaj = true)
         CzekajNaEnter();
 }
 
-///Metoda filtrująca samochody po statusie 'Available'.
+///Metoda filtrująca samochody które sa dostepne po statusie 'Available'.
 
 static void PokazDostepneSamochody(ApplicationDbContext db, bool czekaj = true)
 {
@@ -303,7 +302,7 @@ static void PokazDostepneSamochody(ApplicationDbContext db, bool czekaj = true)
         CzekajNaEnter();
 }
 
-/// Wyświetlanie listy oddziałów wraz ze statystykami (liczba aut i pracowników).
+/// Wyświetlanie listy oddziałów wraz ze statystykami w(liczba aut i pracowników).
 
 static void PokazOddzialy(ApplicationDbContext db, bool czekaj = true)
 {
@@ -346,6 +345,72 @@ static void PokazHistorie(ApplicationDbContext db, bool czekaj = true)
         Console.WriteLine(r.ToString());
     if (czekaj) 
         CzekajNaEnter();
+}
+
+///Dodanie nowego klienta do bazy
+static void DodajKlienta(ApplicationDbContext db)
+{
+    Console.Clear();
+    Console.WriteLine("=== REJESTRACJA NOWEGO KLIENTA ===");
+
+    Console.Write("Podaj imię: ");
+    string imie = Console.ReadLine();
+    while (string.IsNullOrWhiteSpace(imie))
+    {
+        Console.WriteLine("Imię nie może być puste!");
+        Console.Write("Podaj imię: ");
+        imie = Console.ReadLine();
+    }
+
+    Console.Write("Podaj nazwisko: ");
+    string nazwisko = Console.ReadLine();
+    while (string.IsNullOrWhiteSpace(nazwisko))
+    {
+        Console.WriteLine("Nazwisko nie może być puste!");
+        Console.Write("Podaj nazwisko: ");
+        nazwisko = Console.ReadLine();
+    }
+    Console.Write("Podaj numer telefonu: ");
+    string telefon = Console.ReadLine();
+
+    DateTime dataUrodzenia;
+    while (true)
+    {
+        Console.Write("Podaj datę urodzenia (RRRR-MM-DD): ");
+        if (DateTime.TryParse(Console.ReadLine(), out dataUrodzenia))
+        {
+            if (dataUrodzenia > DateTime.Now.AddYears(-18))
+            {
+                Powiadomienie("Błąd: Klient musi być pełnoletni.");
+                return;
+            }
+            break;
+        }
+        Console.WriteLine("Błędny format daty. Spróbuj np. 2000-01-01");
+    }
+
+    var nowyKlient = new Customer
+    {
+        FirstName = imie,
+        LastName = nazwisko,
+        PhoneNumber = telefon,
+        DateOfBirth = dataUrodzenia,
+        RentalHistory = new List<Rental>()
+    };
+
+    try
+    {
+        db.Customers.Add(nowyKlient);
+        db.SaveChanges();
+
+        Console.WriteLine($"\nSUKCES! Dodano klienta: {imie} {nazwisko} [ID: {nowyKlient.Id}]");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Wystąpił błąd podczas zapisu: {ex.Message}");
+    }
+
+    CzekajNaEnter();
 }
 
 ///Metody pomocnicze.
