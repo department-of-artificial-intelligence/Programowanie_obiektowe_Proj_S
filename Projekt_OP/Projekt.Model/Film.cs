@@ -10,12 +10,16 @@ namespace Projekt.Model
     {
         //ID Do bazy (Klucz głowny)
         public int ID { get;  set; }
-        public string Title { get; private set; }
-        public int TimeMin { get; private set; }
-        public string Genre { get; private set; }
-        //Nwigacja bazy
+        //===============================
+
+        public string Title { get; set; }
+        public int TimeMin { get; set; }
+        public string Genre { get; set; }
+
+        //Nwigacja bazy klucze obce
         public Hall Hall { get; set; }
         public int HallID { get; set; }
+        //===============================
 
         public Film()
         {

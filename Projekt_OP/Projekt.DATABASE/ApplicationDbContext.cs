@@ -10,8 +10,6 @@ namespace Projekt.DATABASE
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Hall> Halls { get; set; }
 
-
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base (options)
         {
 

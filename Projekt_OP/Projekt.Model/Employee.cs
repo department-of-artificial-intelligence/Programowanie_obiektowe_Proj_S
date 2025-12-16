@@ -8,34 +8,30 @@ namespace Projekt.Model
 {
     public class Employee
     {
-        private string _name;
-        private string _lastName;
-        private int _iD;
+        //Klucz główny do bazy
+        public int ID { get; set;}
+        public string Name { get; set; }
+        public string LastName { get; set; }
+
+        //klucze obce 
         public Cinema Cinema { get; set; }
         public int CinemaID { get; set; }
-
-        public string Name { get { return _name; } set { _name = value; } }
-        public string LastName { get { return _lastName; } set { _lastName = value; } }
-        public int ID { get { return _iD; } set { _iD = value; } }
+        //================================
         
 
 
-        public Employee() 
-        {
-            _name = string.Empty;
-            _lastName = string.Empty;
-        }
+        public Employee() { }
 
-        public Employee(string Name, string LastName, Cinema cinema)
+        public Employee(string Name, string LastName, Cinema Cinema)
         {
-            _name = Name;
-            _lastName = LastName;
-            Cinema = cinema;
+            this.Name = Name;
+            this.LastName = LastName;
+            this.Cinema = Cinema;
         }
 
         public override string ToString()
         {
-            return $"Pracownik: {_name} {_lastName} | ID: {_iD}\n";
+             return $"Pracownik: {Name} {LastName} | ID: {ID} | Nazwa Kina: {Cinema.CinemaName} | ID Kina: {Cinema.CinemaID}\n";
         }
 
     }

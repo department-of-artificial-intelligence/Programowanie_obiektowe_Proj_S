@@ -8,15 +8,21 @@ namespace Projekt.Model
 {
     public class Cinema
     {
+        //Klucz główny do bazy
         public int CinemaID { get;  set; }
         public string CinemaName { get; set; }
         public List<Hall> Hall { get; set; } = new List<Hall>();
+
+        //Klucze obce
         public CinemaAddress Address { get; set; }
-        public List<Employee> Employees { get; set; } = new List<Employee>();
         public int CinemaAddressID { get; set; }
+        public List<Employee> Employees { get; set; } = new List<Employee>();
+        //==================================
+
 
         public Cinema() 
         {
+
         }
 
         public Cinema(string cinemaName, CinemaAddress address)
@@ -27,7 +33,8 @@ namespace Projekt.Model
 
         public override string ToString()
         {
-            return $"Kino: {CinemaName} | IDKina:{CinemaID}|\n";
+            return $"Kino: {CinemaName} | IDKina:{CinemaID}  \nAdres: {Address}\n";
+
         }
     }
 }

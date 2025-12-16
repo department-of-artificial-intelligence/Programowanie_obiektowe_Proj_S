@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Projekt.Model
+namespace Projekt.Model.UI
 {
     public class ConsoleView
     {
@@ -105,7 +105,7 @@ namespace Projekt.Model
         public int GetIDInput(string info) 
         {
                 Console.Write(info);
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
 
                 if (int.TryParse(input, out int id))
                 {
@@ -121,7 +121,7 @@ namespace Projekt.Model
         {
             Console.Write(info);
 
-            return Console.ReadLine();
+            return Console.ReadLine()!;
 
 
         }
