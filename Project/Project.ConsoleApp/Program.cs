@@ -182,10 +182,10 @@ void AddWorkoutInteractive(DataManagement data)
     while (true)
     {
         Console.Write("Podaj datę treningu (YYYY-MM-DD HH:MM): ");
-        // Teraz sprawdzamy tylko, czy format daty jest poprawny
+        // sprawdzamy format daty jest poprawny
         if (DateTime.TryParse(Console.ReadLine(), out workoutDate))
         {
-            break; // Data jest poprawna, wychodzimy z pętli bez sprawdzania czy jest "stara"
+            break; 
         }
         else
         {

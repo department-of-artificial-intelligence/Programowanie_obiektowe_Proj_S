@@ -69,7 +69,7 @@ namespace Project.Model
 
             if (freeSlot == null)
             {
-                Console.WriteLine("Termin jest już zajęty.");
+                Console.WriteLine("Termin jest nie dostępny");
                 return false;
             }
 

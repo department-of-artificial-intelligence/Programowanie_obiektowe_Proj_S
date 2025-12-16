@@ -16,7 +16,7 @@ namespace Project.DAL
             _context = context;
         }
 
-       //Pobieranie kolekcji z bazy danych
+       //Pobieranie kolekcji z bazy danych, zagladamy
 
         
         public List<Client> Clients => _context.Persons.OfType<Client>().Include(c => c.PlannedWorkouts).ToList();
@@ -59,7 +59,7 @@ namespace Project.DAL
             return _context.Exercises.FirstOrDefault(e => e.Id == id)!;
         }
 
-        // 3. Metody do dodawania do bazy-----------------
+        //  Metody do dodawania do bazy-----------------
         public void AddClient(Client client)
         {
             _context.Persons.Add(client);
