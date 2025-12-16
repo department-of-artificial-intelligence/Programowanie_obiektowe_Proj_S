@@ -2,14 +2,20 @@
 
 namespace RestaurantNetwork.Model
 {
+
     public interface IRestaurant
     {
         string Name { get; set; }
-        string Address { get; set; }
+        Address Address { get; set; }
+        string PhoneNumber { get; set; }
+        string Email { get; set; }
+        TimeOnly OpeningHours { get; set; }
+        TimeOnly ClosingHours { get; set; }
+
         List<MenuItem> Menu { get; set; }
         List<Employee> Employees { get; set; }
 
-        void AddMenuItem(MenuItem item);
-        void AddEmployee(Employee emp);
+        void AddMenus(IEnumerable<MenuItem> menuItems);
+        void RemoveMenu(string menuName);
     }
 }

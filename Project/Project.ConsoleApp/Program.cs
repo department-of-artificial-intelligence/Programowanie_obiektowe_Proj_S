@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RestaurantManagement.DAL;
 using RestaurantManagement.Models;
+using RestaurantManagement.Models.Enums;
 
 namespace RestaurantManagement
 {
@@ -233,11 +234,10 @@ namespace RestaurantManagement
 
                 while (true)
                 {
-                   // Console.Clear();
                     Console.WriteLine($"=== PRACOWNICY: {restaurant.Name} ===");
-                    Console.WriteLine("1. Dodaj pracownika");
-                    Console.WriteLine("2. Usuń pracownika");
-                    Console.WriteLine("3. Lista pracowników");
+                    Console.WriteLine("1. Zatrudnij pracownika");
+                    Console.WriteLine("2. Zwolnij pracownika");
+                    Console.WriteLine("3. Lista aktywnych pracowników");
                     Console.WriteLine("0. Wróć");
                     Console.Write("Wybierz opcję: ");
 
@@ -245,21 +245,30 @@ namespace RestaurantManagement
 
                     switch (opt)
                     {
-                        case "1": AddEmployee(restaurant, db); break;
-                        case "2": RemoveEmployee(restaurant, db); break;
+                        case "1": HireEmployee(restaurant, db); break;
+                        case "2": FireEmployee(restaurant, db); break;
                         case "3": ShowEmployees(restaurant, db); break;
                         case "0": return;
                     }
                 }
             }
 
-            static void AddEmployee(Restaurant restaurant, ApplicationDbContext db)
+            static void HireEmployee(Restaurant restaurant, ApplicationDbContext db)
             {
                 Console.Write("Imię: ");
                 string firstName = Console.ReadLine();
 
                 Console.Write("Nazwisko: ");
                 string lastName = Console.ReadLine();
+
+                Console.Write("Stanowisko (Kelner/Szef/Kucharz/Menadżer/Barman/Host/Sprzątaczka/Dostawca):");
+                string positionInput = Console.ReadLine();
+
+                if (!Enum.TryParse<EmployeeType>(positionInput, true, out EmployeeType employeeType))
+                {
+                    Console.WriteLine("Nieprawidłowe stanowisko!");
+                    return;
+                }
 
                 Console.Write("Numer telefonu: ");
                 string phoneNumber = Console.ReadLine();
@@ -308,44 +317,55 @@ namespace RestaurantManagement
                     DateOfBirth = dateOfBirth,
                     Address = address,
                     HiredOn = DateTime.Now,
-                    RestaurantId = restaurant.Id
+                    RestaurantId = restaurant.Id,
+                    EmployeeType = employeeType
                 };
 
                 db.Employee.Add(employee);
                 db.SaveChanges();
 
-                Console.WriteLine("Pracownik dodany i zapisany do bazy!");
+                Console.WriteLine("Pracownik zatrudniony i zapisany do bazy!");
             }
 
-            static void RemoveEmployee(Restaurant restaurant, ApplicationDbContext db)
+            static void FireEmployee(Restaurant restaurant, ApplicationDbContext db)
             {
                 db.Entry(restaurant).Collection(r => r.Employees).Load();
 
-                Console.Write("Nazwisko: ");
-                string name = Console.ReadLine();
+                Console.Write("Nazwisko pracownika do zwolnienia: ");
+                string lastName = Console.ReadLine();
 
-                var emp = restaurant.Employees.FirstOrDefault(x =>
-                    x.LastName.Equals(name, StringComparison.OrdinalIgnoreCase));
+                var emp = restaurant.Employees
+                    .FirstOrDefault(e =>
+                        e.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)
+                        && e.FiredOn == null);
 
-                if (emp != null)
+                if (emp == null)
                 {
-                    db.Employee.Remove(emp);
-                    db.SaveChanges();
-                    Console.WriteLine("Usunięto pracownika z bazy!");
+                    Console.WriteLine("Nie znaleziono aktywnego pracownika.");
+                    return;
                 }
-                else
-                {
-                    Console.WriteLine("Nie znaleziono pracownika o podanym nazwisku.");
-                }
+
+                emp.FiredOn = DateTime.Now;
+                db.SaveChanges();
+
+                Console.WriteLine($"Pracownik {emp.FirstName} {emp.LastName} został zwolniony.");
             }
 
             static void ShowEmployees(Restaurant restaurant, ApplicationDbContext db)
             {
                 db.Entry(restaurant).Collection(r => r.Employees).Load();
 
-                foreach (var e in restaurant.Employees)
+                var active = restaurant.Employees.Where(e => e.FiredOn == null);
+
+                if (!active.Any())
                 {
-                    Console.WriteLine($"{e.FirstName} {e.LastName}");
+                    Console.WriteLine("Brak aktywnych pracowników.");
+                    return;
+                }
+
+                foreach (var e in active)
+                {
+                    Console.WriteLine($"{e.FirstName} {e.LastName} ({e.EmployeeType}) | Zatrudniony od: {e.HiredOn:yyyy-MM-dd}");
                 }
             }
 
@@ -356,7 +376,6 @@ namespace RestaurantManagement
 
                 while (true)
                 {
-                    //Console.Clear();
                     Console.WriteLine($"=== REZERWACJE: {restaurant.Name} ===");
                     Console.WriteLine("1. Dodaj rezerwację");
                     Console.WriteLine("2. Usuń rezerwację");
@@ -448,7 +467,6 @@ namespace RestaurantManagement
 
                 while (true)
                 {
-                   // Console.Clear();
                     Console.WriteLine($"=== MENU: {restaurant.Name} ===");
                     Console.WriteLine("1. Dodaj pozycję do menu");
                     Console.WriteLine("2. Usuń pozycję z menu");

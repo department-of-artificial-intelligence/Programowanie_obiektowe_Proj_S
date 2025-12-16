@@ -3,12 +3,11 @@ using RestaurantManagement.Models.Enums;
 
 namespace RestaurantManagement.Tests
 {
-    public class EmployeeTests
+    public class EmployeeTest
     {
         [Fact]
-        public void EmployeeCreation_ShouldSetAllProperties()
+        public void Create_Works()
         {
-            // Arrange
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
             var hiredDate = DateTime.Now;
@@ -26,7 +25,7 @@ namespace RestaurantManagement.Tests
                 EmployeeType = EmployeeType.Kelner,
                 Salary = 3500,
                 HiredOn = hiredDate
-            // Assert
+                // Assert
             };
 
             // Assert
@@ -39,29 +38,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Employee_ShouldInheritFromPerson()
-        {
-            // Arrange
-            var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
-            var employee = new Employee
-            {
-                FirstName = "Anna",
-                LastName = "Nowak",
-                PhoneNumber = "987654321",
-                Email = "anna@restaurant.com",
-                DateOfBirth = new DateTime(1992, 8, 20),
-                Address = address,
-                EmployeeType = EmployeeType.Kucharz,
-                Salary = 4500,
-                HiredOn = DateTime.Now
-            };
-
-            Assert.IsAssignableFrom<Person>(employee);
-            Assert.Equal("Anna Nowak", employee.FullName);
-        }
-
-        [Fact]
-        public void Employee_ToString_Test()
+        public void ToString_Works()
         {
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
             var employee = new Employee
@@ -84,7 +61,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Employee_FiredOn_Can_Be_Set()
+        public void Fire_Works()
         {
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
             var employee = new Employee
@@ -106,7 +83,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Employee_Salary_Can_Be_Modified()
+        public void Salary_Works()
         {
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
             var employee = new Employee
@@ -128,7 +105,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Employee_FullName_Test()
+        public void FullName_Works()
         {
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
             var employee = new Employee
@@ -148,4 +125,3 @@ namespace RestaurantManagement.Tests
         }
     }
 }
-

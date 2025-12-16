@@ -2,7 +2,7 @@
 
 namespace RestaurantManagement.Models
 {
-    public class Address
+    public class Address: IAddress
     {
         public int Id { get; set; } // PK dla EF
 

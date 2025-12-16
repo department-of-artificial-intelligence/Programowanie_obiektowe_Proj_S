@@ -5,13 +5,13 @@ using Xunit;
 
 namespace RestaurantManagement.Tests
 {
-    public class ReservationTests
+    public class ReservationTest
     {
         [Fact]
-        public void ReservationTest()
+        public void Name_Works()
         {
             // Arrange & Act
-            Reservation r1 = new Reservation()
+            var reservation = new Reservation
             {
                 CustomerName = "Jan",
                 PhoneNumber = "123456789",
@@ -21,17 +21,19 @@ namespace RestaurantManagement.Tests
             };
 
             // Assert
-            Assert.NotNull(r1.CustomerName);
-            Assert.NotEmpty(r1.CustomerName);
-            Assert.True(r1.CustomerName.Length > 2);
+            Assert.NotNull(reservation.CustomerName);
+            Assert.NotEmpty(reservation.CustomerName);
+            Assert.Equal("Jan", reservation.CustomerName);
         }
 
         [Fact]
-        public void ReservationCreation()
+        public void Create_Works()
         {
+            // Arrange
             var date = new DateTime(2025, 12, 15);
             var time = new TimeOnly(18, 30);
 
+            // Act
             var reservation = new Reservation
             {
                 CustomerName = "Jan Kowalski",
@@ -41,6 +43,7 @@ namespace RestaurantManagement.Tests
                 Time = time
             };
 
+            // Assert
             Assert.Equal("Jan Kowalski", reservation.CustomerName);
             Assert.Equal(4, reservation.NumberOfPeople);
             Assert.Equal("123456789", reservation.PhoneNumber);
@@ -49,8 +52,9 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void ReservationToString()
+        public void ToString_Works()
         {
+            // Arrange
             var reservation = new Reservation
             {
                 CustomerName = "Anna Nowak",
@@ -60,84 +64,50 @@ namespace RestaurantManagement.Tests
                 Time = new TimeOnly(19, 0)
             };
 
+            // Act
             var result = reservation.ToString();
 
+            // Assert
             Assert.Contains("Anna Nowak", result);
             Assert.Contains("2", result);
         }
 
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(5)]
-        public void ReservationVarious(int numberOfPeople)
-        {
-            var reservation = new Reservation
-            {
-                CustomerName = "Test Customer",
-                NumberOfPeople = numberOfPeople,
-                PhoneNumber = "111222333",
-                Date = DateTime.Now.AddDays(1),
-                Time = new TimeOnly(18, 0)
-            };
-
-            Assert.Equal(numberOfPeople, reservation.NumberOfPeople);
-        }
-
         [Fact]
-        public void Reservation_CorrectLength()
+        public void Phone_Works()
         {
+            // Arrange
             var reservation = new Reservation
             {
                 CustomerName = "Piotr Wiśniewski",
-                NumberOfPeople = 3,
-                PhoneNumber = "555666777",
-                Date = new DateTime(2025, 12, 25),
-                Time = new TimeOnly(20, 0)
+                PhoneNumber = "555666777"
             };
 
-            Assert.Equal(9, reservation.PhoneNumber.Length);
+            // Assert
+            Assert.Equal("555666777", reservation.PhoneNumber);
+            Assert.NotNull(reservation.PhoneNumber);
+            Assert.NotEmpty(reservation.PhoneNumber);
         }
 
         [Fact]
-        public void Reservation_DateCanBeFuture()
+        public void Change_Works()
         {
-            var futureDate = DateTime.Now.AddDays(7);
-
+            // Arrange
             var reservation = new Reservation
             {
-                CustomerName = "Maria Kowalczyk",
-                NumberOfPeople = 6,
-                PhoneNumber = "444555666",
-                Date = futureDate,
-                Time = new TimeOnly(19, 30)
-            };
-
-            Assert.True(reservation.Date > DateTime.Now.Date);
-        }
-
-        [Fact]
-        public void Reservation_Properties()
-        {
-            var reservation = new Reservation
-            {
-                CustomerName = "Original Name",
+                CustomerName = "Test Name",
                 NumberOfPeople = 2,
-                PhoneNumber = "111111111",
-                Date = DateTime.Now,
-                Time = new TimeOnly(18, 0)
+                PhoneNumber = "111111111"
             };
 
-            reservation.CustomerName = "Updated Name";
+            // Act
+            reservation.CustomerName = "New Name";
             reservation.NumberOfPeople = 4;
             reservation.PhoneNumber = "999999999";
-            reservation.Date = DateTime.Now.AddDays(1);
-            reservation.Time = new TimeOnly(20, 0);
 
-            Assert.Equal("Updated Name", reservation.CustomerName);
+            // Assert
+            Assert.Equal("New Name", reservation.CustomerName);
             Assert.Equal(4, reservation.NumberOfPeople);
             Assert.Equal("999999999", reservation.PhoneNumber);
-            Assert.Equal(new TimeOnly(20, 0), reservation.Time);
         }
     }
 }

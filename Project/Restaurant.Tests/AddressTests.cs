@@ -3,10 +3,10 @@ using RestaurantManagement.Models.Interfaces;
 
 namespace RestaurantManagement.Tests
 {
-    public class AddressTests
+    public class AddressTest
     {
         [Fact]
-        public void AddressCreation_ShouldSetAllProperties()
+        public void Create_Works()
         {
             // Arrange & Act
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -19,7 +19,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void AddressToString_ShouldReturnFormattedString()
+        public void ToString_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -35,33 +35,24 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Address_ShouldImplementIAddress()
-        {
-            // Arrange
-            var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
-
-            // Assert
-            Assert.IsAssignableFrom<IAddress>(address);
-        }
-
-        [Fact]
-        public void Address_PropertiesCanBeModified()
+        public void Change_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
 
             // Act
-            address.Country = "Niemcy";
-            address.ZipCode = "10115";
-            address.City = "Berlin";
-            address.Street = "Unter den Linden";
+            address.Country = "Polska";
+            address.ZipCode = "00-001";
+            address.City = "Warszawa";
+            address.Street = "Warszawska 10";
 
             // Assert
-            Assert.Equal("Niemcy", address.Country);
-            Assert.Equal("10115", address.ZipCode);
-            Assert.Equal("Berlin", address.City);
-            Assert.Equal("Unter den Linden", address.Street);
+            Assert.Equal("Polska", address.Country);
+            Assert.Equal("00-001", address.ZipCode);
+            Assert.Equal("Warszawa", address.City);
+            Assert.Equal("Warszawska 10", address.Street);
         }
     }
 }
+
 

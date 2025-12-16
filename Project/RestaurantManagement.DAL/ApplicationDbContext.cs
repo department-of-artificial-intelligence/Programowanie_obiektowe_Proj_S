@@ -20,20 +20,26 @@ namespace RestaurantManagement.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Employee -> Restaurant relationship with NoAction on delete
+            //Employee -> Restaurant - NoAction ondelete
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Restaurant)
                 .WithMany(r => r.Employees)
                 .HasForeignKey(e => e.RestaurantId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Configure Reservation -> Restaurant relationship with NoAction on delete
+            //Reservation -> Restaurant- NoAction ondelete
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Restaurant)
                 .WithMany(rest => rest.Reservations)
                 .HasForeignKey(r => r.RestaurantId)
                 .OnDelete(DeleteBehavior.NoAction);
-        }
 
+            // MenuItem -> Restaurant - NoAction ondelete
+            modelBuilder.Entity<MenuItem>()
+                .HasOne(m => m.Restaurant)
+                .WithMany(r => r.Menu)
+                .HasForeignKey(m => m.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

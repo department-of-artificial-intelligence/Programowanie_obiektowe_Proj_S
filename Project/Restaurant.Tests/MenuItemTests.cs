@@ -2,10 +2,10 @@
 
 namespace RestaurantManagement.Tests
 {
-    public class MenuItemTests
+    public class MenuItemTest
     {
         [Fact]
-        public void MenuItemCreation_ShouldSetAllProperties()
+        public void Create_Works()
         {
             // Arrange & Act
             var menuItem = new MenuItem
@@ -22,7 +22,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void MenuItem_PriceShouldBePositive()
+        public void Price_Works()
         {
             // Arrange & Act
             var menuItem = new MenuItem
@@ -37,7 +37,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void MenuItem_NameShouldNotBeEmpty()
+        public void Name_Works()
         {
             // Arrange & Act
             var menuItem = new MenuItem
@@ -53,7 +53,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void MenuItem_DescriptionShouldNotBeEmpty()
+        public void Description_Works()
         {
             // Arrange & Act
             var menuItem = new MenuItem
@@ -69,7 +69,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void MenuItem_PropertiesCanBeModified()
+        public void Change_Works()
         {
             // Arrange
             var menuItem = new MenuItem
@@ -90,25 +90,55 @@ namespace RestaurantManagement.Tests
             Assert.Equal(15.00f, menuItem.Price);
         }
 
-        [Theory]
-        [InlineData("Pierogi", "Polskie pierogi", 18.00f)]
-        [InlineData("Schabowy", "Kotlet schabowy z ziemniakami", 35.00f)]
-        [InlineData("Barszcz", "Czerwony barszcz", 10.00f)]
-        public void MenuItem_ShouldAcceptVariousValues(string name, string description, float price)
+        [Fact]
+        public void Values_Pierogi_Works()
         {
             // Arrange & Act
             var menuItem = new MenuItem
             {
-                Name = name,
-                Description = description,
-                Price = price
+                Name = "Pierogi",
+                Description = "Polskie pierogi",
+                Price = 18.00f
             };
 
             // Assert
-            Assert.Equal(name, menuItem.Name);
-            Assert.Equal(description, menuItem.Description);
-            Assert.Equal(price, menuItem.Price);
+            Assert.Equal("Pierogi", menuItem.Name);
+            Assert.Equal("Polskie pierogi", menuItem.Description);
+            Assert.Equal(18.00f, menuItem.Price);
+        }
+
+        [Fact]
+        public void Values_Schabowy_Works()
+        {
+            // Arrange & Act
+            var menuItem = new MenuItem
+            {
+                Name = "Schabowy",
+                Description = "Kotlet schabowy z ziemniakami",
+                Price = 35.00f
+            };
+
+            // Assert
+            Assert.Equal("Schabowy", menuItem.Name);
+            Assert.Equal("Kotlet schabowy z ziemniakami", menuItem.Description);
+            Assert.Equal(35.00f, menuItem.Price);
+        }
+
+        [Fact]
+        public void Values_Barszcz_Works()
+        {
+            // Arrange & Act
+            var menuItem = new MenuItem
+            {
+                Name = "Barszcz",
+                Description = "Czerwony barszcz",
+                Price = 10.00f
+            };
+
+            // Assert
+            Assert.Equal("Barszcz", menuItem.Name);
+            Assert.Equal("Czerwony barszcz", menuItem.Description);
+            Assert.Equal(10.00f, menuItem.Price);
         }
     }
 }
-

@@ -2,10 +2,10 @@
 
 namespace RestaurantManagement.Tests
 {
-    public class PersonTests
+    public class PersonTest
     {
         [Fact]
-        public void PersonCreation_ShouldSetAllRequiredProperties()
+        public void Create_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -32,7 +32,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void FullName_ShouldReturnCombinedFirstAndLastName()
+        public void FullName_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -54,7 +54,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Person_ShouldAcceptValidEmail()
+        public void Email_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -76,7 +76,7 @@ namespace RestaurantManagement.Tests
         }
 
         [Fact]
-        public void Person_PhoneNumberCanBeSet()
+        public void Phone_Works()
         {
             // Arrange
             var address = new Address("Polska", "00-001", "Warszawa", "Warszawska 10");
@@ -96,4 +96,3 @@ namespace RestaurantManagement.Tests
         }
     }
 }
-
