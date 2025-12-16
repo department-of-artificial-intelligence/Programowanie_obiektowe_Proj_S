@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,6 @@ namespace Project.Model
         public required PaymentMethod PaymentMethod {  get; set; }
         public required string Description {  get; set; }
 
-        public required Student Student { get; set; }
+        public virtual Student? Student { get; set; }
     }
 }

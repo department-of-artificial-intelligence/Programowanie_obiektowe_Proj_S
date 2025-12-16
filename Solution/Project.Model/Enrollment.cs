@@ -15,7 +15,7 @@ namespace Project.Model
         public required EnrollmentStatus Status {  get; set; }
         public required decimal AmountPaid {  get; set; }
 
-        public required Student Student { get; set; }
-        public required Group Group { get; set; }
+        public virtual Student? Student { get; set; }
+        public virtual Group? Group { get; set; }
     }
 }

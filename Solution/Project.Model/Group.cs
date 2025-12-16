@@ -24,8 +24,8 @@ namespace Project.Model
             Enrollments = new List<Enrollment>();
         }
 
-        public required Teacher Teacher { get; set; }
-        public required Course Course { get; set; }
+        public virtual Teacher? Teacher { get; set; }
+        public virtual Course? Course { get; set; }
 
 
         public string GetInfo()

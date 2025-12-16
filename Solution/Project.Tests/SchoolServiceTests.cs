@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Project.Logic;
+using Project.DAL;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Project.Tests
@@ -15,48 +17,50 @@ namespace Project.Tests
         [Fact]
         public void GetStudentsByLanguage_ShouldReturnOnlyEnglishStudents()
         {
-            var school = new School
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDb_Students_English")
+                .Options;
+
+            using (var context = new ApplicationDbContext(options))
             {
-                Id = 1,
-                Name = "Test School",
-                City = "Test",
-                Address = "Test",
-                Country = "Test"
-            };
+                // Dodajemy dane testowe
+                context.Students.Add(new Student
+                {
+                    Id = 0,
+                    FirstName = "Jan",
+                    LastName = "Kowalski",
+                    LanguageOfLearning = "English",
+                    Balance = 0,
+                    DateOfBirth = new DateOnly(2000, 1, 1),
+                    Address = "Test",
+                    PhoneNumber = "123123123",
+                    Email = "test@test.pl"
+                });
 
-            //dodajemy students
-            school.Students.Add(new Student
+                context.Students.Add(new Student
+                {
+                    Id = 0,
+                    FirstName = "Patryk",
+                    LastName = "Nowak",
+                    LanguageOfLearning = "German", 
+                    Balance = 0,
+                    DateOfBirth = new DateOnly(2000, 1, 1),
+                    Address = "Test",
+                    PhoneNumber = "111222333",
+                    Email = "test@test.pl"
+                });
+
+                context.SaveChanges(); 
+            }
+
+            using (var context = new ApplicationDbContext(options))
             {
-                Id = 1,
-                FirstName = "Jan",
-                LastName = "Kowalski",
-                LanguageOfLearning = "English",
-                Balance = 0,
-                DateOfBirth = new System.DateOnly(2000, 1, 1),
-                Address = "",
-                PhoneNumber = "123456789",
-                Email = ""
-            });
+                var service = new SchoolService(context);
+                var result = service.GetStudentsByLanguage("English");
 
-            school.Students.Add(new Student
-            {
-                Id = 2,
-                FirstName = "Patryk",
-                LastName = "Nowak",
-                LanguageOfLearning = "Germen",
-                Balance = 0,
-                DateOfBirth = new System.DateOnly(2000, 1, 1),
-                Address = "",
-                PhoneNumber = "123456789",
-                Email = ""
-            });
-
-            var service = new SchoolService(school);
-
-            var result = service.GetStudentsByLanguage("English");
-
-            Assert.Single(result);
-            Assert.Equal("Jan", result.First().FirstName);
+                Assert.Single(result);
+                Assert.Equal("Jan", result.First().FirstName);
+            }
         }
     }
 }
