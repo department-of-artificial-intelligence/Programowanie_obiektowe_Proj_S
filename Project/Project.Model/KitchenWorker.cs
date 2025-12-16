@@ -11,6 +11,6 @@ public class KitchenWorker : Worker
 
     public void PrepareFood()
     {
-        Console.WriteLine($"{FirstName} is preparing food at the {Station}.");
+        Console.WriteLine($"{FirstName} is preparing food at the {Station}");
     }
 }
