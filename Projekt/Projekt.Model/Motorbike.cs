@@ -21,15 +21,9 @@ namespace Projekt.Model
             PojemnoscSilnikaCm3 = pojemnoscSilnikaCm3;
             TypRamy = typRamy;
         }
-        public void Serwis(string tablica)
-        {
-            Console.WriteLine($"Serwis motocykla {tablica}");
-            Console.WriteLine("Serwis objal wymiane oleju, kontrola stanu łańcucha");
-
-        }
         public override string ToString()
         {
-            return $"Motocykl {base.ToString()} | Pojemność: {PojemnoscSilnikaCm3}cm3 | Typ: {TypRamy}";
+            return $"Motocykl {base.ToString()} Pojemność: {PojemnoscSilnikaCm3}cm3 Typ: {TypRamy}";
         }
 
     }

@@ -20,11 +20,6 @@ namespace Projekt.Model
             Ladownosc = ladownosc;
             LiczbaOsi = liczbaosi;
         }
-        public void Serwis(string tablica)
-        {
-            Console.WriteLine($"Serwis ciezarowki {tablica}");
-            Console.WriteLine("Serwis objal przeglad tachografu, smarowanie siodla, kontrole stanu ciagnika");
-        }
         public override string ToString()
         {
             return $"Ciezarowka {base.ToString()} ladownosc {Ladownosc} liczba osi {LiczbaOsi}";

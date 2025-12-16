@@ -13,7 +13,7 @@ namespace Projekt.Model
         Vehicle ZnajdzPojazdPoRejestracji(string tablica);
         void PokazWszystkie();
 
-        bool PrzypiszKierowceDoPojazdu(string tablica, Driver kierowca);
+        //bool PrzypiszKierowceDoPojazdu(string tablica, Driver kierowca);
         bool DodajWpisSerwisowy(string tablica, string opis, double koszt);
         void PokazSerwisPojazdu(string tablica);
     }

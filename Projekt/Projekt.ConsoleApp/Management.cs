@@ -18,9 +18,7 @@ namespace Projekt.ConsoleApp
         }
         public bool DodajPojazd(Vehicle pojazd)
         {
-            bool istnieje = _context.Vehicles.Any(p => p.Tablica == pojazd.Tablica);
-
-            if (istnieje)
+            if (_context.Vehicles.Any(p => p.Tablica == pojazd.Tablica))
             {
                 Console.WriteLine($"Blad: pojazd o tablicy {pojazd.Tablica} juz istnieje w bazie.");
                 return false;
@@ -76,22 +74,6 @@ namespace Projekt.ConsoleApp
             {
                 Console.WriteLine(pojazd.ToString());
             }
-        }
-        public bool PrzypiszKierowceDoPojazdu(string tablica, Driver kierowca)
-        {
-            //pobranie auta
-            var pojazd = ZnajdzPojazdPoRejestracji(tablica);
-            if (pojazd != null)
-            {
-                if (kierowca.Id == 0)
-                {
-                    _context.Drivers.Add(kierowca);
-                }
-                pojazd.PrzypiszKierowce(kierowca);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
         }
         public bool DodajWpisSerwisowy(string tablica, string opis, double koszt)
         {

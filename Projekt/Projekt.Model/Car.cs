@@ -20,11 +20,6 @@ namespace Projekt.Model
             LiczbaDrzwi = liczbadrzwi;
             Nadwozie = nadwozie;
         }
-        public void Serwis(string tablica)
-        {
-            Console.WriteLine($"Serwis samochodu {tablica}");
-            Console.WriteLine("Serwis objal wymiane oleju, filtrow i kontrole stanu samochodu");
-        }
         public override string ToString()
         {
             return $"Samochod osobowy {base.ToString()} dzrwi {LiczbaDrzwi} w nadwoziu {Nadwozie}";

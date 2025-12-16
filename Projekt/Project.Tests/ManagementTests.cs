@@ -74,31 +74,6 @@ namespace Projekt.Tests
             Assert.Null(manager.ZnajdzPojazdPoRejestracji("USUN"));
         }
         [Fact]
-        public void PrzypiszKierowceTest()
-        {
-            var baza = DajBaze();
-            var manager = new Management(baza);
-            var auto = new Car
-            {
-                Marka = "Ford",
-                Model = "Focus",
-                Tablica = "AUTO1",
-                Nadwozie = "Kombi",
-                Paliwo = "Diesel",
-                PrzypisanyKierowca = new Driver { Imie = "Tymczasowy", Nazwisko = "User", NumerPrawaJazdy = "000" }
-            };
-            manager.DodajPojazd(auto);
-            //nowy kierowca do przypisania
-            var nowyKierowca = new Driver { Imie = "Jan", Nazwisko = "Kowalski", NumerPrawaJazdy = "ABC" };
-            //zmiana kierowcy
-            bool wynik = manager.PrzypiszKierowceDoPojazdu("AUTO1", nowyKierowca);
-            Assert.True(wynik);
-            //sprawdzenie czy kierowca sie zmienil
-            var autoZBazy = manager.ZnajdzPojazdPoRejestracji("AUTO1");
-            Assert.NotNull(autoZBazy.PrzypisanyKierowca);
-            Assert.Equal("Jan", autoZBazy.PrzypisanyKierowca.Imie);
-        }
-        [Fact]
         public void ZnajdzPojazdTest()
         {
             var baza = DajBaze();
