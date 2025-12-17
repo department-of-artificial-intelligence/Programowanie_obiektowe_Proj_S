@@ -1,51 +1,28 @@
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace RatingSystem.Domain;
 
 public class Rating
 {
-    private int _ratingId;
-    private int _serviceId;
+   
+   
 
-    private int _value;
-    private string _comment;
+    public int RatingId { get; set; }
+    public int UserId {  get; set; }
+    public int ServiceId {  get; set; }
+    public int Value { get; set; }
+    public string Comment { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
+    public User? User { get; set;  }
+    public Service? Service { get; set; }
 
-
-
-    public Service? Service
+    public Rating(int userId, int serviceId, int value, string comment)
     {
-        get;
-        set;
-    }
-    public  int UserId{get;set;}
-    public int RatingId
-    {
-        get => _ratingId;
-        set => _ratingId = value;
-    }
-    public DateTime Date { get; set; }
-    public int ServiceId
-    {
-        get => _serviceId;
-        set => _serviceId = value;
-    }
-
-    public int Value
-    {
-        get => _value;
-        set => _value = value;
-    }
-
-    public string Comment
-    {
-        get => _comment;
-        set => _comment = value;
-    }
-
-     public Rating(int id, int serviceId, int value, string comment)
-    {
-        _ = id;
-        _serviceId = serviceId;
-        _value = value;
-        _comment = comment;
+        UserId = userId;
+        ServiceId = serviceId;
+        Value = value;
+        Comment = comment;
+        Created = DateTime.Now;
     }
     public Rating():this(0, 0, 0, string.Empty){}
     

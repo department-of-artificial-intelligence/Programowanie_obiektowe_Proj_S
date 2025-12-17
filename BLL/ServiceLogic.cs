@@ -1,35 +1,45 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using RatingSystem.Domain;
-using RatingSystem.DAL;
-namespace RatingSystem.BLL
-
+namespace BLL
 {
-    public  class ServiceLogic: IService
+    public class ServiceLogic : IServiceLogic
     {
-        private readonly IServiceRepository _serviceRepository;
-        public ServiceLogic(IServiceRepository sR)
+        private readonly IServiceDataLogic _serviceDataLogic;
+        public ServiceLogic(IServiceDataLogic serviceDataLogic)
         {
-            _serviceRepository = sR; 
+            _serviceDataLogic = serviceDataLogic;
         }
-        public async Task AddServiceAsync(Service service)
+        public async Task<Service?> GetServiceByIdAsync(int serviceId)
         {
-            if (string.IsNullOrWhiteSpace(service.Name))
+            return await _serviceDataLogic.GetByIdAsync(serviceId);
+        }
+        public async Task<IEnumerable<Service>> GetAllServicesAsync()
+        {
+            return await _serviceDataLogic.GetAllAsync();
+        }
+        public async Task<Service> CreateServiceAsync(string name, string desc, string? type)
+        {
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException(" name line cannot be empty");
+                throw new Exception("Name of the service cannot be empty");
             }
-            await _serviceRepository.AddAsync(service);
-
+            var newService = new Service(name, desc, type);
+            await _serviceDataLogic.AddAsync(newService);
+            await _serviceDataLogic.SaveChangesAsync();
+            return newService;
         }
-        public async Task<Service> GetServiceByIdAsync(int serviceId)
+        public async Task DeleteServiceAsync(int serviceId)
         {
-            return await _serviceRepository.GetByIdAsync(serviceId);
+            Service? serviceToDelete = await _serviceDataLogic.GetByIdAsync(serviceId);
+            if (serviceToDelete != null)
+            {
+                await _serviceDataLogic.RemoveAsync(serviceToDelete);
+                await _serviceDataLogic.SaveChangesAsync();
+            }
         }
-        public async Task<IEnumerable<Service>> GetServicesAsync()
-        {
-            return await _serviceRepository.GetAllAsync(); 
-        }
+                                                                                    
     }
 }

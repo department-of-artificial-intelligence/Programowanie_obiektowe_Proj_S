@@ -1,60 +1,77 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
-
 using System.Text;
-using RatingSystem.DAL;
 using RatingSystem.Domain;
-
-namespace RatingSystem.BLL
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+namespace BLL
 {
-    public  class RatingService: IRatingService
+    public class RatingLogic: IRatigLogic
     {
-        private readonly IRatingRepository _ratingRepository;
-        private readonly IService _service;
-        private readonly IUserService _userService;
-
-        public RatingService(IRatingRepository RR, IUserService US, IService S)
+        private readonly IRatingDataLogic _ratingDataLogic;
+        private readonly IUserLogic _userLogic;
+        private readonly IServiceLogic _serviceLogic;
+        RatingLogic(IRatingDataLogic ratingDataLogic, IUserLogic userLogic, IServiceLogic seviceLogic)
         {
-            _ratingRepository = RR;
-            _userService = US;
-            _service = S;
+            _ratingDataLogic = ratingDataLogic;
+            _userLogic = userLogic;
+            _serviceLogic = seviceLogic;
         }
-        
-        public async Task SubmitRating(Rating rating ) 
+        public async Task SubmitRatingAsync( int userId, int serviceId, int value, string comment)
         {
-           
-        if(rating.Value<1 || rating.Value > 5)
+            if(value<1 || value > 5)
             {
-                throw new ArgumentOutOfRangeException("your grade must be between 1-5, if it happens again i will shut the console"); 
-
+                throw new Exception($"Value must be 1<=value<=5");
             }
-            var service = await _service.GetServiceByIdAsync(rating.ServiceId);
-            if (service == null)
-            {
-                throw new Exception("Rating System does not containt this service and probably is never going to, so try to check on google or smthng(");
-            }
-            var user = await _userService.GetUserByIdAsync(rating.UserId);
+            User? user = await _userLogic.GetUserByIdAsync(userId);
             if (user == null)
             {
-                throw new Exception("user does not exist");
+                throw new Exception($"Can't find user:{userId} ");
             }
-            rating.Date = DateTime.Now;
-            await _ratingRepository.AddAsync(rating);
+            Service? service = await _serviceLogic.GetServiceByIdAsync(serviceId);
+            if (service == null)
+            {
+                throw new Exception($"service:{serviceId} doesn't exist");
+            }
+            var newRating = new Rating(userId,serviceId,value,comment?? string.Empty);
 
+            await _ratingDataLogic.AddAsync(newRating);
+            await _ratingDataLogic.SaveChangesAsync();
         }
-        public async Task<double> CalculateAvgRatingAsync(int serviceId)
+        public async Task<IEnumerable<Rating>> GetUserRatingAsync(int userId)
         {
-            if (serviceId <= 0) throw new ArgumentException("wrong id");
-            var ratings = await _ratingRepository.GetByServiceIdAsync(serviceId);
-
-            if (ratings == null || !ratings.Any()) { return 0.0f; }
-            double average = ratings.Average(r => r.Value);
-            return average;
-
+            var user = await _userLogic.GetUserByIdAsync(userId);
+            if(user == null)
+            {
+                throw new Exception($"can't find user:{userId}");
+            }
+            var ratings= await _ratingDataLogic.GetByUserIdAsync(userId);
+            return ratings.OrderByDescending(r => r.Date);
         }
-        public async Task<IEnumerable<Rating>> GetRatingsByServiceAsync(int serviceId)
+        public async Task DeleteRatingAsync(int ratingId, int requestingUserId)
         {
-            return await _ratingRepository.GetByServiceIdAsync(serviceId);
+            var rating =await _ratingDataLogic.GetByIdAsync(ratingId);
+            if(rating == null)
+            {
+                throw new Exception("Rating couldn't be found");
+            }
+            if(rating.UserId == requestingUserId)
+            {
+                throw new UnauthorizedAccessException("You cannot delete, someones else rating");
+            }
+            await _ratingDataLogic.RemoveAsync(rating);
+            await _ratingDataLogic.SaveChangesAsync();
         }
+        public async Task<double> GetAverageRatingAsync(int serviceId)
+        {
+            var ratings = await _ratingDataLogic.GetByServiceIdAsync(serviceId);
+            if (!ratings.Any())
+            {
+                return 0.0;
+            }
+            return ratings.Average(r => r.Value);
+        }
+
     }
 }
