@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Project.Model
@@ -10,27 +11,9 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (!string.IsNullOrWhiteSpace(s)) return s.Trim();
+                var input = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrWhiteSpace(input)) return input;
                 Console.WriteLine("Pole nie może być puste.");
-            }
-        }
-
-        public static string GetOptionalString(string prompt)
-        {
-            Console.Write(prompt);
-            return Console.ReadLine() ?? "";
-        }
-
-        public static string GetNonEmptyAlpha(string prompt)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (string.IsNullOrWhiteSpace(s)) { Console.WriteLine("Pole nie może być puste."); continue; }
-                if (!Regex.IsMatch(s.Trim(), @"^[A-Za-zÀ-ÿ\- ]+$")) { Console.WriteLine("Dozwolone tylko litery, spacje i myślniki."); continue; }
-                return s.Trim();
             }
         }
 
@@ -39,21 +22,9 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (int.TryParse(s, out int v) && v >= min && v <= max) return v;
+                if (int.TryParse(Console.ReadLine(), out int value) && value >= min && value <= max)
+                    return value;
                 Console.WriteLine($"Wprowadź liczbę całkowitą z zakresu {min}-{max}.");
-            }
-        }
-
-        public static int GetOptionalIntInRange(string prompt, int min, int max, int defaultValue)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (string.IsNullOrWhiteSpace(s)) return defaultValue;
-                if (int.TryParse(s, out int v) && v >= min && v <= max) return v;
-                Console.WriteLine($"Wprowadź liczbę całkowitą z zakresu {min}-{max} lub zostaw puste.");
             }
         }
 
@@ -62,9 +33,8 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (int.TryParse(s, out int v) && v > 0) return v;
-                Console.WriteLine("Wprowadź liczbę całkowitą większą od 0.");
+                if (int.TryParse(Console.ReadLine(), out int value) && value > 0) return value;
+                Console.WriteLine("Wprowadź liczbę większą od 0.");
             }
         }
 
@@ -73,31 +43,24 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (decimal.TryParse(s, out decimal v) && v >= 0) return v;
-                Console.WriteLine("Wprowadź poprawną liczbę (np. 199.99). Nie może być ujemna.");
+                string s = Console.ReadLine()?.Replace(",", ".") ?? "";
+                if (decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                    return value;
+                Console.WriteLine("Wprowadź poprawną liczbę dodatnią (np. 199.99).");
             }
         }
 
-        public static DateTime GetDateNotFuture(string prompt)
+        public static decimal GetDecimalInRange(string prompt, decimal min, decimal max)
         {
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (DateTime.TryParseExact(s, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime d) && d <= DateTime.Now) return d;
-                Console.WriteLine("Wprowadź poprawną datę w formacie dd-MM-yyyy, nie późniejszą niż dziś.");
-            }
-        }
-
-        public static DateTime GetFutureOrTodayDate(string prompt)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (DateTime.TryParseExact(s, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime d) && d >= DateTime.Today) return d;
-                Console.WriteLine("Wprowadź poprawną datę w formacie dd-MM-yyyy (dzisiaj lub później).");
+                string s = Console.ReadLine()?.Replace(",", ".") ?? "";
+                if (decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value))
+                {
+                    if (value >= min && value <= max) return value;
+                }
+                Console.WriteLine($"Wprowadź liczbę z zakresu {min}-{max}.");
             }
         }
 
@@ -106,9 +69,19 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (DateTime.TryParseExact(s, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime d)) return d;
-                Console.WriteLine("Wprowadź poprawną datę w formacie dd-MM-yyyy.");
+                if (DateTime.TryParseExact(Console.ReadLine(), "DD-MM-YYYY", null, DateTimeStyles.None, out DateTime date))
+                    return date;
+                Console.WriteLine("Niepoprawny format daty. Wprowadź DD-MM-YYYY.");
+            }
+        }
+
+        public static DateTime GetFutureOrTodayDate(string prompt)
+        {
+            while (true)
+            {
+                var date = GetDate(prompt);
+                if (date >= DateTime.Today) return date;
+                Console.WriteLine("Data musi być dzisiaj lub w przyszłości.");
             }
         }
 
@@ -117,33 +90,30 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                string cleaned = s.Trim();
-                if (cleaned.Length == 9 && long.TryParse(cleaned, out _)) return cleaned;
+                var s = Console.ReadLine()?.Trim() ?? "";
+                if (s.Length == 9 && long.TryParse(s, out _)) return s;
                 Console.WriteLine("Wprowadź poprawny numer telefonu (9 cyfr).");
             }
         }
-
 
         public static string GetValidatedEmail(string prompt)
         {
             while (true)
             {
                 Console.Write(prompt);
-                string s = Console.ReadLine() ?? "";
-                if (Regex.IsMatch(s, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) return s.Trim();
-                Console.WriteLine("Wprowadź poprawny adres e-mail.");
+                var s = Console.ReadLine()?.Trim() ?? "";
+                if (Regex.IsMatch(s, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) return s;
+                Console.WriteLine("Niepoprawny email.");
             }
         }
 
-        public static string GetYesNo(string prompt)
+        public static string GetNonEmptyAlpha(string prompt)
         {
             while (true)
             {
-                Console.Write(prompt);
-                string s = (Console.ReadLine() ?? "").Trim().ToLower();
-                if (s == "t" || s == "n") return s;
-                Console.WriteLine("Wpisz 't' (tak) lub 'n' (nie).");
+                var s = GetNonEmptyString(prompt);
+                if (Regex.IsMatch(s, @"^[a-zA-ZżźćńółęąśŻŹĆŃÓŁĘĄŚ\s\-]+$")) return s;
+                Console.WriteLine("Można używać tylko liter i spacji.");
             }
         }
     }

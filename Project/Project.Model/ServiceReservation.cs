@@ -2,15 +2,16 @@
 
 namespace Project.Model
 {
-    public class ServiceReservation : IHotelElement
+    public class ServiceReservation
     {
         public int Id { get; set; }
-        public Guest Gosc { get; set; } = new();
-        public Service Usluga { get; set; } = new();
+        public int ServiceId { get; set; }
+        public Service Service { get; set; } = null!;
+        public int ReservationId { get; set; }
+        public Reservation Reservation { get; set; } = null!;
         public DateTime Data { get; set; }
-        public int? PowiazanyNumerPokoju { get; set; }
+        public decimal CenaWChwiliZakupu { get; set; }
 
-        public string Info() => ToString();
-        public override string ToString() => $"Rezerwacja usługi #{Id}: {Usluga.Nazwa} dla {Gosc.PelneDane()} {(PowiazanyNumerPokoju.HasValue ? $"(pokój {PowiazanyNumerPokoju})" : "")} - {Data:dd-MM-yyyy} - {Usluga.Cena:C}";
+        public override string ToString() => $"{Service?.Nazwa} ({Data:DD-MM}) - {CenaWChwiliZakupu:C}";
     }
 }

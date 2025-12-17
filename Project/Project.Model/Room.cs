@@ -2,18 +2,25 @@
 
 namespace Project.Model
 {
-    public class Room : IReservable, IHotelElement
+    public class Room
     {
+        public int Id { get; set; }
         public int Numer { get; set; }
         public int LiczbaMiejsc { get; set; }
-        public RoomType Typ { get; set; } = RoomType.Standard;
-        public decimal CenaZaDobe { get; set; } = 100m;
+        public RoomType Typ { get; set; }
+        public decimal CenaZaDobe { get; set; }
+
         public bool Dostepny { get; private set; } = true;
         public DateTime? Od { get; private set; }
         public DateTime? Do { get; private set; }
 
+        public int HotelId { get; set; }
+        public Hotel Hotel { get; set; } = null!;
+
         public void Zarezerwuj(DateTime od, DateTime doo)
         {
+            if (doo <= od) throw new ArgumentException("Niepoprawny zakres dat.");
+
             Dostepny = false;
             Od = od;
             Do = doo;
@@ -26,11 +33,6 @@ namespace Project.Model
             Do = null;
         }
 
-        public string Info() => ToString();
-        public override string ToString()
-        {
-            string status = Dostepny ? "wolny" : $"zajęty do {Do:dd-MM-yyyy}";
-            return $"Pokój {Numer} ({Typ}) - miejsc: {LiczbaMiejsc} - {status} - {CenaZaDobe:C}";
-        }
+        public override string ToString() => $"Pokój {Numer} | {Typ} | {CenaZaDobe:C}";
     }
 }

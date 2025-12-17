@@ -1,12 +1,12 @@
 ﻿namespace Project.Model
 {
-    public class Service : IHotelElement
+    public class Service
     {
         public int Id { get; set; }
+        public int HotelId { get; set; }
         public string Nazwa { get; set; } = "";
-        public decimal Cena { get; set; } = 0m;
+        public decimal Cena { get; set; }
 
-        public string Info() => ToString();
-        public override string ToString() => $"Usługa {Id}: {Nazwa} - {Cena:C}";
+        public override string ToString() => $"Usługa {Nazwa} - {Cena:C}";
     }
 }
