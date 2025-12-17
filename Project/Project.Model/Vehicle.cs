@@ -1,4 +1,5 @@
 ﻿using Project.Abstractions;
+using Project.Model;
 using System.ComponentModel.DataAnnotations.Schema;
 public abstract class Vehicle : IVehicle
 {
@@ -13,9 +14,12 @@ public abstract class Vehicle : IVehicle
 
     public VehicleStatus VStatus { get; set; }
     public abstract VehicleType VType { get; }
-    
-    [NotMapped]
-    public IDriver? AssignedDriver { get; set; } = null!;
+    public Driver? AssignedDriver { get; set; }
+    IDriver? IVehicle.AssignedDriver
+    {
+        get => AssignedDriver;
+        set => AssignedDriver = value as Driver;
+    }
 
     public Vehicle() {}
     protected Vehicle(int id, string vinNumber, int productionYear, float engineSize, int mileage, string brand, string model, string registrationNumber)
@@ -40,7 +44,7 @@ public abstract class Vehicle : IVehicle
         if (!driver.IsAvailable)
             throw new InvalidOperationException("ERROR - Driver is not available.");
 
-        AssignedDriver = driver;
+        this.AssignedDriver = driver as Driver;
         VStatus = VehicleStatus.InTransit;
     }
 
