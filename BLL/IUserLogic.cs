@@ -1,9 +1,7 @@
 ﻿using RatingSystem.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BLL
+
+namespace RatingSystem.BLL
 {
     public interface IUserLogic
     {

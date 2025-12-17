@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DAL
+namespace RatingSystem.DAL
 {
     public  interface IUserDataLogic
     {
         Task<User?> GetByIdAsync(int id);
         Task AddAsync(User user);
         Task <User?> GetByNameAsync(string name);
-        Task SaveChangesAsync();
+        Task<int>SaveChangesAsync();
         Task RemoveAsync(User user);
     }
 }

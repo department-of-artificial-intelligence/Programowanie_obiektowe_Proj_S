@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DAL
+namespace RatingSystem.DAL
 {
     public  interface IServiceDataLogic
     {

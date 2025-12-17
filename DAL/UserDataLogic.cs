@@ -1,10 +1,10 @@
-﻿using DataAccess;
+﻿
 using Microsoft.EntityFrameworkCore;
 using RatingSystem.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
-namespace DAL
+namespace RatingSystem.DAL
 {
     public class UserDataLogic: IUserDataLogic
     {

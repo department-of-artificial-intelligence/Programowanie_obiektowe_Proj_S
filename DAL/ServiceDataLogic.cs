@@ -1,10 +1,10 @@
-﻿using DataAccess;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
 using RatingSystem.Domain;
 using Microsoft.EntityFrameworkCore;
-namespace DAL
+namespace RatingSystem.DAL
 {
     public class ServiceDataLogic : IServiceDataLogic
     {
@@ -19,6 +19,7 @@ namespace DAL
             _context.Services.Remove(service);
             await Task.CompletedTask;
         }
+        
         public async Task<int> SaveChangesAsync()=> await _context.SaveChangesAsync();
 
     }

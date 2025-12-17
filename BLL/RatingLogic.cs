@@ -1,26 +1,25 @@
-﻿using DAL;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RatingSystem.DAL;
+
 using RatingSystem.Domain;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-namespace BLL
+
+namespace RatingSystem.BLL
 {
-    public class RatingLogic: IRatigLogic
+    public class RatingLogic: IRatingLogic
     {
         private readonly IRatingDataLogic _ratingDataLogic;
         private readonly IUserLogic _userLogic;
         private readonly IServiceLogic _serviceLogic;
-        RatingLogic(IRatingDataLogic ratingDataLogic, IUserLogic userLogic, IServiceLogic seviceLogic)
+         public RatingLogic(IRatingDataLogic ratingDataLogic, IUserLogic userLogic, IServiceLogic seviceLogic)
         {
             _ratingDataLogic = ratingDataLogic;
             _userLogic = userLogic;
             _serviceLogic = seviceLogic;
         }
+        
         public async Task SubmitRatingAsync( int userId, int serviceId, int value, string comment)
         {
-            if(value<1 || value > 5)
+            
+            if (value<1 || value > 5)
             {
                 throw new Exception($"Value must be 1<=value<=5");
             }
@@ -47,7 +46,7 @@ namespace BLL
                 throw new Exception($"can't find user:{userId}");
             }
             var ratings= await _ratingDataLogic.GetByUserIdAsync(userId);
-            return ratings.OrderByDescending(r => r.Date);
+            return ratings.OrderByDescending(r => r.Created);
         }
         public async Task DeleteRatingAsync(int ratingId, int requestingUserId)
         {

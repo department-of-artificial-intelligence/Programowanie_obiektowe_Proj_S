@@ -6,7 +6,7 @@ public class Service
     public string Name { get; set; }
     public string Description { get; set; }
     public string? ServiceType { get; set; }
-    public ICollection<Rating> Ratings { get; set; }
+    public ICollection<Rating?> Ratings { get; set; }
     
 
     public Service( string name, string description, string? serviceType)

@@ -1,15 +1,15 @@
 ﻿using RatingSystem.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BLL
+
+namespace RatingSystem.BLL
 {
     public  interface IServiceLogic
     {
         Task<Service?> GetServiceByIdAsync(int serviceId);
         Task<IEnumerable<Service>> GetAllServicesAsync();
-        Task<Service> CreateServiceAsync(string name, string description, string? type);
+        Task<Service> AddServiceAsync(string name, string description, string? type);
         Task DeleteServiceAsync(int serviceId);
+        Task<int> GetServiceIdByNameAsync(string serviceName);
+        Task<IEnumerable<Service>> GetAllAsync();
     }
 }

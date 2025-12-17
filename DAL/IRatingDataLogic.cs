@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using RatingSystem.Domain;
-namespace DAL
+namespace RatingSystem.DAL
 {
     public interface IRatingDataLogic
     {
@@ -11,6 +11,7 @@ namespace DAL
         Task RemoveAsync(Rating rating);
         Task <IEnumerable<Rating>> GetByServiceIdAsync(int serviceId);
         Task<IEnumerable<Rating>> GetByUserIdAsync(int serviceId);
+        Task<IEnumerable<Rating>> GetAllAsync();
         Task<int> SaveChangesAsync();
     }
 }

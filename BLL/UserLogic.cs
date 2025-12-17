@@ -1,11 +1,8 @@
-﻿using DAL;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 using RatingSystem.Domain;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System.Runtime.CompilerServices;
-namespace BLL
+
+using RatingSystem.DAL;
+namespace RatingSystem.BLL
 {
     public class UserLogic:IUserLogic
     {
