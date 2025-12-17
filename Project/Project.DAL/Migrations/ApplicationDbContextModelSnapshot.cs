@@ -55,6 +55,44 @@ namespace Project.DAL.Migrations
                     b.ToTable("Drivers");
                 });
 
+            modelBuilder.Entity("Project.Model.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AssignedDriverId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AssignedVehicleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LoadingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LoadingDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UnloadingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedDriverId");
+
+                    b.HasIndex("AssignedVehicleId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -150,6 +188,21 @@ namespace Project.DAL.Migrations
                     b.HasOne("Vehicle", "AssignedVehicle")
                         .WithMany()
                         .HasForeignKey("AssignedVehicleId");
+
+                    b.Navigation("AssignedVehicle");
+                });
+
+            modelBuilder.Entity("Project.Model.Order", b =>
+                {
+                    b.HasOne("Project.Model.Driver", "AssignedDriver")
+                        .WithMany()
+                        .HasForeignKey("AssignedDriverId");
+
+                    b.HasOne("Vehicle", "AssignedVehicle")
+                        .WithMany()
+                        .HasForeignKey("AssignedVehicleId");
+
+                    b.Navigation("AssignedDriver");
 
                     b.Navigation("AssignedVehicle");
                 });

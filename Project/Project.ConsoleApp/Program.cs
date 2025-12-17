@@ -14,7 +14,8 @@ IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) 
 var context = _host.Services.GetService<ApplicationDbContext>();
 if (context != null)
 {
-    context.Database.Migrate();
+    //context.Database.Migrate();
+    context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
     // Seed()
     Driver driver1 = new Driver() { FirstName = "John", LastName = "Smith", LicenseNumber = "A123" };

@@ -57,15 +57,56 @@ namespace Project.DAL.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LoadingDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoadingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnloadingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    AssignedDriverId = table.Column<int>(type: "int", nullable: true),
+                    AssignedVehicleId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Drivers_AssignedDriverId",
+                        column: x => x.AssignedDriverId,
+                        principalTable: "Drivers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_Vehicle_AssignedVehicleId",
+                        column: x => x.AssignedVehicleId,
+                        principalTable: "Vehicle",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Drivers_AssignedVehicleId",
                 table: "Drivers",
+                column: "AssignedVehicleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AssignedDriverId",
+                table: "Orders",
+                column: "AssignedDriverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AssignedVehicleId",
+                table: "Orders",
                 column: "AssignedVehicleId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Orders");
+
             migrationBuilder.DropTable(
                 name: "Drivers");
 
