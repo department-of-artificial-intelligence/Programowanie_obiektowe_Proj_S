@@ -69,7 +69,7 @@ namespace Project.Model
             while (true)
             {
                 Console.Write(prompt);
-                if (DateTime.TryParseExact(Console.ReadLine(), "DD-MM-YYYY", null, DateTimeStyles.None, out DateTime date))
+                if (DateTime.TryParseExact(Console.ReadLine(), "dd-MM-yyyy", null, DateTimeStyles.None, out DateTime date))
                     return date;
                 Console.WriteLine("Niepoprawny format daty. Wprowadź DD-MM-YYYY.");
             }

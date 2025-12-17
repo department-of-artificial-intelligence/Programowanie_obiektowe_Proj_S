@@ -72,7 +72,7 @@ namespace Project.ConsoleApp
 
             int liczbaOsob = Helpers.GetIntPositive("Dla ilu osób jest rezerwacja?: ");
 
-            Console.WriteLine($"\n-> Szukam pokoi dla {liczbaOsob} osób w terminie: {od:DD-MM-YYYY} do {doo:DD-MM-YYYY}...");
+            Console.WriteLine($"\n-> Szukam pokoi dla {liczbaOsob} osób w terminie: {od:dd-MM-yyyy} do {doo:dd-MM-yyyy}...");
 
             var zajetePokojeIds = db.Reservations
                 .Where(r => r.HotelId == hotel.Id)
@@ -146,7 +146,7 @@ namespace Project.ConsoleApp
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"✖ Błąd: {ex.Message}");
+                Console.WriteLine($"Błąd: {ex.Message}");
                 Console.ResetColor();
             }
 

@@ -16,6 +16,6 @@ namespace Project.Model
 
         public decimal Koszt => (decimal)(DataDo - DataOd).TotalDays * (Pokoj?.CenaZaDobe ?? 0);
 
-        public override string ToString() => $"Rezerwacja: {DataOd:DD-MM-YYYY} - {DataDo:DD-MM-YYYY} ({LiczbaOsob} os.)";
+        public override string ToString() => $"Rezerwacja: {DataOd:dd-MM-yyyy} - {DataDo:dd-MM-yyyy} ({LiczbaOsob} os.)";
     }
 }

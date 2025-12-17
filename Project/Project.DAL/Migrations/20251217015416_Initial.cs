@@ -54,7 +54,7 @@ namespace Project.DAL.Migrations
                     Imie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nazwisko = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Stanowisko = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pensja = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Pensja = table.Column<decimal>(type: "decimal(12,2)", precision: 12, scale: 2, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataZatrudnienia = table.Column<DateTime>(type: "date", nullable: false)

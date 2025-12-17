@@ -10,6 +10,7 @@ namespace Project.ConsoleApp
         {
             Console.Title = "System Zarządzania Hotelami";
 
+            // Próba inicjalizacji bazy danych
             if (!InitDatabase())
             {
                 Console.WriteLine("Naciśnij dowolny klawisz, aby zamknąć...");
@@ -19,7 +20,7 @@ namespace Project.ConsoleApp
 
             while (true)
             {
-                using var db = CreateContext();
+                using var db = CreateContext(); // Tworzymy kontekst EF Core
 
                 Console.Clear();
                 Console.WriteLine("=== SYSTEM HOTELOWY ===");
@@ -55,18 +56,19 @@ namespace Project.ConsoleApp
             }
         }
 
+        // Inicjalizacja bazy danych i migracje
         static bool InitDatabase()
         {
             Console.WriteLine("Ładowanie bazy danych i sprawdzanie migracji...");
             try
             {
                 using var db = CreateContext();
-                db.Database.Migrate();
+                db.Database.Migrate(); // Tworzy bazę, jeśli nie istnieje
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Połączono z bazą danych pomyślnie.");
                 Console.ResetColor();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(1000); // Pauza dla komunikatu
                 return true;
             }
             catch (Exception ex)
@@ -83,6 +85,7 @@ namespace Project.ConsoleApp
             }
         }
 
+        // Tworzenie kontekstu EF Core
         static ApplicationDbContext CreateContext()
             => new ApplicationDbContextFactory().CreateDbContext(null);
     }
