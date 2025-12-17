@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+#nullable disable
 
 namespace Project.Model
 {
     public class Pizzeria : IShowInfo
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public Menu Menu { get; set; }
+
+        [NotMapped]
         public StorageRoom Storage { get; set; }
+
         public IList<Worker> Workers { get; set; }
         public IList<Order> Orders { get; set; }
 
@@ -42,13 +43,22 @@ namespace Project.Model
 
         public Order PlaceOrder(Client client, IList<string> itemNames)
         {
-            var order = new Order(GenerateOrderId(), client);
+            var order = new Order(0, client);
 
             foreach (var name in itemNames)
             {
-                var item = Menu.FindItem(name);
-                if (item != null)
-                    order.AddItem(item);
+                var originalItem = Menu.FindItem(name);
+                if (originalItem != null)
+                {
+                    var soldItem = new MenuItem(
+                        0, // ID 0 tells DB to create a new row
+                        originalItem.Name,
+                        originalItem.Price ?? 0,
+                        originalItem.Description
+                    );
+
+                    order.AddItem(soldItem);
+                }
             }
 
             Orders.Add(order);

@@ -3,6 +3,7 @@ using Project.Model;
 
 public class Menu : IShowInfo
 {
+    public int Id { get; set; }
     public IList<MenuItem> AvailableItems { get; set; }
 
     public Menu() : this([]) { }

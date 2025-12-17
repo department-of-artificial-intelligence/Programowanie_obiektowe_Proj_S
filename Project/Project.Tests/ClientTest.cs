@@ -18,7 +18,7 @@ namespace Project.Tests
 
             Client client = new Client(expectedId, expectedFirstName, expectedLastName, expectedPhone);
 
-            Assert.Equal(expectedId, client.ClientId);
+            Assert.Equal(expectedId, client.Id);
             Assert.Equal(expectedFirstName, client.FirstName);
             Assert.Equal(expectedLastName, client.LastName);
             Assert.Equal(expectedPhone, client.PhoneNumber);
@@ -29,7 +29,7 @@ namespace Project.Tests
         {
             Client client = new Client();
 
-            Assert.Equal(0, client.ClientId);
+            Assert.Equal(0, client.Id);
             Assert.Equal(string.Empty, client.FirstName);
             Assert.Equal(string.Empty, client.LastName);
             Assert.Equal(string.Empty, client.PhoneNumber);

@@ -1,388 +1,278 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Project.DAL;
 using Project.Model;
 #nullable disable
 
 class Program
 {
-    static PizzeriasNetwork network = new PizzeriasNetwork();
-
     static void Main(string[] args)
     {
+        // Read connection string
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-        /**IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+        IConfiguration config = builder.Build();
+        string connectionString = config.GetConnectionString("DefaultConnection");
+
+        // Create Options
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        optionsBuilder.UseSqlServer(connectionString);
+
+        // Run with Database Context
+        using (var context = new ApplicationDbContext(optionsBuilder.Options))
         {
-            var cns = context.Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
-        }).Build();
-
-
-        var context = _host.Services.GetService<ApplicationDbContext>();
-        if (context != null)
-        {
-            context.Database.Migrate();
-            context.Database.EnsureCreated();
-            var person = new Person() { FirstName = "Mykhailo", LastName = "Lytvyn" };
-            context.People.Add(person);
-            context.SaveChanges();
-        }**/
-
-        bool running = true;
-        while (running)
-        {
-            Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("   PIZZERIA NETWORK MANAGEMENT SYSTEM   ");
-            Console.WriteLine("========================================");
-            Console.WriteLine("1. Create New Pizzeria");
-            Console.WriteLine("2. Enter Pizzeria Management");
-            Console.WriteLine("3. View All Networks");
-            Console.WriteLine("4. Remove Pizzeria");
-            Console.WriteLine("0. Exit");
-            Console.Write("\nSelect an option: ");
-
-            string input = Console.ReadLine();
-
-            switch (input)
+            bool running = true;
+            while (running)
             {
-                case "1":
-                    CreatePizzeria();
-                    break;
-                case "2":
-                    SelectPizzeria();
-                    break;
-                case "3":
-                    Console.Clear();
-                    if (network.PizzeriasList.Count == 0)
-                    {
-                        Console.WriteLine("Network is empty.");
-                    }
-                    else
-                    {
-                        network.DisplayAll();
-                    }
-                    Pause();
-                    break;
-                case "4":
-                    RemovePizzeria();
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    Console.WriteLine("Invalid option.");
-                    Pause();
-                    break;
+                Console.Clear();
+                Console.WriteLine("========================================");
+                Console.WriteLine("   PIZZERIA NETWORK MANAGEMENT SYSTEM   ");
+                Console.WriteLine("========================================");
+                Console.WriteLine("1. Create New Pizzeria");
+                Console.WriteLine("2. Enter Pizzeria Management");
+                Console.WriteLine("3. View All Networks");
+                Console.WriteLine("4. Remove Pizzeria");
+                Console.WriteLine("0. Exit");
+                Console.Write("\nSelect an option: ");
+
+                switch (Console.ReadLine())
+                {
+                    case "1": CreatePizzeria(context); break;
+                    case "2": SelectPizzeria(context); break;
+                    case "3": ViewAll(context); break;
+                    case "4": RemovePizzeria(context); break;
+                    case "0": running = false; break;
+                }
             }
         }
     }
 
-    // --- LEVEL 1: NETWORK MANAGEMENT ---
+    // NETWORK MANAGEMENT
 
-    static void CreatePizzeria()
+    static void CreatePizzeria(ApplicationDbContext context)
     {
         Console.Clear();
         Console.WriteLine("--- CREATE NEW PIZZERIA ---");
         Console.Write("Enter Pizzeria Name: ");
         string name = Console.ReadLine();
-
-        // Basic validation so we don't add empty names
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            Console.WriteLine("Name cannot be empty.");
-            Pause();
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(name)) return;
 
         Console.Write("Enter Address: ");
         string address = Console.ReadLine();
 
         Pizzeria p = new Pizzeria(name, address);
-        network.AddPizzeria(p);
+
+        context.Pizzerias.Add(p);
+        context.SaveChanges();
+
+        Console.WriteLine("Pizzeria saved to Database!");
         Pause();
     }
 
-    static void RemovePizzeria()
+    static void ViewAll(ApplicationDbContext context)
     {
         Console.Clear();
-        // 1. Check if empty
-        if (network.PizzeriasList.Count == 0)
-        {
-            Console.WriteLine("Network is empty. Add a pizzeria first.");
-            Pause();
-            return;
-        }
+        Console.WriteLine("--- NETWORK OVERVIEW ---");
 
-        // 2. Show options
+        var pizzerias = context.Pizzerias
+            .Include(p => p.Workers)
+            .Include(p => p.Orders)
+            .Include(p => p.Menu).ThenInclude(m => m.AvailableItems)
+            .ToList();
+
+        if (pizzerias.Count == 0) Console.WriteLine("Database is empty.");
+        else
+            foreach (var p in pizzerias) Console.WriteLine(p.GetInfo());
+
+        Pause();
+    }
+
+    static void RemovePizzeria(ApplicationDbContext context)
+    {
+        Console.Clear();
+        var list = context.Pizzerias.ToList();
+
+        if (list.Count == 0) { Console.WriteLine("Database is empty."); Pause(); return; }
+
         Console.WriteLine("--- REMOVE PIZZERIA ---");
-        Console.WriteLine("Available Pizzerias:");
-        foreach (var p in network.PizzeriasList)
-        {
-            Console.WriteLine($" - {p.Name}");
-        }
+        foreach (var p in list) Console.WriteLine($" - {p.Name}");
 
         Console.Write("\nEnter name of Pizzeria to remove: ");
         string name = Console.ReadLine();
-        network.RemovePizzeria(name);
+
+        var toRemove = context.Pizzerias.FirstOrDefault(p => p.Name == name);
+        if (toRemove != null)
+        {
+            context.Pizzerias.Remove(toRemove);
+            context.SaveChanges();
+            Console.WriteLine("Deleted.");
+        }
+        else Console.WriteLine("Not found.");
+
         Pause();
     }
 
-    static void SelectPizzeria()
+    static void SelectPizzeria(ApplicationDbContext context)
     {
         Console.Clear();
-        // 1. Check if empty
-        if (network.PizzeriasList.Count == 0)
-        {
-            Console.WriteLine("Network is empty. Add a pizzeria first.");
-            Pause();
-            return;
-        }
-
-        // 2. Show options
         Console.WriteLine("--- SELECT PIZZERIA ---");
-        Console.WriteLine("Available Pizzerias:");
-        foreach (var pizzeria in network.PizzeriasList)
-        {
-            Console.WriteLine($" - {pizzeria.Name}");
-        }
+        var list = context.Pizzerias.ToList();
+        foreach (var pizzeria in list) Console.WriteLine($" - {pizzeria.Name}");
 
         Console.Write("\nEnter Pizzeria Name to manage: ");
         string name = Console.ReadLine();
 
-        Pizzeria p = network.GetPizzeria(name);
-        if (p == null)
-        {
-            Console.WriteLine("Pizzeria not found!");
-            Pause();
-        }
-        else
-        {
-            ManageSpecificPizzeria(p);
-        }
+        // Load everything for the selected Pizzeria
+        var p = context.Pizzerias
+            .Include(x => x.Menu).ThenInclude(m => m.AvailableItems)
+            .Include(x => x.Workers)
+            .Include(x => x.Orders).ThenInclude(o => o.Items)
+            .Include(x => x.Orders).ThenInclude(o => o.Client)
+            .FirstOrDefault(x => x.Name == name);
+
+        if (p == null) { Console.WriteLine("Pizzeria not found!"); Pause(); }
+        else ManageSpecificPizzeria(p, context);
     }
 
-    // --- LEVEL 2: SPECIFIC PIZZERIA MANAGEMENT ---
+    // SPECIFIC PIZZERIA MANAGEMENT
 
-    static void ManageSpecificPizzeria(Pizzeria p)
+    static void ManageSpecificPizzeria(Pizzeria p, ApplicationDbContext context)
     {
         bool inMenu = true;
         while (inMenu)
         {
             Console.Clear();
             Console.WriteLine($"=== MANAGING: {p.Name.ToUpper()} ===");
-            Console.WriteLine($"Address: {p.Address}");
-            Console.WriteLine("-----------------------------");
-            Console.WriteLine("1. Staff Management (Hire/Fire)");
-            Console.WriteLine("2. Menu Management (Add/Remove items)");
-            Console.WriteLine("3. Order System (Place/View Orders)");
-            Console.WriteLine("4. View Pizzeria Statistics");
-            Console.WriteLine("0. Back to Main Network");
+            Console.WriteLine("1. Staff Management");
+            Console.WriteLine("2. Menu Management");
+            Console.WriteLine("3. Order System");
+            Console.WriteLine("4. View Stats");
+            Console.WriteLine("0. Back");
             Console.Write("\nOption: ");
 
             switch (Console.ReadLine())
             {
-                case "1":
-                    ManageStaff(p);
-                    break;
-                case "2":
-                    ManageMenu(p);
-                    break;
-                case "3":
-                    ManageOrders(p);
-                    break;
-                case "4":
-                    Console.Clear();
-                    Console.WriteLine(p.GetInfo());
-                    Pause();
-                    break;
-                case "0":
-                    inMenu = false;
-                    break;
+                case "1": ManageStaff(p, context); break;
+                case "2": ManageMenu(p, context); break;
+                case "3": ManageOrders(p, context); break;
+                case "4": Console.Clear(); Console.WriteLine(p.GetInfo()); Pause(); break;
+                case "0": inMenu = false; break;
             }
         }
     }
 
-    // --- SUB-MENUS ---
-
-    static void ManageStaff(Pizzeria p)
+    static void ManageStaff(Pizzeria p, ApplicationDbContext context)
     {
         Console.Clear();
-        Console.WriteLine($"--- STAFF MANAGEMENT ({p.Name}) ---");
         Console.WriteLine("1. Hire Kitchen Worker");
         Console.WriteLine("2. Hire Hall Worker");
-        Console.WriteLine("3. List All Staff");
+        Console.WriteLine("3. List Staff");
         Console.WriteLine("0. Back");
-        Console.Write("Option: ");
 
         string choice = Console.ReadLine();
         if (choice == "0") return;
-
         if (choice == "3")
         {
-            Console.WriteLine("\n--- Current Staff ---");
-            if (p.Workers.Count == 0) Console.WriteLine("(No staff hired yet)");
-
-            foreach (var w in p.Workers)
-                Console.WriteLine(w.GetInfo());
-
-            Pause();
-            return;
+            foreach (var w in p.Workers) Console.WriteLine(w.GetInfo());
+            Pause(); return;
         }
 
-        // Common inputs for hiring
         Console.Write("First Name: "); string fn = Console.ReadLine();
         Console.Write("Last Name: "); string ln = Console.ReadLine();
-
         Console.Write("Salary: ");
-        if (!decimal.TryParse(Console.ReadLine(), out decimal salary))
-        {
-            Console.WriteLine("Invalid salary.");
-            Pause();
-            return;
-        }
+        if (!decimal.TryParse(Console.ReadLine(), out decimal salary)) return;
 
         if (choice == "1")
         {
-            Console.Write("Kitchen Station (e.g., Oven, Prep): ");
-            string station = Console.ReadLine();
-            p.AddWorker(new KitchenWorker(fn, ln, salary, station));
-            Console.WriteLine("Chef hired!");
+            Console.Write("Station: ");
+            p.AddWorker(new KitchenWorker(fn, ln, salary, Console.ReadLine()));
         }
         else if (choice == "2")
         {
             p.AddWorker(new HallWorker(fn, ln, salary));
-            Console.WriteLine("Waiter hired!");
         }
+
+        context.SaveChanges();
+        Console.WriteLine("Staff hired and saved.");
         Pause();
     }
 
-    static void ManageMenu(Pizzeria p)
+    static void ManageMenu(Pizzeria p, ApplicationDbContext context)
     {
         Console.Clear();
-        Console.WriteLine($"--- MENU MANAGEMENT ({p.Name}) ---");
         Console.WriteLine("1. Add Item");
         Console.WriteLine("2. Remove Item");
         Console.WriteLine("3. View Menu");
         Console.WriteLine("0. Back");
-        Console.Write("Option: ");
 
         string choice = Console.ReadLine();
         if (choice == "0") return;
-
-        if (choice == "3")
-        {
-            Console.WriteLine("\n" + p.Menu.GetInfo());
-            Pause();
-            return;
-        }
+        if (choice == "3") { Console.WriteLine(p.Menu.GetInfo()); Pause(); return; }
 
         if (choice == "1")
         {
-            Console.Write("Item ID (number): ");
-            int.TryParse(Console.ReadLine(), out int id);
-
-            Console.Write("Name: ");
-            string name = Console.ReadLine();
-
-            Console.Write("Price: ");
-            decimal.TryParse(Console.ReadLine(), out decimal price);
-
-            Console.Write("Description: ");
-            string desc = Console.ReadLine();
-
-            p.Menu.AddItem(new MenuItem(id, name, price, desc));
-            Console.WriteLine("Item added!");
+            Console.Write("Name: "); string name = Console.ReadLine();
+            Console.Write("Price: "); decimal.TryParse(Console.ReadLine(), out decimal price);
+            Console.Write("Desc: "); string desc = Console.ReadLine();
+            p.Menu.AddItem(new MenuItem(0, name, price, desc));
+            context.SaveChanges();
+            Console.WriteLine("Saved.");
         }
         else if (choice == "2")
         {
-            // List items so user knows what to remove
-            Console.WriteLine("\nAvailable Items:");
-            foreach (var item in p.Menu.AvailableItems) Console.WriteLine($"- {item.Name}");
-
-            Console.Write("\nName of item to remove: ");
-            string name = Console.ReadLine();
-            if (p.Menu.RemoveItem(name)) Console.WriteLine("Removed.");
-            else Console.WriteLine("Item not found.");
+            Console.Write("Name to remove: ");
+            if (p.Menu.RemoveItem(Console.ReadLine())) { context.SaveChanges(); Console.WriteLine("Removed."); }
+            else Console.WriteLine("Not found.");
         }
         Pause();
     }
 
-    static void ManageOrders(Pizzeria p)
+    static void ManageOrders(Pizzeria p, ApplicationDbContext context)
     {
         Console.Clear();
-        Console.WriteLine($"--- ORDER SYSTEM ({p.Name}) ---");
         Console.WriteLine("1. New Order");
-        Console.WriteLine("2. View All Orders");
+        Console.WriteLine("2. View Orders");
         Console.WriteLine("0. Back");
-        Console.Write("Option: ");
 
         string choice = Console.ReadLine();
-        if (choice == "0") return;
-
         if (choice == "2")
         {
-            Console.WriteLine("\n--- Order History ---");
-            if (p.Orders.Count == 0) Console.WriteLine("(No orders yet)");
-
             foreach (var o in p.Orders) Console.WriteLine(o.GetInfo());
-            Pause();
-            return;
+            Pause(); return;
         }
 
         if (choice == "1")
         {
-            if (p.Menu.AvailableItems.Count == 0)
-            {
-                Console.WriteLine("Menu is empty! Add items to menu before ordering.");
-                Pause();
-                return;
-            }
+            if (p.Menu.AvailableItems.Count == 0) { Console.WriteLine("Menu empty."); Pause(); return; }
 
-            Console.WriteLine("\nClient Details:");
-            Console.Write("Name: "); string cName = Console.ReadLine();
+            Console.Write("Client Name: "); string cName = Console.ReadLine();
             Console.Write("Phone: "); string cPhone = Console.ReadLine();
             Client tempClient = new Client(0, cName, "", cPhone);
 
-            // Display Menu so they know what to order
             Console.WriteLine("\n" + p.Menu.GetInfo());
-
             List<string> itemNames = new List<string>();
-            Console.WriteLine("Type item names to add (type 'done' to finish):");
 
+            Console.WriteLine("Enter item names (type 'done' to finish):");
             while (true)
             {
-                Console.Write("Item Name: ");
+                Console.Write("- ");
                 string item = Console.ReadLine();
-                if (item.ToLower() == "done") break;
-
-                // Visual feedback if item exists
+                if (item == "done") break;
                 if (p.Menu.FindItem(item) != null) itemNames.Add(item);
-                else Console.WriteLine($"'{item}' is not on the menu.");
+                else Console.WriteLine("Not in menu.");
             }
 
             if (itemNames.Count > 0)
             {
-                var order = p.PlaceOrder(tempClient, itemNames);
-                Console.WriteLine("Order Placed Successfully!");
-                Console.WriteLine($"Total: {order.Items.Sum(i => i.Price)} zł");
-            }
-            else
-            {
-                Console.WriteLine("Order cancelled (no valid items).");
+                p.PlaceOrder(tempClient, itemNames);
+                context.SaveChanges();
+                Console.WriteLine("Order saved!");
             }
         }
         Pause();
     }
 
-    static void Pause()
-    {
-        Console.WriteLine("\nPress any key to continue...");
-        Console.ReadKey();
-    }
+    static void Pause() { Console.WriteLine("\nPress any key..."); Console.ReadKey(); }
 }

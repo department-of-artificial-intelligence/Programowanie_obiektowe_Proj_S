@@ -3,20 +3,19 @@ using Project.Model;
 
 public class Client : Person, IShowInfo
 {
-	public int ClientId { get; set; }
 	public string? PhoneNumber { get; set; }
 
 	public Client() : this(0, string.Empty, string.Empty, string.Empty) { }
-	public Client(int clientId, string firstName, string lastName, string phoneNumber) : base(firstName, lastName)
+	public Client(int id, string firstName, string lastName, string phoneNumber) : base(firstName, lastName)
 	{
-		ClientId = clientId;
+		Id = id;
 		PhoneNumber = phoneNumber;
 	}
 
 	public string GetInfo()
 	{
         return $@"---- Client ----
-ID: {ClientId}
+ID: {Id}
 Name: {GetFullName()}
 Phone: {PhoneNumber}
 -------------------";
