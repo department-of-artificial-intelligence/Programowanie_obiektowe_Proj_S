@@ -16,7 +16,6 @@ public class PerformanceService
     public List<Performance> GetPerformances()
     {
         return _context.Performances
-            .AsSplitQuery()
             .Include(p => p.Play)
             .ToList();
     }
