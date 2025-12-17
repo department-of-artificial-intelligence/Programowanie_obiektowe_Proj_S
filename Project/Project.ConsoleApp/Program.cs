@@ -46,4 +46,38 @@ if (context != null)
     driver3.AssignVehicle(van1);
 
     context.SaveChanges();
+
+    Order order1 = new Order(0, "Elektronika do hurtowni", "Warszawa, ul. Prosta 1", "Kraków, ul. Zawiła 10");
+    Order order2 = new Order(0, "Materiały budowlane", "Gdańsk, Portowa 5", "Wrocław, Fabryczna 2");
+
+    context.Orders.Add(order1);
+    context.Orders.Add(order2);
+    context.SaveChanges();
+
+    try
+    {
+        Console.WriteLine("\n--- Proces przypisywania zamówień ---");
+        order1.AssignOrder(driver1);
+        order2.AssignOrder(driver2);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Błąd podczas przypisywania: {ex.Message}");
+    }
+
+    context.SaveChanges();
+
+    Console.WriteLine("\n--- Stan Bazy Danych ---");
+    var allDrivers = context.Drivers.Include(d => d.AssignedVehicle).ToList();
+    foreach (var d in allDrivers)
+    {
+        Console.WriteLine(d.ToString());
+    }
+
+    var allOrders = context.Orders.Include(o => o.AssignedDriver).Include(o => o.AssignedVehicle).ToList();
+    foreach (var o in allOrders)
+    {
+        string driverName = o.AssignedDriver != null ? $"{o.AssignedDriver.FirstName} {o.AssignedDriver.LastName}" : "Brak";
+        Console.WriteLine($"{o} | Status: {o.Status} | Kierowca: {driverName}");
+    }
 }

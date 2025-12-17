@@ -18,7 +18,7 @@ namespace Project.Model
 
         public Vehicle? AssignedVehicle { get; set; }
         
-        public bool IsAvailable => Status == DriverStatus.Available;
+        public bool IsAvailable => Status == DriverStatus.Available || Status == DriverStatus.Assigned;
 
         public Driver() { }
         public Driver(int id, string firstName, string lastName, string licenseNumber)

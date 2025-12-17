@@ -37,15 +37,23 @@ namespace Project.Model
                     return;
                 }
 
-                if (!concreteDriver.IsAvailable || concreteDriver.AssignedVehicle == null)
+                if (concreteDriver.AssignedVehicle == null)
                 {
-                    Console.WriteLine($"ERROR - Driver: {concreteDriver.FirstName} {concreteDriver.LastName} is not available now.");
+                    Console.WriteLine($"ERROR - Driver {concreteDriver.FirstName} cannot take order without a vehicle!");
+                    return;
+                }
+
+                if (!concreteDriver.IsAvailable)
+                {
+                    Console.WriteLine($"ERROR - Driver {concreteDriver.FirstName} is busy or unavailable.");
                     return;
                 }
 
                 AssignedDriver = concreteDriver;
                 AssignedVehicle = concreteDriver.AssignedVehicle;
                 Status = OrderStatus.InProgress;
+
+                concreteDriver.AssignOrder(this);
                 Console.WriteLine($"Order {Id} has been assigned to driver {concreteDriver.FirstName} {concreteDriver.LastName} and is now in progress.");
             }
             else
