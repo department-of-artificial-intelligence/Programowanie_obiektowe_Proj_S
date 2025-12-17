@@ -1,6 +1,6 @@
 namespace Project.Configuration
 {
-    public class ApplicationConfiguration
+    public class DatabaseConfiguration
     {
         public string ConnectionString { get; set; } = string.Empty;
     }

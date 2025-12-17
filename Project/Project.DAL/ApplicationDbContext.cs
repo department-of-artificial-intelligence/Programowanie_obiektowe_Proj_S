@@ -18,5 +18,11 @@ namespace Project.DAL
         public DbSet<RoomHistoricResident> RoomHistoricResidents { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public async Task Prepare()
+        {
+            await this.Database.MigrateAsync();
+            await this.Database.EnsureCreatedAsync();
+        }
     }
 }

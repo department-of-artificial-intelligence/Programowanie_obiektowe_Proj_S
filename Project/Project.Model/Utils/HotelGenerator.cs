@@ -1,6 +1,4 @@
-using Project.Model;
-
-namespace Project.ConsoleApp
+namespace Project.Model.Utils
 {
     public class HotelGenerator
     {

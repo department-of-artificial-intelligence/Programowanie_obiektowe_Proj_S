@@ -13,11 +13,11 @@ namespace Project.DAL
             this._action = action;
         }
 
-        public ApplicationDbContextFactory(ApplicationConfiguration configuration)
+        public ApplicationDbContextFactory(DatabaseConfiguration configuration)
             : this(x => x.UseSqlServer(configuration.ConnectionString)) { }
 
         public ApplicationDbContextFactory()
-            : this(new ApplicationConfigurationLoader<ApplicationConfiguration>().LoadConfiguration()) { }
+            : this(new ApplicationConfigurationLoader<DatabaseConfiguration>(sectionName: "Database").LoadConfiguration()) { }
 
         public ApplicationDbContext CreateDbContext(string[] args)
         {
