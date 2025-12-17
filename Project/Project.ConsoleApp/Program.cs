@@ -129,6 +129,24 @@ void ViewMenu1()
                 Console.WriteLine("Lista przedstawień bez sali:");
                 Console.WriteLine(performances.ListToString("Brak przedstawień", '-'));
                 break;
+            case "8": // wyświetl raport statusów przedstawień
+                Console.Write("Podaj rok: ");
+                if (!int.TryParse(ConsoleHelper.UserInput(), out int year))
+                {
+                    Console.WriteLine("Nieprawidłowy rok");
+                    break;
+                }
+                
+                performances = performanceService.GetPerformances();
+                var reports = performances.GetMonthlyStatusReportsByYear(year);
+                
+                Console.WriteLine($"Raport statusów przedstawień dla roku {year}:");
+                Console.WriteLine(reports.ListToString("Brak raportów", '-'));
+                //foreach (var report in reports)
+                //{
+                //    Console.WriteLine(report.ToString());
+                //}
+                break;
             case "x":
                 return;
             default:
@@ -1324,60 +1342,80 @@ void Initialize()
             context.SaveChanges();
 
             // 3. INFRASTRUKTURA
-
-            // UTWORZENIE SIECI (ROOT)
             TheaterNetwork network = new("Polskie Teatry Narodowe");
             context.Add(network);
             context.SaveChanges();
 
-            // THEATERS (tworzone przez network.CreateTheater)
             Theater? t1 = network.CreateTheater("Teatr Narodowy", "Polska", "Warszawa", "Plac Teatralny 1");
             Theater? t2 = network.CreateTheater("Teatr Stary", "Polska", "Kraków", "Rynek Główny 32");
             context.SaveChanges();
 
-            // HALLS (tworzone przez t.CreateHall)
             Hall? h1 = t1?.CreateHall("Duża Sala");
             Hall? h2 = t1?.CreateHall("Kameralna");
             Hall? h3 = t2?.CreateHall("Scena Główna");
             context.SaveChanges();
 
-            // SEATS (tworzone przez h.CreateSeats)
             h1?.CreateSeats(6, 10);
             h2?.CreateSeats(4, 6);
             h3?.CreateSeats(8, 12);
             context.SaveChanges();
 
-            // PERFORMANCES (tworzone przez h.AddPerformance)
+            // 4. PRZEDSTAWIENIA
             var now = DateTime.Now;
+
+            // przyszłe
             Performance pf1 = new(p1, now.AddDays(1), now.AddDays(1).AddHours(2));
             h1?.AddPerformance(pf1);
+
             Performance pf2 = new(p2, now.AddDays(2), now.AddDays(2).AddHours(2));
             h1?.AddPerformance(pf2);
+
             Performance pf3 = new(p3, now.AddDays(3), now.AddDays(3).AddHours(3));
             h3?.AddPerformance(pf3);
+
             Performance pf4 = new(p4, now.AddDays(4), now.AddDays(4).AddHours(2));
             h2?.AddPerformance(pf4);
+
             Performance pf5 = new(p5, now.AddDays(5), now.AddDays(5).AddHours(2));
             h3?.AddPerformance(pf5);
 
+            // historyczne
+            var oneMonthAgo = now.AddMonths(-1);
+            var twoMonthsAgo = now.AddMonths(-2);
+
+            Performance pf6 = new(p1, oneMonthAgo, oneMonthAgo.AddHours(2));
+            h1?.AddPerformance(pf6);
+
+            Performance pf7 = new(p2, oneMonthAgo.AddDays(3), oneMonthAgo.AddDays(3).AddHours(2));
+            h2?.AddPerformance(pf7);
+
+            Performance pf8 = new(p3, twoMonthsAgo, twoMonthsAgo.AddHours(3));
+            h3?.AddPerformance(pf8);
+
+            Performance pf9 = new(p4, twoMonthsAgo.AddDays(5), twoMonthsAgo.AddDays(5).AddHours(2));
+            h1?.AddPerformance(pf9);
+
             context.SaveChanges();
 
-            // 4. BILETY I TRANSAKCJE
-
-            // TICKETS (tworzone przez pf.CreateTicketForEverySeat)
+            // 5. BILETY
             pf1.CreateTicketForEverySeat(120);
             pf2.CreateTicketForEverySeat(110);
             pf3.CreateTicketForEverySeat(100);
             pf4.CreateTicketForEverySeat(90);
             pf5.CreateTicketForEverySeat(130);
 
+            pf6.CreateTicketForEverySeat(100);
+            pf7.CreateTicketForEverySeat(95);
+            pf8.CreateTicketForEverySeat(90);
+            pf9.CreateTicketForEverySeat(85);
+
+            // 6. KLIENCI I TRANSAKCJE
             Customer c1 = new() { FirstName = "Michał", LastName = "Kaczmarek" };
             Customer c2 = new() { FirstName = "Ewa", LastName = "Kamińska" };
             Customer c3 = new() { FirstName = "Paweł", LastName = "Dąbrowski" };
             context.Customers.AddRange(c1, c2, c3);
             context.SaveChanges();
 
-            // OPERACJE NA BILETACH
             var ticketList = context.Tickets.OrderBy(t => t.TicketId).ToList();
 
             c1.ReserveTicket(ticketList.First());
@@ -1391,4 +1429,5 @@ void Initialize()
         }
     }
 }
+
 /**/

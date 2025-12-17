@@ -13,6 +13,14 @@ public class PerformanceService
         _context = context;
     }
 
+    public List<Performance> GetPerformances()
+    {
+        return _context.Performances
+            .AsSplitQuery()
+            .Include(p => p.Play)
+            .ToList();
+    }
+
     public List<Performance> GetPerformancesWithStatus(PerformanceStatus status)
     {
         return _context.Performances

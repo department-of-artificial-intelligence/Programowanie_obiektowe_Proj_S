@@ -16,7 +16,7 @@ internal static class DisplayMenu
     internal static void View1()
     {
         Console.WriteLine();
-        Console.WriteLine("============== View Menu 1 ==============");
+        Console.WriteLine("================ View Menu 1 ================");
         Console.WriteLine("[1] - wyświetl listę teatrów");
         Console.WriteLine("[2] - wyświetl listę autorów");
         Console.WriteLine("[3] - wyświetl listę reżyserów");
@@ -24,8 +24,10 @@ internal static class DisplayMenu
         Console.WriteLine("[5] - wyświetl listę klientów");
         Console.WriteLine("[6] - wyświetl listę sztuk");
         Console.WriteLine("[7] - wyświetl listę przedstawień bez sali");
+        Console.WriteLine("[8] - wyświetl liczbę statusów przedstawień\n" +
+                          "      dla każdego miesiąca podanego roku");
         Console.WriteLine("[x] - cofnij");
-        Console.WriteLine("-----------------------------------------");
+        Console.WriteLine("---------------------------------------------");
     }
 
     internal static void View1_1()
