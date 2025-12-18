@@ -9,7 +9,7 @@ namespace Project.Model
     public class Festival : Event
     {
         public string Name { get; set; }
-        public Artist[] Artists {  get; set; }
+        public IList<Artist> Artists {  get; set; }
 
         public override string ToString()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.En
 
 namespace Project.Model
 {
@@ -13,7 +14,7 @@ namespace Project.Model
         public string LastName { get; set; }
         public int Age { get; set; }
 
-        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public IList<Ticket> Tickets { get; set; }
 
         public Person()
         {
