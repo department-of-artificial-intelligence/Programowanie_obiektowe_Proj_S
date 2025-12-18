@@ -38,3 +38,4 @@ Person p1 = new Person() { FirstName = "Jan", LastName = "Kowalski", Age = 40, T
 Console.WriteLine(p1);
 
 Console.WriteLine(c1.TicketsSold);
+//ss
