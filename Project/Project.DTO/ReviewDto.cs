@@ -3,6 +3,8 @@
 public class ReviewDto
 {
     public int Id { get; set; }
+    public int UserId { get; set; }
+    public int MovieId { get; set; }
     public UserDto? User { get; set; }
     public MovieDto? Movie { get; set; }
     public float Rate { get; set; }

@@ -18,16 +18,26 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.HashPassword, opt => opt.MapFrom(src => src.PasswordHash));
 
         // Movie mappings
-        CreateMap<Movie, MovieDto>();
-        CreateMap<MovieDto, Movie>();
+        CreateMap<Movie, MovieDto>()
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.Author.Id));
+        CreateMap<MovieDto, Movie>()
+            .ForMember(dest => dest.Author, opt => opt.Ignore());
 
         // Review mappings
-        CreateMap<Review, ReviewDto>();
-        CreateMap<ReviewDto, Review>();
+        CreateMap<Review, ReviewDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
+            .ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.Movie.Id));
+        CreateMap<ReviewDto, Review>()
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.Movie, opt => opt.Ignore());
 
         // MovieMark mappings
-        CreateMap<MovieMark, MovieMarkDto>();
-        CreateMap<MovieMarkDto, MovieMark>();
+        CreateMap<MovieMark, MovieMarkDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
+            .ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.Movie.Id));
+        CreateMap<MovieMarkDto, MovieMark>()
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.Movie, opt => opt.Ignore());
     }
 }
 

@@ -68,5 +68,50 @@ public class MovieMarkService : BaseService<MovieMark, int, MovieMarkDto>, IMovi
         
         return movieMark == null ? null : _mapper.Map<MovieMarkDto>(movieMark);
     }
+
+    public override async Task<MovieMarkDto> CreateAsync(MovieMarkDto dto)
+    {
+        var movieMark = _mapper.Map<MovieMark>(dto);
+        
+        // Load User and Movie from database using their IDs
+        var user = await _context.Set<User>().FindAsync(dto.UserId);
+        if (user == null)
+            throw new InvalidOperationException($"User with ID {dto.UserId} not found.");
+        
+        var movie = await _context.Set<Movie>().Include(m => m.Author).FirstOrDefaultAsync(m => m.Id == dto.MovieId);
+        if (movie == null)
+            throw new InvalidOperationException($"Movie with ID {dto.MovieId} not found.");
+        
+        movieMark.User = user;
+        movieMark.Movie = movie;
+        movieMark.CreatedAt = DateTime.UtcNow;
+        movieMark.UpdatedAt = DateTime.UtcNow;
+        
+        await _dbSet.AddAsync(movieMark);
+        await _context.SaveChangesAsync();
+        
+        return _mapper.Map<MovieMarkDto>(movieMark);
+    }
+
+    public override async Task<MovieMarkDto?> UpdateAsync(int id, MovieMarkDto dto)
+    {
+        var movieMark = await _dbSet
+            .Include(mm => mm.User)
+            .Include(mm => mm.Movie)
+            .ThenInclude(m => m.Author)
+            .FirstOrDefaultAsync(mm => mm.Id == id);
+        
+        if (movieMark == null)
+            return null;
+
+        // Update the type
+        movieMark.Type = dto.Type;
+        movieMark.UpdatedAt = DateTime.UtcNow;
+        
+        _context.Entry(movieMark).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+        
+        return _mapper.Map<MovieMarkDto>(movieMark);
+    }
 }
 

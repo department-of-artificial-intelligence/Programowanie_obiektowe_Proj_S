@@ -586,32 +586,38 @@ namespace Project.ConsoleApp
                 Console.WriteLine($"{(int)genres[i]}. {genres[i]}");
             }
             Console.Write("Select Genre Number: ");
-            
-            Console.Write("\nEnter Director (Author) ID: ");
-            
-            if (!string.IsNullOrWhiteSpace(title) 
-                && int.TryParse(Console.ReadLine(), out int genreNum) 
-                && Enum.IsDefined(typeof(Genre), genreNum)
-                && int.TryParse(Console.ReadLine(), out int authorId))
+            if (!int.TryParse(Console.ReadLine(), out int genreNum) || !Enum.IsDefined(typeof(Genre), genreNum))
             {
-                var author = await _authorService!.GetByIdAsync(authorId);
-                if (author != null)
-                {
-                    var movieDto = new MovieDto
-                    {
-                        Title = title,
-                        Description = description,
-                        TagLine = tagline,
-                        Genre = (Genre)genreNum,
-                        Author = author
-                    };
+                Console.WriteLine("\n✗ Invalid genre.");
+                return;
+            }
+            
+            Console.Write("Enter Director (Author) ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int authorId))
+            {
+                Console.WriteLine("\n✗ Invalid Author ID.");
+                return;
+            }
 
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                var movieDto = new MovieDto
+                {
+                    Title = title,
+                    Description = description,
+                    TagLine = tagline,
+                    Genre = (Genre)genreNum,
+                    AuthorId = authorId
+                };
+
+                try
+                {
                     var created = await _movieService!.CreateAsync(movieDto);
                     Console.WriteLine($"\n✓ Movie created successfully! ID: {created.Id}");
                 }
-                else
+                catch (InvalidOperationException ex)
                 {
-                    Console.WriteLine("\n✗ Author not found.");
+                    Console.WriteLine($"\n✗ Error: {ex.Message}");
                 }
             }
             else
@@ -788,25 +794,22 @@ namespace Project.ConsoleApp
             Console.Write("Comment: ");
             var comment = Console.ReadLine();
 
-            var user = await _userService!.GetByIdAsync(userId);
-            var movie = await _movieService!.GetByIdAsync(movieId);
-
-            if (user != null && movie != null)
+            var reviewDto = new ReviewDto
             {
-                var reviewDto = new ReviewDto
-                {
-                    User = user,
-                    Movie = movie,
-                    Rate = rating,
-                    Comment = comment ?? ""
-                };
+                UserId = userId,
+                MovieId = movieId,
+                Rate = rating,
+                Comment = comment ?? ""
+            };
 
+            try
+            {
                 var created = await _reviewService!.CreateAsync(reviewDto);
                 Console.WriteLine($"\n✓ Review created successfully! ID: {created.Id}");
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine("\n✗ User or Movie not found.");
+                Console.WriteLine($"\n✗ Error: {ex.Message}");
             }
         }
 
@@ -1004,24 +1007,21 @@ namespace Project.ConsoleApp
                 return;
             }
 
-            var user = await _userService!.GetByIdAsync(userId);
-            var movie = await _movieService!.GetByIdAsync(movieId);
-
-            if (user != null && movie != null)
+            var markDto = new MovieMarkDto
             {
-                var markDto = new MovieMarkDto
-                {
-                    User = user,
-                    Movie = movie,
-                    Type = (MovieMarkType)typeNum
-                };
+                UserId = userId,
+                MovieId = movieId,
+                Type = (MovieMarkType)typeNum
+            };
 
+            try
+            {
                 var created = await _movieMarkService!.CreateAsync(markDto);
                 Console.WriteLine($"\n✓ Movie mark created successfully! ID: {created.Id}");
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine("\n✗ User or Movie not found.");
+                Console.WriteLine($"\n✗ Error: {ex.Message}");
             }
         }
 

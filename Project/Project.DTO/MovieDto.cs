@@ -9,6 +9,7 @@ public class MovieDto
     public string? Description { get; set; }
     public string? TagLine { get; set; }
     public Genre Genre { get; set; }
+    public int AuthorId { get; set; }
     public AuthorDto? Author { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

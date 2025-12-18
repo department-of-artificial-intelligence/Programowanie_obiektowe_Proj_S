@@ -59,5 +59,54 @@ public class MovieService : BaseService<Movie, int, MovieDto>, IMovieService
         
         return _mapper.Map<IEnumerable<MovieDto>>(movies);
     }
+
+    public override async Task<MovieDto> CreateAsync(MovieDto dto)
+    {
+        var movie = _mapper.Map<Movie>(dto);
+        
+        // Load the Author from the database using AuthorId
+        var author = await _context.Set<Author>().FindAsync(dto.AuthorId);
+        if (author == null)
+            throw new InvalidOperationException($"Author with ID {dto.AuthorId} not found.");
+        
+        movie.Author = author;
+        movie.CreatedAt = DateTime.UtcNow;
+        movie.UpdatedAt = DateTime.UtcNow;
+        
+        await _dbSet.AddAsync(movie);
+        await _context.SaveChangesAsync();
+        
+        return _mapper.Map<MovieDto>(movie);
+    }
+
+    public override async Task<MovieDto?> UpdateAsync(int id, MovieDto dto)
+    {
+        var movie = await _dbSet
+            .Include(m => m.Author)
+            .FirstOrDefaultAsync(m => m.Id == id);
+        
+        if (movie == null)
+            return null;
+
+        // Map the DTO to the existing entity
+        _mapper.Map(dto, movie);
+        
+        // If AuthorId changed, load the new Author
+        if (movie.Author.Id != dto.AuthorId)
+        {
+            var author = await _context.Set<Author>().FindAsync(dto.AuthorId);
+            if (author == null)
+                throw new InvalidOperationException($"Author with ID {dto.AuthorId} not found.");
+            
+            movie.Author = author;
+        }
+        
+        movie.UpdatedAt = DateTime.UtcNow;
+        
+        _context.Entry(movie).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+        
+        return _mapper.Map<MovieDto>(movie);
+    }
 }
 
