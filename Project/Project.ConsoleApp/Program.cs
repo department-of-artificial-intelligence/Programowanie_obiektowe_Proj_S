@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Project.DAL;
 using Project.Model;
 using Project.Logic;
+using Project.Service;
 
 namespace Project
 {
@@ -114,4 +115,4 @@ namespace Project
         }
     }
 }
->>>>>>>>> Temporary merge branch 2
+

@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
     <ProjectReference Include="..\Project.Logic\Project.Logic.csproj" />
     <ProjectReference Include="..\Project.Model\Project.Model.csproj" />
+    <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
