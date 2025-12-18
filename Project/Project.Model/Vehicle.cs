@@ -3,7 +3,7 @@ using Project.Model;
 using System.ComponentModel.DataAnnotations.Schema;
 public abstract class Vehicle : IVehicle
 {
-    public int Id { get; set; } = int.MinValue;
+    public int Id { get; set; }
     public string VinNumber { get; set; } = string.Empty;
     public int ProductionYear { get; set; } = int.MinValue;
     public float EngineSize { get; set; } = float.MinValue;

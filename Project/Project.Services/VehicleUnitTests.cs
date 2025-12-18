@@ -1,5 +1,6 @@
 ﻿using Project.Model;
 using Project.Abstractions;
+using Xunit;
 
 namespace Project.Tests
 {
@@ -25,7 +26,7 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void IsAvailableWhenStatusAvailableTest() // Returns True when Status Available
+        public void IsAvailableWhenStatusAvailableTest()
         {
             var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5)
             {
@@ -36,7 +37,7 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void AssignDriverWhenDriverNullTest() // Throws exception when Driver is null
+        public void AssignDriverWhenDriverNullTest()
         {
             var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
 
@@ -44,7 +45,7 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void AssignDriverWhenDriverNotAvailableTest() // Throws exception when Driver is not Available
+        public void AssignDriverWhenDriverNotAvailableTest()
         {
             var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
             var driver = new FakeDriver { Status = DriverStatus.Assigned };
@@ -52,24 +53,26 @@ namespace Project.Tests
             Assert.Throws<InvalidOperationException>(() => v.AssignDriver(driver));
         }
 
-        /*[Fact]
-        public void AssignDriverTest() // Sets Status and Driver
+        [Fact]
+        public void AssignDriverTest()
         {
             var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5);
-            var driver = new FakeDriver();
+            var driver = new Driver(1, "Jan", "Kowalski", "ABC12345");
 
             v.AssignDriver(driver);
 
             Assert.Equal(VehicleStatus.InTransit, v.VStatus);
             Assert.Equal(driver, v.AssignedDriver);
-        }*/
+        }
 
-        /*[Fact]
-        public void MarkAsAvailableTest() // Sets Status and Driver
+        [Fact]
+        public void MarkAsAvailableTest()
         {
+            var driver = new Driver(1, "Jan", "Kowalski", "ABC12345");
+
             var v = new DeliveryVan(1, "V", 2000, 2, 0, "Ford", "M", "R", 5)
             {
-                AssignedDriver = new FakeDriver(),
+                AssignedDriver = driver,
                 VStatus = VehicleStatus.InTransit
             };
 
@@ -77,6 +80,6 @@ namespace Project.Tests
 
             Assert.Null(v.AssignedDriver);
             Assert.Equal(VehicleStatus.Available, v.VStatus);
-        }*/
+        }
     }
 }
