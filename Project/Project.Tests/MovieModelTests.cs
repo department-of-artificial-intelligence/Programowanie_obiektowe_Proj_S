@@ -14,13 +14,6 @@ public class MovieModelTests
     private List<Review> Reviews { get; set; } = new List<Review>();
 
     public MovieModelTests() {
-    
-        // Lists Initialization
-        //Authors = new List<Author>();
-        //Movies = new List<Movie>();
-        //Users = new List<User>();
-        //MovieMarks = new List<MovieMark>();
-        //Reviews = new List<Review>();
 
         // List Initialization with Mock Data
         // TODO: Create Data Initializer with advanced data generation
