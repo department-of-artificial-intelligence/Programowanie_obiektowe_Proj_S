@@ -11,6 +11,7 @@ namespace Project.Model
         public int Id { get; set; }
         public Venue Venue { get; set; }
         public DateTime Date { get; set; }
+        public IList<Ticket> Tickets { get; set; }
 
         public int TicketsSold { get; set; } = 0;
     }

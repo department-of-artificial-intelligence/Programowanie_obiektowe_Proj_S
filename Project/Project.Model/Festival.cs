@@ -10,7 +10,8 @@ namespace Project.Model
     {
         public string Name { get; set; }
         public IList<Artist> Artists {  get; set; }
-
+        
+        public Festival(){}
         public override string ToString()
         {
             return $"{Name} {Date}: {string.Join("/n ",Artists.Select(a => a.ToString()))}, {Venue}";

@@ -23,13 +23,14 @@ namespace Project.Tests
         {
             Concert c1 = new Concert();
             Venue v1 = new Venue();
-            v1.FloorCapacity = 100;
-            v1.SeatsCapacity = 30;
+            v1.Capacity = 130;
+            //v1.FloorCapacity = 100;
+            //v1.SeatsCapacity = 30;
             c1.Venue = v1;
             c1.TicketsSold = 150;
-            int _capacity = v1.SeatsCapacity + v1.SeatsCapacity;
+            //int _capacity = v1.SeatsCapacity + v1.SeatsCapacity;
 
-            Assert.False(_capacity < c1.TicketsSold, "Sprzedano więcej biletów niż jest dostępnych miejsc");
+            Assert.False(v1.Capacity < c1.TicketsSold, "Sprzedano więcej biletów niż jest dostępnych miejsc");
         }
         [Fact]
         public void VenueTest()
