@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Model
 {
@@ -12,36 +10,53 @@ namespace Project.Model
         Rented,
         Maintenance
     }
+
     public class Bicycle
     {
-        public int Id {  get; set; }
+        [Key]
+        public int Id { get; set; }
         public string Model { get; set; }
-        public string Type { get; set; }
-        public int Price { get; set; }
-        public Station? CurrentStation { get; internal set; }
-        public BicycleStatus Status { get; private set; } = BicycleStatus.Available;
-        
+        public BicycleType Type { get; set; }
+        public decimal Price { get; set; }
 
+        public int? BatteryLevel { get; set; } 
+        public int? RangeKm { get; set; }
+
+        public int? CurrentStationId { get; set; }
+
+        
+        [ForeignKey("CurrentStationId")]
+        public virtual Station? CurrentStation { get; set; }
+
+        public int? CustomerId { get; set; }
+        public virtual Customer? Renter { get; set; }
+
+        public BicycleStatus Status { get; private set; } = BicycleStatus.Available;
+
+        
         public void Rent()
         {
             if (Status != BicycleStatus.Available)
             {
-                throw new InvalidOperationException($"Bicycle ID {Id} is not available. Current status: {Status}");
+                throw new InvalidOperationException($"Bike {Id} is not available.");
             }
 
             Status = BicycleStatus.Rented;
             CurrentStation = null;
+            CurrentStationId = null; 
         }
 
+        
         public void Return(Station station)
         {
             Status = BicycleStatus.Available;
-            CurrentStation = station; 
+            CurrentStation = station;
+            CurrentStationId = station.Id; 
         }
 
         public override string ToString()
         {
-            return $"ID: {Id}, {Model} ({Type}) - {Price} EUR/hour";
+            return $"ID: {Id}, {Model} ({Type}) - {Price} PLN/hour [{Status}]";
         }
     }
 }

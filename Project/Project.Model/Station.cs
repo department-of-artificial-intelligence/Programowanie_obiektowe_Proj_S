@@ -1,47 +1,38 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Model
 {
     public class Station
     {
-        public string Location { get; set; }
-        public int Amount { get; set; }
-        private List<Bicycle> bicycles = new List<Bicycle>();
-        public int BicycleCount { get { return bicycles.Count; } }
+        [Key]
+        public int Id { get; set; }
 
-        public Station( string location, int amount)
+        public string Name { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
+        public int Capacity { get; set; }
+
+        public virtual ICollection<Bicycle> Bicycles { get; set; }
+
+        public Station()
         {
-            
-            Location = location;
-            Amount = amount;
+            Bicycles = new List<Bicycle>();
         }
 
-        public bool AddBicycle(Bicycle b)
+        public Station(string name, string city, string address, int capacity)
         {
-
-            if (b == null || bicycles.Count >= this.Amount) return false;
-            foreach (Bicycle bic in bicycles)
-            {
-                if (b.Id == bic.Id) return false;
-            }
-            bicycles.Add(b);
-            b.Return(this);
-            return true;
-        }
-
-        public void RemoveBicycle(Bicycle b)
-        {
-            bicycles.Remove(b);
+            Name = name;
+            City = city;
+            Address = address;
+            Capacity = capacity; 
+            Bicycles = new List<Bicycle>();
         }
 
         public override string ToString()
         {
-            string s = string.Format("Station {0} ({1}/{2} bicycles):", Location, bicycles.Count, Amount);
-            foreach (Bicycle bic in bicycles)
-            {
-                s += "\n- " + bic.ToString();
-            }
-            return s;
+            
+            return $"[{City}, {Address}] Station '{Name}' ({Bicycles?.Count ?? 0}/{Capacity} slots)";
         }
     }
 }
