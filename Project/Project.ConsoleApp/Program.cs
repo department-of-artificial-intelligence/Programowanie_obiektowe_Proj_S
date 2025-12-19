@@ -7,26 +7,32 @@ using Microsoft.Extensions.Hosting;
 using Project.DAL;
 using Project.Model;
 
+
+
+
 namespace Project.ConsoleApp
 {
     class Program
     {
         static void Main(string[] args)
         {
-            IHost host = Host.CreateDefaultBuilder(args)
+            IHost _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddDbContext<ApplicationDbContext>(options =>
-                        options.UseSqlServer(
-                            context.Configuration.GetConnectionString("DefaultConnection")));
+                    var cs = context.Configuration.GetConnectionString("DefaultConnection");
+                    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
                 })
                 .Build();
 
-            using var scope = host.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            db.Database.Migrate();
+            var db = _host.Services.GetService<ApplicationDbContext>();
+            if (db != null)
+            {
+                db.Database.Migrate();
+            }
+
             RunMenu(db);
         }
+
 
         //MENU 
         static void RunMenu(ApplicationDbContext db)
