@@ -10,12 +10,18 @@ namespace Project.ConsoleApp.ApplicationModes
         public ManagerService ManagerService { get; private set; }
         
         public HotelService HotelService { get; private set; }
+        
+        public ResidentService ResidentService { get; private set; }
+        
+        public RoomService RoomService { get; private set; }
 
         public ApplicationContext(ApplicationDbContext dbContext)
         {
             this.PersonService = new PersonService(dbContext);
             this.ManagerService = new ManagerService(dbContext, this.PersonService);
             this.HotelService = new  HotelService(dbContext);
+            this.ResidentService = new ResidentService(dbContext, this.PersonService);
+            this.RoomService = new RoomService(dbContext, this.ResidentService);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Project.Model
 
         public required Manager Manager { get; set; }
 
-        public required IEnumerable<HotelRoom> Rooms { get; set; }
+        public required List<HotelRoom> Rooms { get; set; }
         
         [NotMapped]
         public List<IResident> AllResidents => this.Rooms.SelectMany(x => x.AllResidents).ToList();
@@ -24,7 +24,7 @@ namespace Project.Model
         public Hotel() : base(UlongIdGenerator.GenerateId()) { }
 
         [SetsRequiredMembers]
-        public Hotel(string name, string address, Manager manager, IEnumerable<HotelRoom> rooms)
+        public Hotel(string name, string address, Manager manager, List<HotelRoom> rooms)
             : base(UlongIdGenerator.GenerateId())
             => (this.Name, this.Address, this.Manager, this.Rooms) = (name, address, manager, rooms);
     }

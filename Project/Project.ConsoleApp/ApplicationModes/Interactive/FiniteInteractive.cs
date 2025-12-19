@@ -15,6 +15,12 @@ namespace Project.ConsoleApp.ApplicationModes.Interactive
                 .AddState<FireManagerTrigger>(FireManagerTrigger.FiniteAction)
                 .AddState<CreateHotelTrigger>(CreateHotelTrigger.FiniteAction)
                 .AddState<ManageHotelTrigger>(ManageHotelTrigger.FiniteAction)
+                .AddState<AddNewRoomTrigger>(AddNewRoomTrigger.FiniteAction)
+                .AddState<ChangeHotelManagerTrigger>(ChangeHotelManagerTrigger.FiniteAction)
+                .AddState<ChangeHotelNameTrigger>(ChangeHotelNameTrigger.FiniteAction)
+                .AddState<CreateResidentTrigger>(CreateResidentTrigger.FiniteAction)
+                .AddState<GenerateReportTrigger>(GenerateReportTrigger.FiniteAction)
+                .AddState<RemoveResidentTrigger>(RemoveResidentTrigger.FiniteAction)
                 .Build();
     }
 }

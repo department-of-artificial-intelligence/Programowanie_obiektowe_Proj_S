@@ -16,6 +16,15 @@ namespace Project.Services
             this._applicationDbContext = applicationDbContext;
         }
         
+        public async Task<Hotel?> GetFullHotelByIdAsync(ulong hotelId)
+        {
+            return await this._applicationDbContext.Hotels
+                .Include(h => h.Manager)
+                .Include(h => h.Rooms)
+                .ThenInclude(r => r.Residents)
+                .FirstOrDefaultAsync(h => h.Id == hotelId);
+        }
+        
         public async Task<bool> IsAnyHotelExistsAsync()
         {
             return await this._applicationDbContext.Hotels.AnyAsync();
@@ -54,6 +63,22 @@ namespace Project.Services
             return await this._applicationDbContext.Hotels
                 .Where(h => h.Manager.Id == manager.Id)
                 .ToListAsync();
+        }
+        
+        public async Task ChangeHotelNameAsync(Hotel hotel, string newName)
+        {
+            hotel.Name = newName;
+            
+            this._applicationDbContext.Hotels.Update(hotel);
+            await this._applicationDbContext.SaveChangesAsync();
+        }
+        
+        public async Task ChangeHotelManagerAsync(Hotel hotel, Manager newManager)
+        {
+            hotel.Manager = newManager;
+            
+            this._applicationDbContext.Hotels.Update(hotel);
+            await this._applicationDbContext.SaveChangesAsync();
         }
     }
 }

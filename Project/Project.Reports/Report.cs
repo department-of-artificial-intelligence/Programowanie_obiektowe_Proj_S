@@ -4,9 +4,9 @@ namespace Project.Reports
 {
     public record Report<T>
     {
-        public required DateTime GeneratedAt { get; set; }
+        public required DateTime GeneratedAt { get; init; }
 
-        public required T Details { get; set; }
+        public required T Details { get; init; }
 
         public Report() { }
 
