@@ -9,13 +9,34 @@ namespace Project.Logic
 {
     public static class AppointmentExtensions
     {
-        public static IEnumerable<Appointment> Upcoming(this IEnumerable<Appointment> appointments, DateTime from)
-            => appointments?.Where(a => a.Date >= from).OrderBy(a => a.Date) ?? Enumerable.Empty<Appointment>();
+        
+        public static IEnumerable<Appointment>
+            ByAnimal(this IEnumerable<Appointment> appointments, int animalId)
+        {
+            return appointments.Where(a => a.AnimalId == animalId);
+        }
 
-        public static IEnumerable<Appointment> Past(this IEnumerable<Appointment> appointments, DateTime before)
-            => appointments?.Where(a => a.Date < before).OrderByDescending(a => a.Date) ?? Enumerable.Empty<Appointment>();
+     
+        public static IEnumerable<Appointment>
+            ByVeterinarian(this IEnumerable<Appointment> appointments, int veterinarianId)
+        {
+            return appointments.Where(a => a.VeterinarianId == veterinarianId);
+        }
 
-        public static IEnumerable<Appointment> ByVeterinarian(this IEnumerable<Appointment> appointments, int veterinarianId)
-            => appointments?.Where(a => a.VeterinarianId == veterinarianId) ?? Enumerable.Empty<Appointment>();
+        
+        public static IEnumerable<Appointment>
+            SortByDate(this IEnumerable<Appointment> appointments)
+        {
+            return appointments.OrderBy(a => a.Date);
+        }
+
+       
+        public static IEnumerable<(int VeterinarianId, int AppointmentCount)>
+            AppointmentsCountPerVeterinarian(this IEnumerable<Appointment> appointments)
+        {
+            return appointments
+                .GroupBy(a => a.VeterinarianId)
+                .Select(g => (VeterinarianId: g.Key, AppointmentCount: g.Count()));
+        }
     }
 }

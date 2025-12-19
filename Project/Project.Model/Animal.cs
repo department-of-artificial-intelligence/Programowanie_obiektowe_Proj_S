@@ -15,13 +15,14 @@ namespace Project.Model
         public string? Breed { get; set; }
         public int Age { get; set; }
         public double? WeightKg { get; set; }
+
         public int? OwnerId { get; set; }
+        public Owner? Owner { get; set; }
 
         public Animal() { }
 
-        public Animal(int id, string name, string? species = null, string? breed = null, int age = 0, double? weightKg = null, int? ownerId = null)
+        public Animal( string name, string? species = null, string? breed = null, int age = 0, double? weightKg = null, int? ownerId = null)
         {
-            Id = id;
             Name = name;
             Species = species;
             Breed = breed;
@@ -29,6 +30,11 @@ namespace Project.Model
             WeightKg = weightKg;
             OwnerId = ownerId;
         }
+        public override string ToString()
+        {
+            return $"{Name} ({Species})";
+        }
+
     }
 
 }

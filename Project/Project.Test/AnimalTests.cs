@@ -1,4 +1,5 @@
 ﻿using Project.Model;
+using Project.Logic;
 
 namespace Project.Tests
 {
@@ -7,9 +8,17 @@ namespace Project.Tests
         [Fact]
         public void Constructor_ShouldCreateAnimal()
         {
-            var a = new Animal(1, "Reksio", "Dog", "Beagle", 5, 12.5, 10);
+            
+            var a = new Animal(
+                name: "Reksio",
+                species: "Dog",
+                breed: "Beagle",
+                age: 5,
+                weightKg: 12.5,
+                ownerId: 10
+            );
 
-            Assert.Equal(1, a.Id);
+            
             Assert.Equal("Reksio", a.Name);
             Assert.Equal("Dog", a.Species);
             Assert.Equal("Beagle", a.Breed);
@@ -19,11 +28,12 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void EmptyConstructor_ShouldInitDefaults()
+        public void EmptyConstructor_ShouldInitializeDefaults()
         {
             var a = new Animal();
 
             Assert.NotNull(a.Name);
+            Assert.Equal(string.Empty, a.Name);
         }
     }
 }

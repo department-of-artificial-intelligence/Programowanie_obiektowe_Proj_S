@@ -7,13 +7,12 @@ namespace Project.Tests
         [Fact]
         public void Constructor_ShouldCreatePerson()
         {
-            var p = new Person(1, "Adam", "Kowalski", "a@a.com", "123");
+            var p = new Person("Adam", "Kowalski", "a@a.com", "123456789");
 
-            Assert.Equal(1, p.Id);
             Assert.Equal("Adam", p.FirstName);
             Assert.Equal("Kowalski", p.LastName);
             Assert.Equal("a@a.com", p.Email);
-            Assert.Equal("123", p.Phone);
+            Assert.Equal("123456789", p.Phone);
         }
 
         [Fact]

@@ -12,11 +12,15 @@ namespace Project.Model
 
         public Owner() : base() { }
 
-        public Owner(int id, string firstName, string lastName, string? email = null, string? phone = null)
-            : base(id, firstName, lastName, email, phone)
+        public Owner(string firstName, string lastName, string? email = null, string? phone = null)
+            : base(firstName, lastName, email, phone)
         {
 
 
+        }
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}";
         }
     }
 }

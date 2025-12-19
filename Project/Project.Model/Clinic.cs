@@ -15,17 +15,21 @@ namespace Project.Model
         public string? Address { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public List<Veterinarian> Veterinarians { get; set; } = new();
+
+        public List<Veterinarian> Veterinarians { get; set; } = new List<Veterinarian>();
 
         public Clinic() { }
 
-        public Clinic(int id, string name, string? address = null, string? email = null, string? phone = null)
+        public Clinic(string name, string? address = null, string? email = null, string? phone = null)
         {
-            Id = id;
             Name = name;
             Address = address;
             Email = email;
             Phone = phone;
+        }
+        public override string ToString()
+        {
+            return $"{Name} ({Address})";
         }
     }
 }

@@ -16,13 +16,17 @@ namespace Project.Model
 
         public Treatment() { }
 
-        public Treatment(int id, string name, string? description = null, decimal cost = 0m)
+        public Treatment(string name, string? description = null, decimal cost = 0m)
         {
-            Id = id;
             Name = name;
             Description = description;
             Cost = cost;
         }
+        public override string ToString()
+        {
+            return $"{Name} – {Cost} zł";
+        }
+
 
     }
 }

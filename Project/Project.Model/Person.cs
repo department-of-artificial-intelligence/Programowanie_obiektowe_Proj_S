@@ -17,9 +17,8 @@ namespace Project.Model
         
         public Person() { }
 
-        public Person(int id, string firstName, string lastName, string? email = null, string? phone = null)
+        public Person(string firstName, string lastName, string? email = null, string? phone = null)
         {
-            Id = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

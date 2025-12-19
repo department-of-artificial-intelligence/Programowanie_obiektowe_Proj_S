@@ -7,9 +7,8 @@ namespace Project.Tests
         [Fact]
         public void Constructor_ShouldCreateTreatment()
         {
-            var t = new Treatment(1, "Vaccination", "Rabies injection", 99.99m);
+            var t = new Treatment("Vaccination", "Rabies injection", 99.99m);
 
-            Assert.Equal(1, t.Id);
             Assert.Equal("Vaccination", t.Name);
             Assert.Equal("Rabies injection", t.Description);
             Assert.Equal(99.99m, t.Cost);

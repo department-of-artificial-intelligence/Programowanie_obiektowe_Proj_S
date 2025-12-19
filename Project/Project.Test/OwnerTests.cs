@@ -1,4 +1,5 @@
 ﻿using Project.Model;
+using Project.Logic;
 
 namespace Project.Tests
 {
@@ -7,13 +8,12 @@ namespace Project.Tests
         [Fact]
         public void Constructor_ShouldCreateOwner()
         {
-            var o = new Owner(1, "Anna", "Nowak", "a@a.com", "123");
+            var o = new Owner("Anna", "Nowak", "a@a.com", "123456789");
 
-            Assert.Equal(1, o.Id);
             Assert.Equal("Anna", o.FirstName);
             Assert.Equal("Nowak", o.LastName);
             Assert.Equal("a@a.com", o.Email);
-            Assert.Equal("123", o.Phone);
+            Assert.Equal("123456789", o.Phone);
         }
 
         [Fact]
