@@ -1,20 +1,5 @@
 ﻿namespace Project.Abstractions
 {
-    public enum VehicleStatus
-    {
-        Available,
-        InTransit,
-        UnderMaintenance
-    }
-
-    public enum VehicleType
-    {
-        CompanyCar,
-        DeliveryVan,
-        Truck,
-        SemiTrailer
-    }
-
     public interface IVehicle
     {
         int Id { get; set; }
@@ -39,5 +24,20 @@
         float CalculateWearRate();
 
         string ToString();
+
+        public enum VehicleStatus
+        {
+            Available,
+            InTransit,
+            UnderMaintenance
+        }
+
+        public enum VehicleType
+        {
+            CompanyCar,
+            DeliveryVan,
+            Truck,
+            SemiTrailer
+        }
     }
 }
