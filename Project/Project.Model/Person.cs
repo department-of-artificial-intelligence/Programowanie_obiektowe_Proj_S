@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using Project.Model.Abstract;
 using Project.Model.Utils;
 
@@ -12,6 +13,9 @@ namespace Project.Model
         
         public required DateTime DateOfBirth { get; set; }
 
+        [NotMapped]
+        public string FullName => $"{FirstName} {LastName}";
+        
         public Person() : base(UlongIdGenerator.GenerateId()) { }
         
         [SetsRequiredMembers]
