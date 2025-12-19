@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
     <ProjectReference Include="..\Project.Extensions\Project.Extensions.csproj" />
+    <ProjectReference Include="..\Project.FSM\Project.FSM.csproj" />
     <ProjectReference Include="..\Project.Model\Project.Model.csproj" />
     <ProjectReference Include="..\Project.Reports\Project.Reports.csproj" />
   </ItemGroup>

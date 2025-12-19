@@ -1,35 +1,34 @@
-using Project.ConsoleApp.FiniteStateMachine;
+using Project.FSM;
+using Project.FSM.Triggers;
 
 namespace Project.ConsoleApp.ApplicationModes.Interactive
 {
     public class InteractiveMode : IApplicationMode
     {
-        private readonly FiniteStateMachine<State, int> _stateMachine = new FiniteStateMachineBuilder<State, int>(0)
-            .AddState(State.Hello, async (machine, _) =>
+        private readonly FiniteStateMachine<int> _fsm = new FiniteStateMachineBuilder<int>()
+            .AddState<HelloTrigger>((context, trigger) =>
             {
-                Console.WriteLine("Hello");
-                Console.ReadKey(intercept: true);
-
-                await machine.TransitToStateAsync(State.World);
-            })
-            .AddState(State.World, async (machine, _) =>
-            {
-                Console.WriteLine("World");
-                Console.ReadKey(intercept: true);
+                Console.Write("Hello, ");
+                Console.ReadKey(true);
                 
-                await machine.TransitToStateAsync(State.Hello);
+                return Task.FromResult<IFiniteTrigger>(new WorldTrigger());
+            })
+            .AddState<WorldTrigger>((context, trigger) =>
+            {
+                Console.WriteLine("World!");
+                Console.ReadKey(true);
+                
+                return Task.FromResult<IFiniteTrigger>(new HelloTrigger());
             })
             .Build();
         
         public async Task Run(ApplicationContext context)
         {
-            await this._stateMachine.TransitToStateAsync(State.Hello);
+            await this._fsm.RunAsync(0, new HelloTrigger());
         }
+
+        private record HelloTrigger : IFiniteTrigger;
         
-        private enum State
-        {
-            Hello,
-            World
-        }
+        private record WorldTrigger : IFiniteTrigger;
     }
 }
