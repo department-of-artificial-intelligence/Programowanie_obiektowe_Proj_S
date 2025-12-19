@@ -12,7 +12,7 @@ using WypozyczalniaSamochodow.DAL;
 namespace WypozyczalniaSamochodow.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251219003608_Initial")]
+    [Migration("20251219005614_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

@@ -44,9 +44,12 @@
 
         public override string ToString()
         {
+            string carInfo = Car != null ? $"{Car.Brand} {Car.Model}" : "[Samochód usunięty]"; 
+            string customerInfo = Customer != null ? $"{Customer.FirstName} {Customer.LastName}" : "[Klient usunięty]";
+
             string rentalInfo =
-                $"  [{Id}] 🚗 {Car?.Brand} {Car?.Model}\n" +
-                $"      👤 {Customer?.FirstName} {Customer?.LastName}\n" +
+                $"  [{Id}] 🚗 {carInfo}\n" +
+                $"      👤 {customerInfo}\n" +
                 $"      📅 {StartDate:dd.MM.yyyy} - {EndDate:dd.MM.yyyy} ({Days} dni)\n" +
                 $"      💰 {Cost:C}";
 
