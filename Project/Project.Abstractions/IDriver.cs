@@ -1,5 +1,12 @@
 ﻿namespace Project.Abstractions
 {
+    public enum DriverStatus
+    {
+        Available,
+        Assigned,
+        Unavailable
+    }
+
     public interface IDriver
     {
         int Id { get; }
@@ -19,12 +26,5 @@
 
         void AssignOrder(IOrder order);
         void RemoveOrder(IOrder order);
-
-        public enum DriverStatus
-        {
-            Available,
-            Assigned,
-            Unavailable
-        }
     }
 }

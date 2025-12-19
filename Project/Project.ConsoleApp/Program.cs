@@ -18,7 +18,6 @@ namespace Project
 
         public static void Main(string[] args)
         {
-            // Dependency Injection:
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
@@ -26,7 +25,6 @@ namespace Project
                         options.UseSqlServer(
                             context.Configuration.GetConnectionString("DefaultConnection")));
 
-                    // Within one scope, the program will use the same instance of a given website:
                     services.AddScoped<DriverService>();
                     services.AddScoped<VehicleService>();
                     services.AddScoped<OrderService>();
@@ -222,7 +220,7 @@ namespace Project
                 Console.Clear();
                 Console.WriteLine("--- VEHICLES ---");
                 Console.WriteLine("1. Show all vehicles (with stats)");
-                Console.WriteLine("2. Add vehicle (Car, Truck, Van, Trailer)");
+                Console.WriteLine("2. Add vehicle (Car, Truck, Van, Trailer)"); // Zmiana opisu
                 Console.WriteLine("3. Delete vehicle");
                 Console.WriteLine("4. Show Vehicles Sorted by Mileage [Sort]");
                 Console.WriteLine("5. Calculate Wear Rate for a Vehicle");
@@ -239,7 +237,7 @@ namespace Project
                         break;
 
                     case "2":
-                        AddVehicleUI();
+                        AddVehicleUI(); // Zmieniono z AddCompanyCarUI na ogólną metodę
                         break;
 
                     case "3":
