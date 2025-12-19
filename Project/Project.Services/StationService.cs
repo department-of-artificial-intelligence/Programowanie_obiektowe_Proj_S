@@ -31,34 +31,33 @@ namespace Project.Services
             return _context.Stations.Include(s => s.Bicycles).ToList();
         }
 
-        public bool ParkBicycle(int stationId, int bicycleId)
+        public string ParkBicycle(int stationId, int bicycleId)
         {
             
             var station = _context.Stations.Include(s => s.Bicycles).FirstOrDefault(s => s.Id == stationId);
-            var bike = _context.Bicycles.FirstOrDefault(b => b.Id == bicycleId);
+            var bike = _context.Bicycles.Find(bicycleId);
 
-            if (station == null || bike == null) return false;
+            if (station == null) return "Error: Station not found.";
+            if (bike == null) return "Error: Bike not found.";
+            if (station.Bicycles.Count >= station.Capacity) return "Error: Station is full.";
 
             
-            if (station.Bicycles.Count >= station.Capacity)
+            if (bike.Status == BicycleStatus.Rented)
             {
-                Console.WriteLine("Station is full!");
-                return false;
+                return "Error: Bike is currently rented! Customer must return it first.";
             }
 
-            
             try
             {
-                bike.Return(station);
+                
+                bike.Park(stationId);
 
-                _context.SaveChanges(); 
-                Console.WriteLine($"Bike parked at {station.Name}.");
-                return true;
+                _context.SaveChanges();
+                return $"Success: Bike '{bike.Model}' parked at '{station.Name}'.";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return false;
+                return $"Error: {ex.Message}";
             }
         }
     }

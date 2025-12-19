@@ -12,6 +12,6 @@ namespace Project.Services.Interfaces
         void AddStation(string name, string city, string address, int capacity);
 
         List<Station> GetAllStations();
-        bool ParkBicycle(int stationId, int bicycleId);
+        string ParkBicycle(int stationId, int bicycleId);
     }
 }

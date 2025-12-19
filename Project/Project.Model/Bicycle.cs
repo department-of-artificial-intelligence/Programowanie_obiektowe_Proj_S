@@ -33,7 +33,14 @@ namespace Project.Model
 
         public BicycleStatus Status { get; private set; } = BicycleStatus.Available;
 
-        
+        public void Park(int stationId)
+        {
+            
+            this.Status = BicycleStatus.Available;
+            this.CurrentStationId = stationId;
+            this.CustomerId = null; 
+        }
+
         public void Rent()
         {
             if (Status != BicycleStatus.Available)

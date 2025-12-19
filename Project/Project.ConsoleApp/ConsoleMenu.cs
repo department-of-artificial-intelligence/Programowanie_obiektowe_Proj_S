@@ -88,11 +88,23 @@ namespace Project.ConsoleApp
             Console.WriteLine("1. Show All");
             Console.WriteLine("2. Show Sorted by City");
             Console.WriteLine("3. Add Station");
+            Console.WriteLine("4. Park Bike (Move bike to station)"); 
             Console.Write("Select: ");
 
             var input = Console.ReadLine();
+
             if (input == "3") { AddNewStation(); return; }
 
+           
+            if (input == "4")
+            {
+                Console.Write("Enter Station ID: "); int sid = ParseInt();
+                Console.Write("Enter Bike ID: "); int bid = ParseInt();
+                Console.WriteLine(_stationService.ParkBicycle(sid, bid));
+                Pause();
+                return;
+            }
+           
             var stations = _stationService.GetAllStations();
             if (input == "2") stations = stations.OrderBy(s => s.City).ToList();
 
@@ -101,7 +113,11 @@ namespace Project.ConsoleApp
             {
                 int count = s.Bicycles?.Count ?? 0;
                 string full = count >= s.Capacity ? "[FULL]" : "";
-                Console.WriteLine($"ID:{s.Id} | {s.Name} ({s.City}) | Bikes: {count}/{s.Capacity} {full}");
+
+               
+                string bikeIds = string.Join(", ", s.Bicycles.Select(b => b.Id));
+
+                Console.WriteLine($"ID:{s.Id} | {s.Name} | Bikes: {count}/{s.Capacity} [{bikeIds}] {full}");
             }
             Pause();
         }
@@ -219,7 +235,7 @@ namespace Project.ConsoleApp
         {
             Console.Write("First Name: "); string fn = Console.ReadLine();
             Console.Write("Last Name: "); string ln = Console.ReadLine();
-            Console.WriteLine("Role: 0-Manager, 1-Mechanic, 2-Intern");
+            Console.WriteLine("Role: 0-Manager, 1-Mechanic");
             Console.Write("Select Role ID: ");
             EmployeeRole r = (EmployeeRole)ParseInt();
             _personService.AddEmployee(fn, ln, r);

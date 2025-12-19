@@ -27,6 +27,10 @@ public class ApplicationDbContext: DbContext
             .Property(b => b.Price)
             .HasColumnType("decimal(18,2)");
 
+        modelBuilder.Entity<RentalRecord>()
+        .Property(r => r.TotalCost)
+        .HasColumnType("decimal(18,2)");
+
         modelBuilder.Entity<Person>()
         .HasDiscriminator<string>("UserType")
         .HasValue<Employee>("Employee")
