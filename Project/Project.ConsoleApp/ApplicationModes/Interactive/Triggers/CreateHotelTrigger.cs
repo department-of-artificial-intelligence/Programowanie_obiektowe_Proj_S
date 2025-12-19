@@ -7,6 +7,14 @@ namespace Project.ConsoleApp.ApplicationModes.Interactive.Triggers
     {
         public static async Task<IFiniteTrigger> FiniteAction(ApplicationContext context, CreateHotelTrigger trigger)
         {
+            if (!await context.ManagerService.IsAnyManagerExistsAsync())
+            {
+                Console.WriteLine("No managers to assign.");
+                InteractiveComponents.PressAnyKeyToContinue();
+
+                return new StartMenuTrigger();
+            }
+
             var name = InteractiveComponents.ValuePrompt<string>("Enter hotel name");
             var address = InteractiveComponents.ValuePrompt<string>("Enter hotel address");
 
