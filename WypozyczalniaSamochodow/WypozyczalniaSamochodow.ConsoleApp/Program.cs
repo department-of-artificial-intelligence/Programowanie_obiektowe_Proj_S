@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using WypozyczalniaSamochodow.DAL;
 using Microsoft.EntityFrameworkCore;
 
-IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+/*IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
 {
     var cns = context.Configuration.GetConnectionString("DefaultConnection");
     services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
@@ -20,7 +20,7 @@ if(context is not null)
     Branch branch = new Branch() { Name = "Rentals", City = "Częstochowa", Address="Dąbrowskiego 1", ContactNumber="111222333" };
     context.Branches.Add(branch);
     context.SaveChanges();
-}
+}*/
 
 namespace WypozyczalniaSamochodow.ConsoleApp
 {
