@@ -46,3 +46,5 @@ foreach (var concert in concerts)
 {
     Console.WriteLine($"{concert} - Wyprzedany: {concert.IsSoldOut()}");
 }
+
+context.Temp();
