@@ -18,8 +18,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WypozyczalniaSamochodow.DAL\WypozyczalniaSamochodow.DAL.csproj" />
-    <ProjectReference Include="..\WypozyczalniaSamochodow.Logic\WypozyczalniaSamochodow.Logic.csproj" />
+    <ProjectReference Include="..\WypozyczalniaSamochodow.Extensions\WypozyczalniaSamochodow.Extensions.csproj" />
     <ProjectReference Include="..\WypozyczalniaSamochodow.Model\WypozyczalniaSamochodow.Model.csproj" />
+    <ProjectReference Include="..\WypozyczalniaSamochodow.Services\WypozyczalniaSamochodow.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

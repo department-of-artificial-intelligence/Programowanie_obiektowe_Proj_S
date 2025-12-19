@@ -59,8 +59,8 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("AvgConsumption")
-                        .HasColumnType("float");
+                    b.Property<decimal>("AvgConsumption")
+                        .HasColumnType("decimal(5,1)");
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
@@ -69,8 +69,8 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("EngineVolume")
-                        .HasColumnType("float");
+                    b.Property<decimal>("EngineVolume")
+                        .HasColumnType("decimal(5,1)");
 
                     b.Property<string>("FuelType")
                         .IsRequired()
@@ -90,8 +90,8 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
                     b.Property<int>("Power")
                         .HasColumnType("int");
 
-                    b.Property<double>("PricePerDay")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PricePerDay")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductionYear")
                         .HasColumnType("int");
@@ -111,7 +111,7 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BranchId")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -129,6 +129,9 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
                     b.Property<string>("LicenseNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LoyaltyPoints")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -149,14 +152,17 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BranchId")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CarId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Cost")
-                        .HasColumnType("float");
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
@@ -166,6 +172,12 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCancelledBeforeStart")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -183,33 +195,45 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
             modelBuilder.Entity("WypozyczalniaSamochodow.Model.Car", b =>
                 {
-                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", null)
+                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", "Branch")
                         .WithMany("Cars")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("WypozyczalniaSamochodow.Model.Customer", b =>
                 {
-                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", null)
+                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", "Branch")
                         .WithMany("Customers")
-                        .HasForeignKey("BranchId");
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("WypozyczalniaSamochodow.Model.Rental", b =>
                 {
-                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", null)
+                    b.HasOne("WypozyczalniaSamochodow.Model.Branch", "Branch")
                         .WithMany("Rentals")
-                        .HasForeignKey("BranchId");
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WypozyczalniaSamochodow.Model.Car", "Car")
-                        .WithMany("Reservations")
-                        .HasForeignKey("CarId");
+                        .WithMany("Rentals")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("WypozyczalniaSamochodow.Model.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .WithMany("Rentals")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Car");
 
@@ -227,7 +251,12 @@ namespace WypozyczalniaSamochodow.DAL.Migrations
 
             modelBuilder.Entity("WypozyczalniaSamochodow.Model.Car", b =>
                 {
-                    b.Navigation("Reservations");
+                    b.Navigation("Rentals");
+                });
+
+            modelBuilder.Entity("WypozyczalniaSamochodow.Model.Customer", b =>
+                {
+                    b.Navigation("Rentals");
                 });
 #pragma warning restore 612, 618
         }

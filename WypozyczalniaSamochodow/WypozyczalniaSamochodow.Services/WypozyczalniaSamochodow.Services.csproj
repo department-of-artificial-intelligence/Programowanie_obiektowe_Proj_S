@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WypozyczalniaSamochodow.DAL\WypozyczalniaSamochodow.DAL.csproj" />
+    <ProjectReference Include="..\WypozyczalniaSamochodow.Extensions\WypozyczalniaSamochodow.Extensions.csproj" />
     <ProjectReference Include="..\WypozyczalniaSamochodow.Model\WypozyczalniaSamochodow.Model.csproj" />
   </ItemGroup>
 
