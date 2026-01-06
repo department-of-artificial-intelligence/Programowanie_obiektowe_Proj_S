@@ -48,11 +48,11 @@ namespace Project.Model
 
 
 
-        private Employee() { }
+        protected Employee() { }
 
         
         
-        public Employee(int id, string firstName, string lastName, string email, string phone, decimal salary, EmployeePosition position)
+        public Employee(int id, string firstName, string lastName, string email, int phone, decimal salary, EmployeePosition position)
             : base(firstName, lastName, phone, email)
         {
             EmployeeId = id;
@@ -74,5 +74,5 @@ namespace Project.Model
 
 
 
-}
+    
 }

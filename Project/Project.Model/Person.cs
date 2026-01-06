@@ -18,10 +18,10 @@ namespace Project.Model
         public required string Email { get; set; }
 
 
-        private Person() { }
+        protected Person() { }
 
 
-        protected Person(string firstName, string lastName)
+        protected Person(string firstName, string lastName, int phoneNumber, string email)
         {
             FirstName = firstName;
             LastName = lastName;

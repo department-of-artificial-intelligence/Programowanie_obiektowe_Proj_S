@@ -30,7 +30,7 @@ namespace Project.Model
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee));
 
-            
+
             if (!Employees.Any(e => e.EmployeeId == employee.EmployeeId))
             {
                 Employees.Add(employee);
@@ -38,6 +38,7 @@ namespace Project.Model
                 employee.WorkPlace = this;
                 employee.StoreId = this.Id;
             }
+        }
 
         public void RemoveEmployee(Employee employee)
         {
@@ -53,7 +54,7 @@ namespace Project.Model
 
         // --- ZARZĄDZANIE MAGAZYNEM (Inventory) ---
 
-        /
+        
         public int GetStockLevel(Product product)
         {
             if (product == null) throw new ArgumentNullException(nameof(product));

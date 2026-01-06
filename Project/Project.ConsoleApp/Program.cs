@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using Project.Model;
 
-namespace Project
+namespace Project.Model
 {
     class Program
     {
