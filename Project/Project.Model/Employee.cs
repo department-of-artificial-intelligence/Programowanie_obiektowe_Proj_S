@@ -6,75 +6,66 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    public class Employee: Person
-    {
 
-        public required int StoreId 
-        { 
-          get = value;
-          set{
+    public class Employee : Person
+    {
+        private int _employeeId;
+        private decimal _salary;
+
+        
+        public required int EmployeeId
+        {
+            get { return _employeeId; }
+            set
+            {
                 if (value < 0)
-                {
-                    throw new ArgumentOutOfRangeException("Id nie może być wartością poniżej 0!");
-                }
-                _storeId = value;
-            };
+                    throw new ArgumentOutOfRangeException(nameof(EmployeeId), "ID cannot be negative!");
+                _employeeId = value;
             }
+        }
+
+        
+        public required decimal Salary
+        {
+            get { return _salary; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(Salary), "Salary cannot be negative!");
+                _salary = value;
+            }
+        }
+
 
         public required EmployeePosition Position { get; set; }
 
-        public required decimal Salary { get; set; }
 
-        public required string WorkPlace { get; set; }
+        public DateTime HireDate { get; set; } = DateTime.Now;
 
+        
+        private Employee() { }
 
-
-
-
-        private Employee() : base() { }
-
-
-        public Employee(int id, string firstName, string lastName, EmployeePosition position, decimal salary, int storeId, string workPlace) : base(firstName, lastName)
+        
+        
+        public Employee(int id, string firstName, string lastName, string email, string phone, decimal salary, EmployeePosition position)
+            : base(firstName, lastName, phone, email)
         {
-            if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
-            FirstName = firstName;
-            LastName = lastName;
-            Position = position;
+            EmployeeId = id;
             Salary = salary;
-            StoreId = storeId;
-            WorkPlace = workPlace;
-        }
-
-
-
-        public void ChangePosition(int id, EmployeePosition position)
-        {
-            if (id < 0) throw new ArgumentException("Id nie może być wartością ujemną", nameof(id));
-
             Position = position;
-
-
         }
 
-
-
-    
-        public void ChangeStore(int id,  int storeId)
+        
+        public override string GetInfo()
         {
-            if (id >= 0)
-            {
-                this.StoreId = storeId;
-            }
-            else
-            {
-                this.StoreId = 0;
-            }
+            return $"[EMPLOYEE #{EmployeeId}] {base.GetInfo()} | Stanowisko: {Position}";
         }
-
-
-
-
-
-
     }
+
+
+
+
+
+
+}
 }

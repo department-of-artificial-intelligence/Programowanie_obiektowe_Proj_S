@@ -7,49 +7,48 @@ using System.Threading.Tasks;
 
 namespace Project.Model
 {
-    internal class Customer: Person
+    public class Customer : Person
     {
+        
+        private int _customerId;
 
-        public required int CustomerId 
-        { 
-            get = return _customerId;
-
-            set{
+        
+        public required int CustomerId
+        {
+            get { return _customerId; }
+            set
+            {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException("Id nie może być wartością poniżej 0!");
+                    throw new ArgumentOutOfRangeException(nameof(CustomerId), "ID cannot be negative!");
                 }
-                 _customerId = value;
-            };
-           
-
+                _customerId = value;
+            }
         }
 
-        public required int CustomerPhone { get; set; }
+       
+        public required string City { get; set; }
+        public required string Region { get; set; }
+        public required string PostalCode { get; set; }
 
-        public required string CustomerCity { get; set; }
 
-        public required string CustomerRegion { get; set; }
-
-        public required string CustomerPostalCode { get; set;
-        
+        public Customer(int id, string firstName, string lastName, string email, string phone, string city, string region, string postalCode)
+            : base(firstName, lastName, phone, email) 
+        {
+            CustomerId = id;
+            City = city;
+            Region = region;
+            PostalCode = postalCode;
         }
 
-
-
-
-        public Customer() : base() { }
+       
+        private Customer() { }
 
         
-        public Customer(int customerId, string customerFirstName, string customerLastName, string customerEmail, int customerPhone, string customerCity, string customerRegion, string customerPostalCode): base(customerFirstName, customerLastName)
+        public override string GetInfo()
         {
             
-            CustomerEmail = customerEmail ?? "";
-            CustomerPhone = customerPhone;
-            CustomerCity = customerCity ?? "";
-            CustomerRegion = customerRegion ?? "";
-            CustomerPostalCode = customerPostalCode ?? "";
-
+            return $"[CUSTOMER #{CustomerId}] {base.GetInfo()} | Address: {City}, {PostalCode}";
         }
 
 

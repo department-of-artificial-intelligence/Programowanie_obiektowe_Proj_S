@@ -1,12 +1,20 @@
-﻿namespace Project.Model
+﻿using System;
+
+namespace Project.Model
 {
-
-    public enum InventoryItem
+    public class InventoryItem
     {
-        None,
-        Low,
-        Middle,
-        High
+        public int Id { get; set; } 
 
+        
+        public int StoreId { get; set; }
+        public required Store Store { get; set; }
+
+        
+        public int ProductId { get; set; }
+        public required Product Product { get; set; }
+
+        
+        public int Quantity { get; set; }
     }
 }

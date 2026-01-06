@@ -15,18 +15,28 @@ namespace Project.Model
 
         public required int PhoneNumber {  get; set; } 
 
+        public required string Email { get; set; }
 
 
+        private Person() { }
 
-        public Person() { }
 
-
-        public Person(string firstName, string lastName)
+        protected Person(string firstName, string lastName)
         {
             FirstName = firstName;
             LastName = lastName;
+            PhoneNumber = phoneNumber;
+            Email = email;
         }
 
+        public string GetFullName()
+        {
+            return $"{FirstName} {LastName}";
+        }
 
+        public virtual string GetInfo()
+        {
+            return $"Name: {GetFullName()} | Contact: {Email}, PhoneNumber: {PhoneNumber}";
+        }
     }
 }
