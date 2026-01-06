@@ -39,10 +39,15 @@ namespace Project.Model
 
         public required EmployeePosition Position { get; set; }
 
-
         public DateTime HireDate { get; set; } = DateTime.Now;
 
-        
+        public int? StoreId { get; set; }
+
+        public Store? WorkPlace { get; set; }
+
+
+
+
         private Employee() { }
 
         
@@ -56,6 +61,8 @@ namespace Project.Model
         }
 
         
+
+
         public override string GetInfo()
         {
             return $"[EMPLOYEE #{EmployeeId}] {base.GetInfo()} | Stanowisko: {Position}";

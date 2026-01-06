@@ -15,6 +15,6 @@ namespace Project.Model
         public required Product Product { get; set; }
 
         
-        public int Quantity { get; set; }
+        public required int Quantity { get; set; }
     }
 }
