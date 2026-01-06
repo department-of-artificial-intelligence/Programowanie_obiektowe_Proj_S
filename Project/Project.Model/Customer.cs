@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -26,11 +27,12 @@ namespace Project.Model
             }
         }
 
-       
+        public decimal WalletBalance { get; set; }
         public required string City { get; set; }
         public required string Region { get; set; }
         public required string PostalCode { get; set; }
 
+        [SetsRequiredMembers]
 
         public Customer(int id, string firstName, string lastName, string email, string phone, string city, string region, string postalCode)
             : base(firstName, lastName, phone, email) 
@@ -39,6 +41,7 @@ namespace Project.Model
             City = city;
             Region = region;
             PostalCode = postalCode;
+            WalletBalance = 0;
         }
 
        
@@ -48,7 +51,7 @@ namespace Project.Model
         public override string GetInfo()
         {
             
-            return $"[CUSTOMER #{CustomerId}] {base.GetInfo()} | Address: {City}, {PostalCode}";
+            return $"[CUSTOMER #{CustomerId}] {base.GetInfo()} | Address: {City}, {PostalCode} | Portfel: {WalletBalance:C}";
         }
 
 

@@ -1,252 +1,236 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Project.Model;
 
-namespace Project.Model
+namespace Project
 {
     class Program
     {
-        static Store myStore;
-        static Customer currentCustomer;
+        static Store? mainStore;
+        static Customer? activeCustomer;
 
         static void Main(string[] args)
         {
-            InitializeData();
+            SetupData();
 
-            bool appRunning = true;
+            bool isRunning = true;
 
-            while (appRunning)
+            while (isRunning)
             {
                 Console.Clear();
                 Console.WriteLine("==========================================");
-                Console.WriteLine($"   WITAJ W {myStore.Name.ToUpper()}");
+                Console.WriteLine($"   WITAJ W {mainStore.Name.ToUpper()}");
                 Console.WriteLine("==========================================");
-                Console.WriteLine($"Zalogowany: {currentCustomer.GetFullName()} | Portfel: {currentCustomer.WalletBalance:C}\n");
+                Console.WriteLine($"Klient: {activeCustomer.GetFullName()}");
+                Console.WriteLine($"Portfel: {activeCustomer.WalletBalance:C}");
+                Console.WriteLine("------------------------------------------");
 
-                Console.WriteLine("1. Katalog Produktów (Kupowanie)");
-                Console.WriteLine("2. Moje Zamówienia");
-                Console.WriteLine("3. Panel Admina (Pracownicy i Stan)");
+                Console.WriteLine("1. Lista Produktów (Kupowanie)");
+                Console.WriteLine("2. Twoja Historia Zamówień");
+                Console.WriteLine("3. Informacje o Sklepie");
                 Console.WriteLine("0. Wyjście");
                 Console.Write("\nWybierz opcję: ");
 
-                string choice = Console.ReadLine();
+                string input = Console.ReadLine();
 
-                switch (choice)
+                switch (input)
                 {
                     case "1":
-                        ShowShopMenu();
+                        MenuBuying();
                         break;
                     case "2":
-                        ShowCustomerOrders();
+                        MenuHistory();
                         break;
                     case "3":
-                        ShowAdminPanel();
+                        MenuStoreInfo();
                         break;
                     case "0":
-                        appRunning = false;
+                        isRunning = false;
                         break;
                     default:
-                        Console.WriteLine("Niepoprawna opcja.");
-                        Thread.Sleep(1000);
+                        Console.WriteLine("Nieznana opcja.");
+                        Console.ReadKey();
                         break;
                 }
             }
         }
 
-        static void ShowShopMenu()
+        static void MenuBuying()
         {
             Console.Clear();
-            Console.WriteLine("--- KATALOG PRODUKTÓW ---");
+            Console.WriteLine("--- DOSTĘPNE PRODUKTY ---");
 
-            foreach (var item in myStore.Inventory)
+            foreach (var item in mainStore.Inventory)
             {
-                Console.ForegroundColor = item.Quantity > 0 ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine($"ID: {item.Product.Id} | {item.Product.Name}");
-                Console.ResetColor();
-                Console.WriteLine($"Opis: {item.Product.GetDescription()}");
-                Console.WriteLine($"Dostępne: {item.Quantity} szt. | Cena: {item.Product.Price:C}");
-                Console.WriteLine("------------------------------------------");
+                if (item.Quantity > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"[ID: {item.Product.Id}] {item.Product.Name}");
+                    Console.ResetColor();
+                    Console.WriteLine($" - {item.Product.Price:C}");
+                    Console.WriteLine($"   Opis: {item.Product.GetDescription()}");
+                    Console.WriteLine($"   Magazyn: {item.Quantity} szt.");
+                    Console.WriteLine("- - -");
+                }
             }
 
-            Console.WriteLine("\nWpisz ID produktu, aby kupić (lub 0 aby wrócić):");
-            if (int.TryParse(Console.ReadLine(), out int prodId) && prodId > 0)
+            Console.WriteLine("\nWpisz ID produktu, aby kupić (lub ENTER aby wrócić):");
+            string idInput = Console.ReadLine();
+
+            if (int.TryParse(idInput, out int prodId))
             {
-                BuyProductProcess(prodId);
+                ProcessTransaction(prodId);
             }
         }
 
-        static void BuyProductProcess(int productId)
+        static void ProcessTransaction(int productId)
         {
-            var inventoryItem = myStore.Inventory.FirstOrDefault(i => i.ProductId == productId);
+            var stockItem = mainStore.Inventory.FirstOrDefault(x => x.ProductId == productId);
 
-            if (inventoryItem == null || inventoryItem.Quantity == 0)
+            if (stockItem == null || stockItem.Quantity <= 0)
             {
-                Console.WriteLine("Produkt niedostępny lub błędne ID.");
-                Thread.Sleep(1500);
+                Console.WriteLine("Błąd: Produkt niedostępny.");
+                Console.ReadKey();
                 return;
             }
 
-            Console.Write($"Podaj ilość (max {inventoryItem.Quantity}): ");
-            if (int.TryParse(Console.ReadLine(), out int qty) && qty > 0)
+            Console.Write("Podaj ilość: ");
+            if (int.TryParse(Console.ReadLine(), out int quantity) && quantity > 0)
             {
-                if (qty > inventoryItem.Quantity)
+                if (quantity > stockItem.Quantity)
                 {
-                    Console.WriteLine("Nie mamy tyle towaru na stanie.");
-                    Thread.Sleep(1500);
+                    Console.WriteLine("Za mało towaru w magazynie!");
+                    Console.ReadKey();
                     return;
                 }
 
-                if (currentCustomer.WalletBalance < (inventoryItem.Product.Price * qty))
+                decimal totalPrice = stockItem.Product.Price * quantity;
+
+                if (activeCustomer.WalletBalance < totalPrice)
                 {
-                    Console.WriteLine("Brak wystarczających środków na koncie.");
-                    Thread.Sleep(1500);
+                    Console.WriteLine("Niestety, masz za mało środków na koncie.");
+                    Console.ReadKey();
                     return;
                 }
 
                 Order newOrder = new Order
                 {
-                    Id = new Random().Next(1000, 9999),
+                    Id = new Random().Next(10000, 99999),
                     DatePlaced = DateTime.Now,
                     Status = OrderStatus.New,
-                    CustomerId = currentCustomer.CustomerId,
-                    Customer = currentCustomer,
-                    StoreId = myStore.Id,
-                    FulfillingStore = myStore
+                    CustomerId = activeCustomer.CustomerId,
+                    Customer = activeCustomer,
+                    StoreId = mainStore.Id,
+                    FulfillingStore = mainStore
                 };
 
-                newOrder.AddProduct(inventoryItem.Product, qty);
+                newOrder.AddProduct(stockItem.Product, quantity);
 
-                currentCustomer.WalletBalance -= newOrder.TotalValue;
-                myStore.UpdateStock(inventoryItem.Product, inventoryItem.Quantity - qty);
-                myStore.Orders.Add(newOrder);
+                mainStore.Orders.Add(newOrder);
+                mainStore.UpdateStock(stockItem.Product, stockItem.Quantity - quantity);
+                activeCustomer.WalletBalance -= totalPrice;
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("\n=== ZAMÓWIENIE PRZYJĘTE ===");
-                Console.WriteLine(newOrder.ToString());
+                Console.WriteLine("\nSUKCES! Zamówienie złożone.");
+                Console.WriteLine($"Pobrano z konta: {totalPrice:C}");
                 Console.ResetColor();
-
-                Console.WriteLine("\nNaciśnij dowolny klawisz...");
                 Console.ReadKey();
             }
         }
 
-        static void ShowCustomerOrders()
+        static void MenuHistory()
         {
             Console.Clear();
-            Console.WriteLine($"--- HISTORIA ZAMÓWIEŃ: {currentCustomer.FirstName} ---");
+            Console.WriteLine($"--- HISTORIA ZAMÓWIEŃ: {activeCustomer.FirstName} ---");
 
-            var myOrders = myStore.Orders.Where(o => o.CustomerId == currentCustomer.CustomerId).ToList();
+            var orders = mainStore.Orders.Where(o => o.CustomerId == activeCustomer.CustomerId).ToList();
 
-            if (myOrders.Count == 0)
+            if (orders.Count == 0)
             {
                 Console.WriteLine("Brak zamówień.");
             }
             else
             {
-                foreach (var order in myOrders)
+                foreach (var order in orders)
                 {
                     Console.WriteLine(order.ToString());
-                    foreach (var item in order.OrderItems)
+                    foreach (var line in order.OrderItems)
                     {
-                        Console.WriteLine($"  -> {item.Product.Name} x{item.Quantity} ({item.CalculateLineTotal():C})");
+                        Console.WriteLine($" * {line.Product.Name} (x{line.Quantity})");
                     }
-                    Console.WriteLine("- - - - - - - - -");
+                    Console.WriteLine("-----------------------------");
                 }
             }
-            Console.WriteLine("\nNaciśnij dowolny klawisz...");
             Console.ReadKey();
         }
 
-        static void ShowAdminPanel()
+        static void MenuStoreInfo()
         {
             Console.Clear();
-            Console.WriteLine($"--- PANEL SKLEPU: {myStore.Name} ---");
-            Console.WriteLine("\n[PRACOWNICY]");
-
-            foreach (var emp in myStore.Employees)
-            {
-                Console.WriteLine(emp.GetInfo());
-            }
-
-            Console.WriteLine("\n[STATYSTYKI]");
-            Console.WriteLine($"Liczba produktów (rodzajów): {myStore.Inventory.Count}");
-            Console.WriteLine($"Całkowita wartość magazynu: {CalculateInventoryValue():C}");
-            Console.WriteLine($"Liczba zamówień: {myStore.Orders.Count}");
-
-            Console.WriteLine("\nNaciśnij dowolny klawisz...");
+            Console.WriteLine(mainStore.ToString());
+            Console.WriteLine($"Adres: {mainStore.Address}, {mainStore.City}");
+            Console.WriteLine($"Pracowników: {mainStore.Employees.Count}");
+            Console.WriteLine($"Wartość magazynu: {mainStore.Inventory.Sum(x => x.Quantity * x.Product.Price):C}");
             Console.ReadKey();
         }
 
-        static decimal CalculateInventoryValue()
+        static void SetupData()
         {
-            return myStore.Inventory.Sum(item => item.Quantity * item.Product.Price);
-        }
-
-        static void InitializeData()
-        {
-            myStore = new Store
+            mainStore = new Store
             {
                 Id = 1,
-                Name = "ElectroCenter",
-                Address = "Aleje Jerozolimskie 1",
+                Name = "ElectroHub",
+                Address = "Szkolna 12",
                 City = "Warszawa",
                 Region = "Mazowieckie",
-                PostalCode = "00-001",
+                PostalCode = "00-100",
                 Country = "Polska",
-                PhoneNumber = "22 111 22 33"
+                PhoneNumber = "111-222-333"
             };
 
-            var manager = new Employee(1, "Jan", "Kowalski", "jan@sklep.pl", "123", 8000m, EmployeePosition.Manager);
-            var seller = new Employee(2, "Anna", "Nowak", "anna@sklep.pl", "456", 4000m, EmployeePosition.Salesperson);
-
-            myStore.AddEmployee(manager);
-            myStore.AddEmployee(seller);
-
-            var laptop = new ElectronicDevice
+            var p1 = new ElectronicDevice
             {
                 Id = 101,
-                Name = "Asus ROG",
-                Manufacturer = "Asus",
-                Price = 6500m,
+                Name = "Laptop Gamingowy",
+                Manufacturer = "Lenovo",
+                Price = 4500m,
                 Category = ProductCategory.Computer,
-                Processor = "Intel i9",
-                RamSizeGB = 32,
-                ScreenSize = "17 cali"
+                Processor = "Ryzen 7",
+                RamSizeGB = 16,
+                ScreenSize = "15.6 cala"
             };
 
-            var phone = new ElectronicDevice
+            var p2 = new ElectronicDevice
             {
                 Id = 102,
-                Name = "Samsung S24",
-                Manufacturer = "Samsung",
-                Price = 4500m,
+                Name = "Smartfon Pro",
+                Manufacturer = "Xiaomi",
+                Price = 2500m,
                 Category = ProductCategory.Smartphone,
-                Processor = "Snapdragon 8 Gen 3",
-                RamSizeGB = 12,
-                ScreenSize = "6.2 cala"
+                Processor = "Snapdragon 8",
+                RamSizeGB = 8,
+                ScreenSize = "6.7 cala"
             };
 
-            var washingMachine = new HomeAppliance
+            var p3 = new HomeAppliance
             {
                 Id = 201,
-                Name = "UltraWash 5000",
+                Name = "Pralka Automatyczna",
                 Manufacturer = "Bosch",
-                Price = 2200m,
+                Price = 1800m,
                 Category = ProductCategory.LargeAppliance,
-                EnergyClass = "A",
-                Capacity = 9.0,
-                PowerConsumptionWatts = 1500
+                EnergyClass = "A+++",
+                Capacity = 8.0,
+                PowerConsumptionWatts = 1200
             };
 
-            myStore.UpdateStock(laptop, 5);
-            myStore.UpdateStock(phone, 10);
-            myStore.UpdateStock(washingMachine, 4);
+            mainStore.UpdateStock(p1, 5);
+            mainStore.UpdateStock(p2, 10);
+            mainStore.UpdateStock(p3, 3);
 
-            currentCustomer = new Customer(99, "Marek", "Klient", "marek@dom.pl", "999-999", "Poznań", "Wielkopolskie", "60-100")
+            activeCustomer = new Customer(1, "Jan", "Kowalski", "jan@test.pl", "500-123", "Kraków", "Małopolskie", "30-001")
             {
-                WalletBalance = 15000m
+                WalletBalance = 10000m
             };
         }
     }

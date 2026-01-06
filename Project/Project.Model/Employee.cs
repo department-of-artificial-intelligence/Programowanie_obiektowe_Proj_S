@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,27 +40,27 @@ namespace Project.Model
 
         public required EmployeePosition Position { get; set; }
 
-        public DateTime HireDate { get; set; } = DateTime.Now;
+        public required DateTime HireDate { get; set; } = DateTime.Now;
 
-        public int? StoreId { get; set; }
+        public required int? StoreId { get; set; }
 
-        public Store? WorkPlace { get; set; }
+        public required Store? WorkPlace { get; set; }
 
-
+        
 
 
         protected Employee() { }
 
-        
-        
-        public Employee(int id, string firstName, string lastName, string email, int phone, decimal salary, EmployeePosition position)
+
+        [SetsRequiredMembers]
+        public Employee(int id, string firstName, string lastName, string email, string phone, decimal salary, EmployeePosition position)
             : base(firstName, lastName, phone, email)
         {
             EmployeeId = id;
             Salary = salary;
             Position = position;
         }
-
+        
         
 
 

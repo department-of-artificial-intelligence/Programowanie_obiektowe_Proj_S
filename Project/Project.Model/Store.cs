@@ -9,7 +9,6 @@ namespace Project.Model
         public required int Id { get; set; }
         public required string Name { get; set; }
 
-       
         public required string Address { get; set; }
         public required string City { get; set; }
         public required string Region { get; set; }
@@ -17,12 +16,10 @@ namespace Project.Model
         public required string Country { get; set; }
         public required string PhoneNumber { get; set; }
 
-        
         public List<Employee> Employees { get; set; } = new List<Employee>();
-
-        
         public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>();
 
+        public List<Order> Orders { get; set; } = new List<Order>();
 
         // --- ZARZĄDZANIE PRACOWNIKAMI ---
 
@@ -30,11 +27,9 @@ namespace Project.Model
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee));
 
-
             if (!Employees.Any(e => e.EmployeeId == employee.EmployeeId))
             {
                 Employees.Add(employee);
-
                 employee.WorkPlace = this;
                 employee.StoreId = this.Id;
             }
@@ -48,21 +43,16 @@ namespace Project.Model
             if (empToRemove != null)
             {
                 Employees.Remove(empToRemove);
-                
             }
         }
 
         // --- ZARZĄDZANIE MAGAZYNEM (Inventory) ---
 
-        
         public int GetStockLevel(Product product)
         {
             if (product == null) throw new ArgumentNullException(nameof(product));
 
-           
             var inventoryItem = Inventory.FirstOrDefault(item => item.ProductId == product.Id);
-
-          
             return inventoryItem?.Quantity ?? 0;
         }
 
@@ -71,17 +61,14 @@ namespace Project.Model
             if (product == null) throw new ArgumentNullException(nameof(product));
             if (newQuantity < 0) throw new ArgumentException("Quantity cannot be negative.");
 
-            
             var inventoryItem = Inventory.FirstOrDefault(item => item.ProductId == product.Id);
 
             if (inventoryItem != null)
             {
-                
                 inventoryItem.Quantity = newQuantity;
             }
             else
             {
-                
                 var newItem = new InventoryItem
                 {
                     Store = this,

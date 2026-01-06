@@ -10,34 +10,27 @@ namespace Project.Model
         public required DateTime DatePlaced { get; set; }
         public required OrderStatus Status { get; set; }
 
-        
         public decimal TotalValue { get; private set; }
 
         public required int CustomerId { get; set; }
         public required Customer Customer { get; set; }
 
-        
         public required int StoreId { get; set; }
         public required Store FulfillingStore { get; set; }
 
-       
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
-        
-        private Order() { }
+        public Order() { }
 
         public decimal CalculateTotalValue()
         {
-            
             decimal total = OrderItems.Sum(item => item.CalculateLineTotal());
             TotalValue = total;
             return total;
         }
 
-       
         public void AddProduct(Product product, int quantity)
         {
-            
             if (product == null)
             {
                 throw new ArgumentNullException(nameof(product), "Produkt nie może być pusty.");
@@ -47,29 +40,28 @@ namespace Project.Model
                 throw new ArgumentException("Ilość musi być dodatnia.", nameof(quantity));
             }
 
-           
             var existingItem = OrderItems.FirstOrDefault(item => item.ProductId == product.Id);
 
             if (existingItem != null)
             {
-                
                 existingItem.Quantity += quantity;
             }
             else
             {
-                
+                // TUTAJ BYŁ BŁĄD - Poprawiona inicjalizacja
                 var newItem = new OrderItem
                 {
+                    Order = this,              // <--- TA LINIA JEST KLUCZOWA (CS9035)
+                    OrderId = this.Id,
                     Product = product,
                     ProductId = product.Id,
                     Quantity = quantity,
-                    UnitPrice = product.Price 
+                    UnitPrice = product.Price
                 };
 
                 OrderItems.Add(newItem);
             }
 
-            
             CalculateTotalValue();
         }
 
@@ -80,7 +72,7 @@ namespace Project.Model
 
         public override string ToString()
         {
-            return $"Order #{Id} | Status: {Status} | Total: {TotalValue:C}";
+            return $"Zamówienie #{Id} [Status: {Status}] - {DatePlaced:yyyy-MM-dd} | Total: {TotalValue:C}";
         }
     }
 }
