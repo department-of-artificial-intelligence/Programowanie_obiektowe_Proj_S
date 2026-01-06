@@ -1,5 +1,5 @@
 ﻿using System;
-using Project.Model; // Pamiętaj o tym, żeby widzieć swoje klasy!
+using Project.Model; 
 
 namespace Project.Model
 {
@@ -9,7 +9,7 @@ namespace Project.Model
         {
             Console.WriteLine("=== ROZPOCZYNAMY SYMULACJĘ SYSTEMU SKLEPOWEGO ===\n");
 
-            // KROK 1: Tworzymy Sklep
+            
             Store myStore = new Store
             {
                 Id = 1,
@@ -23,7 +23,7 @@ namespace Project.Model
             };
             Console.WriteLine($"1. Utworzono sklep: {myStore}");
 
-            // KROK 2: Zatrudniamy Pracowników
+            
             Employee manager = new Employee(
                 id: 101,
                 firstName: "Jan",
@@ -44,12 +44,12 @@ namespace Project.Model
                 position: EmployeePosition.Salesperson
             );
 
-            // Dodajemy ich do sklepu (tu zadziała też relacja zwrotna, jeśli ją odkomentowałeś)
+           
             myStore.AddEmployee(manager);
             myStore.AddEmployee(seller);
             Console.WriteLine($"2. Zatrudniono {myStore.Employees.Count} pracowników.");
 
-            // KROK 3: Definiujemy Produkty (Hardware)
+            
             Hardware laptop = new Hardware
             {
                 Id = 1,
@@ -72,16 +72,15 @@ namespace Project.Model
                 WarrantyMonths = 12
             };
 
-            // KROK 4: Przyjmujemy towar na magazyn
-            // Mamy 10 laptopów i 20 telefonów
+           
             myStore.UpdateStock(laptop, 10);
             myStore.UpdateStock(phone, 20);
 
-            // Sprawdzenie stanu magazynowego
+            
             int laptopCount = myStore.GetStockLevel(laptop);
             Console.WriteLine($"3. Magazyn zaktualizowany. Mamy {laptopCount} sztuk {laptop.Name}.");
 
-            // KROK 5: Pojawia się Klient
+            
             Customer customer = new Customer(
                 id: 501,
                 firstName: "Piotr",
@@ -94,7 +93,7 @@ namespace Project.Model
             );
             Console.WriteLine($"4. Klient wchodzi do sklepu: {customer.GetInfo()}");
 
-            // KROK 6: Klient składa zamówienie
+            
             Order newOrder = new Order
             {
                 Id = 1001,
@@ -106,8 +105,7 @@ namespace Project.Model
                 FulfillingStore = myStore
             };
 
-            // Klient kupuje: 1 laptopa i 2 telefony
-            // Metoda AddProduct sama stworzy OrderItem i przeliczy koszty
+            
             newOrder.AddProduct(laptop, 1);
             newOrder.AddProduct(phone, 2);
 
@@ -121,7 +119,7 @@ namespace Project.Model
 
             Console.WriteLine($"\nŁĄCZNA WARTOŚĆ: {newOrder.TotalValue:C}");
 
-            // Zatrzymanie konsoli, żebyś widział wynik
+            
             Console.ReadKey();
         }
     }
