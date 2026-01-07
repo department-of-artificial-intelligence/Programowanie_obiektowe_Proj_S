@@ -3,10 +3,11 @@
 
     public enum OrderStatus
     {
-        New = 0,            
-        Pending,            
-        Approved,           
-        Completed,          
+        New = 0,        
+        Confirmed,  
+        Paid,       
+        Shipped,    
+        Completed,  
         Cancelled
 
 

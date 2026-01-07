@@ -1,33 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions; 
+using System.Diagnostics.CodeAnalysis; 
 
 namespace Project.Model
 {
     public abstract class Person
     {
+       
+        private string _phoneNumber;
 
-        public  required string FirstName { get; set; }
+        
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public required string Email { get; set; }
 
-        public  required string LastName { get; set; }
+        public required string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set
+            {
+                
+                
+                string pattern = @"^\+\d{2}\d{9}$";
 
-        public  required string PhoneNumber {  get; set; } 
+                
+                if (!Regex.IsMatch(value, pattern))
+                {
+                    
+                    throw new ArgumentException("Numer telefonu musi być w formacie: +XXYYYYYYYYY (np. +48123456789)");
+                }
 
-        public  required string Email { get; set; }
+                
+                _phoneNumber = value;
+            }
+        }
 
-
-        public Person() { }
+        protected Person() { }
 
         [SetsRequiredMembers]
-
-        protected Person(string firstName, string lastName, string phoneNumber, string email)
+        protected Person(string firstName, string lastName, string phone, string email)
         {
             FirstName = firstName;
             LastName = lastName;
-            PhoneNumber = phoneNumber;
+            PhoneNumber = phone; 
             Email = email;
         }
 
@@ -38,7 +53,7 @@ namespace Project.Model
 
         public virtual string GetInfo()
         {
-            return $"Name: {GetFullName()} | Contact: {Email}, PhoneNumber: {PhoneNumber}";
+            return $"{GetFullName()} | Tel: {PhoneNumber} | Email: {Email}";
         }
     }
 }
