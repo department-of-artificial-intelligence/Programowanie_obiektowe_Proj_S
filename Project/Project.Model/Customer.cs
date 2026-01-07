@@ -32,10 +32,12 @@ namespace Project.Model
         public required string Region { get; set; }
         public required string PostalCode { get; set; }
 
+
+
         [SetsRequiredMembers]
 
-        public Customer(int id, string firstName, string lastName, string email, string phone, string city, string region, string postalCode)
-            : base(firstName, lastName, phone, email) 
+        public Customer(int id, string firstName, string lastName, string email, string address, string phone, string city, string region, string postalCode)
+            : base(firstName, lastName, phone, email, address) 
         {
             CustomerId = id;
             City = city;

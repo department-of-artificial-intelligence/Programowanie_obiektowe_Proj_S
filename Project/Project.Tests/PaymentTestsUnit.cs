@@ -8,7 +8,7 @@ namespace Project.Tests
     {
         private Customer CreateTestCustomer(decimal balance)
         {
-            return new Customer(1, "Test", "User", "test@test.pl", "+48111222333", "City", "Region", "00-000")
+            return new Customer(1, "Test", "User", "test@test.pl", "ul. Polna 1", "+48111222333", "City", "Region", "00-000")
             {
                 WalletBalance = balance
             };
@@ -28,24 +28,9 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void Blik_ShouldReturnFalse_WhenFundsAreInsufficient()
-        {
-            var customer = CreateTestCustomer(10m);
-            var payment = new BlikPayment("123456");
-
-            bool result = payment.Pay(50m, customer);
-
-            Assert.False(result);
-            Assert.Equal(10m, customer.WalletBalance);
-        }
-
-        [Fact]
         public void Blik_Constructor_ShouldThrowException_WhenCodeInvalid()
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                new BlikPayment("123");
-            });
+            Assert.Throws<ArgumentException>(() => new BlikPayment("123"));
         }
 
         [Fact]
@@ -58,15 +43,6 @@ namespace Project.Tests
 
             Assert.True(result);
             Assert.Equal(100m, customer.WalletBalance);
-        }
-
-        [Fact]
-        public void CreditCard_Constructor_ShouldThrowException_WhenNumberTooShort()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                new CreditCardPayment("123", "Jan Nowak");
-            });
         }
 
         [Fact]

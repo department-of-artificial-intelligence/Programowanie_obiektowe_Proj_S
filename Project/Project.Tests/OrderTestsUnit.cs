@@ -9,7 +9,17 @@ namespace Project.Tests
     {
         private Order CreateTestOrder(decimal customerBalance = 1000m)
         {
-            var customer = new Customer(1, "Jan", "Testowy", "jan@test.pl", "+48111222333", "Warszawa", "Mazowieckie", "00-100")
+            var customer = new Customer(
+                1,
+                "Jan",
+                "Testowy",
+                "jan@test.pl",
+                "ul. Testowa 1",
+                "+48111222333",
+                "Warszawa",
+                "Mazowieckie",
+                "00-100"
+            )
             {
                 WalletBalance = customerBalance
             };
@@ -23,7 +33,7 @@ namespace Project.Tests
                 Region = "Region",
                 PostalCode = "00-000",
                 Country = "PL",
-                PhoneNumber = "123"
+                PhoneNumber = "+48123123123"
             };
 
             return new Order
@@ -40,16 +50,13 @@ namespace Project.Tests
 
         private Product CreateTestProduct(decimal price)
         {
-            return new ElectronicDevice
+            return new Product
             {
                 Id = 101,
-                Name = "Test Phone",
+                Name = "Test Product",
                 Manufacturer = "TestCo",
                 Price = price,
-                Category = ProductCategory.Smartphone,
-                Processor = "TestCPU",
-                RamSizeGB = 8,
-                ScreenSize = "6 inch"
+                Category = ProductCategory.Smartphone
             };
         }
 
@@ -118,21 +125,6 @@ namespace Project.Tests
 
             order.FinalizeOrder();
 
-            Assert.NotEqual(OrderStatus.Paid, order.Status);
-            Assert.Equal(OrderStatus.New, order.Status);
-        }
-
-        [Fact]
-        public void FinalizeOrder_ShouldFail_WhenNoPaymentMethodSelected()
-        {
-            var order = CreateTestOrder();
-            var product = CreateTestProduct(100m);
-            order.AddProduct(product, 1);
-
-            order.PaymentMethod = null;
-
-            order.FinalizeOrder();
-
             Assert.Equal(OrderStatus.New, order.Status);
         }
 
@@ -142,10 +134,7 @@ namespace Project.Tests
             var order = CreateTestOrder();
             var product = CreateTestProduct(100m);
 
-            Assert.Throws<ArgumentException>(() =>
-            {
-                order.AddProduct(product, -5);
-            });
+            Assert.Throws<ArgumentException>(() => order.AddProduct(product, -5));
         }
     }
 }

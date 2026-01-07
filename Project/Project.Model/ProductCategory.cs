@@ -3,10 +3,12 @@
     public enum ProductCategory
     {
         Other = 0,
-        Computer,       
-        Smartphone,     
-        TV,             
-        LargeAppliance, 
-        SmallAppliance  
+        Computer,
+        Smartphone,
+        Audio,
+        TV,
+        LargeAppliance,
+        SmallAppliance,
+        Accessory
     }
 }

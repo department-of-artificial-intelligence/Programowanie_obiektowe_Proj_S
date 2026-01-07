@@ -1,29 +1,30 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Model
 {
-    public abstract class Product
+    public class Product
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         public required string Name { get; set; }
-        public required decimal Price { get; set; }
-        public required string Manufacturer { get; set; } 
-
-        
+        public required string Manufacturer { get; set; }
+        public decimal Price { get; set; }
         public required ProductCategory Category { get; set; }
 
-        
-        protected Product() { }
+        public Product() { }
 
-       
-        public virtual string GetDescription()
+        [SetsRequiredMembers]
+        public Product(int id, string name, string manufacturer, decimal price, ProductCategory category)
         {
-            return $"{Name} ({Manufacturer}) - {Price:C}";
+            Id = id;
+            Name = name;
+            Manufacturer = manufacturer;
+            Price = price;
+            Category = category;
         }
 
-        public override string ToString()
+        public string GetDescription()
         {
-            return GetDescription();
+            return $"{Name} ({Manufacturer}) - {Price:C} [{Category}]";
         }
     }
 }

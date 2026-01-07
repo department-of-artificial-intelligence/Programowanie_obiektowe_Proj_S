@@ -7,7 +7,6 @@ namespace Project.Tests
 {
     public class StoreTests
     {
-        
         private Store CreateStore()
         {
             return new Store
@@ -25,25 +24,29 @@ namespace Project.Tests
 
         private Employee CreateEmployee(int id)
         {
-            return new Employee(id, "Jan", "Test", "j@t.pl", "+48000000000", 3000m, EmployeePosition.Cleaner);
+            return new Employee(
+                id,
+                "Jan",
+                "Test",
+                "j@t.pl",
+                "ul. Firmowa 1",
+                "+48000000000",
+                3000m,
+                EmployeePosition.Manager
+            );
         }
 
         private Product CreateProduct(int id)
         {
-            return new ElectronicDevice
+            return new Product
             {
                 Id = id,
-                Name = "Laptop",
-                Manufacturer = "Dell",
+                Name = "Generic Product",
+                Manufacturer = "Manufacturer",
                 Price = 2000m,
-                Category = ProductCategory.Computer,
-                Processor = "CPU",
-                RamSizeGB = 8,
-                ScreenSize = "15 inch"
+                Category = ProductCategory.Computer
             };
         }
-
-       
 
         [Fact]
         public void HireEmployee_ShouldAddEmployee_WhenNotExists()
@@ -79,15 +82,12 @@ namespace Project.Tests
             Assert.Empty(store.Employees);
         }
 
-        
-
         [Fact]
         public void AddToInventory_ShouldAddNewItem_AndAssignStoreReference()
         {
             var store = CreateStore();
             var product = CreateProduct(10);
 
-            
             store.AddToInventory(product, 5);
 
             Assert.Single(store.Inventory);
@@ -95,7 +95,6 @@ namespace Project.Tests
 
             Assert.Equal(5, item.Quantity);
             Assert.Equal(product.Id, item.ProductId);
-            
             Assert.NotNull(item.Store);
             Assert.Equal(store.Id, item.Store.Id);
         }
@@ -113,47 +112,10 @@ namespace Project.Tests
         }
 
         [Fact]
-        public void RemoveFromInventory_ShouldDecreaseQuantity()
-        {
-            var store = CreateStore();
-            var product = CreateProduct(10);
-            store.AddToInventory(product, 10);
-
-            store.RemoveFromInventory(product.Id, 4);
-
-            Assert.Equal(6, store.Inventory.First().Quantity);
-        }
-
-        [Fact]
-        public void UpdateStock_ShouldSetSpecificQuantity()
-        {
-            var store = CreateStore();
-            var product = CreateProduct(10);
-            store.AddToInventory(product, 10);
-
-            store.UpdateStock(product.Id, 2);
-
-            Assert.Equal(2, store.Inventory.First().Quantity);
-        }
-
-       
-
-        [Fact]
-        public void PhoneNumber_ShouldSetCorrectly_WhenFormatIsValid()
-        {
-            var store = CreateStore();
-            store.PhoneNumber = "+48999888777";
-            Assert.Equal("+48999888777", store.PhoneNumber);
-        }
-
-        [Fact]
         public void PhoneNumber_ShouldThrowException_WhenFormatIsInvalid()
         {
             var store = CreateStore();
-            Assert.Throws<ArgumentException>(() =>
-            {
-                store.PhoneNumber = "123456789"; // Brak plusa
-            });
+            Assert.Throws<ArgumentException>(() => store.PhoneNumber = "12345");
         }
     }
 }

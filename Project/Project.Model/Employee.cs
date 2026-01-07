@@ -53,8 +53,8 @@ namespace Project.Model
 
 
         [SetsRequiredMembers]
-        public Employee(int id, string firstName, string lastName, string email, string phone, decimal salary, EmployeePosition position)
-            : base(firstName, lastName, phone, email)
+        public Employee(int id, string firstName, string lastName, string email, string address, string phone, decimal salary, EmployeePosition position)
+            : base(firstName, lastName, phone, email, address)
         {
             EmployeeId = id;
             Salary = salary;

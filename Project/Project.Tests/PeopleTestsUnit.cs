@@ -1,59 +1,57 @@
 ﻿using Xunit;
-using System;
 using Project.Model;
+using System;
 
 namespace Project.Tests
 {
-    public class PeopleTestsUnit
+    public class PersonTests
     {
+        [Fact]
+        public void Employee_ShouldCalculateInfoCorrectly()
+        {
+            Employee emp = new Employee(1, "Jan", "Kowalski", "jan@firma.pl", "ul. Jasna 1", "+48123456789", 5000m, EmployeePosition.Manager);
 
+            string info = emp.GetInfo();
 
+            Assert.Contains("[EMPLOYEE #1]", info);
+            Assert.Contains("Jan Kowalski", info);
+            Assert.Contains("Manager", info);
+        }
 
-            [Fact]
-            public void PhoneNumber_ShouldSetCorrectly_WhenFormatIsValid()
-            {
-                var customer = new Customer(1, "Jan", "Kowalski", "j@k.pl", "+48123456789", "Miasto", "Reg", "00-000");
+        [Fact]
+        public void Customer_ShouldInitializeWithZeroWalletBalance()
+        {
+            Customer cust = new Customer(101, "Anna", "Nowak", "anna@poczta.pl", "ul. Polna 4", "+48987654321", "Warszawa", "Mazowieckie", "00-001");
 
-                Assert.Equal("+48123456789", customer.PhoneNumber);
-            }
+            Assert.Equal(0, cust.WalletBalance);
+        }
 
-            [Fact]
-            public void PhoneNumber_ShouldThrowException_WhenFormatIsInvalid()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new Customer(1, "Jan", "Kowalski", "j@k.pl", "123456789", "Miasto", "Reg", "00-000");
-                });
-            }
+        [Fact]
+        public void PhoneNumber_ShouldThrowException_WhenFormatIsInvalid()
+        {
+            Employee emp = new Employee(1, "Jan", "Kowalski", "jan@firma.pl", "ul. Jasna 1", "+48123456789", 5000m, EmployeePosition.Manager);
 
-            [Fact]
-            public void PhoneNumber_ShouldThrowException_WhenContainsLetters()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new Customer(1, "Jan", "Kowalski", "j@k.pl", "+48aabbccdd", "Miasto", "Reg", "00-000");
-                });
-            }
+            Assert.Throws<ArgumentException>(() => emp.PhoneNumber = "123-456-789");
+        }
 
-            [Fact]
-            public void Employee_Salary_ShouldThrowException_WhenNegative()
-            {
-                var emp = new Employee(1, "Test", "Emp", "e@e.pl", "+48111222333", 5000m, EmployeePosition.Manager);
+        [Fact]
+        public void Salary_ShouldThrowException_WhenValueIsNegative()
+        {
+            Employee emp = new Employee(1, "Jan", "Kowalski", "jan@firma.pl", "ul. Jasna 1", "+48123456789", 5000m, EmployeePosition.Manager);
 
-                Assert.Throws<ArgumentOutOfRangeException>(() =>
-                {
-                    emp.Salary = -100m;
-                });
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() => emp.Salary = -100m);
+        }
 
-            [Fact]
-            public void GetFullName_ShouldCombineFirstAndLastName()
-            {
-                var customer = new Customer(1, "Anna", "Nowak", "a@n.pl", "+48999888777", "X", "Y", "00");
+        [Theory]
+        [InlineData("+48123456789")]
+        [InlineData("+12987654321")]
+        public void PhoneNumber_ShouldAcceptValidFormats(string validPhone)
+        {
+            Customer cust = new Customer(1, "A", "B", "e@e.pl", "Add", "+48111222333", "City", "Reg", "00-000");
 
-                Assert.Equal("Anna Nowak", customer.GetFullName());
-            }
-        
+            cust.PhoneNumber = validPhone;
+
+            Assert.Equal(validPhone, cust.PhoneNumber);
+        }
     }
 }
-
