@@ -1,89 +1,145 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Project.Model
 {
     public class Store
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
+        private string _phoneNumber;
 
+        public int Id { get; set; }
+        public required string Name { get; set; }
         public required string Address { get; set; }
         public required string City { get; set; }
         public required string Region { get; set; }
         public required string PostalCode { get; set; }
         public required string Country { get; set; }
-        public required string PhoneNumber { get; set; }
 
-        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public required string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set
+            {
+                string pattern = @"^\+\d{2}\d{9}$";
+
+                if (!Regex.IsMatch(value, pattern))
+                {
+                    throw new ArgumentException("Numer telefonu sklepu musi być w formacie: +XXYYYYYYYYY (np. +48123456789)");
+                }
+                _phoneNumber = value;
+            }
+        }
+
         public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>();
-
+        public List<Employee> Employees { get; set; } = new List<Employee>();
         public List<Order> Orders { get; set; } = new List<Order>();
 
-        // --- ZARZĄDZANIE PRACOWNIKAMI ---
-
-        public void AddEmployee(Employee employee)
+        public void HireEmployee(Employee employee)
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee));
 
-            if (!Employees.Any(e => e.EmployeeId == employee.EmployeeId))
+            if (Employees.Any(e => e.EmployeeId == employee.EmployeeId))
             {
-                Employees.Add(employee);
-                employee.WorkPlace = this;
-                employee.StoreId = this.Id;
+                throw new InvalidOperationException($"Pracownik o ID {employee.EmployeeId} jest już zatrudniony.");
             }
+
+            Employees.Add(employee);
         }
 
-        public void RemoveEmployee(Employee employee)
+        public void FireEmployee(int employeeId)
         {
-            if (employee == null) throw new ArgumentNullException(nameof(employee));
+            var employee = Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
 
-            var empToRemove = Employees.FirstOrDefault(e => e.EmployeeId == employee.EmployeeId);
-            if (empToRemove != null)
+            if (employee == null)
             {
-                Employees.Remove(empToRemove);
+                throw new ArgumentException($"Nie znaleziono pracownika o ID {employeeId}.");
             }
+
+            Employees.Remove(employee);
         }
 
-        // --- ZARZĄDZANIE MAGAZYNEM (Inventory) ---
-
-        public int GetStockLevel(Product product)
+        public void AddToInventory(Product product, int quantity)
         {
             if (product == null) throw new ArgumentNullException(nameof(product));
+            if (quantity <= 0) throw new ArgumentException("Ilość dodawanego towaru musi być dodatnia.");
 
-            var inventoryItem = Inventory.FirstOrDefault(item => item.ProductId == product.Id);
-            return inventoryItem?.Quantity ?? 0;
-        }
+            var existingItem = Inventory.FirstOrDefault(i => i.ProductId == product.Id);
 
-        public void UpdateStock(Product product, int newQuantity)
-        {
-            if (product == null) throw new ArgumentNullException(nameof(product));
-            if (newQuantity < 0) throw new ArgumentException("Quantity cannot be negative.");
-
-            var inventoryItem = Inventory.FirstOrDefault(item => item.ProductId == product.Id);
-
-            if (inventoryItem != null)
+            if (existingItem != null)
             {
-                inventoryItem.Quantity = newQuantity;
+                existingItem.Quantity += quantity;
             }
             else
             {
-                var newItem = new InventoryItem
+                
+                Inventory.Add(new InventoryItem
                 {
-                    Store = this,
-                    StoreId = this.Id,
                     Product = product,
                     ProductId = product.Id,
-                    Quantity = newQuantity
-                };
-                Inventory.Add(newItem);
+                    Quantity = quantity,
+                    Store = this,
+                    StoreId = this.Id
+                });
             }
         }
 
+        public void RemoveFromInventory(int productId, int quantityToRemove)
+        {
+            if (quantityToRemove <= 0) throw new ArgumentException("Ilość do usunięcia musi być dodatnia.");
+
+            var item = Inventory.FirstOrDefault(i => i.ProductId == productId);
+
+            if (item == null)
+            {
+                throw new InvalidOperationException($"Produkt o ID {productId} nie znajduje się w magazynie.");
+            }
+
+            if (item.Quantity < quantityToRemove)
+            {
+                throw new InvalidOperationException($"Niewystarczająca ilość towaru. Masz: {item.Quantity}, chcesz usunąć: {quantityToRemove}.");
+            }
+
+            item.Quantity -= quantityToRemove;
+
+            if (item.Quantity == 0)
+            {
+                Inventory.Remove(item);
+            }
+        }
+
+
+   
+
+        public void UpdateStock(int productId, int newQuantity)
+        {
+            if (newQuantity < 0)
+            {
+                throw new ArgumentException("Ilość towaru nie może być ujemna.");
+            }
+
+            var item = Inventory.FirstOrDefault(i => i.ProductId == productId);
+
+            if (item == null)
+            {
+                throw new InvalidOperationException($"Produkt o ID {productId} nie znajduje się w magazynie. Użyj metody AddToInventory, aby go dodać.");
+            }
+
+            if (newQuantity == 0)
+            {
+                Inventory.Remove(item);
+            }
+            else
+            {
+                item.Quantity = newQuantity;
+            }
+        }
+
+
         public override string ToString()
         {
-            return $"{Name} (Id: {Id}) - {City}, {Country}";
+            return $"Sklep #{Id}: {Name} ({City}) | Tel: {PhoneNumber}";
         }
     }
 }
