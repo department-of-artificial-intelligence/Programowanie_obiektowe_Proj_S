@@ -40,7 +40,7 @@ namespace WypozyczalniaSamochodow.Services
             car.ValidateCar();
 
             var existingCar = _context.Cars.FirstOrDefault(c => c.Id == car.Id);
-            if (existingCar == null) throw new InvalidOperationException("Samochód nie istnieje");
+            if (existingCar is null) throw new InvalidOperationException("Samochód nie istnieje");
 
             existingCar.Brand = car.Brand;
             existingCar.Model = car.Model;
