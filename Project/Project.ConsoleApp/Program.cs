@@ -40,7 +40,7 @@ namespace Project.ConsoleApp
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("=== PRZYCHODNIA WETERYNARYJNA ===");
+                Console.WriteLine("=== Siec gabinetów weterynaryjnych ===");
                 Console.WriteLine("1. Kliniki");
                 Console.WriteLine("2. Weterynarze");
                 Console.WriteLine("3. Właściciele");
