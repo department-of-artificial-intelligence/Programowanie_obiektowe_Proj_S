@@ -14,7 +14,6 @@ namespace Project.ConsoleApp
         private static IMovieMarkService? _movieMarkService;
 
         // Testing Entity Framework
-        // use --use-inmemory for in-memory database (DEBUG/TEST)
         static async Task Main(string[] args)
         {
             // Setup and configure application database and migrations
