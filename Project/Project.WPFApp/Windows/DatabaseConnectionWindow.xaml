@@ -1,0 +1,35 @@
+﻿<Window x:Class="Project.WPFApp.Windows.DatabaseConnectionWindow"
+        x:Name="DatabaseConnectionWindowElement"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.WPFApp.Windows"
+        xmlns:vm="clr-namespace:Project.WPFApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Connect to the Database" Height="138" Width="364" ResizeMode="NoResize">
+
+    <Window.DataContext>
+        <vm:DatabaseConnectionViewModel />
+    </Window.DataContext>
+    
+    <Window.Resources>
+        <Style TargetType="DockPanel">
+            <Setter Property="Margin" Value="6" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="6" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock HorizontalAlignment="Center">Microsoft SQL Database Connection</TextBlock>
+            <DockPanel HorizontalAlignment="Stretch">
+                <TextBlock DockPanel.Dock="Left" Width="108">Connection String:</TextBlock>
+                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Stretch" Text="{Binding ConnectionString}"></TextBox>
+            </DockPanel>
+        </StackPanel>
+        <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="24" Width="64" Command="{Binding ConnectCommand}" CommandParameter="{Binding ElementName=DatabaseConnectionWindowElement}">Connect</Button>
+    </DockPanel>
+</Window>
