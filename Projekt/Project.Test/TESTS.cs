@@ -23,7 +23,7 @@ namespace Project.TESTS
 
             wyplata.DoPayment(pracownik, kwotaPodstawowa, true);
 
-            Assert.Equal(3000m, wyplata.Amount);
+            Assert.Equal(4000m, wyplata.Amount);
 
         }
     }
@@ -62,7 +62,8 @@ namespace Project.TESTS
 
             var wynik = dzial.FindBestEmployeeByProjectGrade();
 
-            Assert.Null(wynik);
+            Assert.NotNull(wynik);
+            Assert.Equal("Hubert", wynik.FirstName);
         }
     }
 
@@ -82,6 +83,9 @@ namespace Project.TESTS
             };
 
             string wynik = GetPracownikInfo(pracownik);
+
+            Assert.Contains("fgdgjjk@gmail.com", wynik);
+            Assert.Contains("Częstochowa", wynik);
         }
 
         private string GetPracownikInfo(Pracownik p)

@@ -9,6 +9,10 @@ namespace Project.DAL
     {
         public DbSet<Pracownik> Pracownicy { get; set; }
 
+        public DbSet<Dzial> Dzialy { get; set; }
+        public DbSet<Projekt> Projekty { get; set; }
+
+        public DbSet<Adres> Adresy { get; set; }
         public ApplicationDbcontext(DbContextOptions<ApplicationDbcontext> options) : base(options)
         {
 

@@ -9,15 +9,18 @@ namespace Project.Model
 {
     public class Pracownik : Osoba, IPracujacy, IKontakt
     {
-        public Adres AdresZamieszkania { get; set; }
+        public int? DzialId { get; set; }
+        public int? AdresId { get; set; }
+        public Adres Adres { get; set; }
+        public Dzial Dzial { get; set; }
         public Stanowisko StanowiskoPracy { get; set; }
-       
+
         public List<Projekt> ListaProjektow { get; set; } = new List<Projekt>();
-       
+
         public int PassedProjects()
         {
             int amountofpassed = 0;
-       
+
             foreach (Projekt p in ListaProjektow)
             {
                 if (p.Status == "Zakończony" && p.Ocena > 60)
@@ -27,11 +30,11 @@ namespace Project.Model
             }
             return amountofpassed;
         }
-       
+
         public int NotPassedProjects()
         {
             int amountofnotpassed = 0;
-       
+
             foreach (Projekt p in ListaProjektow)
             {
                 if (p.Status == "Zakończony" && p.Ocena < 60)
@@ -41,15 +44,15 @@ namespace Project.Model
             }
             return amountofnotpassed;
         }
-       
-        public Adres Adres { get; set; }
-        public string Email { get; set;}
-        public string Telefon {  get; set; }
-       
+
+
+        public string Email { get; set; }
+        public string Telefon { get; set; }
+
         public string LoadContactInfo()
         {
-            return $"Email: {Email} | Telefon: {Telefon} | Adres: {Adres.Miasto}, {Adres.Ulica}";
+            return $"Email: {Email} | Telefon: {Telefon.FormatujNumerTelefonu()} | Adres: {Adres.Miasto}, {Adres.Ulica}";
         }
-       
-   }    
+
+    }
 }

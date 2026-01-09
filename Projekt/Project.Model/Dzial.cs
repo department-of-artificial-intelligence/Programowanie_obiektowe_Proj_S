@@ -9,6 +9,7 @@ namespace Project.Model
 {
     public class Dzial : IWyszukiwaniePracownikow
     {
+        public int Id { get; set; }
         public string NazwaDzialu {  get; set; }
         public List<Pracownik> ListaPracownikow { get; set; } = new List<Pracownik>();
 
