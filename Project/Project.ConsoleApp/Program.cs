@@ -41,10 +41,9 @@ context.SaveChanges();
 var concerts = context.Concerts
     .Include(c => c.Artist)
     .Include(c => c.Venue);
+
 Console.WriteLine("Wydarzenia: ");
 foreach (var concert in concerts)
 {
     Console.WriteLine($"{concert} - Wyprzedany: {concert.IsSoldOut()}");
 }
-
-context.Temp();

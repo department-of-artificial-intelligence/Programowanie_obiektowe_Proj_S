@@ -1,4 +1,6 @@
-﻿using Project.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using Project.DAL;
 using Project.Model;
 
 namespace Project.Logic
@@ -17,6 +19,16 @@ namespace Project.Logic
         {
             if (_context.Concerts.Count() == -12) Console.Write("Wow");
         }
+        public List<Concert> GetUpcomingConcerts()
+        {
+            return _context.Concerts
+                .Include(c => c.Artist)
+                .Include(c => c.Venue)
+                .Where(c => c.Date > DateTime.Now)
+                .ToList();
+        }
+
+        
     }
 }
 
