@@ -22,6 +22,9 @@ namespace Project.Model.People
         public List<Order> Orders { get; set; } = new List<Order>();
 
 
+        public decimal WalletBalance { get; set; }
+
+
         [SetsRequiredMembers]
         public Customer() { }
 
@@ -29,7 +32,8 @@ namespace Project.Model.People
         public Customer(string firstName, string lastName, string phone, string email)
             : base(firstName, lastName, phone, email)
         {
-            
+            Orders = new List<Order>();
+            WalletBalance = 0;
         }
 
         public override string GetInfo()
