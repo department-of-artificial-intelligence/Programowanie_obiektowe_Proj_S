@@ -30,9 +30,9 @@ namespace Project.Model
         }
 
         [SetsRequiredMembers]
-        protected Person() { }
+        public Person() { }
 
-        protected Person(string firstName, string lastName, string phoneNumber, string email)
+        public Person(string firstName, string lastName, string phoneNumber, string email)
         {
             FirstName = firstName;
             LastName = lastName;

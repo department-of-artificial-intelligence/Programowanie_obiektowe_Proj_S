@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Project.Model
+namespace Project.Model.Stores
 {
     public class Product
     {
@@ -27,7 +27,7 @@ namespace Project.Model
         public required string Category { get; set; }
 
        
-        private Product() { }
+        public Product() { }
 
         [SetsRequiredMembers]
         public Product(string name, decimal price, string category)

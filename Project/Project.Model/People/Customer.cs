@@ -35,8 +35,19 @@ namespace Project.Model.People
         public override string GetInfo()
         {
             string idInfo = CustomerId == 0 ? "NEW" : CustomerId.ToString();
-            
-            return $"[CUSTOMER #{idInfo}] {base.GetInfo()} | Zamówień: {Orders.Count}";
+
+            string result = $"[CUSTOMER #{idInfo}] {base.GetInfo()} | Zamówień: {Orders.Count}";
+
+            if (Orders.Count > 0)
+            {
+                result += "\nLista zamówień:";
+                foreach (var order in Orders)
+                {
+                    result += $"\n\t -> {order}";
+                }
+            }
+
+            return result;
         }
     }
 }

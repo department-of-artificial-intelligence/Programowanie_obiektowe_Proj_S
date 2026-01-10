@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Model.Stores;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Project.Model.People
         public required EmployeePosition Position { get; set; }
 
 
+
         private decimal _salary;
         public required decimal Salary
         {
@@ -33,7 +35,7 @@ namespace Project.Model.People
         public required DateTime HireDate { get; set; } = DateTime.Now;
 
         [SetsRequiredMembers]
-        private Employee(): base(string.Empty, string.Empty, string.Empty, string.Empty) { }
+        public Employee(): base(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
 
         [SetsRequiredMembers]

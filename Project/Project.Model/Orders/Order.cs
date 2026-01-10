@@ -1,4 +1,5 @@
 ﻿using Project.Model.People;
+using Project.Model.Stores;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

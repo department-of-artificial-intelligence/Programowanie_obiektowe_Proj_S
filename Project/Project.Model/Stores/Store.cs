@@ -1,20 +1,19 @@
-﻿using Project.Model.People;
+﻿using Project.Model.Orders;
+using Project.Model.People;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Project.Model
+namespace Project.Model.Stores
 {
     public class Store
     {
         public int Id { get; private set; }
-        public string Name { get; set; }
-        public string City { get; set; }
-        public List<Employee> Staff { get; set; }
-        public List<Product> Inventory { get; set; }
+        public required string Name { get; set; }
 
-        private string _phoneNumber {  get; set; }
+        public string _phoneNumber { get; set; }
         public required string PhoneNumber
         {
             get { return _phoneNumber; }
@@ -31,11 +30,18 @@ namespace Project.Model
         }
 
 
-        public Store(int id, string name, string city)
+        required public Address Address { get; set; }
+        public List<Employee> Staff { get; set; }
+        public List<Product> Inventory { get; set; }
+
+        [SetsRequiredMembers]
+
+        public Store(string name, Address address, string phoneNumber)
         {
-            Id = id;
+            
             Name = name;
-            City = city;
+            Address = address;
+            PhoneNumber = phoneNumber;
             Staff = new List<Employee>();
             Inventory = new List<Product>();
         }
@@ -45,7 +51,7 @@ namespace Project.Model
 
         public override string ToString()
         {
-            return $"Sklep #{Id}: {Name} ({City}) | Tel: {PhoneNumber}";
+            return $"Sklep #{Id}: {Name} ({Address}) | Tel: {PhoneNumber}";
         }
     }
 }

@@ -3,8 +3,8 @@
 
     public enum EmployeePosition
     {
-        None = 0,           
-        Seller,        
+        None = 0,
+        Cashier,        
         WarehouseWorker,    
         Technician,         
         Cleaner,            

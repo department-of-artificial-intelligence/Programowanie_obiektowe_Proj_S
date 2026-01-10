@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Model.Stores;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Model.Orders
@@ -22,7 +23,7 @@ namespace Project.Model.Orders
         }
 
         
-        private OrderItem() { }
+        public OrderItem() { }
 
 
         [SetsRequiredMembers]
@@ -40,7 +41,7 @@ namespace Project.Model.Orders
 
         public override string ToString()
         {
-            return $"{Product.Name} x{Quantity} ({GetLineTotal():C})";
+            return $"{Product.Name} (x{Quantity}) - {Product.Price * Quantity} PLN";
         }
     }
 }

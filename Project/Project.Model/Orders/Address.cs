@@ -18,14 +18,15 @@ namespace Project.Model.Orders
         public required string Country { get; set; }
 
         
-        private Address() { }
+        public Address() { }
 
         [SetsRequiredMembers]
-        public Address(string street, string city, string zipCode)
+        public Address(string city, string street, string zipCode, string country)
         {
             Street = street;
             City = city;
             ZipCode = zipCode;
+            Country = country;
         }
 
         public override string ToString()
