@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Model.People;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,16 +8,13 @@ namespace Project.Model
 {
     public class Store
     {
-        private string _phoneNumber;
+        public int Id { get; private set; }
+        public string Name { get; set; }
+        public string City { get; set; }
+        public List<Employee> Staff { get; set; }
+        public List<Product> Inventory { get; set; }
 
-        public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Address { get; set; }
-        public required string City { get; set; }
-        public required string Region { get; set; }
-        public required string PostalCode { get; set; }
-        public required string Country { get; set; }
-
+        private string _phoneNumber {  get; set; }
         public required string PhoneNumber
         {
             get { return _phoneNumber; }
@@ -32,109 +30,17 @@ namespace Project.Model
             }
         }
 
-        public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>();
-        public List<Employee> Employees { get; set; } = new List<Employee>();
-        public List<Order> Orders { get; set; } = new List<Order>();
 
-        public void HireEmployee(Employee employee)
+        public Store(int id, string name, string city)
         {
-            if (employee == null) throw new ArgumentNullException(nameof(employee));
-
-            if (Employees.Any(e => e.EmployeeId == employee.EmployeeId))
-            {
-                throw new InvalidOperationException($"Pracownik o ID {employee.EmployeeId} jest już zatrudniony.");
-            }
-
-            Employees.Add(employee);
+            Id = id;
+            Name = name;
+            City = city;
+            Staff = new List<Employee>();
+            Inventory = new List<Product>();
         }
 
-        public void FireEmployee(int employeeId)
-        {
-            var employee = Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-
-            if (employee == null)
-            {
-                throw new ArgumentException($"Nie znaleziono pracownika o ID {employeeId}.");
-            }
-
-            Employees.Remove(employee);
-        }
-
-        public void AddToInventory(Product product, int quantity)
-        {
-            if (product == null) throw new ArgumentNullException(nameof(product));
-            if (quantity <= 0) throw new ArgumentException("Ilość dodawanego towaru musi być dodatnia.");
-
-            var existingItem = Inventory.FirstOrDefault(i => i.ProductId == product.Id);
-
-            if (existingItem != null)
-            {
-                existingItem.Quantity += quantity;
-            }
-            else
-            {
-                
-                Inventory.Add(new InventoryItem
-                {
-                    Product = product,
-                    ProductId = product.Id,
-                    Quantity = quantity,
-                    Store = this,
-                    StoreId = this.Id
-                });
-            }
-        }
-
-        public void RemoveFromInventory(int productId, int quantityToRemove)
-        {
-            if (quantityToRemove <= 0) throw new ArgumentException("Ilość do usunięcia musi być dodatnia.");
-
-            var item = Inventory.FirstOrDefault(i => i.ProductId == productId);
-
-            if (item == null)
-            {
-                throw new InvalidOperationException($"Produkt o ID {productId} nie znajduje się w magazynie.");
-            }
-
-            if (item.Quantity < quantityToRemove)
-            {
-                throw new InvalidOperationException($"Niewystarczająca ilość towaru. Masz: {item.Quantity}, chcesz usunąć: {quantityToRemove}.");
-            }
-
-            item.Quantity -= quantityToRemove;
-
-            if (item.Quantity == 0)
-            {
-                Inventory.Remove(item);
-            }
-        }
-
-
-   
-
-        public void UpdateStock(int productId, int newQuantity)
-        {
-            if (newQuantity < 0)
-            {
-                throw new ArgumentException("Ilość towaru nie może być ujemna.");
-            }
-
-            var item = Inventory.FirstOrDefault(i => i.ProductId == productId);
-
-            if (item == null)
-            {
-                throw new InvalidOperationException($"Produkt o ID {productId} nie znajduje się w magazynie. Użyj metody AddToInventory, aby go dodać.");
-            }
-
-            if (newQuantity == 0)
-            {
-                Inventory.Remove(item);
-            }
-            else
-            {
-                item.Quantity = newQuantity;
-            }
-        }
+        
 
 
         public override string ToString()

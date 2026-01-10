@@ -1,4 +1,4 @@
-﻿namespace Project.Model
+﻿namespace Project.Model.Orders
 {
 
     public enum OrderStatus

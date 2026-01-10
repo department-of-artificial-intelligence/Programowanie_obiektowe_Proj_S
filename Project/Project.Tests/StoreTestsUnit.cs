@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Project.Model;
+using Project.Model.People;
 
 namespace Project.Tests
 {

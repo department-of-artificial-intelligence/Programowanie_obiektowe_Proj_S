@@ -4,27 +4,44 @@ namespace Project.Model
 {
     public class Product
     {
-        public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Manufacturer { get; set; }
-        public decimal Price { get; set; }
-        public required ProductCategory Category { get; set; }
+        
+        public int ProductId { get; private set; }
 
-        public Product() { }
+        public required string Name { get; set; }
+        public string Description { get; set; } = "Brak opisu";
+
+        private decimal _price;
+        public required decimal Price
+        {
+            get { return _price; }
+            set
+            {
+                if (value < 0)
+                    
+                    throw new ArgumentOutOfRangeException(nameof(Price), "Cena produktu nie może być ujemna!");
+                _price = value;
+            }
+        }
+
+        
+        public required string Category { get; set; }
+
+       
+        private Product() { }
 
         [SetsRequiredMembers]
-        public Product(int id, string name, string manufacturer, decimal price, ProductCategory category)
+        public Product(string name, decimal price, string category)
         {
-            Id = id;
             Name = name;
-            Manufacturer = manufacturer;
             Price = price;
             Category = category;
         }
 
-        public string GetDescription()
+        public override string ToString()
         {
-            return $"{Name} ({Manufacturer}) - {Price:C} [{Category}]";
+            string idInfo = ProductId == 0 ? "NOWY" : ProductId.ToString();
+            
+            return $"[PRODUKT #{idInfo}] {Name} ({Category}) | Cena: {Price:C}";
         }
     }
 }

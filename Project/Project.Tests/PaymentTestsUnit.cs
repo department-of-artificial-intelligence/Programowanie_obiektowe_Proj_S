@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using System;
-using Project.Model;
+using Project.Model.People;
 
 namespace Project.Tests
 {

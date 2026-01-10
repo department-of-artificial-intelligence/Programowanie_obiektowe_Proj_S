@@ -4,14 +4,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Model
 {
+
     public abstract class Person
     {
         private string _phoneNumber;
 
+        public int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string Email { get; set; }
-        public required string Address { get; set; }
+
 
         public required string PhoneNumber
         {
@@ -27,20 +29,21 @@ namespace Project.Model
             }
         }
 
+        [SetsRequiredMembers]
         protected Person() { }
 
-        [SetsRequiredMembers]
-        protected Person(string firstName, string lastName, string phone, string email, string address)
+        protected Person(string firstName, string lastName, string phoneNumber, string email)
         {
             FirstName = firstName;
             LastName = lastName;
-            PhoneNumber = phone;
+            PhoneNumber = phoneNumber;
             Email = email;
-            Address = address;
+
         }
 
-        public virtual string GetInfo() => $"{FirstName} {LastName}";
-
-
+        public virtual string GetInfo()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }

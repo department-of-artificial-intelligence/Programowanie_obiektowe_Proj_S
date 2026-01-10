@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Project.Model;
 using Project.Extensions;
+using Project.Model.Orders;
 
 namespace Project.Tests
 {

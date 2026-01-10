@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Project.Model;
+using Project.Model.Orders;
 
 namespace Project.Tests
 {

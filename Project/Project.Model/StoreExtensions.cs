@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Project.Model;
+using Project.Model.Orders;
+using Project.Model.People;
 
 namespace Project.Extensions
 {

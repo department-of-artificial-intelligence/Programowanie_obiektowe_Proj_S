@@ -1,4 +1,4 @@
-﻿namespace Project.Model
+﻿namespace Project.Model.People
 {
 
     public enum EmployeePosition
