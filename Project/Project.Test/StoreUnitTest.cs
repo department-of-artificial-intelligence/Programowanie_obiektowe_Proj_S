@@ -1,4 +1,5 @@
 ﻿using Xunit;
+
 using System;
 using System.Collections.Generic;
 using Project.Model;
@@ -10,6 +11,7 @@ namespace Project.Test
 {
     public class StoreTestUnit
     {
+
         [Fact]
         public void StoreTest() 
         {
@@ -42,7 +44,7 @@ namespace Project.Test
             var p3 = new Product("Szynka Parmeńska", 89.90m, "Wędliny Premium");
             var p4 = new Product("Oliwa z Oliwek", 45.00m, "Import");
 
-            store1.Inventory.AddRange(new[] { p1, p2 });
+            store1.Inventory.Add(p1);
             store2.Inventory.AddRange(new[] { p3, p4, p2 });
 
             
@@ -78,6 +80,8 @@ namespace Project.Test
             }
 
             
+
+
         }
     }
 }
