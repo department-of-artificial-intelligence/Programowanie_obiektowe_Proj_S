@@ -28,9 +28,9 @@ namespace Project.Logic.StoreManagment
 
         public Employee FindById(int id)
         {
-            
-            return _employeesDatabase.FirstOrDefault(e => e.Email.Length > id); 
-            
+
+            return _employeesDatabase.FirstOrDefault(e => e.EmployeeId == id);
+
         }
 
        
