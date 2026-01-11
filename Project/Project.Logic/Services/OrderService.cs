@@ -7,7 +7,7 @@ using Project.Model.Orders;
 using Project.Model.People;
 using Project.Model.Stores;
 
-namespace Project.Logic.Services
+namespace Project.Logic.StoreManager
 {
     public class OrderService : IOrderService
     {

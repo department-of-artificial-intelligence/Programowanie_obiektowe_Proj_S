@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.Model.Interfaces
 {
-    public interface IStoreManager
+    public interface IProductManager
     {
         List<Store> AllStores();
         bool AddProduct(Store store, Product product, int quantity);

@@ -5,14 +5,14 @@ using Project.Model;
 using Project.Model.Interfaces; 
 using Project.Model.Stores;
 
-namespace Project.Logic.Services
+namespace Project.Logic.StoreManager
 {
-    public class StoreManager : IStoreManager
+    public class ProductManager : IProductManager
     {
         
         private readonly List<Store> _fakeStoreDatabase;
 
-        public StoreManager()
+        public ProductManager()
         {
             _fakeStoreDatabase = new List<Store>();
         }
