@@ -27,7 +27,7 @@ namespace Project.Model.Orders
             DeliveryAddress = deliveryAddress;
         }
 
-        
+
 
         public void AddProduct(Product product, int quantity)
         {
@@ -36,23 +36,22 @@ namespace Project.Model.Orders
                 throw new InvalidOperationException("Nie można dodawać produktów do przetworzonego zamówienia.");
             }
 
-            
-            var existingItem = Items.FirstOrDefault(item => item.Product.ProductId == product.ProductId);
+            var existingItem = Items.FirstOrDefault(item =>
+                (item.Product.ProductId != 0 && item.Product.ProductId == product.ProductId) ||
+                (item.Product.Name == product.Name));
 
             if (existingItem != null)
             {
-                
                 existingItem.Quantity += quantity;
             }
             else
             {
-                
                 var newItem = new OrderItem(product, quantity);
                 Items.Add(newItem);
             }
         }
 
-        
+
         public void ShipOrder()
         {
             if (Status == OrderStatus.Cancelled)
