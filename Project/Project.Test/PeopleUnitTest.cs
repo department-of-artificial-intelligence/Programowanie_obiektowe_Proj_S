@@ -108,7 +108,7 @@ namespace Project.Test
 
             Assert.Throws<ArgumentException>(() =>
             {
-                // Tutaj nastąpi błąd w konstruktorze
+                
                 new Customer("Jan", "Testowy", "+48123456789", invalidEmail);
             });
 
