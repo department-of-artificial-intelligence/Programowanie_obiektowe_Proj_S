@@ -11,6 +11,7 @@ namespace Project.Test
 {
     public class StoreTestUnit
     {
+        
         private readonly ITestOutputHelper _output;
 
         public StoreTestUnit(ITestOutputHelper output)
@@ -18,13 +19,15 @@ namespace Project.Test
             _output = output;
         }
 
+
+
         [Fact]
         public void Calculate_Its_TotalAmount()
         {
             _output.WriteLine("TEST: Obliczanie wartości pojedynczego zamówienia.");
 
             var customer = new Customer("Test", "User", "+48123456789", "test@test.pl");
-            var address = new Address("A", "B", "00", "PL");
+            var address = new Address("A", "B", "50-361", "PL");
             var order = new Order(customer, address);
 
             var p1 = new Product("Mleko", 3.50m, "Food");
@@ -51,13 +54,15 @@ namespace Project.Test
             Assert.Equal(expected, order.GetTotalAmount());
         }
 
+
+
         [Fact]
         public void Change_Status_To_Shipped()
         {
             _output.WriteLine("TEST: Zmiana statusu zamówienia na Wysłane.");
 
             
-            var order = new Order(new Customer("A", "B", "+48123456789", "a@a.pl"), new Address("A", "B", "0", "P"));
+            var order = new Order(new Customer("A", "B", "+48123456789", "a@a.pl"), new Address("A", "B", "67-531", "P"));
 
            
             var product = new Product("Test", 10m, "Test");
@@ -70,6 +75,8 @@ namespace Project.Test
             Assert.Equal(OrderStatus.Shipped, order.Status);
             _output.WriteLine("SUKCES: Status zmienił się poprawnie.");
         }
+
+
 
         [Fact]
         public void Store_Should_Add_Employee_Correctly()
@@ -88,6 +95,8 @@ namespace Project.Test
             Assert.Equal("Jan", store.Staff[0].FirstName);
             _output.WriteLine("SUKCES: Pracownik dodany.");
         }
+
+
 
         [Fact]
         public void Integration_Customer_TotalSpent_Should_Sum_Multiple_Orders()
@@ -130,5 +139,40 @@ namespace Project.Test
            
             Assert.Equal(223.30m, totalSpent);
         }
+
+
+        [Theory]
+        [InlineData("12345")]       
+        [InlineData("12-34")]       
+        [InlineData("12-3456")]     
+        [InlineData("AB-CDE")]      
+        [InlineData("12 345")]      
+        [InlineData("")]            
+        public void Address_Should_Throw_Exception_When_ZipCode_Invalid(string invalidZip)
+        {
+            _output.WriteLine($"TEST: Walidacja błędnego kodu pocztowego: '{invalidZip}'");
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                
+                new Address("Warszawa", "Testowa", invalidZip, "Polska");
+            });
+
+            _output.WriteLine("SUKCES: Błędny kod został odrzucony.");
+        }
+
+
+        [Fact]
+        public void Address_Should_Accept_Valid_ZipCode()
+        {
+            _output.WriteLine("TEST: Walidacja poprawnego kodu pocztowego.");
+
+            string validZip = "11-950";
+            var address = new Address("Warszawa", "Testowa", validZip, "Polska");
+
+            Assert.Equal(validZip, address.ZipCode);
+            _output.WriteLine($"SUKCES: Adres utworzony z kodem: {address.ZipCode}");
+        }
+
     }
 }

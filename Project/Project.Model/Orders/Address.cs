@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Project.Model.Orders
@@ -14,7 +15,25 @@ namespace Project.Model.Orders
 
         public required string Street { get; set; }
         public required string City { get; set; }
-        public required string ZipCode { get; set; }
+
+        private string _zipCode;
+        public required string ZipCode
+        {
+            get => _zipCode;
+            set
+            {
+                
+                string pattern = @"^\d{2}-\d{3}$";
+
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, pattern))
+                {
+                    throw new ArgumentException($"Nieprawidłowy kod pocztowy: '{value}'. Wymagany format: XX-XXX (np. 00-123).");
+                }
+                _zipCode = value;
+            }
+        }
+
+
         public required string Country { get; set; }
 
         
