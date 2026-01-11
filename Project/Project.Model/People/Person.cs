@@ -7,13 +7,14 @@ namespace Project.Model
 
     public abstract class Person
     {
-        private string _phoneNumber;
+        
 
         public int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public required string Email { get; set; }
 
+
+        private string _phoneNumber;
 
         public required string PhoneNumber
         {
@@ -28,6 +29,25 @@ namespace Project.Model
                 _phoneNumber = value;
             }
         }
+
+
+        private string _email;
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                
+                string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$";
+
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, emailPattern))
+                {
+                    throw new ArgumentException($"Niepoprawny format adresu email: {value}");
+                }
+                _email = value;
+            }
+        }
+
 
         [SetsRequiredMembers]
         public Person() { }

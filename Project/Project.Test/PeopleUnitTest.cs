@@ -83,5 +83,36 @@ namespace Project.Test
             Assert.Empty(customer.Orders);   
             Assert.Equal(0, customer.WalletBalance); 
         }
+
+
+
+        [Theory]
+        [InlineData("test")]                
+        [InlineData("test@")]               
+        [InlineData("@gmail.com")]          
+        [InlineData("jan kowalski@wp.pl")]  
+        [InlineData("jan@wp")]              
+        public void Person_Should_Throw_Exception_When_Email_Invalid(string invalidEmail)
+        {
+            
+            Assert.Throws<ArgumentException>(() =>
+            {
+                
+                new Customer("Jan", "Testowy", "+48123456789", invalidEmail);
+            });
+        }
+
+        [Fact]
+        public void Person_Should_Accept_Valid_Email()
+        {
+            
+            string validEmail = "jan.kowalski@firma.com.pl";
+
+           
+            var customer = new Customer("Jan", "Kowalski", "+48123456789", validEmail);
+
+            
+            Assert.Equal(validEmail, customer.Email);
+        }
     }
 }
