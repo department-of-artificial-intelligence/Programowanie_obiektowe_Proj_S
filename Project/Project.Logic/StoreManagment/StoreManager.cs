@@ -5,7 +5,7 @@ using Project.Model;
 using Project.Model.Interfaces; 
 using Project.Model.Stores;
 
-namespace Project.Logic.StoreManager
+namespace Project.Logic.StoreManagment
 {
     public class ProductManager : IProductManager
     {

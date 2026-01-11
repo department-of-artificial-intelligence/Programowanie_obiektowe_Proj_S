@@ -1,12 +1,11 @@
 ﻿using Project.Model.Interfaces;
 using Project.Model.People;
-using Project.Model.Interfaces;
 using Project.Model.Orders;
 
 
 using System;
 
-namespace Project.Logic.Payments
+namespace Project.Logic.PaymentService
 {
     public class CashPayment : IPayment
     {

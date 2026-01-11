@@ -4,7 +4,7 @@ using Project.Model.Interfaces;
 using Project.Model.Orders;
 
 
-namespace Project.Logic.Payments
+namespace Project.Logic.PaymentService
 {
     public class BlikPayment : IPayment
     {
