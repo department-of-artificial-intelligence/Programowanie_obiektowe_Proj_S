@@ -52,12 +52,22 @@ namespace Project.Model.Orders
         }
 
 
+        public void MarkAsPaid()
+        {
+            if (Status != OrderStatus.New)
+                throw new InvalidOperationException("Tylko nowe zamówienie można opłacić.");
+
+            Status = OrderStatus.Paid;
+        }
+
+
         public void ShipOrder()
         {
             if (Status == OrderStatus.Cancelled)
                 throw new InvalidOperationException("Nie można wysłać anulowanego zamówienia.");
             Status = OrderStatus.Shipped;
         }
+
 
         public void CancelOrder()
         {
@@ -75,6 +85,7 @@ namespace Project.Model.Orders
             
             return Items.Sum(item => item.GetLineTotal());
         }
+
 
         public override string ToString()
         {

@@ -94,5 +94,58 @@ namespace Project.Logic.Managers
 
             return lowStock;
         }
+
+
+        public void SortProductsByFirstLetter(Store store)
+        {
+            if (store == null || store.Inventory.Count == 0)
+            {
+                Console.WriteLine("[INFO] Sklep jest pusty lub nie istnieje.");
+                return;
+            }
+
+            Console.WriteLine($"\n--- PRODUKTY W '{store.Name}' (ALFABETYCZNIE) ---");
+
+           
+            var groupedProducts = store.Inventory
+                .GroupBy(p => p.Name[0])
+                .OrderBy(g => g.Key);
+
+            foreach (var group in groupedProducts)
+            {
+               
+
+                
+                var uniqueNames = group.Select(p => p.Name).Distinct();
+
+                string itemsLine = string.Join(", ", uniqueNames);
+                Console.WriteLine($"[{group.Key}]: {itemsLine}");
+            }
+        }
+
+        
+        public void SortProductsByCategory(Store store)
+        {
+            if (store == null || store.Inventory.Count == 0) return;
+
+            Console.WriteLine($"\n--- PRODUKTY W '{store.Name}' (KATEGORIAMI) ---");
+
+            
+            var groupedByCategory = store.Inventory
+                .GroupBy(p => p.Category)
+                .OrderBy(g => g.Key);
+
+            foreach (var group in groupedByCategory)
+            {
+                
+                var uniqueNames = group.Select(p => p.Name).Distinct();
+
+                
+                int count = group.Count();
+
+                string itemsLine = string.Join(", ", uniqueNames);
+                Console.WriteLine($"Kategoria '{group.Key}' ({count} szt.): {itemsLine}");
+            }
+        }
     }
 }
