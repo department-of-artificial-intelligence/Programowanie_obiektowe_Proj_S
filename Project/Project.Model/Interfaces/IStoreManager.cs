@@ -14,5 +14,7 @@ namespace Project.Model.Interfaces
         bool RemoveProduct(Store store, Product product, int quantity);
         bool IsProductAvailable(Store store, string productName, int quantity);
         List<Product> GetLowStockProducts(Store store, int threshold);
+        void SortProductsByFirstLetter(Store store);
+        void SortProductsByCategory(Store store);
     }
 }
