@@ -33,7 +33,7 @@ namespace Project.Model.Orders
             Quantity = quantity;
         }
 
-        
+
         public decimal GetLineTotal()
         {
             return Product.Price * Quantity;
@@ -41,7 +41,8 @@ namespace Project.Model.Orders
 
         public override string ToString()
         {
-            return $"{Product.Name} (x{Quantity}) - {Product.Price * Quantity} PLN";
+            
+            return $"{Product.Name} (x{Quantity}) - {GetLineTotal():C}";
         }
     }
 }

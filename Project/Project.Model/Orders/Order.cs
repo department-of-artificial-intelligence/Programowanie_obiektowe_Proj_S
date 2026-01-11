@@ -18,7 +18,7 @@ namespace Project.Model.Orders
 
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        private Order() { }
+        
 
         [SetsRequiredMembers]
         public Order(Customer purchaser, Address deliveryAddress)
