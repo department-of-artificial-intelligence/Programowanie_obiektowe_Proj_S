@@ -5,9 +5,9 @@ using Project.Model.Orders;
 using System;
 using Xunit;
 
-namespace Project.Tests
+namespace Project.Test
 {
-    public class PeopleTests
+    public class PeopleUnitTest
     {
         
         [Theory]
