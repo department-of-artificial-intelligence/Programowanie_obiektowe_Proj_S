@@ -1,6 +1,6 @@
 ﻿using Project.Model.People;
 
-namespace Project.Model.Payments
+namespace Project.Model.Interfaces
 {
     
     public interface IPayment

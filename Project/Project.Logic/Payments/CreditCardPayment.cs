@@ -1,6 +1,8 @@
-﻿using Project.Model.Orders;
-using Project.Model.Payments;
+﻿using Project.Model.Interfaces;
 using Project.Model.People;
+using Project.Model.Interfaces;
+using Project.Model.Orders;
+
 using System;
 
 namespace Project.Logic.Payments

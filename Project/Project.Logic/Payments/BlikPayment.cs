@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Project.Model.Orders;
+﻿using System.Text.RegularExpressions;
 using Project.Model.People;
-using Project.Model.Payments;
+using Project.Model.Interfaces;
+using Project.Model.Orders;
+
 
 namespace Project.Logic.Payments
 {
