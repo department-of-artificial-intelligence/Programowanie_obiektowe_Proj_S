@@ -4,18 +4,30 @@ using Project.Model.Stores;
 using Project.Model.Orders;
 using System;
 using Xunit;
+using Xunit.Abstractions;
+
 
 namespace Project.Test
 {
     public class PeopleUnitTest
     {
+
+        private readonly ITestOutputHelper _output;
+
         
+        public PeopleUnitTest(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+
+
         [Theory]
         [InlineData("123")]                 
         [InlineData("abcdefg")]             
         [InlineData("123-456-789")]         
         [InlineData("")]                   
-        public void Person_Should_Throw_Exception_When_PhoneNumber_Invalid(string invalidPhone)
+        public void Throw_Exception_When_PhoneNumber_Invalid(string invalidPhone)
         {
             
             Assert.Throws<ArgumentException>(() =>
@@ -25,7 +37,7 @@ namespace Project.Test
         }
 
         [Fact]
-        public void Person_Should_Create_Successfully_When_PhoneNumber_Valid()
+        public void Create_Successfully_When_PhoneNumber_Valid()
         {
             
             string validPhone = "+48123456789";
@@ -39,7 +51,7 @@ namespace Project.Test
 
         
         [Fact]
-        public void Employee_Should_Throw_Exception_When_Salary_Is_Negative()
+        public void Throw_Exception_When_Salary_Is_Negative()
         {
             
             var dummyAddress = new Address("A", "B", "00-000", "PL");
@@ -55,7 +67,7 @@ namespace Project.Test
         }
 
         [Fact]
-        public void Employee_Should_Calculate_HireDate_Correctly()
+        public void Calculate_HireDate_Correctly()
         {
            
             var dummyAddress = new Address("A", "B", "00-000", "PL");
@@ -73,7 +85,7 @@ namespace Project.Test
 
        
         [Fact]
-        public void Customer_Should_Have_Empty_Orders_List_On_Creation()
+        public void Empty_Orders_List_On_Creation()
         {
             
             var customer = new Customer("Ewa", "Nowa", "+48999888777", "ewa@test.pl");
@@ -92,18 +104,20 @@ namespace Project.Test
         [InlineData("@gmail.com")]          
         [InlineData("jan kowalski@wp.pl")]  
         [InlineData("jan@wp")]              
-        public void Person_Should_Throw_Exception_When_Email_Invalid(string invalidEmail)
+        public void Throw_Exception_When_Email_Invalid(string invalidEmail)
         {
             
             Assert.Throws<ArgumentException>(() =>
             {
                 
-                new Customer("Jan", "Testowy", "+48123456789", invalidEmail);
+                var klient1 = new Customer("Jan", "Testowy", "+48123456789", invalidEmail);
+
+                klient1.GetInfo();
             });
         }
 
         [Fact]
-        public void Person_Should_Accept_Valid_Email()
+        public void Accept_Valid_Email()
         {
             
             string validEmail = "jan.kowalski@firma.com.pl";
