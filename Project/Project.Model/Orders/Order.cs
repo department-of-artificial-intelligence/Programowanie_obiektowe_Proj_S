@@ -71,8 +71,8 @@ namespace Project.Model.Orders
 
         public void CancelOrder()
         {
-            if (Status == OrderStatus.Shipped || Status == OrderStatus.Completed)
-                throw new InvalidOperationException("Nie można anulować wysłanego zamówienia.");
+            if (Status == OrderStatus.Completed)
+                throw new InvalidOperationException("Nie można anulować zakończonego zamówienia.");
             Status = OrderStatus.Cancelled;
         }
 

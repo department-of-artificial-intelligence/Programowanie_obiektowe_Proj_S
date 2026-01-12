@@ -24,14 +24,19 @@ namespace Project.Model.Stores
         }
 
         
-        public required string Category { get; set; }
+        public required ProductCategory Category { get; set; }
 
        
         public Product() { }
 
         [SetsRequiredMembers]
-        public Product(string name, decimal price, string category)
+        public Product(string name, decimal price, ProductCategory category)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Nazwa produktu nie może być pusta.");
+            }
+
             Name = name;
             Price = price;
             Category = category;

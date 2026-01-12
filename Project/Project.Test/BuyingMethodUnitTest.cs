@@ -34,7 +34,7 @@ namespace Project.Test
             var order = service.CreateOrder(customer, address);
 
             
-            var product = new Product("Słuchawki", 50m, "Elektronika");
+            var product = new Product("Słuchawki", 50m, ProductCategory.Smartphone);
             service.AddItemToOrder(order, product, 1);
 
             
@@ -66,7 +66,7 @@ namespace Project.Test
             var order = service.CreateOrder(customer, new Address("A", "B", "00-000", "C"));
 
             
-            service.AddItemToOrder(order, new Product("TV", 1000m, "RTV"), 1);
+            service.AddItemToOrder(order, new Product("TV", 1000m, ProductCategory.TV), 1);
 
             
             var card = new CreditCardPayment("1234123412341234", "Ewa Nowak");
@@ -93,7 +93,7 @@ namespace Project.Test
 
             var service = new OrderService();
             var order = service.CreateOrder(customer, new Address("A", "B", "00-000", "C"));
-            service.AddItemToOrder(order, new Product("Pizza", 40m, "Jedzenie"), 1);
+            service.AddItemToOrder(order, new Product("Iphone", 4000m, ProductCategory.Smartphone), 1);
 
            
             var cash = new CashPayment();

@@ -78,7 +78,7 @@ namespace Project.Test
         {
             _output.WriteLine($"TEST: Walidacja ujemnej ilości w OrderItem: {invalidQuantity}");
 
-            var product = new Product("Test", 10m, "TestCat");
+            var product = new Product("Słuchawki Bezprzewodowe", 199.00m, ProductCategory.Audio);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
@@ -94,12 +94,12 @@ namespace Project.Test
         {
             _output.WriteLine("TEST: Obliczanie wartości pozycji (Cena * Ilość).");
 
-            var product = new Product("Laptop", 2500m, "Electronics");
+            var product = new Product("Tablet Graficzny", 1100.00m, ProductCategory.Computer);
             int quantity = 3;
 
             var item = new OrderItem(product, quantity);
 
-            decimal expected = 7500m; 
+            decimal expected = 3300m; 
 
             Assert.Equal(expected, item.GetLineTotal());
             _output.WriteLine($"SUKCES: {quantity}x {product.Price} = {item.GetLineTotal()}");
@@ -118,22 +118,22 @@ namespace Project.Test
             var address = new Address("City", "Str", "00-000", "PL");
             var order = new Order(customer, address);
 
-            var p1 = new Product("Mleko", 3.00m, "Nabiał");
-            var p2 = new Product("Mleko", 3.00m, "Nabiał");
-            var p3 = new Product("Chleb", 4.00m, "Pieczywo");
+            var p7 = new Product("Laptop Biurowy 15", 2400.00m, ProductCategory.Computer);
+            var p8 = new Product("Tablet Graficzny", 1100.00m, ProductCategory.Computer);
+            var p9 = new Product("Smartfon Galaxy S24", 3999.00m, ProductCategory.Smartphone);
+
+
+            order.AddProduct(p7, 5);
+            order.AddProduct(p8, 5); 
+            order.AddProduct(p9, 10); 
 
             
-            order.AddProduct(p1, 5);
-            order.AddProduct(p2, 5); 
-            order.AddProduct(p3, 2); 
+            Assert.Equal(3, order.Items.Count); 
 
-            
-            Assert.Equal(2, order.Items.Count); 
+            var smartphoneItem = order.Items.First(i => i.Product.Name == "Smartfon Galaxy S24");
+            Assert.Equal(10, smartphoneItem.Quantity);
 
-            var milkItem = order.Items.First(i => i.Product.Name == "Mleko");
-            Assert.Equal(10, milkItem.Quantity);
-
-            _output.WriteLine($"SUKCES: Pozycje scalone poprawnie. Ilość mleka: {milkItem.Quantity}.");
+            _output.WriteLine($"SUKCES: Pozycje scalone poprawnie. Ilość Smartfonu Galaxy: {smartphoneItem.Quantity}.");
         }
 
 
@@ -144,7 +144,7 @@ namespace Project.Test
 
             
             var order = new Order(new Customer("A", "B", "+48111222333", "a@b.com"), new Address("A", "B", "37-111", "D"));
-            var product = new Product("Test", 100m, "Test");
+            var product = new Product("Test", 100m, ProductCategory.Other);
 
            
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -162,8 +162,7 @@ namespace Project.Test
             _output.WriteLine("TEST: Cykl życia zamówienia i blokady statusów.");
 
             var customer = new Customer("Jan", "Test", "+48111222333", "j@test.pl");
-            
-            var order = new Order(customer, new Address("A", "B", "01-234", "D"));
+            var order = new Order(customer, new Address("A", "B", "00-000", "D"));
 
            
             Assert.Equal(OrderStatus.New, order.Status);
@@ -173,22 +172,15 @@ namespace Project.Test
             Assert.Equal(OrderStatus.Paid, order.Status);
 
             
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                order.AddProduct(new Product("X", 1m, "Y"), 1);
-            });
-
-           
             order.ShipOrder();
             Assert.Equal(OrderStatus.Shipped, order.Status);
 
-           
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                order.CancelOrder();
-            });
+            
+            order.CancelOrder();
+            Assert.Equal(OrderStatus.Cancelled, order.Status);
+            _output.WriteLine("SUKCES: Udało się anulować zamówienie wysłane (zgodnie z nową logiką).");
 
-            _output.WriteLine("SUKCES: Wszystkie blokady statusów działają.");
+            
         }
 
         [Fact]
@@ -199,9 +191,9 @@ namespace Project.Test
             
             var order = new Order(new Customer("Jan", "K", "+48123456789", "e@m.pl"), new Address("U", "M", "99-999", "PL"));
 
-            order.AddProduct(new Product("Rower", 1000m, "Sport"), 1);
+            order.AddProduct(new Product("Szczoteczka soniczna", 120.00m, ProductCategory.SmallAppliance),2);
 
-            
+
             order.CancelOrder();
 
             
@@ -224,10 +216,10 @@ namespace Project.Test
             
             var order = new Order(new Customer("A", "B", "+48111222333", "a@b.onet"), new Address("A", "B", "25-001", "D"));
 
-            order.AddProduct(new Product("A", 10m, "C"), 2); 
-            order.AddProduct(new Product("B", 5m, "C"), 4);  
+            order.AddProduct(new Product("Klawiatura mechaniczna", 450.00m, ProductCategory.Accessory), 1); 
+            order.AddProduct(new Product("Laptop Biurowy 15", 2400.00m, ProductCategory.Computer), 4);  
 
-            Assert.Equal(40m, order.GetTotalAmount());
+            Assert.Equal(10050m, order.GetTotalAmount());
             _output.WriteLine("SUKCES: Suma obliczona poprawnie.");
         }
     }

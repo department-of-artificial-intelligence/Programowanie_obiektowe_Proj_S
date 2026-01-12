@@ -30,15 +30,15 @@ namespace Project.Test
             var address = new Address("A", "B", "50-361", "PL");
             var order = new Order(customer, address);
 
-            var p1 = new Product("Mleko", 3.50m, "Food");
-            var p2 = new Product("Chleb", 4.00m, "Food");
+            var p5 = new Product("Telewizor OLED 65 cali", 5999.00m, ProductCategory.TV);
+            var p6 = new Product("Soundbar kina domowego", 850.00m, ProductCategory.Audio);
 
-            
-            _output.WriteLine($"Cena p1 (Mleko): {p1.Price}");
-            _output.WriteLine($"Cena p2 (Chleb): {p2.Price}");
 
-            order.AddProduct(p1, 10);
-            order.AddProduct(p2, 2);
+            _output.WriteLine($"Cena p1 (Mleko): {p5.Price}");
+            _output.WriteLine($"Cena p2 (Chleb): {p6.Price}");
+
+            order.AddProduct(p5, 10);
+            order.AddProduct(p6, 2);
 
             
             foreach (var item in order.Items)
@@ -46,7 +46,7 @@ namespace Project.Test
                 _output.WriteLine($"Pozycja: {item.Product.Name}, Ilość: {item.Quantity}, Cena jedn.: {item.Product.Price}, Razem: {item.GetLineTotal()}");
             }
 
-            decimal expected = 43.00m;
+            decimal expected = 61690.00m;
 
             
             _output.WriteLine($"Suma zamówienia (Order.TotalAmount): {order.GetTotalAmount()}");
@@ -65,8 +65,8 @@ namespace Project.Test
             var order = new Order(new Customer("A", "B", "+48123456789", "a@a.pl"), new Address("A", "B", "67-531", "P"));
 
            
-            var product = new Product("Test", 10m, "Test");
-            order.AddProduct(product, 1);
+            var product = new Product("Test", 100m, ProductCategory.Other);
+            order.AddProduct(product, 13);
 
             
             order.ShipOrder();
@@ -103,13 +103,13 @@ namespace Project.Test
         {
             _output.WriteLine("TEST INTEGRACYJNY: Pełny scenariusz.");
 
-            
-            var p1 = new Product("Mleko 3.2%", 3.50m, "Nabiał");
-            var p2 = new Product("Chleb Razowy", 4.20m, "Pieczywo");
-            var p3 = new Product("Szynka Parmeńska", 89.90m, "Wędliny Premium");
-            var p4 = new Product("Oliwa z Oliwek", 45.00m, "Import");
 
-            
+            var p1 = new Product("Kabel HDMI 2m", 25.00m, ProductCategory.Accessory);
+            var p2 = new Product("Słuchawki Bezprzewodowe", 199.00m, ProductCategory.Audio);
+            var p3 = new Product("Smartfon Pro X", 3500.00m, ProductCategory.Smartphone);
+            var p4 = new Product("Ekspres do kawy", 1200.00m, ProductCategory.SmallAppliance);
+
+
             var customer = new Customer("Ewa", "Kowalska", "+48987654321", "ewa@klient.pl");
             var deliveryAddress = new Address("Warszawa", "ul. Polna 5", "00-123", "Polska");
 
@@ -137,7 +137,7 @@ namespace Project.Test
             _output.WriteLine($"Łącznie wydano: {totalSpent} PLN");
 
            
-            Assert.Equal(223.30m, totalSpent);
+            Assert.Equal(6548m, totalSpent);
         }
 
 

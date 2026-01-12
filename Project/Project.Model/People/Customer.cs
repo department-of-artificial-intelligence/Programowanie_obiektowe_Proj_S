@@ -22,7 +22,7 @@ namespace Project.Model.People
         public List<Order> Orders { get; set; } = new List<Order>();
 
 
-        public decimal WalletBalance { get; set; }
+        public required decimal WalletBalance { get; set; }
 
 
         [SetsRequiredMembers]
