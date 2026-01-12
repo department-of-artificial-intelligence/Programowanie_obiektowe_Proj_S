@@ -120,40 +120,138 @@
                 <MenuItem Header="Generate Sample Data" Command="{Binding SeedSampleDataCommand}" />
                 <MenuItem Header="Clear Database" Command="{Binding ClearDbCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Actors">
                 <MenuItem Header="Add..." Command="{Binding AddActorCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditActorCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteActorCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortActorsByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortActorsByOldestCommand}" />
+                    <MenuItem Header="By Popularity" Command="{Binding SortActorsByPopularityCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Last Name" Command="{Binding FilterActorsByLastNameCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetActorsFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Auditoriums">
                 <MenuItem Header="Add..." Command="{Binding AddAuditoriumCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditAuditoriumCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteAuditoriumCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortAuditoriumsByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortAuditoriumsByOldestCommand}" />
+                    <MenuItem Header="By Capacity" Command="{Binding SortAuditoriumsByCapacityCommand}" />
+                    <MenuItem Header="By Rating" Command="{Binding SortAuditoriumsByRatingCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Name" Command="{Binding FilterAuditoriumsByNameCommand}" />
+                    <MenuItem Header="By Feature" Command="{Binding FilterAuditoriumsByFeatureCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetAuditoriumsFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Cinemas">
                 <MenuItem Header="Add..." Command="{Binding AddCinemaCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditCinemaCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteCinemaCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortCinemasByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortCinemasByOldestCommand}" />
+                    <MenuItem Header="By Rating" Command="{Binding SortCinemasByRatingCommand}" />
+                    <MenuItem Header="By Film Count" Command="{Binding SortCinemasByFilmCountCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Name" Command="{Binding FilterCinemasByNameCommand}" />
+                    <MenuItem Header="By Film" Command="{Binding FilterCinemasByFilmCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetCinemasFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Films">
                 <MenuItem Header="Add..." Command="{Binding AddFilmCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditFilmCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteFilmCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortFilmsByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortFilmsByOldestCommand}" />
+                    <MenuItem Header="By Rating" Command="{Binding SortFilmsByRatingCommand}" />
+                    <MenuItem Header="By Duration" Command="{Binding SortFilmsByDurationCommand}" />
+                    <MenuItem Header="By Actor Count" Command="{Binding SortFilmsByActorCountCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Title" Command="{Binding FilterFilmsByTitleCommand}" />
+                    <MenuItem Header="By Genre" Command="{Binding FilterFilmsByGenreCommand}" />
+                    <MenuItem Header="By Director" Command="{Binding FilterFilmsByDirectorCommand}" />
+                    <MenuItem Header="By Age Restriction" Command="{Binding FilterFilmsByAgeRestrictionCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetFilmsFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Reservations">
                 <MenuItem Header="Add..." Command="{Binding AddReservationCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditReservationCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteReservationCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortReservationsByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortReservationsByOldestCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Payment Method" Command="{Binding FilterReservationsByPaymentMethodCommand}" />
+                    <MenuItem Header="By Customer" Command="{Binding FilterReservationsByCustomerCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetReservationsFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Seances">
                 <MenuItem Header="Add..." Command="{Binding AddSeanceCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditSeanceCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteSeanceCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortSeancesByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortSeancesByOldestCommand}" />
+                    <MenuItem Header="By Start Time" Command="{Binding SortSeancesByStartTimeCommand}" />
+                    <MenuItem Header="By Price" Command="{Binding SortSeancesByPriceCommand}" />
+                    <MenuItem Header="By Occupied Seats" Command="{Binding SortSeancesByOccupiedSeatsCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Film" Command="{Binding FilterSeancesByFilmCommand}" />
+                    <MenuItem Header="By Auditorium" Command="{Binding FilterSeancesByAuditoriumCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetSeancesFiltersCommand}" />
             </MenuItem>
+
             <MenuItem Header="_Tickets">
                 <MenuItem Header="Add..." Command="{Binding AddTicketCommand}" />
                 <MenuItem Header="Edit..." Command="{Binding EditTicketCommand}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteTicketCommand}" />
+                <Separator />
+                <MenuItem Header="Sort">
+                    <MenuItem Header="By Newest" Command="{Binding SortTicketsByNewestCommand}" />
+                    <MenuItem Header="By Oldest" Command="{Binding SortTicketsByOldestCommand}" />
+                    <MenuItem Header="By Final Price" Command="{Binding SortTicketsByFinalPriceCommand}" />
+                    <MenuItem Header="By Type" Command="{Binding SortTicketsByTypeCommand}" />
+                </MenuItem>
+                <MenuItem Header="Filter">
+                    <MenuItem Header="By Type" Command="{Binding FilterTicketsByTypeCommand}" />
+                    <MenuItem Header="By Seance" Command="{Binding FilterTicketsBySeanceCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Reset All Filters" Command="{Binding ResetTicketsFiltersCommand}" />
             </MenuItem>
         </Menu>
 

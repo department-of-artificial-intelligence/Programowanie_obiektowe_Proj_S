@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
+
 namespace Project.WpfApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
@@ -152,6 +153,63 @@ namespace Project.WpfApp.ViewModels
         public ICommand DeleteTicketCommand { get; }
         public ICommand ShowTicketsCommand { get; }
 
+        public ICommand SortActorsByNewestCommand { get; }
+        public ICommand SortActorsByOldestCommand { get; }
+        public ICommand SortActorsByPopularityCommand { get; }
+        public ICommand FilterActorsByLastNameCommand { get; }
+
+        public ICommand SortAuditoriumsByNewestCommand { get; }
+        public ICommand SortAuditoriumsByOldestCommand { get; }
+        public ICommand SortAuditoriumsByCapacityCommand { get; }
+        public ICommand SortAuditoriumsByRatingCommand { get; }
+        public ICommand FilterAuditoriumsByNameCommand { get; }
+        public ICommand FilterAuditoriumsByFeatureCommand { get; }
+
+        public ICommand SortCinemasByNewestCommand { get; }
+        public ICommand SortCinemasByOldestCommand { get; }
+        public ICommand SortCinemasByRatingCommand { get; }
+        public ICommand SortCinemasByFilmCountCommand { get; }
+        public ICommand FilterCinemasByNameCommand { get; }
+        public ICommand FilterCinemasByFilmCommand { get; }
+
+        public ICommand SortFilmsByNewestCommand { get; }
+        public ICommand SortFilmsByOldestCommand { get; }
+        public ICommand SortFilmsByRatingCommand { get; }
+        public ICommand SortFilmsByDurationCommand { get; }
+        public ICommand SortFilmsByActorCountCommand { get; }
+        public ICommand FilterFilmsByTitleCommand { get; }
+        public ICommand FilterFilmsByGenreCommand { get; }
+        public ICommand FilterFilmsByDirectorCommand { get; }
+        public ICommand FilterFilmsByAgeRestrictionCommand { get; }
+
+        public ICommand SortReservationsByNewestCommand { get; }
+        public ICommand SortReservationsByOldestCommand { get; }
+        public ICommand FilterReservationsByPaymentMethodCommand { get; }
+        public ICommand FilterReservationsByCustomerCommand { get; }
+
+        public ICommand SortSeancesByNewestCommand { get; }
+        public ICommand SortSeancesByOldestCommand { get; }
+        public ICommand SortSeancesByStartTimeCommand { get; }
+        public ICommand SortSeancesByPriceCommand { get; }
+        public ICommand SortSeancesByOccupiedSeatsCommand { get; }
+        public ICommand FilterSeancesByFilmCommand { get; }
+        public ICommand FilterSeancesByAuditoriumCommand { get; }
+
+        public ICommand SortTicketsByNewestCommand { get; }
+        public ICommand SortTicketsByOldestCommand { get; }
+        public ICommand SortTicketsByFinalPriceCommand { get; }
+        public ICommand SortTicketsByTypeCommand { get; }
+        public ICommand FilterTicketsByTypeCommand { get; }
+        public ICommand FilterTicketsBySeanceCommand { get; }
+
+        public ICommand ResetActorsFiltersCommand { get; }
+        public ICommand ResetAuditoriumsFiltersCommand { get; }
+        public ICommand ResetCinemasFiltersCommand { get; }
+        public ICommand ResetFilmsFiltersCommand { get; }
+        public ICommand ResetReservationsFiltersCommand { get; }
+        public ICommand ResetSeancesFiltersCommand { get; }
+        public ICommand ResetTicketsFiltersCommand { get; }
+
         public MainViewModel()
         {
             try
@@ -202,6 +260,63 @@ namespace Project.WpfApp.ViewModels
             EditTicketCommand = new Command(EditTicket);
             DeleteTicketCommand = new Command(DeleteTicket);
             ShowTicketsCommand = new Command(ShowTickets);
+
+            SortActorsByNewestCommand = new Command(SortActorsByNewest);
+            SortActorsByOldestCommand = new Command(SortActorsByOldest);
+            SortActorsByPopularityCommand = new Command(SortActorsByPopularity);
+            FilterActorsByLastNameCommand = new Command(FilterActorsByLastName);
+
+            SortAuditoriumsByNewestCommand = new Command(SortAuditoriumsByNewest);
+            SortAuditoriumsByOldestCommand = new Command(SortAuditoriumsByOldest);
+            SortAuditoriumsByCapacityCommand = new Command(SortAuditoriumsByCapacity);
+            SortAuditoriumsByRatingCommand = new Command(SortAuditoriumsByRating);
+            FilterAuditoriumsByNameCommand = new Command(FilterAuditoriumsByName);
+            FilterAuditoriumsByFeatureCommand = new Command(FilterAuditoriumsByFeature);
+
+            SortCinemasByNewestCommand = new Command(SortCinemasByNewest);
+            SortCinemasByOldestCommand = new Command(SortCinemasByOldest);
+            SortCinemasByRatingCommand = new Command(SortCinemasByRating);
+            SortCinemasByFilmCountCommand = new Command(SortCinemasByFilmCount);
+            FilterCinemasByNameCommand = new Command(FilterCinemasByName);
+            FilterCinemasByFilmCommand = new Command(FilterCinemasByFilm);
+
+            SortFilmsByNewestCommand = new Command(SortFilmsByNewest);
+            SortFilmsByOldestCommand = new Command(SortFilmsByOldest);
+            SortFilmsByRatingCommand = new Command(SortFilmsByRating);
+            SortFilmsByDurationCommand = new Command(SortFilmsByDuration);
+            SortFilmsByActorCountCommand = new Command(SortFilmsByActorCount);
+            FilterFilmsByTitleCommand = new Command(FilterFilmsByTitle);
+            FilterFilmsByGenreCommand = new Command(FilterFilmsByGenre);
+            FilterFilmsByDirectorCommand = new Command(FilterFilmsByDirector);
+            FilterFilmsByAgeRestrictionCommand = new Command(FilterFilmsByAgeRestriction);
+
+            SortReservationsByNewestCommand = new Command(SortReservationsByNewest);
+            SortReservationsByOldestCommand = new Command(SortReservationsByOldest);
+            FilterReservationsByPaymentMethodCommand = new Command(FilterReservationsByPaymentMethod);
+            FilterReservationsByCustomerCommand = new Command(FilterReservationsByCustomer);
+
+            SortSeancesByNewestCommand = new Command(SortSeancesByNewest);
+            SortSeancesByOldestCommand = new Command(SortSeancesByOldest);
+            SortSeancesByStartTimeCommand = new Command(SortSeancesByStartTime);
+            SortSeancesByPriceCommand = new Command(SortSeancesByPrice);
+            SortSeancesByOccupiedSeatsCommand = new Command(SortSeancesByOccupiedSeats);
+            FilterSeancesByFilmCommand = new Command(FilterSeancesByFilm);
+            FilterSeancesByAuditoriumCommand = new Command(FilterSeancesByAuditorium);
+
+            SortTicketsByNewestCommand = new Command(SortTicketsByNewest);
+            SortTicketsByOldestCommand = new Command(SortTicketsByOldest);
+            SortTicketsByFinalPriceCommand = new Command(SortTicketsByFinalPrice);
+            SortTicketsByTypeCommand = new Command(SortTicketsByType);
+            FilterTicketsByTypeCommand = new Command(FilterTicketsByType);
+            FilterTicketsBySeanceCommand = new Command(FilterTicketsBySeance);
+
+            ResetActorsFiltersCommand = new Command(ResetActorsFilters);
+            ResetAuditoriumsFiltersCommand = new Command(ResetAuditoriumsFilters);
+            ResetCinemasFiltersCommand = new Command(ResetCinemasFilters);
+            ResetFilmsFiltersCommand = new Command(ResetFilmsFilters);
+            ResetReservationsFiltersCommand = new Command(ResetReservationsFilters);
+            ResetSeancesFiltersCommand = new Command(ResetSeancesFilters);
+            ResetTicketsFiltersCommand = new Command(ResetTicketsFilters);
         }
 
         private void RefreshAllCollections()
@@ -1158,6 +1273,409 @@ namespace Project.WpfApp.ViewModels
             }
         }
 
+        private void SortActorsByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Actors.ToList());
+            RefreshCollection(Actors, sorted);
+        }
+
+        private void SortActorsByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Actors.ToList());
+            RefreshCollection(Actors, sorted);
+        }
+
+        private void SortActorsByPopularity(object? parameter)
+        {
+            var sorted = Actors.OrderByDescending(a => a.Popularity).ToList();
+            RefreshCollection(Actors, sorted);
+        }
+
+        private void FilterActorsByLastName(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter last name to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Actors.Where(a => a.LastName.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Actors, filtered);
+            }
+        }
+
+        private void SortAuditoriumsByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Auditoriums.ToList());
+            RefreshCollection(Auditoriums, sorted);
+        }
+
+        private void SortAuditoriumsByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Auditoriums.ToList());
+            RefreshCollection(Auditoriums, sorted);
+        }
+
+        private void SortAuditoriumsByCapacity(object? parameter)
+        {
+            var sorted = Auditoriums.OrderByDescending(a => a.Capacity).ToList();
+            RefreshCollection(Auditoriums, sorted);
+        }
+
+        private void SortAuditoriumsByRating(object? parameter)
+        {
+            var sorted = Auditoriums.OrderByDescending(a => a.Rating).ToList();
+            RefreshCollection(Auditoriums, sorted);
+        }
+
+        private void FilterAuditoriumsByName(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter auditorium name to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Auditoriums.Where(a => a.Name.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Auditoriums, filtered);
+            }
+        }
+
+        private void FilterAuditoriumsByFeature(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter feature to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Auditoriums.Where(a => a.Features.Any(f => f.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase))).ToList();
+                RefreshCollection(Auditoriums, filtered);
+            }
+        }
+        private void SortCinemasByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Cinemas.ToList());
+            RefreshCollection(Cinemas, sorted);
+        }
+
+        private void SortCinemasByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Cinemas.ToList());
+            RefreshCollection(Cinemas, sorted);
+        }
+
+        private void SortCinemasByRating(object? parameter)
+        {
+            var sorted = Cinemas.OrderByDescending(c => c.Rating).ToList();
+            RefreshCollection(Cinemas, sorted);
+        }
+
+        private void SortCinemasByFilmCount(object? parameter)
+        {
+            var sorted = Cinemas.OrderByDescending(c => c.AvailableFilmIds.Count).ToList();
+            RefreshCollection(Cinemas, sorted);
+        }
+
+        private void FilterCinemasByName(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter cinema name to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Cinemas.Where(c => c.Name.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Cinemas, filtered);
+            }
+        }
+
+        private void FilterCinemasByFilm(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter film ID to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Cinemas.Where(c => c.AvailableFilmIds.Contains(inputDialog.Answer)).ToList();
+                RefreshCollection(Cinemas, filtered);
+            }
+        }
+
+        private void SortFilmsByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Films.ToList());
+            RefreshCollection(Films, sorted);
+        }
+
+        private void SortFilmsByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Films.ToList());
+            RefreshCollection(Films, sorted);
+        }
+
+        private void SortFilmsByRating(object? parameter)
+        {
+            var sorted = Films.OrderByDescending(f => f.Rating).ToList();
+            RefreshCollection(Films, sorted);
+        }
+
+        private void SortFilmsByDuration(object? parameter)
+        {
+            var sorted = Films.OrderByDescending(f => f.DurationMinutes).ToList();
+            RefreshCollection(Films, sorted);
+        }
+
+        private void SortFilmsByActorCount(object? parameter)
+        {
+            var sorted = Films.OrderByDescending(f => f.ActorIds.Count).ToList();
+            RefreshCollection(Films, sorted);
+        }
+        private void FilterFilmsByTitle(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter film title to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Films.Where(f => f.Title.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Films, filtered);
+            }
+        }
+
+        private void FilterFilmsByGenre(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter genre to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Films.Where(f => f.Genre.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Films, filtered);
+            }
+        }
+
+        private void FilterFilmsByDirector(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter director to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Films.Where(f => f.Director.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Films, filtered);
+            }
+        }
+
+        private void FilterFilmsByAgeRestriction(object? parameter)
+        {
+            var filtered = Films.Where(f => f.HasAgeRestriction).ToList();
+            RefreshCollection(Films, filtered);
+        }
+
+        private void SortReservationsByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Reservations.ToList());
+            RefreshCollection(Reservations, sorted);
+        }
+
+        private void SortReservationsByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Reservations.ToList());
+            RefreshCollection(Reservations, sorted);
+        }
+
+        private void FilterReservationsByPaymentMethod(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter payment method to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Reservations.Where(r => r.PaymentMethod.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Reservations, filtered);
+            }
+        }
+
+        private void FilterReservationsByCustomer(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter customer last name to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Reservations.Where(r => r.CustomerLastName.Contains(inputDialog.Answer, StringComparison.OrdinalIgnoreCase)).ToList();
+                RefreshCollection(Reservations, filtered);
+            }
+        }
+
+        private void SortSeancesByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Seances.ToList());
+            RefreshCollection(Seances, sorted);
+        }
+
+        private void SortSeancesByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Seances.ToList());
+            RefreshCollection(Seances, sorted);
+        }
+
+        private void SortSeancesByStartTime(object? parameter)
+        {
+            var sorted = Seances.OrderBy(s => s.StartTime).ToList();
+            RefreshCollection(Seances, sorted);
+        }
+
+        private void SortSeancesByPrice(object? parameter)
+        {
+            var sorted = Seances.OrderBy(s => s.Price).ToList();
+            RefreshCollection(Seances, sorted);
+        }
+
+        private void SortSeancesByOccupiedSeats(object? parameter)
+        {
+            var sorted = Seances.OrderByDescending(s => s.OccupiedSeatIds.Count).ToList();
+            RefreshCollection(Seances, sorted);
+        }
+
+        private void FilterSeancesByFilm(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter film ID to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Seances.Where(s => s.FilmId.Contains(inputDialog.Answer)).ToList();
+                RefreshCollection(Seances, filtered);
+            }
+        }
+
+        private void FilterSeancesByAuditorium(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter auditorium ID to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Seances.Where(s => s.AuditoriumId.Contains(inputDialog.Answer)).ToList();
+                RefreshCollection(Seances, filtered);
+            }
+        }
+
+        private void SortTicketsByNewest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeNewest(Tickets.ToList());
+            RefreshCollection(Tickets, sorted);
+        }
+
+        private void SortTicketsByOldest(object? parameter)
+        {
+            var sorted = Services.Common.BaseService.SortByTimeOldest(Tickets.ToList());
+            RefreshCollection(Tickets, sorted);
+        }
+
+        private void SortTicketsByFinalPrice(object? parameter)
+        {
+            var sorted = Tickets.OrderByDescending(t => t.FinalPrice).ToList();
+            RefreshCollection(Tickets, sorted);
+        }
+
+        private void SortTicketsByType(object? parameter)
+        {
+            var sorted = Tickets.OrderBy(t => t.Type).ToList();
+            RefreshCollection(Tickets, sorted);
+        }
+
+        private void FilterTicketsByType(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter ticket type (Standard, Student, Senior, Child, VIP):");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                if (Enum.TryParse<TicketType>(inputDialog.Answer, out var ticketType))
+                {
+                    var filtered = Tickets.Where(t => t.Type == ticketType).ToList();
+                    RefreshCollection(Tickets, filtered);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid ticket type. Please enter one of: Standard, Student, Senior, Child, VIP");
+                }
+            }
+        }
+
+        private void FilterTicketsBySeance(object? parameter)
+        {
+            var inputDialog = new InputDialog("Enter seance ID to filter:");
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
+            {
+                var filtered = Tickets.Where(t => t.SeanceId.Contains(inputDialog.Answer)).ToList();
+                RefreshCollection(Tickets, filtered);
+            }
+        }
+
+        private void ResetActorsFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Actors, ActorService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting actors filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetAuditoriumsFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Auditoriums, AuditoriumService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting auditoriums filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetCinemasFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Cinemas, CinemaService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting cinemas filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetFilmsFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Films, FilmService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting films filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetReservationsFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Reservations, ReservationService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting reservations filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetSeancesFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Seances, SeanceService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting seances filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetTicketsFilters(object? parameter)
+        {
+            try
+            {
+                RefreshCollection(Tickets, TicketService.GetAll(_dbContext));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error resetting tickets filters: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void AddTestData()
         {
             try
