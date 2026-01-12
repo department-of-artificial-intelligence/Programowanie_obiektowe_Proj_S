@@ -9,14 +9,14 @@ using Project.Model.Stores;
 
 namespace Project.Logic.StoreManagment
 {
-    public class EmployeeManager : IEmployeeManager
+    public class EmployeeManager
     {
         
-        private readonly List<Employee> _employeesDatabase;
+        private readonly IEmployeeManager _employeesDatabase;
 
         public EmployeeManager()
         {
-            _employeesDatabase = new List<Employee>();
+            _employeesDatabase = employeesDatabase;
         }
 
        

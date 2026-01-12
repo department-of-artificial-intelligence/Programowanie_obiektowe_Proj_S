@@ -2,150 +2,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using Project.Model;
-using Project.Model.Interfaces; 
+using Project.Model.Interfaces;
+using Project.Model.People;
 using Project.Model.Stores;
 
 namespace Project.Logic.StoreManagment
 {
-    public class ProductManager : IProductManager
+    public class EmployeeManager
     {
-        
-        private readonly List<Store> _fakeStoreDatabase;
+        private readonly IEmployeeManager _employeeRepository;
 
-        public ProductManager()
+        public EmployeeManager(IEmployeeManager employeeRepository)
         {
-            _fakeStoreDatabase = new List<Store>();
+            _employeeRepository = employeeRepository;
         }
 
-       
-        public List<Store> AllStores()
+        public List<Employee> AllEmployees()
         {
-            return _fakeStoreDatabase;
+            return _employeeRepository.GetAll();
         }
 
-       
-        public void RegisterNewStore(Store store)
+        public Employee FindById(int id)
         {
-            if (!_fakeStoreDatabase.Contains(store))
+            return _employeeRepository.GetById(id);
+        }
+
+        public Employee FindByEmail(string email)
+        {
+            // Filtrowanie w pamięci (bezpieczniej niż zmieniać interfejs)
+            return _employeeRepository.GetAll().FirstOrDefault(e => e.Email == email);
+        }
+
+        public void HireEmployee(Store store, Employee employee)
+        {
+            if (store == null || employee == null) return;
+
+            var exists = _employeeRepository.GetById(employee.Id);
+            if (exists == null)
             {
-                _fakeStoreDatabase.Add(store);
-            }
-        }
-
-        public bool AddProduct(Store store, Product product, int quantity)
-        {
-            if (store == null || product == null || quantity <= 0) return false;
-
-           
-
-            for (int i = 0; i < quantity; i++)
-            {
-                store.Inventory.Add(product);
-            }
-
-            Console.WriteLine($"[LOGIKA] Dodano {quantity} szt. '{product.Name}' do sklepu '{store.Name}'.");
-            return true;
-        }
-
-        public bool RemoveProduct(Store store, Product product, int quantity)
-        {
-            if (store == null || product == null || quantity <= 0) return false;
-
-          
-            int currentCount = store.Inventory.Count(p => p.Name == product.Name);
-            if (currentCount < quantity)
-            {
-                Console.WriteLine($"[BŁĄD] Nie można usunąć {quantity} szt. '{product.Name}'. W magazynie jest tylko {currentCount}.");
-                return false;
+                _employeeRepository.Add(employee); // Dodaj do bazy, jeśli nie istnieje
             }
 
-          
-            for (int i = 0; i < quantity; i++)
+            if (!store.Staff.Contains(employee))
             {
-               
-                var itemToRemove = store.Inventory.FirstOrDefault(p => p.Name == product.Name);
-                if (itemToRemove != null)
-                {
-                    store.Inventory.Remove(itemToRemove);
-                }
+                store.Staff.Add(employee);
+                // Ponieważ zmieniliśmy listę Staff w sklepie, warto by zaktualizować sklep
+                // Ale tutaj zakładamy, że wystarczy dodać pracownika.
             }
-            return true;
+            Console.WriteLine($"[HR] Zatrudniono {employee.FirstName}.");
         }
 
-        public bool IsProductAvailable(Store store, string productName, int quantity)
+        public void FireEmployeeByObject(Store store, Employee employee)
         {
-            if (store == null) return false;
+            if (store == null || employee == null) return;
 
-            
-            int availableCount = store.Inventory.Count(p => p.Name == productName);
-
-            return availableCount >= quantity;
+            store.Staff.Remove(employee);
+            _employeeRepository.Remove(employee); // Usunięcie z bazy
+            Console.WriteLine($"[HR] Zwolniono {employee.FirstName}.");
         }
 
-        public List<Product> GetLowStockProducts(Store store, int threshold)
+        public void ChangePosition(Employee employee, EmployeePosition newPosition, decimal newSalary)
         {
-            if (store == null) return new List<Product>();
+            if (employee == null) return;
+            employee.Position = newPosition;
+            employee.Salary = newSalary;
 
-            var lowStock = store.Inventory
-                .GroupBy(p => p.Name)
-                .Where(grupa => grupa.Count() < threshold)
-                .Select(grupa => grupa.First()) 
-                .ToList();
-
-            return lowStock;
+            _employeeRepository.Update(employee);
         }
 
-
-        public void SortProductsByFirstLetter(Store store)
+        public decimal CalculatePayroll(Store store)
         {
-            if (store == null || store.Inventory.Count == 0)
-            {
-                Console.WriteLine("[INFO] Sklep jest pusty lub nie istnieje.");
-                return;
-            }
-
-            Console.WriteLine($"\n--- PRODUKTY W '{store.Name}' (ALFABETYCZNIE) ---");
-
-           
-            var groupedProducts = store.Inventory
-                .GroupBy(p => p.Name[0])
-                .OrderBy(g => g.Key);
-
-            foreach (var group in groupedProducts)
-            {
-               
-
-                
-                var uniqueNames = group.Select(p => p.Name).Distinct();
-
-                string itemsLine = string.Join(", ", uniqueNames);
-                Console.WriteLine($"[{group.Key}]: {itemsLine}");
-            }
-        }
-
-        
-        public void SortProductsByCategory(Store store)
-        {
-            if (store == null || store.Inventory.Count == 0) return;
-
-            Console.WriteLine($"\n--- PRODUKTY W '{store.Name}' (KATEGORIAMI) ---");
-
-            
-            var groupedByCategory = store.Inventory
-                .GroupBy(p => p.Category)
-                .OrderBy(g => g.Key);
-
-            foreach (var group in groupedByCategory)
-            {
-                
-                var uniqueNames = group.Select(p => p.Name).Distinct();
-
-                
-                int count = group.Count();
-
-                string itemsLine = string.Join(", ", uniqueNames);
-                Console.WriteLine($"Kategoria '{group.Key}' ({count} szt.): {itemsLine}");
-            }
+            return store?.Staff.Sum(e => e.Salary) ?? 0;
         }
     }
 }

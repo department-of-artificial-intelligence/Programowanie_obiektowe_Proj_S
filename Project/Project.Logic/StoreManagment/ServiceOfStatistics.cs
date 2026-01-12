@@ -4,31 +4,50 @@ using System.Linq;
 using Project.Model.Orders;
 using Project.Model.People;
 using Project.Model.Stores;
+using Project.Model.Interfaces; 
 
 namespace Project.Logic.StoreManagment
 {
     public class ServiceOfStatistics
     {
-        public Order GetMostExpensiveOrder(List<Order> orders)
+        
+        private readonly IOrderRepository _orderRepository;
+
+        
+        public ServiceOfStatistics(IOrderRepository orderRepository)
         {
-            if (orders == null || !orders.Any()) return null;
+            _orderRepository = orderRepository;
+        }
+
+       
+
+        public Order GetMostExpensiveOrder()
+        {
+            
+            var orders = _orderRepository.GetAll();
+
+            if (!orders.Any()) return null;
             return orders.OrderByDescending(o => o.GetTotalAmount()).FirstOrDefault();
         }
 
-        public decimal GetAverageOrderValue(List<Order> orders)
+        public decimal GetAverageOrderValue()
         {
-            if (orders == null || !orders.Any()) return 0;
+            var orders = _orderRepository.GetAll();
+
+            if (!orders.Any()) return 0;
             return orders.Average(o => o.GetTotalAmount());
         }
 
-        public List<Order> GetOrdersBetween(List<Order> orders, DateTime start, DateTime end)
+        public List<Order> GetOrdersBetween(DateTime start, DateTime end)
         {
-            return orders.Where(o => o.OrderDate >= start && o.OrderDate <= end).ToList();
+            return _orderRepository.GetAll()
+                .Where(o => o.OrderDate >= start && o.OrderDate <= end)
+                .ToList();
         }
 
-        public Dictionary<Customer, decimal> GetTotalSpentByCustomer(List<Order> orders)
+        public Dictionary<Customer, decimal> GetTotalSpentByCustomer()
         {
-            return orders
+            return _orderRepository.GetAll()
                 .GroupBy(o => o.Purchaser)
                 .ToDictionary(
                     g => g.Key,
@@ -36,9 +55,10 @@ namespace Project.Logic.StoreManagment
                 );
         }
 
-        public Dictionary<ProductCategory, decimal> GetRevenueByCategory(List<Order> orders)
+        public Dictionary<ProductCategory, decimal> GetRevenueByCategory()
         {
-            return orders
+            
+            return _orderRepository.GetAll()
                 .SelectMany(o => o.Items)
                 .GroupBy(i => i.Product.Category)
                 .ToDictionary(
@@ -47,9 +67,9 @@ namespace Project.Logic.StoreManagment
                 );
         }
 
-        public Dictionary<OrderStatus, int> GetStatusDistribution(List<Order> orders)
+        public Dictionary<OrderStatus, int> GetStatusDistribution()
         {
-            return orders
+            return _orderRepository.GetAll()
                 .GroupBy(o => o.Status)
                 .ToDictionary(g => g.Key, g => g.Count());
         }

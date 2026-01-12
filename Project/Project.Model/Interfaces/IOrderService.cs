@@ -14,7 +14,7 @@ namespace Project.Model.Interfaces
         List<Order> AllOrders();
 
 
-        Order CreateOrder(Customer customer, Address deliveryAddress);
+        Order CreateOrder(Customer customer, Address deliveryAddress, Store store);
         void AddItemToOrder(Order order, Product product, int quantity);
         bool ProcessOrderPayment(Order order, IPayment paymentMethod);
         void ShipOrder(Order order);

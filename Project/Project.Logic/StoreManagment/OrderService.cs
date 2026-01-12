@@ -9,64 +9,73 @@ using Project.Model.Stores;
 
 namespace Project.Logic.StoreManagment
 {
+   
     public class OrderService : IOrderService
     {
         
-        private readonly List<Order> _ordersRepository;
+        private readonly IOrderRepository _repository;
 
-        public OrderService()
+      
+        public OrderService(IOrderRepository repository)
         {
-            _ordersRepository = new List<Order>();
+            _repository = repository;
         }
-
-        
 
         public List<Order> AllOrders()
         {
-            return _ordersRepository;
+           
+            return _repository.GetAll();
         }
+
 
         public List<Order> GetCustomerHistory(Customer customer)
         {
+            if (customer == null) return new List<Order>();
+
             
-            return _ordersRepository
-                .Where(o => o.Purchaser == customer || o.Purchaser.Email == customer.Email)
+            return _repository.GetAll()
+                .Where(o => o.Purchaser != null && o.Purchaser.Id == customer.Id)
                 .ToList();
         }
 
-        public Order CreateOrder(Customer customer, Address deliveryAddress)
+
+        public Order CreateOrder(Customer customer, Address deliveryAddress, Store store)
         {
             if (customer == null || deliveryAddress == null)
-                throw new ArgumentNullException("Klient i adres są wymagane.");
+                throw new ArgumentNullException("Dane są wymagane.");
 
-           
-            var newOrder = new Order(customer, deliveryAddress);
+            var newOrder = new Order(customer, deliveryAddress, store);
 
-            
-            _ordersRepository.Add(newOrder);
+          
+            _repository.Add(newOrder);
 
             
             customer.Orders.Add(newOrder);
 
-            Console.WriteLine($"[SERWIS] Utworzono nowe zamówienie #{newOrder.OrderId} dla {customer.FirstName}.");
+            Console.WriteLine($"[SERWIS] Utworzono zamówienie #{newOrder.OrderId} w bazie.");
             return newOrder;
         }
+
 
         public void AddItemToOrder(Order order, Product product, int quantity)
         {
             if (order == null || product == null) return;
 
-            
             try
             {
                 order.AddProduct(product, quantity);
-                Console.WriteLine($"[SERWIS] Dodano {product.Name} (x{quantity}) do zamówienia.");
+
+                
+                _repository.Update(order);
+
+                Console.WriteLine($"[SERWIS] Zapisano w bazie: {product.Name} (x{quantity}).");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[BŁĄD] Nie udało się dodać produktu: {ex.Message}");
+                Console.WriteLine($"[BŁĄD] {ex.Message}");
             }
         }
+
 
         public bool ProcessOrderPayment(Order order, IPayment paymentMethod)
         {
@@ -76,27 +85,27 @@ namespace Project.Logic.StoreManagment
 
             if (amountToPay <= 0)
             {
-                Console.WriteLine("[SERWIS] Zamówienie jest puste lub darmowe. Płatność niepotrzebna.");
+                Console.WriteLine("[SERWIS] Kwota 0. Płatność zbędna.");
                 return false;
             }
 
-            Console.WriteLine($"[SERWIS] Rozpoczynam płatność za zamówienie #{order.OrderId} na kwotę {amountToPay:C}...");
-
-            
             bool paymentSuccess = paymentMethod.Pay(amountToPay, order.Purchaser);
 
             if (paymentSuccess)
             {
-                
                 try
                 {
                     order.MarkAsPaid();
-                    Console.WriteLine($"[SERWIS] Zamówienie #{order.OrderId} zostało opłacone.");
+
+                   
+                    _repository.Update(order);
+
+                    Console.WriteLine($"[SERWIS] Status 'Opłacone' zapisano w bazie.");
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[BŁĄD] Płatność przeszła, ale nie udało się zmienić statusu: {ex.Message}");
+                    Console.WriteLine($"[BŁĄD ZAPISU] {ex.Message}");
                     return false;
                 }
             }
@@ -107,11 +116,11 @@ namespace Project.Logic.StoreManagment
             }
         }
 
+
         public void ShipOrder(Order order)
         {
             if (order == null) return;
 
-            
             if (order.Status == OrderStatus.New)
             {
                 Console.WriteLine("[SERWIS BŁĄD] Nie można wysłać nieopłaconego zamówienia!");
@@ -121,7 +130,11 @@ namespace Project.Logic.StoreManagment
             try
             {
                 order.ShipOrder();
-                Console.WriteLine($"[SERWIS] Zamówienie #{order.OrderId} zostało wysłane do klienta.");
+
+                
+                _repository.Update(order);
+
+                Console.WriteLine($"[SERWIS] Status 'Wysłane' zapisano w bazie.");
             }
             catch (Exception ex)
             {

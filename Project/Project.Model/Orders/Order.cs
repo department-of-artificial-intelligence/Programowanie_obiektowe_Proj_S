@@ -16,17 +16,28 @@ namespace Project.Model.Orders
         public required Customer Purchaser { get; set; }
         public required Address DeliveryAddress { get; set; }
 
+
+        public int StoreId { get; set; } 
+        public virtual Store Store { get; set; } 
+
+
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        
+
+
+        private Order() { }
 
         [SetsRequiredMembers]
-        public Order(Customer purchaser, Address deliveryAddress)
+        public Order(Customer purchaser, Address deliveryAddress, Store store)
         {
+            OrderDate = DateTime.Now;
+            Status = OrderStatus.New;
             Purchaser = purchaser;
             DeliveryAddress = deliveryAddress;
-        }
 
+           
+            Store = store ?? throw new ArgumentNullException(nameof(store));
+        }
 
 
         public void AddProduct(Product product, int quantity)
