@@ -1,0 +1,380 @@
+﻿<Window x:Class="Project.WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.WpfApp"
+        xmlns:viewmodels="clr-namespace:Project.WpfApp.ViewModels"
+        Title="Cinema Management System" 
+        Height="700" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+
+    <Window.DataContext>
+        <viewmodels:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Style x:Key="CenteredTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CenteredCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
+
+        <Style x:Key="CenteredCellStyle" TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="#CCCCCC" 
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="6,6,0,0"
+                                Margin="2,0,2,0"
+                                Padding="12,8">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0078D4"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#0078D4"/>
+                                <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#F8F9FA"/>
+                                <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="#333333"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8F9FA"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="BorderBrush" Value="#005A9E"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" Background="#F8F9FA" BorderBrush="#E9ECEF" BorderThickness="0,0,0,1">
+            <MenuItem Header="_Program">
+                <MenuItem Header="Close" Command="{Binding CloseAppCommand}" />
+                <Separator/>
+                <MenuItem Header="Generate Sample Data" Command="{Binding SeedSampleDataCommand}" />
+                <MenuItem Header="Clear Database" Command="{Binding ClearDbCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Actors">
+                <MenuItem Header="Add..." Command="{Binding AddActorCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditActorCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteActorCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Auditoriums">
+                <MenuItem Header="Add..." Command="{Binding AddAuditoriumCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditAuditoriumCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteAuditoriumCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Cinemas">
+                <MenuItem Header="Add..." Command="{Binding AddCinemaCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditCinemaCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteCinemaCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Films">
+                <MenuItem Header="Add..." Command="{Binding AddFilmCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditFilmCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteFilmCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Reservations">
+                <MenuItem Header="Add..." Command="{Binding AddReservationCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditReservationCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteReservationCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Seances">
+                <MenuItem Header="Add..." Command="{Binding AddSeanceCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditSeanceCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteSeanceCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Tickets">
+                <MenuItem Header="Add..." Command="{Binding AddTicketCommand}" />
+                <MenuItem Header="Edit..." Command="{Binding EditTicketCommand}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteTicketCommand}" />
+            </MenuItem>
+        </Menu>
+
+        <StackPanel Grid.Row="1" Margin="15,10,15,0">
+            <TextBlock Text="Cinema Management System" 
+                       FontSize="20" 
+                       FontWeight="Bold"
+                       Foreground="#333333"/>
+            <Border Height="2" Background="#0078D4" Margin="0,5,0,10"/>
+        </StackPanel>
+
+        <TabControl Grid.Row="2" 
+                    Margin="15,0,15,15"
+                    SelectedIndex="{Binding IndexOfSelectedTab}"
+                    Background="Transparent"
+                    BorderThickness="0">
+
+            <TabItem Header="Actors">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Actors}" 
+                              SelectedItem="{Binding SelectedActor}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="First Name" 
+                                               Binding="{Binding FirstName}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Last Name" 
+                                               Binding="{Binding LastName}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Nationality" 
+                                               Binding="{Binding Nationality}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Birth Date" 
+                                               Binding="{Binding BirthDate, StringFormat={}{0:dd.MM.yyyy}}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Popularity" 
+                                               Binding="{Binding Popularity, StringFormat={}{0:F1}}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Auditoriums">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Auditoriums}" 
+                              SelectedItem="{Binding SelectedAuditorium}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" 
+                                               Binding="{Binding Name}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Room Number" 
+                                               Binding="{Binding RoomNumber}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Rows" 
+                                               Binding="{Binding Rows}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Seats Per Row" 
+                                               Binding="{Binding SeatsPerRow}" 
+                                               Width="1.2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Capacity" 
+                                               Binding="{Binding Capacity}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Cinemas">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Cinemas}" 
+                              SelectedItem="{Binding SelectedCinema}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" 
+                                               Binding="{Binding Name}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Address" 
+                                               Binding="{Binding Address}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Contact Phone" 
+                                               Binding="{Binding ContactPhone}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Manager" 
+                                               Binding="{Binding ManagerName}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Films">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Films}" 
+                              SelectedItem="{Binding SelectedFilm}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Title" 
+                                               Binding="{Binding Title}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Director" 
+                                               Binding="{Binding Director}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Genre" 
+                                               Binding="{Binding Genre}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Duration (min)" 
+                                               Binding="{Binding DurationMinutes}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridCheckBoxColumn Header="Age Restriction" 
+                                                   Binding="{Binding HasAgeRestriction}" 
+                                                   Width="0.8*"
+                                                   ElementStyle="{StaticResource CenteredCheckBoxStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Reservations">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Reservations}" 
+                              SelectedItem="{Binding SelectedReservation}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Customer" 
+                                               Binding="{Binding CustomerFullName}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Email" 
+                                               Binding="{Binding CustomerEmail}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Phone" 
+                                               Binding="{Binding CustomerPhone}" 
+                                               Width="1.5*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Payment Method" 
+                                               Binding="{Binding PaymentMethod}" 
+                                               Width="1.2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Seances">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Seances}" 
+                              SelectedItem="{Binding SelectedSeance}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Start Time" 
+                                               Binding="{Binding StartTime, StringFormat={}{0:dd.MM.yyyy HH:mm}}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="End Time" 
+                                               Binding="{Binding EndTime, StringFormat={}{0:dd.MM.yyyy HH:mm}}" 
+                                               Width="2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Price" 
+                                               Binding="{Binding Price, StringFormat={}{0:C2}}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Occupied Seats" 
+                                               Binding="{Binding OccupiedSeatIds.Count}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Tickets">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Tickets}" 
+                              SelectedItem="{Binding SelectedTicket}"
+                              CellStyle="{StaticResource CenteredCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Seat" 
+                                               Binding="{Binding SeatId}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Type" 
+                                               Binding="{Binding Type}" 
+                                               Width="1.2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Original Price" 
+                                               Binding="{Binding OriginalPrice, StringFormat={}{0:C2}}" 
+                                               Width="1.2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Final Price" 
+                                               Binding="{Binding FinalPrice, StringFormat={}{0:C2}}" 
+                                               Width="1.2*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                            <DataGridTextColumn Header="Discount" 
+                                               Binding="{Binding Discount, StringFormat={}{0:C2}}" 
+                                               Width="*" 
+                                               ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

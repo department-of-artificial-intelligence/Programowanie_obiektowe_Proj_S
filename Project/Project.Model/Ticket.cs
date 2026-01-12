@@ -14,24 +14,24 @@ namespace Project.Models
 
     public class Ticket : Base
     {
-        public string ReservationId { get; private set; }
-        public string CinemaId { get; private set; }
-        public string AuditoriumId { get; private set; }
-        public string SeanceId { get; private set; }
-        public string FilmId { get; private set; }
-        public string SeatId { get; private set; }
-        public TicketType Type { get; private set; }
+        public string ReservationId { get; set; }
+        public string CinemaId { get; set; }
+        public string AuditoriumId { get; set; }
+        public string SeanceId { get; set; }
+        public string FilmId { get; set; }
+        public string SeatId { get; set; }
+        public TicketType Type { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal OriginalPrice { get; private set; }
+        public decimal OriginalPrice { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal FinalPrice { get; private set; }
+        public decimal FinalPrice { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Discount => OriginalPrice - FinalPrice;
 
-        protected Ticket() 
+        public Ticket() 
         {
             ReservationId = string.Empty;
             CinemaId = string.Empty;

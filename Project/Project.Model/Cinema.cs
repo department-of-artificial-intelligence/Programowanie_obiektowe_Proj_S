@@ -6,20 +6,20 @@ namespace Project.Models
 {
     public class Cinema : Base, IRatable, IListManageable<string>
     {
-        public string Name { get; private set; }
-        public string Address { get; private set; }
-        public string ContactPhone { get; private set; }
-        public string ContactEmail { get; private set; }
-        public string ManagerName { get; private set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string ContactPhone { get; set; }
+        public string ContactEmail { get; set; }
+        public string ManagerName { get; set; }
 
-        public double Rating { get; private set; }
-        public uint TotalRatings { get; private set; }
+        public double Rating { get; set; }
+        public uint TotalRatings { get; set; }
 
         private readonly List<string> _availableFilmIds;
         public IReadOnlyList<string> AvailableFilmIds => _availableFilmIds.AsReadOnly();
         public IReadOnlyList<string> Items => AvailableFilmIds;
 
-        protected Cinema()
+        public Cinema()
         {
             _availableFilmIds = [];
             Name = string.Empty;

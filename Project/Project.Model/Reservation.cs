@@ -2,17 +2,23 @@
 
 namespace Project.Models
 {
+    public enum PaymentMethod
+    {
+        Cash,
+        CreditCard,
+    }
+
     public class Reservation : Base
     {
-        public string SeanceId { get; private set; }
-        public string CustomerFirstName { get; private set; }
-        public string CustomerLastName { get; private set; }
-        public string CustomerEmail { get; private set; }
-        public string CustomerPhone { get; private set; }
-        public string PaymentMethod { get; private set; }
+        public string SeanceId { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
+        public string CustomerEmail { get; set; }
+        public string CustomerPhone { get; set; }
+        public string PaymentMethod { get; set; }
         public string CustomerFullName => $"{CustomerFirstName} {CustomerLastName}";
 
-        protected Reservation()
+        public Reservation()
         {
             SeanceId = string.Empty;
             CustomerFirstName = string.Empty;

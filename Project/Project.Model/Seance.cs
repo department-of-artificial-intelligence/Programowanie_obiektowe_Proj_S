@@ -6,20 +6,20 @@ namespace Project.Models
 {
     public class Seance : Base
     {
-        public string FilmId { get; private set; }
-        public string AuditoriumId { get; private set; }
-        public DateTime StartTime { get; private set; }
-        public DateTime EndTime { get; private set; }
+        public string FilmId { get; set; }
+        public string AuditoriumId { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; private set; }
-        public uint FilmDurationMinutes { get; private set; }
+        public decimal Price { get; set; }
+        public uint FilmDurationMinutes { get; set; }
 
         private readonly List<string> _occupiedSeatIds = [];
         public IReadOnlyList<string> OccupiedSeatIds => _occupiedSeatIds.AsReadOnly();
 
 
-        protected Seance()
+        public Seance()
         {
             _occupiedSeatIds = [];
             FilmId = string.Empty;

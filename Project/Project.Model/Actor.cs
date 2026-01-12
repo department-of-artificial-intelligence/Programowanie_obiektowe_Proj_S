@@ -4,11 +4,11 @@ namespace Project.Models
 {
     public class Actor : Person
     {
-        public string Biography { get; private set; } = string.Empty;
-        public double Popularity { get; private set; } = 0;
+        public string Biography { get; set; } = string.Empty;
+        public double Popularity { get; set; } = 0;
 
 
-        protected Actor() { }
+        public Actor() { }
 
         public Actor(string firstName, string lastName, string nationality, DateTime birthDate, string profileImageUrl, string biography, double popularity)
                : base(firstName, lastName, nationality, birthDate, profileImageUrl)

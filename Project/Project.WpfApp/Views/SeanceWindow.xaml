@@ -1,0 +1,86 @@
+﻿<Window x:Class="Project.WpfApp.Views.SeanceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Seance" 
+        Height="400" 
+        Width="500"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="15">
+                
+                <StackPanel>
+                    <TextBlock Text="Seance Details" 
+                               FontSize="18" 
+                               FontWeight="Bold"
+                               Margin="0,0,0,5"/>
+                    <Border Height="2" Background="#0078D4" Margin="0,0,0,15"/>
+                </StackPanel>
+
+                <GroupBox Header="Seance Information" Style="{StaticResource ColoredGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Film:"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" 
+                                ItemsSource="{Binding AvailableFilms}" 
+                                SelectedValue="{Binding Seance.FilmId}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Title"
+                                Margin="5"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Auditorium:"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" 
+                                ItemsSource="{Binding AvailableAuditoriums}" 
+                                SelectedValue="{Binding Seance.AuditoriumId}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                                Margin="5"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Start Time:"/>
+                        <DatePicker Grid.Row="2" Grid.Column="1" 
+                                  SelectedDate="{Binding Seance.StartTime}"
+                                  Margin="5"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Price:"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Seance.Price}"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Duration (minutes):"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Seance.FilmDurationMinutes}"/>
+                    </Grid>
+                </GroupBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button Content="Confirm" 
+                            Width="100"
+                            Height="35"
+                            Background="#0078D4"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Command="{Binding ConfirmCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Content="Close" 
+                            Width="100"
+                            Height="35"
+                            Background="#6C757D"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Margin="10,0,0,0"
+                            Command="{Binding CloseCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -1,29 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
+using Project.Models;
 
 namespace Project.DAL
 {
     public static class DBManager
     {
         private static ApplicationDBContext? Context;
+        private static readonly string ConnectionString = @"Server=(localdb)\mssqllocaldb;Database=CinemaManagementDB;Trusted_Connection=True;MultipleActiveResultSets=true;";
 
         public static ApplicationDBContext BuildDB()
         {
             if (Context == null)
             {
-                IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
+                try
                 {
-                    var cns = context.Configuration.GetConnectionString("DefaultConnection");
-                    services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(cns));
-                }).Build();
-
-                Context = _host.Services.GetService<ApplicationDBContext>() ?? throw new Exception("Database couldnt't run properly");
+                    var optionsBuilder = new DbContextOptionsBuilder<ApplicationDBContext>();
+                    optionsBuilder.UseSqlServer(ConnectionString);
+                    
+                    Context = new ApplicationDBContext(optionsBuilder.Options);
+                    
+                    Context.Database.EnsureCreated();
+                    
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error connecting to database: {ex.Message}");
+                    throw;
+                }
             }
-
-            Context.Database.Migrate();
 
             return Context;
         }
@@ -34,17 +38,24 @@ namespace Project.DAL
 
             try
             {
-                if (Context.Actors.Any()) Context.Actors.RemoveRange(Context.Actors);
-                if (Context.Auditoriums.Any()) Context.Auditoriums.RemoveRange(Context.Auditoriums);
-                if (Context.Cinemas.Any()) Context.Cinemas.RemoveRange(Context.Cinemas);
-                if (Context.Films.Any()) Context.Films.RemoveRange(Context.Films);
-                if (Context.Reservations.Any()) Context.Reservations.RemoveRange(Context.Reservations);
-                if (Context.Seances.Any()) Context.Seances.RemoveRange(Context.Seances);
-                if (Context.Tickets.Any()) Context.Tickets.RemoveRange(Context.Tickets);
-
+                using var transaction = Context.Database.BeginTransaction();
+                
+                Context.Tickets.RemoveRange(Context.Tickets);
+                Context.Reservations.RemoveRange(Context.Reservations);
+                Context.Seances.RemoveRange(Context.Seances);
+                Context.Auditoriums.RemoveRange(Context.Auditoriums);
+                Context.Cinemas.RemoveRange(Context.Cinemas);
+                Context.Films.RemoveRange(Context.Films);
+                Context.Actors.RemoveRange(Context.Actors);
+                
                 Context.SaveChanges();
+                transaction.Commit();
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error clearing database: {ex.Message}");
+                throw;
+            }
         }
     }
 }

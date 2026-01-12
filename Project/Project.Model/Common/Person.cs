@@ -2,11 +2,11 @@
 {
     public abstract class Person : Base
     {
-        public string FirstName { get; protected set; }
-        public string LastName { get; protected set; }
-        public string Nationality { get; protected set; }
-        public DateTime BirthDate { get; protected set; }
-        public string ProfileImageUrl { get; protected set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Nationality { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string ProfileImageUrl { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
         public int Age => CalculateAge();

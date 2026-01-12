@@ -6,21 +6,21 @@ namespace Project.Models
 {
     public class Auditorium : Base, IRatable, IListManageable<string>
     {
-        public string CinemaId { get; private set; }
-        public string Name { get; private set; }
-        public uint RoomNumber { get; private set; }
-        public uint Rows { get; private set; }
-        public uint SeatsPerRow { get; private set; }
+        public string CinemaId { get; set; }
+        public string Name { get; set; }
+        public uint RoomNumber { get; set; }
+        public uint Rows { get; set; }
+        public uint SeatsPerRow { get; set; }
         public uint Capacity => Rows * SeatsPerRow;
 
-        public double Rating { get; private set; }
-        public uint TotalRatings { get; private set; }
+        public double Rating { get; set; }
+        public uint TotalRatings { get; set; }
 
         private readonly List<string> _features;
         public IReadOnlyList<string> Features => _features.AsReadOnly();
         public IReadOnlyList<string> Items => Features;
 
-        protected Auditorium()
+        public Auditorium()
         {
             _features = [];
             CinemaId = string.Empty;

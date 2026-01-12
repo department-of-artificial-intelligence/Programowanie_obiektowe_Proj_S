@@ -6,22 +6,22 @@ namespace Project.Models
 {
     public class Film : Base, IRatable, IListManageable<string>
     {
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public uint DurationMinutes { get; private set; }
-        public string Director { get; private set; }
-        public string Genre { get; private set; }
-        public bool HasAgeRestriction { get; private set; }
-        public string PosterUrl { get; private set; }
-        public string TrailerUrl { get; private set; }
-        public double Rating { get; private set; }
-        public uint TotalRatings { get; private set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public uint DurationMinutes { get; set; }
+        public string Director { get; set; }
+        public string Genre { get; set; }
+        public bool HasAgeRestriction { get; set; }
+        public string PosterUrl { get; set; }
+        public string TrailerUrl { get; set; }
+        public double Rating { get; set; }
+        public uint TotalRatings { get; set; }
 
         private readonly List<string> _actorIds;
         public IReadOnlyList<string> ActorIds => _actorIds.AsReadOnly();
         public IReadOnlyList<string> Items => ActorIds;
 
-        protected Film()
+        public Film()
         {
             _actorIds = [];
             Title = string.Empty;

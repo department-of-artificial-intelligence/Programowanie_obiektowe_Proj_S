@@ -1,0 +1,74 @@
+﻿<Window x:Class="Project.WpfApp.Views.CinemaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cinema" 
+        Height="450" 
+        Width="500"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="15">
+                
+                <StackPanel>
+                    <TextBlock Text="Cinema Information" 
+                               FontSize="18" 
+                               FontWeight="Bold"
+                               Margin="0,0,0,5"/>
+                    <Border Height="2" Background="#0078D4" Margin="0,0,0,15"/>
+                </StackPanel>
+
+                <GroupBox Header="Contact Details" Style="{StaticResource ColoredGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Name:"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Cinema.Name}"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Address:"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Cinema.Address}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Contact Phone:"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Cinema.ContactPhone}"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Contact Email:"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Cinema.ContactEmail}"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Manager Name:"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Cinema.ManagerName}"/>
+                    </Grid>
+                </GroupBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button Content="Confirm" 
+                            Width="100"
+                            Height="35"
+                            Background="#0078D4"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Command="{Binding ConfirmCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Content="Close" 
+                            Width="100"
+                            Height="35"
+                            Background="#6C757D"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Margin="10,0,0,0"
+                            Command="{Binding CloseCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

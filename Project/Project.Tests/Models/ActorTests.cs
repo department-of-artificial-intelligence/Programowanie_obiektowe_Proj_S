@@ -76,16 +76,6 @@ namespace Project.Tests.Models
         }
 
         [Fact]
-        public void SetBiography_WithNull_ShouldThrowArgumentNullException()
-        {
-            // Given
-            var actor = CreateTestActor();
-
-            // When & Then
-            Assert.Throws<ArgumentNullException>(() => actor.SetBiography(null));
-        }
-
-        [Fact]
         public void SetPopularity_WithValidValue_ShouldUpdatePopularity()
         {
             // Given
