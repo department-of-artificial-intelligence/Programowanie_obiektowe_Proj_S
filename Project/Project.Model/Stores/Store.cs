@@ -33,8 +33,7 @@ namespace Project.Model.Stores
         public required Address Address { get; set; }
         public List<Employee> Staff { get; set; }
         public List<Product> Inventory { get; set; }
-
-        
+        public List<Order> Orders { get; set; }
 
         
 
@@ -47,6 +46,8 @@ namespace Project.Model.Stores
             PhoneNumber = phoneNumber;
             Staff = new List<Employee>();
             Inventory = new List<Product>();
+            Orders = new List<Order>();
+
         }
 
 

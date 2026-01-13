@@ -12,7 +12,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260113012458_Initial")]
+    [Migration("20260113194131_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -290,7 +290,7 @@ namespace Project.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("Project.Model.Stores.Store", "Store")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -363,6 +363,8 @@ namespace Project.DAL.Migrations
             modelBuilder.Entity("Project.Model.Stores.Store", b =>
                 {
                     b.Navigation("Inventory");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("Staff");
                 });

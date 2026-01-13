@@ -35,26 +35,24 @@ namespace Project.DAL
 
             modelBuilder.Entity<Order>(entity =>
             {
-               
                 entity.Property(o => o.StoreId).IsRequired();
+
                 entity.HasOne(o => o.Store)
-                      .WithMany()
+                      .WithMany(s => s.Orders) 
                       .HasForeignKey(o => o.StoreId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-               
                 entity.Property(o => o.PurchaserId).IsRequired();
                 entity.HasOne(o => o.Purchaser)
-                      .WithMany()
+                      .WithMany() 
                       .HasForeignKey(o => o.PurchaserId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-               
+                
                 entity.HasOne(o => o.DeliveryAddress)
                       .WithMany()
-                      
                       .HasForeignKey("DeliveryAddressId")
-                      .IsRequired() 
+                      .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
             });
         }

@@ -16,14 +16,14 @@ namespace Project.Model.Orders
 
 
         public int PurchaserId { get; set; } 
-        public Customer Purchaser { get; set; }
+        public virtual Customer Purchaser { get; set; }
 
 
         public  Address DeliveryAddress { get; set; }
 
 
-        public int StoreId { get; private set; } 
-        public Store Store { get; set; } 
+        public int StoreId { get; set; } 
+        public virtual Store Store { get; set; } 
 
 
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();

@@ -1,7 +1,7 @@
 ﻿using Project.DAL;
 using Project.Model.Interfaces;
 using Project.Model.Orders;
-using Project.Model.Stores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,33 +28,52 @@ namespace Project.Dal.Repositories
                       .ToList();
         }
 
-        public bool AddOrder(Order order)
-        {
-            if (order == null) return false;
-
-            _db.Orders.Add(order);
-            _db.SaveChanges();
-            return true;
-        }
-
         public Order GetById(int id)
         {
-            throw new NotImplementedException();
+            return _db.Orders.FirstOrDefault(o => o.OrderId == id);
         }
 
         public void Add(Order order)
         {
-            throw new NotImplementedException();
+            if (order != null)
+            {
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+            }
+        }
+
+        public bool AddOrder(Order order)
+        {
+            if (order == null) return false;
+
+            try
+            {
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void Update(Order order)
         {
-            throw new NotImplementedException();
+            if (order != null)
+            {
+                _db.Orders.Update(order);
+                _db.SaveChanges();
+            }
         }
 
         public void Remove(Order order)
         {
-            throw new NotImplementedException();
+            if (order != null)
+            {
+                _db.Orders.Remove(order);
+                _db.SaveChanges();
+            }
         }
     }
 }
