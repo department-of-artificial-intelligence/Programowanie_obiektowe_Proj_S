@@ -43,10 +43,10 @@ namespace Project.DAL
                       .OnDelete(DeleteBehavior.Cascade);
 
                
-                entity.Property(o => o.CustomerId).IsRequired();
+                entity.Property(o => o.PurchaserId).IsRequired();
                 entity.HasOne(o => o.Purchaser)
                       .WithMany()
-                      .HasForeignKey(o => o.CustomerId)
+                      .HasForeignKey(o => o.PurchaserId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                
