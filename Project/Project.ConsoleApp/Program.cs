@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore; 
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,28 +23,29 @@ if (context != null)
     context.Database.Migrate();
     context.Database.EnsureCreated();
 
-    
+
     if (!context.Stores.Any())
     {
 
 
-        var adres1 = new Address { 
-            City = "Warszawa", 
-            Street = "ul. Marszałkowska 1", 
-            ZipCode = "12-690", 
-            Country = "Polska" 
+        var adres1 = new Address
+        {
+            City = "Warszawa",
+            Street = "ul. Marszałkowska 1",
+            ZipCode = "12-690",
+            Country = "Polska"
         };
-        
-        
+
+
         var newStore = new Store
         {
             Name = "Nowe MediaExpert",
             Address = adres1,
             PhoneNumber = "+48863972431"
-            
+
         };
 
-        
+
         var newEmployee = new Employee
         {
             FirstName = "Jan",
@@ -54,13 +55,13 @@ if (context != null)
             WorkPlace = newStore,
             Position = EmployeePosition.Cashier,
             Salary = 4500m,
-            
-            
+
+
         };
 
 
-        context.Stores.Add(newStore);       
-        context.Employees.Add(newEmployee); 
+        context.Stores.Add(newStore);
+        context.Employees.Add(newEmployee);
 
 
         context.SaveChanges();
