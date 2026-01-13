@@ -14,7 +14,8 @@ namespace Project.Model.People
     {
         public int EmployeeId {  get; private set; }
 
-        public required Store WorkPlace { get; set; }
+        public int StoreId { get; private set; }
+        public virtual Store WorkPlace { get; set; }
         public required EmployeePosition Position { get; set; }
 
 

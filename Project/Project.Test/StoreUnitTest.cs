@@ -20,18 +20,30 @@ namespace Project.Test
         }
 
 
+        private Store CreateTestStore()
+        {
+            return new Store
+            {
+                Name = "Sklep Testowy",
+                PhoneNumber = "+48123456789",
+                Address = new Address { City = "Wrocław", Street = "Rynek", ZipCode = "50-001", Country = "PL" }
+            };
+        }
+
+
 
         [Fact]
         public void Calculate_Its_TotalAmount()
         {
             _output.WriteLine("TEST: Obliczanie wartości pojedynczego zamówienia.");
 
+            var store = CreateTestStore();
             var customer = new Customer("Test", "User", "+48123456789", "test@test.pl");
             var address = new Address("A", "B", "50-361", "PL");
-            var order = new Order(customer, address);
+            var order = new Order(customer, address, store);
 
-            var p5 = new Product("Telewizor OLED 65 cali", 5999.00m, ProductCategory.TV);
-            var p6 = new Product("Soundbar kina domowego", 850.00m, ProductCategory.Audio);
+            var p5 = new Product("Telewizor OLED 65 cali", 5999.00m, 40, ProductCategory.TV);
+            var p6 = new Product("Soundbar kina domowego", 850.00m, 15, ProductCategory.Audio);
 
 
             _output.WriteLine($"Cena p1 (Mleko): {p5.Price}");
@@ -61,11 +73,24 @@ namespace Project.Test
         {
             _output.WriteLine("TEST: Zmiana statusu zamówienia na Wysłane.");
 
+
+
+            var adresSklepu = new Address { City = "A", Street = "B", ZipCode = "67-531", Country = "P" };
+
             
-            var order = new Order(new Customer("A", "B", "+48123456789", "a@a.pl"), new Address("A", "B", "67-531", "P"));
+            var store = new Store
+            {
+                Name = "Sklep Testowy",
+                Address = adresSklepu,
+                PhoneNumber = "+48123123123"
+            };
+
+
+
+            var order = new Order(new Customer("A", "B", "+48123456789", "a@a.pl"), new Address("A", "B", "67-531", "P"), store);
 
            
-            var product = new Product("Test", 100m, ProductCategory.Other);
+            var product = new Product("Test", 100m, 10, ProductCategory.Other);
             order.AddProduct(product, 13);
 
             
@@ -83,16 +108,24 @@ namespace Project.Test
         {
             _output.WriteLine("TEST: Dodawanie pracownika do sklepu.");
 
-            var address = new Address("Wrocław", "Rynek", "50-001", "PL");
-            var store = new Store("Sklep Testowy", address, "+48710000000");
+            var adres2 = new Address("Wrocław", "Rynkowa 5/12", "50-001", "PL");
+
+
+            var store2 = new Store{
+                Name = "Sklep Test", 
+                Address = adres2, 
+                PhoneNumber = "+48713612518"
+            };
+
 
             var employee = new Employee("Jan", "Kowalski", "+48123123123", "j@k.pl",
-                store, EmployeePosition.Manager, 5000m, DateTime.Now);
+                store2, EmployeePosition.Manager, 5000m, DateTime.Now);
 
-            store.Staff.Add(employee);
 
-            Assert.Single(store.Staff);
-            Assert.Equal("Jan", store.Staff[0].FirstName);
+            store2.Staff.Add(employee);
+
+            Assert.Single(store2.Staff);
+            Assert.Equal("Jan", store2.Staff[0].FirstName);
             _output.WriteLine("SUKCES: Pracownik dodany.");
         }
 
@@ -104,23 +137,28 @@ namespace Project.Test
             _output.WriteLine("TEST INTEGRACYJNY: Pełny scenariusz.");
 
 
-            var p1 = new Product("Kabel HDMI 2m", 25.00m, ProductCategory.Accessory);
-            var p2 = new Product("Słuchawki Bezprzewodowe", 199.00m, ProductCategory.Audio);
-            var p3 = new Product("Smartfon Pro X", 3500.00m, ProductCategory.Smartphone);
-            var p4 = new Product("Ekspres do kawy", 1200.00m, ProductCategory.SmallAppliance);
+            var p1 = new Product("Kabel HDMI 2m", 25.00m, 20, ProductCategory.Accessory);
+            var p2 = new Product("Słuchawki Bezprzewodowe", 199.00m, 30, ProductCategory.Audio);
+            var p3 = new Product("Smartfon Pro X", 3500.00m, 50, ProductCategory.Smartphone);
+            var p4 = new Product("Ekspres do kawy", 1200.00m, 10, ProductCategory.SmallAppliance);
 
 
             var customer = new Customer("Ewa", "Kowalska", "+48987654321", "ewa@klient.pl");
             var deliveryAddress = new Address("Warszawa", "ul. Polna 5", "00-123", "Polska");
 
-            
-            var order1 = new Order(customer, deliveryAddress);
+
+
+            var store = CreateTestStore();
+
+
+
+            var order1 = new Order(customer, deliveryAddress, store);
             order1.AddProduct(p1, 10); 
             order1.AddProduct(p2, 2);  
             customer.Orders.Add(order1);
 
             
-            var order2 = new Order(customer, deliveryAddress);
+            var order2 = new Order(customer, deliveryAddress, store);
             order2.AddProduct(p3, 1); 
             order2.AddProduct(p4, 2);  
             customer.Orders.Add(order2);

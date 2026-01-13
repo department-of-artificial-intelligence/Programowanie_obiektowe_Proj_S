@@ -6,7 +6,7 @@ using Project.Model.People;
 using Project.Model.Stores;
 using Project.Model.Interfaces; 
 
-namespace Project.Logic.StoreManagment
+namespace Project.Logic.StoreManagement
 {
     public class ServiceOfStatistics
     {

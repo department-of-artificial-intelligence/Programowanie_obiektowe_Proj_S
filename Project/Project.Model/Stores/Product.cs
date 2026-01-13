@@ -7,6 +7,9 @@ namespace Project.Model.Stores
         
         public int ProductId { get; private set; }
 
+        public int StoreId { get; set; }
+        public virtual Store Store { get; set; }
+
         public required string Name { get; set; }
         public string Description { get; set; } = "Brak opisu";
 
@@ -23,14 +26,15 @@ namespace Project.Model.Stores
             }
         }
 
-        
+        public int Stock { get; set; } = 0;
+
         public required ProductCategory Category { get; set; }
 
        
         public Product() { }
 
         [SetsRequiredMembers]
-        public Product(string name, decimal price, ProductCategory category)
+        public Product(string name, decimal price, int stock, ProductCategory category)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -39,14 +43,13 @@ namespace Project.Model.Stores
 
             Name = name;
             Price = price;
+            Stock = stock;
             Category = category;
         }
 
         public override string ToString()
         {
-            string idInfo = ProductId == 0 ? "NOWY" : ProductId.ToString();
-            
-            return $"[PRODUKT #{idInfo}] {Name} ({Category}) | Cena: {Price:C}";
+            return $"[PRODUKT #{ProductId}] {Name} ({Category}) | Cena: {Price:C} | Ilość: {Stock}";
         }
     }
 }

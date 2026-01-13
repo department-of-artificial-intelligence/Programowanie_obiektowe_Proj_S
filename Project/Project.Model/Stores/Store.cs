@@ -30,12 +30,15 @@ namespace Project.Model.Stores
         }
 
 
-        required public Address Address { get; set; }
+        public required Address Address { get; set; }
         public List<Employee> Staff { get; set; }
         public List<Product> Inventory { get; set; }
 
-        [SetsRequiredMembers]
+        
 
+        
+
+        [SetsRequiredMembers]
         public Store(string name, Address address, string phoneNumber)
         {
             
@@ -46,7 +49,9 @@ namespace Project.Model.Stores
             Inventory = new List<Product>();
         }
 
-        
+
+        public Store() { }
+
 
 
         public override string ToString()

@@ -69,18 +69,30 @@ namespace Project.Test
         [Fact]
         public void CalculateTotalRevenue_Should_Sum_Only_Active_Orders()
         {
+
+            var adresSklepu = new Address { City = "A", Street = "B", ZipCode = "67-531", Country = "P" };
+
+
+            var store = new Store
+            {
+                Name = "Sklep Testowy",
+                Address = adresSklepu,
+                PhoneNumber = "+48123123123"
+            };
+
+
             var customer = new Customer("Jan", "K", "+53673492000", "e@m.pl");
             var addr = new Address("A", "B", "00-000", "C");
 
-            var order1 = new Order(customer, addr);
-            order1.AddProduct(new Product("A", 100m, ProductCategory.SmallAppliance), 1);
+            var order1 = new Order(customer, addr, store);
+            order1.AddProduct(new Product("A", 100m, 40, ProductCategory.SmallAppliance), 10);
             order1.MarkAsPaid();
 
-            var order2 = new Order(customer, addr);
-            order2.AddProduct(new Product("B", 50m, ProductCategory.TV), 1);
+            var order2 = new Order(customer, addr, store);
+            order2.AddProduct(new Product("B", 50m, 15, ProductCategory.TV), 10);
 
-            var order3 = new Order(customer, addr);
-            order3.AddProduct(new Product("C", 2000m, ProductCategory.Smartphone), 1);
+            var order3 = new Order(customer, addr, store);
+            order3.AddProduct(new Product("C", 2000m, 15, ProductCategory.Smartphone), 10);
             order3.CancelOrder();
 
             var orders = new List<Order> { order1, order2, order3 };

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 
 namespace Project.Model.Orders
 {
@@ -11,32 +12,41 @@ namespace Project.Model.Orders
     {
         public int OrderId { get; private set; }
         public DateTime OrderDate { get; private set; } = DateTime.Now;
-        public OrderStatus Status { get; private set; } = OrderStatus.New;
-
-        public required Customer Purchaser { get; set; }
-        public required Address DeliveryAddress { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.New;
 
 
-        public int StoreId { get; set; } 
-        public virtual Store Store { get; set; } 
+        public int PurchaserId { get; set; } 
+        public Customer Purchaser { get; set; }
+
+
+        public  Address DeliveryAddress { get; set; }
+
+
+        public int StoreId { get; private set; } 
+        public Store Store { get; set; } 
 
 
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
 
 
-        private Order() { }
+        public Order() { }
 
         [SetsRequiredMembers]
         public Order(Customer purchaser, Address deliveryAddress, Store store)
         {
+
+            Purchaser = purchaser ?? throw new ArgumentNullException(nameof(purchaser), "Zamówienie musi mieć klienta!");
+            Store = store ?? throw new ArgumentNullException(nameof(store), "Zamówienie musi być w sklepie!");
+            DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress), "Zamówienie musi posiadać adres dostawy");
+
+
             OrderDate = DateTime.Now;
             Status = OrderStatus.New;
-            Purchaser = purchaser;
-            DeliveryAddress = deliveryAddress;
+            
 
            
-            Store = store ?? throw new ArgumentNullException(nameof(store));
+           
         }
 
 
