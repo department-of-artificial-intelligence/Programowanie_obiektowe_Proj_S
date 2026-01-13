@@ -17,5 +17,10 @@ namespace Project.Model
         {
             AssignedGroups = new List<Group> ();
         }
+
+        public override string GetInfo()
+        {
+            return $"[Teacher] {FirstName} {LastName} (ID: {Id})";
+        }
     }
 }

@@ -5,6 +5,7 @@ using Project.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,22 +53,44 @@ namespace Project.Logic
 
         public List<GroupStatDto> GetGroupStatistics()
         {
-            return _context.Groups
+            var groups = _context.Groups
                 .Include(g => g.Teacher)
                 .Include(g => g.Enrollments)
-                .Select(g => new GroupStatDto
-                {
-                    GroupName = g.GroupName,
-
-                    TeacherName = g.Teacher != null ? g.Teacher.LastName : "Brak",
-
-                    StudentCount = g.Enrollments != null ? g.Enrollments.Count : 0,
-                   
-                    MaxStudents = g.MaxStudents,
-                    FillPercent = (g.MaxStudents > 0 && g.Enrollments != null) ? (double)g.Enrollments.Count / g.MaxStudents * 100 : 0
-                })
-                .OrderByDescending(x => x.FillPercent)
                 .ToList();
+
+            var stats = groups.Select(g => new GroupStatDto
+            {
+                GroupName = g.GroupName,
+                TeacherName = g.Teacher != null ? $"{g.Teacher.FirstName} {g.Teacher.LastName}" : "Brak",
+
+                MaxStudents = g.MaxStudents,
+                StudentCount = g.Enrollments.Count,
+
+                FillPercent = g.MaxStudents > 0 ? (double)g.Enrollments.Count / g.MaxStudents * 100 : 0
+            })
+            .OrderByDescending(s => s.FillPercent) 
+            .ToList();
+
+            return stats;
+        }
+
+        public void AddStudent(string firstName, string lastName, DateOnly birthDate, string address, string phoneNumber, string email, string language)
+        {
+            var newStudent = new Student
+            {
+                Id = 0,
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = birthDate,
+                Address = address,    
+                PhoneNumber = phoneNumber,
+                Email = email,
+                LanguageOfLearning = language,
+                Balance = 0
+            };
+
+            _context.Students.Add(newStudent);
+            _context.SaveChanges();
         }
     }
 }

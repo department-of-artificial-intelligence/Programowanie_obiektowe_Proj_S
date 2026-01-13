@@ -37,5 +37,11 @@ namespace Project.Model
 
             Enrollments.Add(enrollment);
         }
+
+        public override string GetInfo()
+        {
+            return $"[Student] {FirstName} {LastName} (ID: {Id})";
+        }
+
     }
 }
