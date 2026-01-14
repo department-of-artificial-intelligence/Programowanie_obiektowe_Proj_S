@@ -60,12 +60,34 @@ namespace Project.Dal.Repositories
 
         public void Update(Order order)
         {
-            if (order != null)
+            if (order == null) return;
+
+            try
             {
-                _db.Orders.Update(order);
+                
+                var trackedEntity = _db.Orders.Local.FirstOrDefault(o => o.OrderId == order.OrderId);
+
+                if (trackedEntity == null)
+                {
+                    
+                    _db.Orders.Attach(order);
+                }
+
+                
+                _db.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+                
                 _db.SaveChanges();
             }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine($"[REPO BŁĄD] {ex.InnerException?.Message ?? ex.Message}");
+                throw;
+            }
         }
+    
+        
 
         public void Remove(Order order)
         {

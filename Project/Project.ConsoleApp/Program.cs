@@ -37,7 +37,7 @@ IHost _host = Host.CreateDefaultBuilder()
     .ConfigureServices((context, services) =>
     {
 
-        var cns = "Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv305;Trusted_Connection=True;MultipleActiveResultSets=true";
+        var cns = "Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv605;Trusted_Connection=True;MultipleActiveResultSets=true";
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
     })
     .Build();
@@ -173,13 +173,13 @@ if (context != null)
 var storeRepo = new StoreRepository(context);
 var employeeRepo = new EmployeeRepository(context);
 var orderRepo = new OrderRepository(context);
-
+var statsService = new ServiceOfStatistics(context);
 
 
 var employeeManager = new EmployeeManager(employeeRepo);
 var orderService = new OrderService(orderRepo);
 var productManager = new ProductManager(storeRepo); 
-var statsService = new ServiceOfStatistics(orderRepo);
+
 
 
 var menu = new MenuContainer();
@@ -267,9 +267,7 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
     string emailInput = Console.ReadLine();
 
     var currentCustomer = context.Customers
-      .Include(c => c.Orders)
-      .ThenInclude(o => o.Items)
-      .FirstOrDefault(c => c.Email.ToLower() == emailInput.ToLower());
+    .FirstOrDefault(c => c.Email.ToLower() == emailInput.ToLower());
 
     if (currentCustomer == null)
     {
@@ -470,6 +468,10 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
                 if (orderService.ProcessOrderPayment(newOrder, paymentStrategy))
                 {
                     context.SaveChanges();
+
+                    currentCustomer.Orders.Add(newOrder);
+
+
                     currentBasket.Clear();
                     Console.WriteLine("\n[SUKCES] Zamówienie zrealizowane!");
                 }
@@ -501,7 +503,7 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
                 }
                 else Console.WriteLine("Brak zamówień.");
                 Console.ReadKey();
-                break;
+            break;
 
             case "7": 
                 Console.Clear();
@@ -1341,28 +1343,25 @@ void HandleReports(Store store, ServiceOfStatistics stats, MenuContainer menu)
                 break;
 
             case "3":
+            
                 Console.Clear();
                 Console.WriteLine("--- TOP KLIENCI (WG WYDATKÓW) ---");
 
-               
+                // Wywołujesz metodę z serwisu
                 var customerSpending = stats.GetTotalSpentByCustomer();
 
                 if (customerSpending.Any())
                 {
                     int rank = 1;
-                   
-                    foreach (var entry in customerSpending.OrderByDescending(x => x.Value))
+                    foreach (var entry in customerSpending)
                     {
-                        var customer = entry.Key;
-                        decimal totalSpent = entry.Value;
-
-                        Console.WriteLine($"{rank}. {customer.FirstName} {customer.LastName} (ID: {customer.Id})");
-                        Console.WriteLine($"   Suma wydatków: {totalSpent:C}");
+                        Console.WriteLine($"{rank}. {entry.Key.FirstName} {entry.Key.LastName} (ID: {entry.Key.Id})");
+                        Console.WriteLine($"   Suma wydatków: {entry.Value:C}");
                         Console.WriteLine("-----------------------------------");
                         rank++;
                     }
                 }
-                else Console.WriteLine("Brak danych o klientach.");
+                else Console.WriteLine("Brak danych o wydatkach.");
 
                 Console.ReadKey();
                 break;

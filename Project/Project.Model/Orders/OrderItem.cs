@@ -10,6 +10,10 @@ namespace Project.Model.Orders
 
         public required Product Product { get; set; }
 
+
+        public decimal UnitPrice { get; set; }
+
+
         private int _quantity;
         public required int Quantity
         {
@@ -31,12 +35,15 @@ namespace Project.Model.Orders
         {
             Product = product;
             Quantity = quantity;
+
+            UnitPrice = product.Price;
         }
 
 
         public decimal GetLineTotal()
         {
-            return Product.Price * Quantity;
+            
+            return UnitPrice * Quantity;
         }
 
         public override string ToString()

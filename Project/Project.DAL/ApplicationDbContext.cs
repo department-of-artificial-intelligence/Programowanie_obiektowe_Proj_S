@@ -34,7 +34,7 @@ namespace Project.DAL
             
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Db304;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv605;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 

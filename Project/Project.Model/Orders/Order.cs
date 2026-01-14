@@ -64,10 +64,14 @@ namespace Project.Model.Orders
             if (existingItem != null)
             {
                 existingItem.Quantity += quantity;
+                
+                existingItem.UnitPrice = product.Price;
             }
             else
             {
                 var newItem = new OrderItem(product, quantity);
+                
+                
                 Items.Add(newItem);
             }
         }
