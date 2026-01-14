@@ -183,7 +183,12 @@ var statsService = new ServiceOfStatistics(orderRepo);
 var menu = new MenuContainer();
 
 
-var stores = context.Stores.Include(s => s.Address).ToList();
+var stores = context.Stores
+    .Include(s => s.Address)
+    .Include(s => s.Inventory)
+    .Include(s => s.Staff)     
+    .Include(s => s.Orders)    
+    .ToList();
 
 bool startProgram = true;
 while (startProgram)
@@ -254,14 +259,15 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
     Console.Clear();
     Console.WriteLine("--- LOGOWANIE DO SKLEPU ---");
 
+
     
     Console.Write("Podaj swój adres e-mail użyty przy rejestracji: ");
     string emailInput = Console.ReadLine();
 
-  
     var currentCustomer = context.Customers
-                                 .Include(c => c.Orders)
-                                 .FirstOrDefault(c => c.Email.ToLower() == emailInput.ToLower());
+      .Include(c => c.Orders)
+      .ThenInclude(o => o.Items)
+      .FirstOrDefault(c => c.Email.ToLower() == emailInput.ToLower());
 
     if (currentCustomer == null)
     {
@@ -274,7 +280,8 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
     Console.WriteLine($"\nWitaj, {currentCustomer.FirstName}! Twój portfel: {currentCustomer.WalletBalance:C}");
     Console.ReadKey();
 
-   
+    
+
     var currentBasket = new Dictionary<Product, int>();
 
     bool loggedIn = true;
@@ -908,10 +915,37 @@ void HandleStaff(ApplicationDbContext context, Store store, EmployeeManager empM
                 
                 Console.Write("Imię: "); string firstName = Console.ReadLine();
                 Console.Write("Nazwisko: "); string lastName = Console.ReadLine();
-                Console.Write("Telefon: "); string phone = Console.ReadLine();
-                Console.Write("Email: "); string email = Console.ReadLine();
 
-                
+
+                string phone = "";
+                string phonePattern = @"^\+\d{2}\d{9}$"; 
+                while (true)
+                {
+                    Console.Write("Telefon (+48xxxxxxxxx): ");
+                    phone = Console.ReadLine();
+
+                    
+                    if (Regex.IsMatch(phone, phonePattern)) break;
+
+                    Console.WriteLine("Błąd: Numer musi być w formacie +48123456789 (bez spacji!).");
+                }
+
+
+                string email = "";   
+                string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$";
+
+                while (true)
+                {
+                    Console.Write("Email: ");
+                    email = Console.ReadLine();
+
+                   
+                    if (Regex.IsMatch(email, emailPattern)) break;
+
+                    Console.WriteLine("Błąd: Niepoprawny format email (wymagany np. jan@domena.pl).");
+                }
+
+
                 EmployeePosition position = EmployeePosition.Cashier;
                 bool validPos = false;
 

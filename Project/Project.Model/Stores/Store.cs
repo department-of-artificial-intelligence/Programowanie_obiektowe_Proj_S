@@ -32,7 +32,7 @@ namespace Project.Model.Stores
 
         public required Address Address { get; set; }
         public List<Employee> Staff { get; set; }
-        public List<Product> Inventory { get; set; }
+        public List<Product> Inventory { get; set; } = new List<Product>();
         public List<Order> Orders { get; set; }
 
         
