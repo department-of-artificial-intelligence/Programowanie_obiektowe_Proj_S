@@ -31,11 +31,13 @@ IHost _host = Host.CreateDefaultBuilder()
     {
         
         logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+
+        logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Error);
     })
     .ConfigureServices((context, services) =>
     {
-        
-        var cns = "Server=(localdb)\\mssqllocaldb;Database=Aleksander_NafalskiDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+        var cns = "Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv305;Trusted_Connection=True;MultipleActiveResultSets=true";
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
     })
     .Build();
@@ -391,11 +393,17 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
                 if (Console.ReadLine().ToLower() != "t") break;
 
 
+
+
                 Console.WriteLine("\n--- ADRES DOSTAWY ---");
                 Console.Write("Miasto: "); string city = Console.ReadLine();
                 Console.Write("Ulica: "); string street = Console.ReadLine();
                 Console.Write("Kod: "); string zip = Console.ReadLine();
                 var address = new Address { City = city, Street = street, ZipCode = zip, Country = "Polska" };
+
+
+
+
 
                 Console.WriteLine("\n--- METODA PŁATNOŚCI ---");
                 Console.WriteLine("1. BLIK\n2. Karta\n3. Gotówka");
@@ -410,15 +418,38 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
                         case "1":
                             Console.Write("Kod BLIK: ");
                             paymentStrategy = new BlikPayment(Console.ReadLine());
+
+                            
+                            System.Console.WriteLine("\n\nŁączenie z bankiem...");
+                            for (int i = 0; i < 15; i++)
+                            {
+                                System.Console.Write("█");
+                                Thread.Sleep(300); 
+                            }
+                            System.Console.WriteLine(); 
+                                                        
                             break;
+
                         case "2":
                             Console.Write("Nr karty: "); string cNum = Console.ReadLine();
                             Console.Write("Właściciel: "); string cOwn = Console.ReadLine();
                             paymentStrategy = new CreditCardPayment(cNum, cOwn);
+
+                            
+                            System.Console.WriteLine("\n\nŁączenie z bankiem...");
+                            for (int i = 0; i < 20; i++)
+                            {
+                                System.Console.Write("█");
+                                Thread.Sleep(300);
+                            }
+                            
+                                                        
                             break;
+
                         case "3":
                             paymentStrategy = new CashPayment();
                             break;
+
                         default:
                             Console.WriteLine("Zła opcja.");
                             break;
@@ -447,7 +478,13 @@ void HandleClientSection(ApplicationDbContext context, Store store, MenuContaine
                     Console.WriteLine("\n[BŁĄD] Płatność odrzucona.");
 
 
-                    context.ChangeTracker.Clear();
+                    context.Entry(newOrder).State = EntityState.Detached;
+
+                    
+                    if (newOrder.DeliveryAddress != null)
+                    {
+                        context.Entry(newOrder.DeliveryAddress).State = EntityState.Detached;
+                    }
 
                 }
 

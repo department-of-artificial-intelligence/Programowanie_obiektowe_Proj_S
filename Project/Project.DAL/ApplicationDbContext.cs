@@ -34,7 +34,7 @@ namespace Project.DAL
             
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Aleksander_NafalskiDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Db304;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -47,6 +47,9 @@ namespace Project.DAL
             modelBuilder.Entity<Customer>().Property(c => c.WalletBalance).HasPrecision(18, 2);
             modelBuilder.Entity<Employee>().Property(e => e.Salary).HasPrecision(18, 2);
             modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(18, 2);
+
+
+            
 
 
 

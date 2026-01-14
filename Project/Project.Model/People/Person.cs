@@ -21,12 +21,20 @@ namespace Project.Model
             get { return _phoneNumber; }
             set
             {
+                
+                if (string.IsNullOrWhiteSpace(value)) return;
+
+                
+                string cleanedValue = value.Trim();
                 string pattern = @"^\+\d{2}\d{9}$";
-                if (!Regex.IsMatch(value, pattern))
+
+                if (!Regex.IsMatch(cleanedValue, pattern))
                 {
-                    throw new ArgumentException("Numer telefonu musi być w formacie: +XXYYYYYYYYY");
+                    throw new ArgumentException($"Numer telefonu musi być w formacie: +XXYYYYYYYYY. Otrzymano: '{value}'");
                 }
-                _phoneNumber = value;
+
+               
+                _phoneNumber = cleanedValue;
             }
         }
 
@@ -38,13 +46,18 @@ namespace Project.Model
             set
             {
                 
+                if (string.IsNullOrWhiteSpace(value)) return;
+
+                string cleanedValue = value.Trim();
                 string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$";
 
-                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, emailPattern))
+                if (!Regex.IsMatch(cleanedValue, emailPattern))
                 {
-                    throw new ArgumentException($"Niepoprawny format adresu email: {value}");
+                    throw new ArgumentException($"Niepoprawny format adresu email: '{value}'");
                 }
-                _email = value;
+
+                
+                _email = cleanedValue;
             }
         }
 
