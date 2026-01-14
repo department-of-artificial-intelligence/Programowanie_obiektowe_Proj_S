@@ -22,6 +22,24 @@ namespace Project.DAL
         }
 
 
+
+        public ApplicationDbContext()
+        {
+        }
+
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Sprawdzamy, czy opcje zostały już skonfigurowane (np. przez Program.cs).
+            // Jeśli nie (bo np. uruchamiasz Drop-Database), to użyjemy tego adresu:
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Aleksander_NafalskiDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            }
+        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

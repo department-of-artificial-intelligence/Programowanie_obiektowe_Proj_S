@@ -12,13 +12,14 @@ namespace Project.Model
             Console.WriteLine("================ MENU GŁÓWNE ================");
             Console.WriteLine("----- 1. Zaloguj się jako Klient ------------");
             Console.WriteLine("----- 2. Zaloguj się jako Administrator -----");
-            Console.WriteLine("----- 3. Zarejestruj się (Nowy Klient) ------"); 
-            Console.WriteLine("----- 4. Wybierz lokalizację sklepu ---------");    
-            Console.WriteLine("----- 5. O ElectroHub (Kontakt) -------------");       
+            Console.WriteLine("----- 3. Zarejestruj się (Nowy Klient) ------");   
+            Console.WriteLine("----- 4. O ElectroHub (Kontakt) -------------");       
             Console.WriteLine("------------ 0. Wyjście ---------------------");
             Console.WriteLine("=============================================");
             Console.Write("Wybierz opcję: ");
         }
+
+
 
 
         public void ShowClientMenu()
@@ -31,10 +32,20 @@ namespace Project.Model
             Console.WriteLine("4. Pokaż mój koszyk i podsumowanie");
             Console.WriteLine("5. Zrealizuj zamówienie (Płatność)");
             Console.WriteLine("6. Historia moich zakupów");
+            Console.WriteLine("7. Doładuj portfel");
             Console.WriteLine("-----------------------------------");
             Console.WriteLine("0. Wyloguj i wróć do Menu Głównego");
             Console.Write("Wybierz opcję: ");
         }
+
+
+
+
+
+
+
+
+
 
 
         public void ShowStoreSelectionHeader()
@@ -46,30 +57,104 @@ namespace Project.Model
         }
 
 
+
+
+
+
+
+
+
+
         public void ShowAdminMenu()
         {
-            
             Console.WriteLine("=== PANEL ADMINISTRATORA - ElectroHub ===");
-            Console.WriteLine("======== ZARZĄDZANIE ASORTYMENTEM =======");
-            Console.WriteLine("1. Dodaj nowy produkt");
-            Console.WriteLine("2. Edytuj dane produktu (cena, opis)");
-            Console.WriteLine("3. Usuń produkt z oferty");
-            Console.WriteLine("4. Aktualizuj stany magazynowe");
-            Console.WriteLine("=========== ZARZĄDZANIE KADRĄ ==========="); 
-            Console.WriteLine("5. Dodaj nowego pracownika");
-            Console.WriteLine("6. Wyświetl listę pracowników");
-            Console.WriteLine("7. Zmień uprawnienia/rolę pracownika");
-            Console.WriteLine("8. Usuń pracownika z systemu");
-            Console.WriteLine("======= ZARZĄDZANIE UŻYTKOWNIKAMI =======");
-            Console.WriteLine("9. Wyświetl listę wszystkich klientów");
-            Console.WriteLine("10. Zablokuj/Usuń konto użytkownika");
-            Console.WriteLine("=========== RAPORTY I FINANSE ===========");
-            Console.WriteLine("11. Wyświetl historię wszystkich zamówień");
-            Console.WriteLine("12. Pokaż całkowity przychód sklepu");
+            Console.WriteLine("=========================================");
+            Console.WriteLine("1. ZARZĄDZANIE ASORTYMENTEM");
+            Console.WriteLine("2. ZARZĄDZANIE KADRĄ");
+            Console.WriteLine("3. ZARZĄDZANIE UŻYTKOWNIKAMI");
+            Console.WriteLine("4. RAPORTY I FINANSE");
+            Console.WriteLine("5. SYMULACJA LOGISTYKI (Aktualizuj statusy)");
             Console.WriteLine("=========================================");
             Console.WriteLine("0. Wyloguj i wróć do Menu Głównego");
-            Console.Write("Wybierz opcję: ");
+            Console.Write("Wybierz kategorię: ");
         }
+
+
+
+        public void ShowInventoryMenu(string storeName)
+        {
+            Console.Clear();
+            Console.WriteLine($"-- ASORTYMENT: {storeName} --");
+            Console.WriteLine("1. Dodaj produkt");
+            Console.WriteLine("2. Edytuj produkt (cena)");
+            Console.WriteLine("3. Usuń produkt z oferty");
+            Console.WriteLine("4. Aktualizuj stany magazynowe");
+            Console.WriteLine("0. Powrót");
+            Console.Write("Wybierz akcję: ");
+        }
+
+
+        public void ShowStaffMenu(string storeName)
+        {
+            Console.Clear();
+            Console.WriteLine($"-- KADRA: {storeName} --");
+            Console.WriteLine("1. Wyświetl listę pracowników");
+            Console.WriteLine("2. Dodaj (zatrudnij) pracownika");
+            Console.WriteLine("3. Zmień rolę / pensję");
+            Console.WriteLine("4. Usuń (zwolnij) pracownika");
+            Console.WriteLine("0. Powrót");
+            Console.Write("Wybierz akcję: ");
+        }
+
+
+        public void ShowUsersMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("-- ZARZĄDZANIE UŻYTKOWNIKAMI --");
+            Console.WriteLine("1. Wyświetl listę wszystkich klientów");
+            Console.WriteLine("2. Usuń konto użytkownika");
+            Console.WriteLine("0. Powrót");
+            Console.Write("Wybierz akcję: ");
+        }
+
+
+        public void ShowStatisticsMenu(string storeName)
+        {
+            Console.Clear();
+            Console.WriteLine($"--- CENTRUM ANALITYCZNE: {storeName} ---");
+            Console.WriteLine("1. Ogólne statystyki (Średnia, Najdroższe zamówienie)");
+            Console.WriteLine("2. Raport przychodów wg Kategorii produktów");
+            Console.WriteLine("3. Ranking wydatków klientów (Top Klienci)");
+            Console.WriteLine("4. Rozkład statusów zamówień");
+            Console.WriteLine("5. Pełna historia zamówień");
+            Console.WriteLine("0. Powrót");
+            Console.Write("Wybierz raport: ");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         public void ShowAboutUs()

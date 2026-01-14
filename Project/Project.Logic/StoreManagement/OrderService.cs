@@ -108,5 +108,51 @@ namespace Project.Logic.StoreManagement
             Console.WriteLine("[SERWIS] Płatność odrzucona.");
             return false;
         }
+
+
+
+
+
+
+        public int SimulateLogistics()
+        {
+            
+            var orders = _orderRepository.GetAll();
+            int changesCount = 0;
+
+            foreach (var order in orders)
+            {
+                
+                TimeSpan elapsed = DateTime.Now - order.OrderDate;
+
+               
+
+                
+                if (order.Status == OrderStatus.Paid && elapsed.TotalSeconds > 30)
+                {
+                    order.Status = OrderStatus.Shipped;
+                    _orderRepository.Update(order);
+                    Console.WriteLine($"[LOGISTYKA] Zamówienie #{order.OrderId} zostało WYSŁANE (Shipped).");
+                    changesCount++;
+                }
+                
+                else if (order.Status == OrderStatus.Shipped && elapsed.TotalSeconds > 60)
+                {
+                    order.Status = OrderStatus.Completed;
+                    _orderRepository.Update(order);
+                    Console.WriteLine($"[LOGISTYKA] Zamówienie #{order.OrderId} zostało DOSTARCZONE (Completed).");
+                    changesCount++;
+                }
+            }
+
+            return changesCount;
+        }
+
+
+
+
+
+
+
     }
 }

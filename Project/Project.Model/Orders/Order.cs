@@ -112,14 +112,16 @@ namespace Project.Model.Orders
         {
             string idInfo = OrderId == 0 ? "NOWE" : OrderId.ToString();
 
-            
-            string itemsDescription = string.Join("\n   - ", Items);
+          
+            string itemsDescription = Items != null && Items.Any()
+               ? string.Join("\n    - ", Items.Select(i => $"{i.Product.Name} x{i.Quantity}"))
+               : "Brak pozycji";
 
             return $"[ZAMÓWIENIE #{idInfo}]\n" +
-                   $"Status: {Status}\n" +
-                   $"Klient: {Purchaser.GetInfo()}\n" +
+                   $"Status: {Status}\n" +          
+                   $"Klient: {Purchaser.FirstName} {Purchaser.LastName} | {Purchaser.PhoneNumber} | ({Purchaser.Email})\n" +
                    $"Adres:  {DeliveryAddress}\n" +
-                   $"Pozycje:\n   - {itemsDescription}\n" +
+                   $"Pozycje:\n    - {itemsDescription}\n" +
                    $"RAZEM DO ZAPŁATY: {GetTotalAmount():C}";
         }
     }
