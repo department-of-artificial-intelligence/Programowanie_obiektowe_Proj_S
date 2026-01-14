@@ -515,6 +515,24 @@ void HandleAdminSection(ApplicationDbContext context, MenuContainer menu, List<S
     Console.Clear();
     menu.ShowStoreSelectionHeader();
 
+    Console.WriteLine("--- STREFA CHRONIONA ---");
+    Console.Write("Podaj hasło administratora: ");
+    string password = Console.ReadLine();
+
+    if (password != "zaq1@WSX")
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("\n[BŁĄD] Nieprawidłowe hasło! Dostęp odmówiony.");
+        Console.ResetColor();
+        Console.WriteLine("Naciśnij dowolny klawisz, aby wrócić...");
+        Console.ReadKey();
+        return; 
+    }
+    
+
+    
+    Console.Clear();
+    menu.ShowStoreSelectionHeader();
 
 
     for (int i = 0; i < stores.Count; i++)
