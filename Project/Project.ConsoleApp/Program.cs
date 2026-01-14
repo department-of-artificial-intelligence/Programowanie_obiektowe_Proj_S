@@ -37,7 +37,7 @@ IHost _host = Host.CreateDefaultBuilder()
     .ConfigureServices((context, services) =>
     {
 
-        var cns = "Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv605;Trusted_Connection=True;MultipleActiveResultSets=true";
+        var cns = "Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv608;Trusted_Connection=True;MultipleActiveResultSets=true";
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
     })
     .Build();

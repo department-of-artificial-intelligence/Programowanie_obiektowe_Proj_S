@@ -34,7 +34,7 @@ namespace Project.DAL
             
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv605;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ElectroHub_Final_Dbv608;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -74,6 +74,12 @@ namespace Project.DAL
                       .HasForeignKey("DeliveryAddressId")
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+
+
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.Property(i => i.UnitPrice).HasPrecision(18, 2).IsRequired();
             });
         }
     }

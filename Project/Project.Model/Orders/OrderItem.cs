@@ -11,7 +11,7 @@ namespace Project.Model.Orders
         public required Product Product { get; set; }
 
 
-        public decimal UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; } = 0;
 
 
         private int _quantity;
