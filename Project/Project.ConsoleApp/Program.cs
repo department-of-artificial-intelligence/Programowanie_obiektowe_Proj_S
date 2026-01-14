@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Dal.Repositories;
+using Microsoft.Extensions.Logging;
 using Project.DAL;
 using Project.Logic.Extensions;
 using Project.Logic.PaymentService;
@@ -25,11 +26,19 @@ CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 
 
-IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
-{
-    var cns = context.Configuration.GetConnectionString("DefaultConnection");
-    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
-}).Build();
+IHost _host = Host.CreateDefaultBuilder()
+    .ConfigureLogging(logging =>
+    {
+        
+        logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        
+        var cns = "Server=(localdb)\\mssqllocaldb;Database=Aleksander_NafalskiDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
+    })
+    .Build();
 
 
 
@@ -53,7 +62,7 @@ if (context != null)
         {
             Name = "ElectroHub Warszawa Central",
             Address = addressWaw,
-            PhoneNumber = "+48 22 111 22 33",
+            PhoneNumber = "+48221112233",
             Inventory = new List<Product>()
         };
 
@@ -61,7 +70,7 @@ if (context != null)
         {
             Name = "ElectroHub Kraków Rynek",
             Address = addressKrk,
-            PhoneNumber = "+48 12 444 55 66",
+            PhoneNumber = "+48124445566",
             Inventory = new List<Product>()
         };
 
