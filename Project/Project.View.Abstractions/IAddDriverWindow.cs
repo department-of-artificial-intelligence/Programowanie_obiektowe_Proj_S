@@ -3,7 +3,7 @@ using Project.Model;
 
 namespace Project.View.Abstractions
 {
-    internal interface IAddDriverWindow : IWindow
+    public interface IAddDriverWindow : IWindow
     {
         public Driver Driver { get; set; }
     }

@@ -1,7 +1,7 @@
 
 namespace Project.View
 {
-    public class Class1
+    public class AddDriverWindow
     {
     }
 

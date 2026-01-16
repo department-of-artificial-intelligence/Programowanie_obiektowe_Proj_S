@@ -27,7 +27,7 @@ namespace Project.ViewModel
         {
             if (AddDriverWindow.Driver.FirstName is null || !Regex.IsMatch(AddDriverWindow.Driver.FirstName, @"^\p{Lu}{1,12}\p{Ll}{1,12}$") ||
                 AddDriverWindow.Driver.LastName is null || !Regex.IsMatch(AddDriverWindow.Driver.LastName, @"^\p{Lu}{1,12}$") ||
-                !Regex.IsMatch(AddDriverWindow.Driver.DriverNo.ToString(), @"^[0-9]{4,10}$"))
+                !Regex.IsMatch(AddDriverWindow.Driver.Id.ToString(), @"^[0-9]{4,10}$"))
 
             {
                 MessageBox.Show("Invalid data.");
