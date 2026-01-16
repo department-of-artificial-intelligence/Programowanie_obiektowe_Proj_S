@@ -15,6 +15,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.DAL", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.Tests", "VehicleRentalSystem.Tests\VehicleRentalSystem.Tests.csproj", "{6ADD45F5-ABED-4BFB-A5A8-8B74257C2172}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.WPFApp", "VehicleRentalSystem.WPFApp\VehicleRentalSystem.WPFApp.csproj", "{00A8B2DE-45E3-4943-80CD-61A486C413C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.Common", "VehicleRentalSystem.Common\VehicleRentalSystem.Common.csproj", "{2984BEEB-6E72-4712-A718-67E24FEFF5B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.View.Abstractions", "VehicleRentalSystem.View.Abstraction\VehicleRentalSystem.View.Abstractions.csproj", "{28209C6F-4F1E-4627-A9BA-78DFFF829FF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.ViewModel", "VehicleRentalSystem.ViewModel\VehicleRentalSystem.ViewModel.csproj", "{FCC2947C-6215-4486-A927-F0797C0C6B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRentalSystem.View", "VehicleRentalSystem.View\VehicleRentalSystem.View.csproj", "{0DAC07CB-337F-4C96-A425-13A785EC1516}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +55,26 @@ Global
 		{6ADD45F5-ABED-4BFB-A5A8-8B74257C2172}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ADD45F5-ABED-4BFB-A5A8-8B74257C2172}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ADD45F5-ABED-4BFB-A5A8-8B74257C2172}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00A8B2DE-45E3-4943-80CD-61A486C413C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00A8B2DE-45E3-4943-80CD-61A486C413C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00A8B2DE-45E3-4943-80CD-61A486C413C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00A8B2DE-45E3-4943-80CD-61A486C413C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2984BEEB-6E72-4712-A718-67E24FEFF5B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2984BEEB-6E72-4712-A718-67E24FEFF5B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2984BEEB-6E72-4712-A718-67E24FEFF5B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2984BEEB-6E72-4712-A718-67E24FEFF5B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28209C6F-4F1E-4627-A9BA-78DFFF829FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28209C6F-4F1E-4627-A9BA-78DFFF829FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28209C6F-4F1E-4627-A9BA-78DFFF829FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28209C6F-4F1E-4627-A9BA-78DFFF829FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC2947C-6215-4486-A927-F0797C0C6B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC2947C-6215-4486-A927-F0797C0C6B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC2947C-6215-4486-A927-F0797C0C6B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC2947C-6215-4486-A927-F0797C0C6B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DAC07CB-337F-4C96-A425-13A785EC1516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DAC07CB-337F-4C96-A425-13A785EC1516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DAC07CB-337F-4C96-A425-13A785EC1516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DAC07CB-337F-4C96-A425-13A785EC1516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
