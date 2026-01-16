@@ -36,5 +36,4 @@ namespace Project.ViewModel
             AddDriverWindow.DialogResult = true;
         }
     }
-
 }
