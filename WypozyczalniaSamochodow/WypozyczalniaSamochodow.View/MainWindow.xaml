@@ -1,0 +1,23 @@
+﻿<Window x:Class="WypozyczalniaSamochodow.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WypozyczalniaSamochodow.View"
+        xmlns:viewModel="clr-namespace:WypozyczalniaSamochodow.ViewModel;assembly=WypozyczalniaSamochodow.ViewModel"
+        mc:Ignorable="d"
+        Title="Branches" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="ButtonAddBranchWindowShow" Content="Add Branch" HorizontalAlignment="Left" Margin="29,84,0,0" VerticalAlignment="Top"/>
+        <DockPanel Height="255" LastChildFill="False" Margin="10,0,0,10" VerticalAlignment="Bottom">
+            <DataGrid x:Name="dataGridBranches" ItemsSource="{Binding Branches, Mode=TwoWay}" AutoGenerateColumns="False" DockPanel.Dock="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nazwa oddziału" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Miasto" Binding="{Binding City}"/>
+                    <DataGridTextColumn Header="Adres" Binding="{Binding Adres}"/>
+                    <DataGridTextColumn Header="Numer kontaktowy" Binding="{Binding ContactNumber}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</Window>
