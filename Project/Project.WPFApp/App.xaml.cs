@@ -1,7 +1,5 @@
 ﻿using Project.WPFApp.ViewModels;
 using Project.WPFApp.Windows;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace Project.WPFApp
@@ -13,7 +11,13 @@ namespace Project.WPFApp
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            new DatabaseConnectionWindow().ShowDialog();
+            new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+                {
+                    Title = "Meow~!"
+                }
+            }.Show();
         }
     }
 }

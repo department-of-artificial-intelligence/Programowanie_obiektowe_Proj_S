@@ -4,20 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project.WPFApp"
+        xmlns:vm="clr-namespace:Project.WPFApp.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <TabControl>
-        <TabItem Header="Rooms">
-            <TextBox>There will be rooms</TextBox>
-        </TabItem>
-        <TabItem Header="Residents">
-            <TextBox>There will be residents</TextBox>
-        </TabItem>
-        <TabItem Header="Reports">
-            <TextBox>There will be reports</TextBox>
-        </TabItem>
-        <TabItem Header="Hotel Properties">
-            <TextBox>There will be dragons</TextBox>
-        </TabItem>
-    </TabControl>
+        Title="{Binding Title}" Height="450" Width="800">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="38" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Create new hotel..." />
+                <Separator />
+                <MenuItem Header="_Open database..." />
+                <MenuItem Header="_Close database..." />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About..." />
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1" Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Selected Hotel: " />
+            <ComboBox Grid.Column="1" />
+        </Grid>
+
+        <TabControl Grid.Row="2" Margin="4">
+            <TabItem Header="Rooms">
+                <TextBox>There will be rooms</TextBox>
+            </TabItem>
+            <TabItem Header="Residents">
+                <TextBox>There will be residents</TextBox>
+            </TabItem>
+            <TabItem Header="Reports">
+                <TextBox>There will be reports</TextBox>
+            </TabItem>
+            <TabItem Header="Hotel Properties">
+                <TextBox>There will be dragons</TextBox>
+            </TabItem>
+        </TabControl>
+
+        <StatusBar Grid.Row="3">
+            <TextBlock Text="Meow!" />
+        </StatusBar>
+    </Grid>
 </Window>

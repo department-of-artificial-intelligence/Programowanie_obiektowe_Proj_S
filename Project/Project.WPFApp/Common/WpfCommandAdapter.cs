@@ -1,5 +1,4 @@
-﻿using System.Data.SqlTypes;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace Project.WPFApp.Common
 {
