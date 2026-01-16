@@ -3,9 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Project.UI.ViewModel"
         xmlns:local="clr-namespace:Project.UI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.DataContext>
+        <viewmodels:MoviesViewModel/>
+    </Window.DataContext>
+    
     <DockPanel>
         <TabControl>
             <TabItem Header="Explore Movies">
@@ -24,7 +30,6 @@
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" Padding="10">
                             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                                 <Label Content="Filters and Search" FontWeight="Bold" FontSize="18" Margin="35, 0, 0, 0"/>
-
                                 <TextBlock Text="Find Movie by Name"
                                            Margin="0, 12, 0 , 0"
                                            FontWeight="SemiBold"
@@ -34,6 +39,7 @@
                                     TextWrapping="Wrap"
                                     VerticalScrollBarVisibility="Disabled"
                                     Padding="0.5"
+                                    Text="{Binding _appliedMovieNameFilter}"
                                     />
                                 <Button
                                     Padding="4"
@@ -41,9 +47,8 @@
                                     Content="SEARCH / APPLY FILTERS"
                                     FontWeight="Bold"
                                     Background="#91FFA0"
+                                    Command="{Binding applyFiltersCommand}"
                                     />
-
-
                                 <TextBlock
                                     Text="Filters by Movie Genre"
                                     FontWeight="SemiBold"
@@ -65,7 +70,8 @@
                                     Margin="0,12,0,0"
                                     />
 
-                                <ComboBox Margin="0,4,0,0">
+                                <!-- Initialize component with real data -->
+                                <ComboBox Margin="0,4,0,0" Name="AuthorFilter">
                                     <ComboBoxItem IsSelected="True">Example 1</ComboBoxItem>
                                     <ComboBoxItem>Example 2</ComboBoxItem>
                                     <ComboBoxItem>Example 3</ComboBoxItem>
@@ -74,6 +80,9 @@
                         </ScrollViewer>
                     </Border>
                     <!-- Filtered cards with movies here -->
+                    <DataGrid ItemsSource="{Binding Movies}" AutoGenerateColumns="True">
+                        
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Movie Marks">

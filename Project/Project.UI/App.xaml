@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Project.UI"
-             StartupUri="MainWindow.xaml">
+             xmlns:dependencyInjection="clr-namespace:Microsoft.Extensions.DependencyInjection;assembly=Microsoft.Extensions.DependencyInjection"
+             >
     <Application.Resources>
          
     </Application.Resources>
