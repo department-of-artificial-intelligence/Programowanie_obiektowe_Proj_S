@@ -69,7 +69,5 @@ namespace Project.Model
                    $"Unloading Address: {UnloadingAddress}\n" +
                    $"Loading Description: {LoadingDescription}";
         }
-
-
     }
 }

@@ -4,57 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Drivers"
-        Height="450"
-        Width="800">
+        Title="Drivers" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="ButtonAddDriverWindowShow" Content="Add driver" HorizontalAlignment="Left" Margin="29,84,0,0" VerticalAlignment="Top" Width="150" Height="50" RenderTransformOrigin="0.152, 1.332" Grid.ColumnSpan="2" Command="{Binding Path=ShowAddDirverWindowCommand}"/>
+        <Button x:Name="ButtonDeleteDriverWindowShow" Content="Delete driver" HorizontalAlignment="Left" Margin="377,84,0,0" VerticalAlignment="Top" Width="150" Height="50" Command="{Binding Path=DeleteDriverCommandS}"/>
+        <DockPanel Height="268" LastChildFill="False" Margin="10,0,0,9" VerticalAlignment="Bottom">
+            <DataGrid x:Name="dataGridDrivers" ItemsSource="{Binding Drivers, Mode=TwoWay}" AutoGenerateColumns="False" DockPanel.Dock="Bottom" Height="275" VerticalAlignment="Top" Margin="10,0,9.4,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="First name" Binding="{Binding FirstName}"/>
+                    <DataGridTextColumn Header="Last name" Binding="{Binding LastName}"/>
+                    <DataGridTextColumn Header="License number" Binding="{Binding LicenseNumber}"/>
+                    <DataGridTextColumn Header="Orders" Binding="{Binding Orders}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        <Button x:Name="ButtonAddOrderWindow" Content="Add order" HorizontalAlignment="Left" Margin="203,84,0,0" VerticalAlignment="Top" Width="150" Height="50" Command="{Binding Path=ShowAddOrderWindowCommand}"/>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0,20,0,20">
-
-            <Button x:Name="ButtonAddDriverWindowShow"
-                    Content="Add driver"
-                    Width="150"
-                    Height="40"
-                    Margin="10,0"/>
-
-            <Button x:Name="ButtonAddOrderWindow"
-                    Content="Add order"
-                    Width="150"
-                    Height="40"
-                    Margin="10,0"/>
-
-            <Button x:Name="ButtonDeleteDriverWindowShow"
-                    Content="Delete driver"
-                    Width="150"
-                    Height="40"
-                    Margin="10,0"/>
-        </StackPanel>
-
-        <DataGrid x:Name="dataGridDrivers"
-                  Grid.Row="2"
-                  ItemsSource="{Binding Drivers, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
-                  Margin="0,0,0,10">
-
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name"
-                                    Binding="{Binding FirstName}"/>
-                <DataGridTextColumn Header="Last Name"
-                                    Binding="{Binding Lastname}"/>
-                <DataGridTextColumn Header="License number"
-                                    Binding="{Binding LicenseNumber}"/>
-                <DataGridTextColumn Header="Orders"
-                                    Binding="{Binding Orders}"/>
-            </DataGrid.Columns>
-        </DataGrid>
     </Grid>
 </Window>
