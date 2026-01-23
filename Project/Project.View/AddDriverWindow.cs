@@ -1,8 +1,14 @@
+using System.Windows;
+using System.Windows.Input;
 
 namespace Project.View
 {
-    public class AddDriverWindow
+    public partial class AddDriverWindow : Window
     {
+        public AddDriverWindow()
+        {
+            InitializeComponent();
+        }
     }
 
 }
