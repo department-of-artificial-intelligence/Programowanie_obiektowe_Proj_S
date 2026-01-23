@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.View.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +18,14 @@ namespace Project.View
     /// <summary>
     /// Interaction logic for MainWIndow.xaml
     /// </summary>
-    public partial class MainWIndow : Window
+    public partial class MainWindow : Window, IMainWindow
     {
-        public MainWIndow()
+        public DataGrid DataGridDrivers
+        {
+            get => DataGridDrivers;
+            set => DataGridDrivers = value;
+        }
+        public MainWindow()
         {
             InitializeComponent();
         }
