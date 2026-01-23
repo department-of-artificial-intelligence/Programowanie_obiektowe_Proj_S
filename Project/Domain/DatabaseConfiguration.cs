@@ -22,12 +22,20 @@ public class DatabaseConfiguration {
             if(useSqlExpress && !useInMemory)
             {
                 services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Server=.\\SQLEXPRESS;Database=ProjectDatabase;Trusted_Connection=True;TrustServerCertificate=True;"));
-                Console.WriteLine("DB CONFIG: Using SQL Server Express Database");
+                Console.WriteLine("DB CONFIG: Using SQL Server Express");
             }
             else
             {
                 // Use SQL Server Database
                 var cns = context.Configuration.GetConnectionString("DefaultConnection");
+
+                if( cns == null )
+                {
+                    Console.WriteLine("DefaultConnection string is empty. Using hardcoded path...");
+
+                    cns = "Server=(localdb)\\mssqllocaldb;Database=Alekasnder_Slabunov-ProjektAppDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+                }
+
                 services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cns));
                 Console.WriteLine("DB CONFIG: Using SQL Server Database");
             }

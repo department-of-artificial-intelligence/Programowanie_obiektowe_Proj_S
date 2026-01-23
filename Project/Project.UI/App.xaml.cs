@@ -24,7 +24,7 @@ public partial class App : Application
     public void ConfigureServices(ServiceCollection services)
     {
         // Configure Database here
-        services.AddSingleton(DatabaseConfiguration.Configure(new[] { "-e" }));
+        services.AddSingleton(DatabaseConfiguration.Configure(new[] { ""}));
         //services.AddSingleton<MapperConfiguration>();
         var mapCfg = new MapperConfiguration(cfg =>
         {

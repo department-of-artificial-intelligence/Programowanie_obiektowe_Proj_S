@@ -15,7 +15,7 @@ public class AuthorViewModel : INotifyPropertyChanged
     private string _lastName = string.Empty;
     private DateTime _birthDay = DateTime.Now.AddYears(-30);
     private string _errorMessage = string.Empty;
-    private bool _hasError;
+
     public bool IsEditMode => _existingAuthor != null;
 
     public string FirstName
