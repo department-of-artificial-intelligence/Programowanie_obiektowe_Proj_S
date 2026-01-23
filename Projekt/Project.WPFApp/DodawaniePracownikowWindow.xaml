@@ -1,0 +1,32 @@
+﻿<Window x:Class="Project.WPFApp.DodawaniePracownikowWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.WPFApp"
+        mc:Ignorable="d"
+        Title="DodawaniePracownikowWindow" Height="450" Width="600" Background="DarkCyan">
+    
+    <Grid>
+        <Viewbox>
+            <StackPanel>
+                <Label Content="Dodaj nowego pracownika" Height="100" Width="600" FontSize="30" HorizontalContentAlignment="Center" Foreground="GreenYellow"/>
+                <Label Content="Imię: " Height="50" Width="262" FontSize="20" HorizontalContentAlignment="Left" Foreground="Black" HorizontalAlignment="Left"/>
+                <Label Content="Nazwisko: " Height="50" Width="600" FontSize="20" HorizontalContentAlignment="Left" Foreground="Black" HorizontalAlignment="Left"/>
+                <Label Content="Wiek: " Height="50" Width="600" FontSize="20" HorizontalContentAlignment="Left" Foreground="Black"/>
+                <Label Content="Czy dodać mu projekt startowy?" Height="50" Width="292" FontSize="20" Margin="5 0 0 0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Foreground="Black" Background="Gray"/>
+                <TextBlock Margin="10">
+                   <Button Content="Tak" Height="50" Width="50" FontWeight="Medium" FontSize="25" Background="Green"/>
+                   <Button Content="Nie" Height="50" Width="50" FontWeight="Medium" FontSize="25" Background="Red"/>
+                </TextBlock>
+
+                <TextBlock>
+                    <Button Content="Wyjście" Height="50" Width="80" FontSize="20" HorizontalAlignment="Left" Margin="10 10" Background="Red"/>
+                    <Button Content="Dodaj pracownika" Height="50" Width="200" Margin="10 10" FontSize="20" Background="LightYellow"/>
+                </TextBlock>
+
+
+            </StackPanel>
+        </Viewbox>    
+    </Grid>
+</Window>

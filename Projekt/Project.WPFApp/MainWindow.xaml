@@ -22,7 +22,7 @@
 
                 <Button Content="5. Zwolnij pracownika" Background="DarkCyan" Margin="-65,5,1,10" Width="120" Command="{Binding ZwolnijPracownikaCommand}"/>
 
-                <Button Content="*Wybierz z powyższych opcji*" FontSize="8" Background="SlateGray" Margin="-50,10,10,10" Width="108" HorizontalContentAlignment="Left" />
+                <Label Content="*Wybierz z powyższych opcji*" FontSize="8" Background="SlateGray" Margin="-50,10,10,10" Width="117" HorizontalContentAlignment="Left" />
                 
                 <Button Content="Wyjście" Margin="-130,10,10,10" Width="49" Background="IndianRed" Command="{Binding WyjscieCommand}"></Button>
 

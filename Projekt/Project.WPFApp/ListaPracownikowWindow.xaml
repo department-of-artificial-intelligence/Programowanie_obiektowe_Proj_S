@@ -1,0 +1,27 @@
+﻿<Window x:Class="Project.WPFApp.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.WPFApp"
+        mc:Ignorable="d"
+        Title="ListaPracownikow" Height="450" Width="600" Background="DarkCyan">
+    <Grid Margin="10">
+        <Viewbox>
+            <StackPanel Width="900">
+                <Label Content="Szef i pracownicy" Height="100" Width="600" FontSize="50" FontWeight="Bold" Foreground="GreenYellow" HorizontalContentAlignment="Center"/>
+
+                <Label Content="Dane szefa: " Height="100" Width="300" FontSize="30" Margin ="-500 0 0 0" FontWeight="Medium"  Foreground="Black" HorizontalContentAlignment="Left"/>
+                <Label Content="Email firmy: " Height="100" Width="300" FontSize="30" Margin ="-500 0 0 0" FontWeight="Medium" Foreground="Black" HorizontalContentAlignment="Left"/>
+                <Label Content="Telefon: " Height="100" Width="300" FontSize="30"  Margin ="-500 0 0 0" FontWeight="Medium" Foreground="Black" HorizontalContentAlignment="Left"/>
+                <Label Content="Adres siedziby: " Height="100" Width="300" FontSize="30" Margin ="-500 0 0 0" FontWeight="Medium" Foreground="Black" HorizontalContentAlignment="Left"/>
+                <Label Content="Lista pracownikow: " Height="100" Width="300" FontSize="30" Margin ="-500 0 0 0" FontWeight="Medium" Foreground="Black" HorizontalContentAlignment="Left"/>
+                <TextBlock>
+                    <Button Content="Wyjscie" Height="50" Width="80" FontSize="20" Margin ="50 0 0 0" FontWeight="Regular" Background="Red" HorizontalContentAlignment="Left"/>
+                </TextBlock>
+            </StackPanel>
+        </Viewbox>
+
+
+    </Grid>
+</Window>
