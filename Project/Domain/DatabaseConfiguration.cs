@@ -8,6 +8,7 @@ public class DatabaseConfiguration {
     public static ApplicationDbContext Configure(string[] args)
     {
         bool useInMemory = args.Contains("--use-inmemory") || args.Contains("-m");
+        bool useSqlExpress = args.Contains("--use-sql-express") || args.Contains("-e");
 
         IHost _host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
         {
@@ -17,6 +18,11 @@ public class DatabaseConfiguration {
                 services.AddDbContext<ApplicationDbContext>(options => 
                     options.UseInMemoryDatabase("TestDatabase"));
                 Console.WriteLine("DB CONFIG: Using In-Memory Database");
+            }
+            if(useSqlExpress && !useInMemory)
+            {
+                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Server=.\\SQLEXPRESS;Database=ProjectDatabase;Trusted_Connection=True;TrustServerCertificate=True;"));
+                Console.WriteLine("DB CONFIG: Using SQL Server Express Database");
             }
             else
             {

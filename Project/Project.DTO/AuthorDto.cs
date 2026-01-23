@@ -1,4 +1,4 @@
-﻿namespace Project.DTO;
+﻿﻿namespace Project.DTO;
 
 public class AuthorDto
 {

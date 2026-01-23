@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Project.UI.ViewModel;
 
 namespace Project.UI;
 /// <summary>
@@ -6,8 +7,9 @@ namespace Project.UI;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
     }
 }
