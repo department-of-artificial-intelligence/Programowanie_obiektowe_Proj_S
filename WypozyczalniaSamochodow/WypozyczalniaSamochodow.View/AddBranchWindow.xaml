@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WypozyczalniaSamochodow.View"
         mc:Ignorable="d"
-        Title="AddBranchWindow" Height="450" Width="800">
+        Title="Add Branch" Height="250" Width="300">
     <Grid>
-        
+        <TextBox x:Name="TextBoxBranchName" Text="{Binding Path=AddBranchWindow.Branch.Name, Mode=TwoWay}" HorizontalAlignment="Left" />
+        <TextBox x:Name="TextBoxBranchCity" Text="{Binding Path=AddBranchWindow.Branch.City, Mode=TwoWay}" HorizontalAlignment="Left" Width="100" Height="25" Margin="166,41,0,168"/>
+        <TextBox x:Name="TextBoxBranchAddress" Text="{Binding Path=AddBranchWindow.Branch.Address, Mode=TwoWay}"/>
+        <TextBox x:Name="TextBoxBranchContactNumber" Text="{Binding Path=AddBranchWindow.Branch.ContactNumber, Mode=TwoWay}"/>
+        <Label Content="Name:" HorizontalAlignment="Left" Margin="30, 40, 0 ,0" VerticalAlignment="Top"/>
+        <Label Content="City:" HorizontalAlignment="Left" Margin="41,66,0,0" VerticalAlignment="Top"/>
+        <Label Content="Address:" HorizontalAlignment="Left" Margin="30,128,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="ButtonAddBranch" Content="Add branch" HorizontalAlignment="Center" Margin="0, 165, 0, 0" Height="25" VerticalAlignment="Top"/>
+        <Label Content="Contact number:" HorizontalAlignment="Left" Margin="8,97,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

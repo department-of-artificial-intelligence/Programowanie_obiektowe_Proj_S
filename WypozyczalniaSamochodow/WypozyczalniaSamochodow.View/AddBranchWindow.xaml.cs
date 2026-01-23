@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WypozyczalniaSamochodow.Model;
+using WypozyczalniaSamochodow.View.Abstractions;
 
 namespace WypozyczalniaSamochodow.View
 {
     /// <summary>
     /// Interaction logic for AddBranchWindow.xaml
     /// </summary>
-    public partial class AddBranchWindow : Window
+    public partial class AddBranchWindow : Window, IAddBranchWindow
     {
+        public Branch Branch { get; set; }
         public AddBranchWindow()
         {
             InitializeComponent();

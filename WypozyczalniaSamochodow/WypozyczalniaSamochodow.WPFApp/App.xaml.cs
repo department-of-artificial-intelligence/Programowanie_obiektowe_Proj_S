@@ -1,9 +1,8 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WypozyczalniaSamochodow.View;
 using WypozyczalniaSamochodow.View.Abstractions;
+using WypozyczalniaSamochodow.ViewModel;
 
 namespace WypozyczalniaSamochodow.WPFApp
 {
@@ -24,7 +23,7 @@ namespace WypozyczalniaSamochodow.WPFApp
         private void ConfigureServices(ServiceCollection services)
         {
             services.AddTransient<IMainWindow, MainWindow>();
-            //services.AddTransient<IAddBranchWindow, AddBranchWindow>();
+            services.AddTransient<IAddBranchWindow, AddBranchWindow>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -33,7 +32,7 @@ namespace WypozyczalniaSamochodow.WPFApp
             var mainWindow = _serviceProvider.GetRequiredService<IMainWindow>();
             mainWindow.DataContext = new MainViewModel(mainWindow, _serviceProvider);
             mainWindow.Show();
-        }//46:45 film
+        }//1:02:12 film
     }
 
 }

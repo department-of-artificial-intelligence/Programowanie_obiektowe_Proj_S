@@ -24,6 +24,7 @@ public class AddBranchViewModel
 
     private void AddBranch_Click(object sender)
     {
+
         AddBranchWindow.DialogResult = true;
     }
 }
