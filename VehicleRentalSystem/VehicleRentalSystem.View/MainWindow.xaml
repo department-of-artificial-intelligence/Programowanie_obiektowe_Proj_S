@@ -7,11 +7,17 @@
         mc:Ignorable="d"
         Title="Department" Height="450" Width="800">
     <Grid>
-        <Button x:Name="ButtonAddDepartmentWindowShow" Content="Add department" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button x:Name="ButtonDeleteDepartmentWindowShow" Content="Delete department" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button x:Name="ButtonAddDepartmentWindowShow" Content="Add department" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="63,65,0,0" Width="150" Height="50" Command=""/>
+        <Button x:Name="ButtonDeleteDepartmentWindowShow" Content="Delete department" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="260,65,0,0" Width="150" Height="50" Command=""/>
         <DockPanel Height="268" LastChildFill="False" VerticalAlignment="Bottom">
-            <DataGrid x:Name="dataGridDepartments" ItemsSource="{Binding Departments, Mode=TwoWay}" AutoGenerateColumns="False" DockPanel.Dock="">
-                
+            <DataGrid x:Name="dataGridDepartments" ItemsSource="{Binding Departments, Mode=TwoWay}" AutoGenerateColumns="False" DockPanel.Dock="Bottom" Height="275" VerticalAlignment="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="City" Binding="{Binding City}" Width="*"/>
+                    <DataGridTextColumn Header="Street" Binding="{Binding StreetAddress}" Width="*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding EmailAddress}" Width="*"/>
+                    <DataGridTextColumn Header="Phone number" Binding="{Binding PhoneNumber}" Width="*"/>
+                </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
     </Grid>
