@@ -8,6 +8,9 @@
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5">
     
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
     
     <Border Padding="20">
         <StackPanel>
@@ -92,6 +95,19 @@
                         FontWeight="Bold"
                         Cursor="Hand"/>
             </Grid>
+            
+            <!-- Delete Button (Only in Edit Mode) -->
+            <Button Content="Delete Movie"
+                    Command="{Binding DeleteCommand}"
+                    Background="#FF4444"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Padding="12"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Cursor="Hand"
+                    Margin="0,15,0,0"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
     </Border>
 </Window>

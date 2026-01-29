@@ -19,9 +19,6 @@ public class MovieViewModel : INotifyPropertyChanged
     private string? _description;
     private Genre _selectedGenre;
     private AuthorDisplayItem? _selectedAuthor;
-    private string _errorMessage = string.Empty;
-    private bool _hasError;
-
     public string WindowTitle => _existingMovie == null ? "Add New Movie" : "Edit Movie";
     public bool IsEditMode => _existingMovie != null;
 
@@ -89,19 +86,6 @@ public class MovieViewModel : INotifyPropertyChanged
             }
         }
     }
-
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set
-        {
-            if (_errorMessage != value)
-            {
-                _errorMessage = value;
-                OnPropertyChanged();
-            }
-        }
-    }
     
 
     public ObservableCollection<Genre> AvailableGenres { get; }
@@ -109,6 +93,7 @@ public class MovieViewModel : INotifyPropertyChanged
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
+    public ICommand DeleteCommand { get; }
 
     public event EventHandler<bool>? RequestClose;
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -124,6 +109,7 @@ public class MovieViewModel : INotifyPropertyChanged
 
         SaveCommand = new AsyncRelayCommand(async _ => await SaveAsync());
         CancelCommand = new RelayCommand(_ => Cancel());
+        DeleteCommand = new AsyncRelayCommand(async _ => await DeleteAsync());
 
         _ = InitializeAsync();
     }
@@ -191,8 +177,7 @@ public class MovieViewModel : INotifyPropertyChanged
             {
                 await _movieService.CreateAsync(movieDto);
             }
-
-            // Success - close with true result
+            
             RequestClose?.Invoke(this, true);
         }
         catch (Exception ex)
@@ -204,6 +189,20 @@ public class MovieViewModel : INotifyPropertyChanged
     private void Cancel()
     {
         RequestClose?.Invoke(this, false);
+    }
+
+    private async Task DeleteAsync()
+    {
+        if (_existingMovie == null) return;
+
+        try
+        {
+            await _movieService.DeleteAsync(_existingMovie.Id);
+            RequestClose?.Invoke(this, true);
+        }
+        catch (Exception ex)
+        {
+        }
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

@@ -14,7 +14,6 @@ public class AuthorViewModel : INotifyPropertyChanged
     private string _firstName = string.Empty;
     private string _lastName = string.Empty;
     private DateTime _birthDay = DateTime.Now.AddYears(-30);
-    private string _errorMessage = string.Empty;
 
     public bool IsEditMode => _existingAuthor != null;
 
@@ -57,19 +56,6 @@ public class AuthorViewModel : INotifyPropertyChanged
         }
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set
-        {
-            if (_errorMessage != value)
-            {
-                _errorMessage = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
 
@@ -86,7 +72,6 @@ public class AuthorViewModel : INotifyPropertyChanged
 
         if (_existingAuthor != null)
         {
-            // Edit mode - load existing author data
             FirstName = _existingAuthor.FirstName;
             LastName = _existingAuthor.LastName;
             BirthDay = _existingAuthor.BirthDay;
@@ -113,8 +98,7 @@ public class AuthorViewModel : INotifyPropertyChanged
             {
                 await _authorService.CreateAsync(authorDto);
             }
-
-            // Success - close with true result
+            
             RequestClose?.Invoke(this, true);
         }
         catch (Exception ex)

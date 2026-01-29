@@ -24,7 +24,7 @@ public partial class App : Application
     public void ConfigureServices(ServiceCollection services)
     {
         // Configure Database here
-        services.AddSingleton(DatabaseConfiguration.Configure(new[] { ""}));
+        services.AddSingleton(DatabaseConfiguration.Configure(new[] { "--use-inmemory" }));
         //services.AddSingleton<MapperConfiguration>();
         var mapCfg = new MapperConfiguration(cfg =>
         {
@@ -52,27 +52,3 @@ public partial class App : Application
     }
 
 }
-
-// OLD CODE | DEPRECATED
-// OLD CODE | DEPRECATED
-// OLD CODE | DEPRECATED
-// TODO: Fix bug with SQL Server not configuring: Cannnot find the DefaultStringConnection
-// DefaultStringConnection should be: (localdb)\\mssqllocaldb
-//var context = DatabaseConfiguration.Configure(new string[] { "--use-inmemory" });
-
-//context.SeedDatabase();
-
-//// Debug
-//Console.WriteLine("Database has been configured and initialized successfully!");
-
-//var mapperConfig = new MapperConfiguration(cfg =>
-//{
-//    cfg.AddProfile<MappingProfile>();
-//});
-
-//var mapper = mapperConfig.CreateMapper();
-//_userService = new UserService(context, mapper);
-//_authorService = new AuthorService(context, mapper);
-//_movieService = new MovieService(context, mapper);
-//_reviewService = new ReviewService(context, mapper);
-//_movieMarkService = new MovieMarkService(context, mapper);

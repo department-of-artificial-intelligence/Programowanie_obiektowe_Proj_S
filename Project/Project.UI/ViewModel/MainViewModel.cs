@@ -1,4 +1,4 @@
-﻿using Project.DTO;
+﻿﻿using Project.DTO;
 using Project.Model;
 using Project.Services;
 using System.Collections.ObjectModel;
@@ -63,6 +63,7 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand ApplyFiltersCommand { get; }
     public ICommand AddMovieCommand { get; }
     public ICommand AddAuthorCommand { get; }
+    public ICommand EditMovieCommand { get; }
 
     public MainViewModel(IMovieService movieService, IAuthorService authorService, IServiceProvider serviceProvider)
     {
@@ -74,6 +75,7 @@ public class MainViewModel : INotifyPropertyChanged
         ApplyFiltersCommand = new AsyncRelayCommand(async _ => await ApplyFiltersAsync());
         AddMovieCommand = new RelayCommand(_ => OpenAddMovieWindow());
         AddAuthorCommand = new RelayCommand(_ => OpenAddAuthorWindow());
+        EditMovieCommand = new RelayCommand(movie => OpenEditMovieWindow((MovieDto)movie!));
         // Load initial data
         _ = InitializeAsync();
     }
@@ -157,6 +159,23 @@ public class MainViewModel : INotifyPropertyChanged
     private void OpenAddMovieWindow()
     {
         var movieViewModel = _serviceProvider.GetRequiredService<MovieViewModel>();
+        var movieWindow = new Views.MovieWindow(movieViewModel);
+        
+        var result = movieWindow.ShowDialog();
+        
+        if (result == true)
+        {
+            _ = GetAllMoviesAsync();
+        }
+    }
+
+    private void OpenEditMovieWindow(MovieDto movie)
+    {
+        var movieViewModel = new MovieViewModel(
+            _serviceProvider.GetRequiredService<IMovieService>(),
+            _serviceProvider.GetRequiredService<IAuthorService>(),
+            movie);
+        
         var movieWindow = new Views.MovieWindow(movieViewModel);
         
         var result = movieWindow.ShowDialog();
