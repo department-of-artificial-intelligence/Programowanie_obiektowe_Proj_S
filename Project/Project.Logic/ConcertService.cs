@@ -27,6 +27,32 @@ namespace Project.Logic
                 .Where(c => c.Date > DateTime.Now)
                 .ToList();
         }
+        public void ShowAllConcerts()
+        {
+            var concerts = _context.Concerts
+                .Include(c => c.Artist)
+                .Include(c => c.Venue)
+                .ToList();
+            foreach (var concert in concerts)
+            {
+                Console.WriteLine($"{concert}");
+            }
+        }
+        public void ShowAllArtists()
+        {
+            
+            foreach (var artist in _context.Artists)
+            {
+                Console.WriteLine(artist);
+            }
+        }
+        public void ShowAllVenues()
+        {
+            foreach(var venue in _context.Venues)
+            {
+                Console.WriteLine(venue);
+            }
+        }
 
         
     }

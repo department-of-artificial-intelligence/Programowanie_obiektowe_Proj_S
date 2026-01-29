@@ -9,8 +9,8 @@ public class Artist
 
     public override string ToString()
     {
-        return $"{Name}, {Genre}";
-        //return $"{Name}, {Genre}, {Country}";
+        //return $"{Name}, {Genre}";
+        return $"{Name}, {Genre}, {Country}";
 
     }
 }

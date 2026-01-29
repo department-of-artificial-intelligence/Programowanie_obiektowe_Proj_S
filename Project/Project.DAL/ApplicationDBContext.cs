@@ -8,7 +8,7 @@ namespace Project.DAL
 {
     public class ApplicationDBContext: DbContext
     {
-        private readonly string _connectionString = "Data source=Database.db";
+        private readonly string _connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\wapie\\Source\\Repos\\Programowanie_obiektowe_Proj_S\\Project\\Project.DAL\\Database.mdf;Integrated Security=True";
         
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Venue> Venues { get; set; }
@@ -18,9 +18,10 @@ namespace Project.DAL
         public DbSet<Ticket> Tickets { get; set; }
         
         public ApplicationDBContext(){}
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            optionsBuilder.UseSqlServer(_connectionString);
         }
     }
 }

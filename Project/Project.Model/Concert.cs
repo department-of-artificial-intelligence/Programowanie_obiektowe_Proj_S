@@ -8,6 +8,6 @@ public class Concert: Event
 
     public override string ToString()
     {
-        return $"{Artist.Name} - {Venue} - {Date}";
+        return $"{Artist.Name} - {Venue} - {Date:d}";
     }
 }
