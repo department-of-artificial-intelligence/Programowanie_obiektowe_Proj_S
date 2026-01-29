@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
+using Project.WPFApp.ViewModels;
 
 namespace Project.WPFApp.Windows
 {
@@ -10,9 +8,12 @@ namespace Project.WPFApp.Windows
     /// </summary>
     public partial class DatabaseConnectionWindow : Window
     {
-        public DatabaseConnectionWindow()
+        public DatabaseConnectionWindow(DatabaseConnectionViewModel viewModel)
         {
             InitializeComponent();
+            
+            this.DataContext = viewModel;
+            viewModel.RequestClose += this.Close;
         }
     }
 }

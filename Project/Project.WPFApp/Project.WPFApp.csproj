@@ -8,4 +8,11 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
+    <ProjectReference Include="..\Project.Model\Project.Model.csproj" />
+    <ProjectReference Include="..\Project.Reports\Project.Reports.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -19,5 +19,10 @@ namespace Project.Model
         public Manager(string firstName, string lastName, DateTime dateOfBirth)
             : base(UlongIdGenerator.GenerateId())
             => this.Person = new Person(firstName, lastName, dateOfBirth);
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

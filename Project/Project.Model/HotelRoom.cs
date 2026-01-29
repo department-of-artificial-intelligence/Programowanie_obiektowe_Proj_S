@@ -30,5 +30,10 @@ namespace Project.Model
         public HotelRoom(int number, int floor, decimal pricePerDay, List<Resident> residents, List<RoomHistoricResident> historicResidents)
             : base(UlongIdGenerator.GenerateId())
             => (this.Number, this.Floor, this.PricePerDay, this.Residents, this.HistoricResidents) = (number, floor, pricePerDay, residents, historicResidents);
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

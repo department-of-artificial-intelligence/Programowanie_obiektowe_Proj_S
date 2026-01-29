@@ -27,5 +27,10 @@ namespace Project.Model
         public Hotel(string name, string address, Manager manager, List<HotelRoom> rooms)
             : base(UlongIdGenerator.GenerateId())
             => (this.Name, this.Address, this.Manager, this.Rooms) = (name, address, manager, rooms);
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

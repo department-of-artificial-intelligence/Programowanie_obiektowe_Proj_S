@@ -22,5 +22,10 @@ namespace Project.Model
         public Person(string firstName, string lastName, DateTime dateOfBirth)
             : base(UlongIdGenerator.GenerateId())
             => (this.FirstName, this.LastName, this.DateOfBirth) = (firstName, lastName, dateOfBirth);
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

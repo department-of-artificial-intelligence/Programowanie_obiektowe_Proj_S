@@ -51,6 +51,13 @@ namespace Project.Services
             return room;
         }
         
+        public async Task<HotelRoom?> GetRoomByNumberAsync(int number)
+        {
+            return await this._applicationDbContext.HotelRooms
+                .Include(x => x.Residents)
+                .FirstOrDefaultAsync(x => x.Number == number);
+        }
+        
         public async Task AddResidentToRoomAsync(ulong roomId, ulong residentId)
         {
             var room = await this._applicationDbContext.HotelRooms.FindAsync(roomId);

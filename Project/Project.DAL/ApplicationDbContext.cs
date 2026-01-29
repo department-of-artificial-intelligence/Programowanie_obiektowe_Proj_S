@@ -19,7 +19,7 @@ namespace Project.DAL
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public async Task Prepare()
+        public async Task PrepareAsync()
         {
             await this.Database.MigrateAsync();
             await this.Database.EnsureCreatedAsync();

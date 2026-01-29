@@ -26,5 +26,10 @@ namespace Project.Model
                 ResidentTo = residentTo ?? DateTime.UtcNow
             };
         }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

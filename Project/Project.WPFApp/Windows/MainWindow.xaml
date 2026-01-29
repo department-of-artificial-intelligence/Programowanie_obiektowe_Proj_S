@@ -1,4 +1,4 @@
-﻿<Window x:Class="Project.WPFApp.MainWindow"
+﻿<Window x:Class="Project.WPFApp.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Project.WPFApp"
         xmlns:vm="clr-namespace:Project.WPFApp.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800">
+        Title="Hotel Management" Height="450" Width="800">
 
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -22,15 +22,21 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="_Create new hotel..." />
+                <MenuItem Header="_Open database..." Command="{Binding OpenDatabaseCommand}" IsEnabled="{Binding IsCanBeConnected}" />
+                <MenuItem Header="_Close database..." Command="{Binding CloseDatabaseCommand}" IsEnabled="{Binding IsReady}" />
                 <Separator />
-                <MenuItem Header="_Open database..." />
-                <MenuItem Header="_Close database..." />
+                <MenuItem Header="_Create new hotel..." Command="{Binding CreateHotelCommand}" IsEnabled="{Binding IsReady}" />
                 <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Exit" Command="{Binding ExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Manage">
+                <MenuItem Header="_Create manager..." IsEnabled="{Binding IsReady}" Command="{Binding CreateManagerCommand}" />
+                <MenuItem Header="_Create room..." IsEnabled="{Binding IsHotelChosen}" Command="{Binding CreateRoomCommand}" />
+                <Separator />
+                <MenuItem Header="_Add resident..." IsEnabled="{Binding IsHotelChosen}" Command="{Binding AddResidentCommand}" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About..." />
+                <MenuItem Header="About..." IsEnabled="False" />
             </MenuItem>
         </Menu>
 
@@ -41,26 +47,67 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Selected Hotel: " />
-            <ComboBox Grid.Column="1" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Hotels}" SelectedItem="{Binding ChosenHotel}" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Name" />
+                                    <Binding Path="Address" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <TabControl Grid.Row="2" Margin="4">
             <TabItem Header="Rooms">
-                <TextBox>There will be rooms</TextBox>
+                <ScrollViewer>
+                    <DataGrid ItemsSource="{Binding Rooms}"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True">
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Width="150" Binding="{Binding Id}" />
+                            <DataGridTextColumn Header="Number" Width="*" Binding="{Binding Number}" />
+                            <DataGridTextColumn Header="Floor" Width="50" Binding="{Binding Floor}" />
+                            <DataGridTextColumn Header="Price per Day" Width="100" Binding="{Binding PricePerDay}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
             </TabItem>
+            
             <TabItem Header="Residents">
-                <TextBox>There will be residents</TextBox>
+                <ScrollViewer>
+                    <DataGrid ItemsSource="{Binding Residents}"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True">
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Width="150" Binding="{Binding Id}" />
+                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Person.FullName}" />
+                            <DataGridTextColumn Header="Date of Birth" Width="200" Binding="{Binding Person.DateOfBirth}" />
+                            <DataGridTemplateColumn Header="-" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Hyperlink Command="{Binding DataContext.EvictResidentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">Evict</Hyperlink>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
             </TabItem>
-            <TabItem Header="Reports">
-                <TextBox>There will be reports</TextBox>
-            </TabItem>
-            <TabItem Header="Hotel Properties">
-                <TextBox>There will be dragons</TextBox>
-            </TabItem>
+            
         </TabControl>
-
-        <StatusBar Grid.Row="3">
-            <TextBlock Text="Meow!" />
-        </StatusBar>
     </Grid>
 </Window>

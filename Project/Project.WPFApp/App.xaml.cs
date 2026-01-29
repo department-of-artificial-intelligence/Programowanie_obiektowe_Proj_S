@@ -1,6 +1,6 @@
-﻿using Project.WPFApp.ViewModels;
-using Project.WPFApp.Windows;
+﻿using Project.WPFApp.Windows;
 using System.Windows;
+using Project.WPFApp.Common;
 
 namespace Project.WPFApp
 {
@@ -11,13 +11,7 @@ namespace Project.WPFApp
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            new MainWindow()
-            {
-                DataContext = new MainWindowViewModel()
-                {
-                    Title = "Meow~!"
-                }
-            }.Show();
+            new MainWindow(new WpfServices()).Show();
         }
     }
 }

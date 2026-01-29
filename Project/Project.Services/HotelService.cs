@@ -39,6 +39,9 @@ namespace Project.Services
         public async Task<List<Hotel>> GetAllHotelsAsync()
         {
             return await this._applicationDbContext.Hotels
+                .Include(x => x.Rooms)
+                .ThenInclude(x => x.Residents)
+                .ThenInclude(x => x.Person)
                 .ToListAsync();
         }
 

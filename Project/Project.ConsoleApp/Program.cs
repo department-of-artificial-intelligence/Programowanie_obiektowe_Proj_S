@@ -17,7 +17,7 @@ namespace Project.ConsoleApp
             var databaseContext = new ApplicationDbContextFactory(configuration)
                 .CreateDbContext([]);
 
-            await databaseContext.Prepare();
+            await databaseContext.PrepareAsync();
             
             await PreferredMode.Run(new ApplicationContext(databaseContext));
         }
