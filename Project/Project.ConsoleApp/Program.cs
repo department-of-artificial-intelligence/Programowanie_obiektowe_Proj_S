@@ -58,6 +58,8 @@ while (true) // menu
     Console.WriteLine("5 - Dodaj Lokal");
     Console.WriteLine("6 - Dodaj Koncert");
     Console.WriteLine("7 - Usuń Artystę");
+    Console.WriteLine("8 - Usuń Lokal");
+    Console.WriteLine("9 - Usuń Koncert");
     Console.WriteLine("0 - Wyjście");
     Console.WriteLine("Naciśnij przycisk: ");
     
@@ -97,6 +99,14 @@ while (true) // menu
             Console.WriteLine("Podaj kraj pochodzenia: ");
             string kraj = Console.ReadLine();
 
+            if (string.IsNullOrWhiteSpace(nazwa) || 
+                string.IsNullOrWhiteSpace(gatunek) ||
+                string.IsNullOrWhiteSpace(kraj))
+            {
+                Console.WriteLine("Wprowadzono puste pole");
+                break;
+            }
+
             Artist nowyArtysta = new Artist()
             {
                 Name = nazwa,
@@ -112,21 +122,29 @@ while (true) // menu
         case "5": // dodanie lokalu
             Console.Clear();
             Console.WriteLine("Podaj nazwę lokalu: ");
-            string nazwalokalu = Console.ReadLine();
+            string nazwaLokalu = Console.ReadLine();
             Console.WriteLine("Podaj miasto: ");
             string miasto = Console.ReadLine();
             Console.WriteLine("Podaj pojemność: ");
 
-            if(int.TryParse(Console.ReadLine(),out int pojemnosc))
+            if (string.IsNullOrWhiteSpace(nazwaLokalu) ||
+                string.IsNullOrWhiteSpace(miasto))
+            {
+                Console.WriteLine("Wprowadzono puste pole");
+                break;
+            }
+
+            if (int.TryParse(Console.ReadLine(),out int pojemnosc))
             {
                 Venue nowyLokal = new Venue()
                 {
-                    Name = nazwalokalu,
+                    Name = nazwaLokalu,
                     City = miasto,
                     Capacity = pojemnosc
                 };
                 context.Venues.Add(nowyLokal);
                 context.SaveChanges();
+                Console.WriteLine("Dodano lokal");
             }
             else
             {
@@ -145,7 +163,7 @@ while (true) // menu
             }
 
             Console.WriteLine("Podaj nazwę lokalu: ");
-            string nazwaLokalu = Console.ReadLine();
+            nazwaLokalu = Console.ReadLine();
             var lokal = context.Venues.FirstOrDefault(v => v.Name == nazwaLokalu);
             if (lokal == null)
             {
@@ -163,6 +181,7 @@ while (true) // menu
                 };
                 context.Concerts.Add(concert);
                 context.SaveChanges();
+                Console.WriteLine("Dodano koncert");
                 break;
 
             }
@@ -172,6 +191,7 @@ while (true) // menu
             }
 
         case "7": // Usunięcie artysty
+            Console.Clear();
             Console.WriteLine("Podaj nazwę artysty którego chcesz usunąć: ");
             nazwaArtysty = Console.ReadLine();
             artysta = context.Artists.FirstOrDefault(a => a.Name == nazwaArtysty);
@@ -186,6 +206,45 @@ while (true) // menu
                 Console.WriteLine("Usunięto artystę");
             }
             break;
+
+        case "8": // usuniecie lokalu
+            Console.Clear();
+            Console.WriteLine("Podaj nazwę lokalu który chcesz usunąć: ");
+            nazwaLokalu = Console.ReadLine();
+            lokal = context.Venues.FirstOrDefault(v => v.Name == nazwaLokalu);
+            if (lokal == null) Console.WriteLine("Nie znaleziono lokalu");
+            else
+            {
+                context.Venues.Remove(lokal);
+                context.SaveChanges();
+                Console.WriteLine("Usunięto lokal");
+            }
+            break;
+        case "9": // usuniecie koncertu
+            Console.Clear();
+            Console.WriteLine("Podaj Artystę którego koncert chcesz usunąć");
+            nazwaArtysty = Console.ReadLine();
+            artysta = context.Artists.FirstOrDefault(a => a.Name == nazwaArtysty);
+            Console.WriteLine("Podaj datę koncertu (RRRR-MM-DD): ");
+            if(DateTime.TryParse(Console.ReadLine(),out data) == false)
+            {
+                Console.WriteLine("Niepoprawna data");
+                break;
+            }
+            var koncert = context.Concerts.FirstOrDefault(c => c.Artist == artysta && c.Date == data);
+            if (koncert == null)
+            {
+                Console.WriteLine("Nie znaleziono koncertu");
+                break;
+            }
+            else
+            {
+                context.Concerts.Remove(koncert);
+                context.SaveChanges();
+                Console.WriteLine("Usunięto koncert");
+                break;
+            }
+
 
         default:
             Console.WriteLine("Niepoprawny wybór. Spróbuj ponownie: ");
