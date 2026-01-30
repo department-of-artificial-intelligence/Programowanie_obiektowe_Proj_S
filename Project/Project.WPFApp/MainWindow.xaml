@@ -5,18 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project.WPFApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Canvas>
-        <TextBox   TextWrapping="Wrap" Text="Nazwa lokalu" Width="120" RenderTransformOrigin="-1.15,2.86" HorizontalAlignment="Center" Canvas.Top="19" VerticalAlignment="Center" Height="18"/>
-        <TextBox TextWrapping="Wrap" Text="Miasto" Width="120" HorizontalAlignment="Left" Canvas.Left="137" VerticalAlignment="Top" Canvas.Top="19"/>
-        <TextBox TextWrapping="Wrap" Text="Pojemność" Width="120" HorizontalAlignment="Left" Canvas.Left="280" VerticalAlignment="Top" Canvas.Top="19" TextAlignment="Right" TextChanged="TextBox_TextChanged"/>
-        <Button Content="Dodaj lokal" Canvas.Left="441" Canvas.Top="20" RenderTransformOrigin="-0.188,1.622" HorizontalAlignment="Left" VerticalAlignment="Center" Width="108"/>
-        
-        <TextBox   TextWrapping="Wrap" Text="Imię" Width="120" RenderTransformOrigin="-1.15,2.86" Canvas.Top="65" Height="18" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox TextWrapping="Wrap" Text="Nazwisko" Width="120" Canvas.Left="137" Canvas.Top="65" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox TextWrapping="Wrap" Text="Wiek" Width="120" Canvas.Left="280" Canvas.Top="65" TextAlignment="Right" TextChanged="TextBox_TextChanged" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Button Content="Dodaj Osobę" Canvas.Left="441" Canvas.Top="66" RenderTransformOrigin="-0.188,1.622" Width="108" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        WindowStartupLocation="CenterScreen"
+        Title="Organizacja koncertów" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Dodaj" Command="{Binding DodajElementCommand}"/>
+            <MenuItem Header="Dodaj" Command="{Binding DodajElementCommand}"/>
+            <MenuItem Header="Usuń" Command="{Binding UsunElementCommand}"/>
+        </Menu>
 
-
-    </Canvas>
+        <TabControl SelectedIndex="{Binding IndeksWybranejZakładki}">
+            <TabItem Header="Artyści">
+                <DataGrid AutoGenerateColumns="False" 
+                          ItemsSource="{Binding Artyści}" 
+                          SelectedItem="{Binding WybranyArtysta}" 
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Gatunek" Binding="{Binding Genre}"/>
+                        <DataGridTextColumn Header="Kraj" Binding="{Binding Country}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Lokale">
+                <DataGrid AutoGenerateColumns="False" 
+                          ItemsSource="{Binding Lokale}" 
+                          SelectedItem="{Binding WybranyLokal}"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Miasto" Binding="{Binding City}"/>
+                        <DataGridTextColumn Header="Pojemność" Binding="{Binding Capacity}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Koncerty">
+                <DataGrid AutoGenerateColumns="False" 
+                          ItemsSource="{Binding Koncerty}" 
+                          SelectedItem="{Binding WybranyKoncert}"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Artysta" Binding="{Binding Artist.Name}"/>
+                        <DataGridTextColumn Header="Miejsce" Binding="{Binding Venue}"/>
+                        <DataGridTextColumn Header="Data" Binding="{Binding Date, StringFormat=d}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            
+        </TabControl>
+    </DockPanel>
 </Window>

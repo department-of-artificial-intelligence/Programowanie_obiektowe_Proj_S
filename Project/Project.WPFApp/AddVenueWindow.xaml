@@ -1,0 +1,24 @@
+﻿<Window x:Class="Project.WPFApp.AddVenueWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.WPFApp"
+        mc:Ignorable="d"
+        Title="Dodawanie lokalu" Height="250" Width="300">
+    <StackPanel Margin="10">
+        <Label Content="Nazwa lokalu:"/>
+        <TextBox Text="{Binding Nazwa,UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Content="Miasto:"/>
+        <TextBox Text="{Binding Miasto,UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Content="Pojemność:"/>
+        <TextBox Text="{Binding Pojemnosc,UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Content="Dodaj" Command="{Binding DodajCommand}" Margin="0,10,0,0"/>
+    </StackPanel>
+
+
+
+
+</Window>
