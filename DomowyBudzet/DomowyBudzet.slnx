@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DomowyBudzet.App/DomowyBudzet.App.csproj" />
+  <Project Path="DomowyBudzet.Model/DomowyBudzet.Model.csproj" />
+</Solution>
