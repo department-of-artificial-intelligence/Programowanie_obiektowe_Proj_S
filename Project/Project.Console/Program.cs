@@ -27,7 +27,7 @@ namespace Project
             Employee emp1 = new Employee(1, "ffr", "frfr", "casier", 1234);
             rest1.AddEmployee(emp1);
             Console.WriteLine(rest1.Employees[0].FirstName);
-
+            //test komentarz
         }
     }
 }
