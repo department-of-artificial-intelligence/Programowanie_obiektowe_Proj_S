@@ -27,5 +27,9 @@ namespace Project.Model
         {
             Restaurants.Add(restaurant);
         }
+        //public void RemoveRestaurant(int id)
+        //{
+           
+        //}
     }
 }
