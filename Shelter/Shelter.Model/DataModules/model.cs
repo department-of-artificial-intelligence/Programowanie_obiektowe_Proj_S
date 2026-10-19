@@ -1,4 +1,4 @@
-﻿namespace Shelter.Model
+﻿namespace Shelter.Model.DataModules
 {
     public class Shelter
     {

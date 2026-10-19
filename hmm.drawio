@@ -28,7 +28,7 @@
         <mxCell id="FASRSMmAtPzWAmNMMtql-8" parent="1" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" value="yayYyyyy!&lt;div&gt;:D&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="120" x="480" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="FASRSMmAtPzWAmNMMtql-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="schronowisko" vertex="1">
+        <mxCell id="FASRSMmAtPzWAmNMMtql-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="schronisko" vertex="1">
           <mxGeometry height="60" width="120" x="370" y="510" as="geometry" />
         </mxCell>
         <mxCell id="FASRSMmAtPzWAmNMMtql-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="zwierze" vertex="1">
@@ -72,7 +72,7 @@
         <mxCell id="FASRSMmAtPzWAmNMMtql-25" parent="FASRSMmAtPzWAmNMMtql-24" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id" vertex="1">
           <mxGeometry height="30" width="140" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="FASRSMmAtPzWAmNMMtql-26" parent="FASRSMmAtPzWAmNMMtql-24" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id schronowiska" vertex="1">
+        <mxCell id="FASRSMmAtPzWAmNMMtql-26" parent="FASRSMmAtPzWAmNMMtql-24" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id schroniska" vertex="1">
           <mxGeometry height="30" width="140" y="60" as="geometry" />
         </mxCell>
         <mxCell id="FASRSMmAtPzWAmNMMtql-35" parent="FASRSMmAtPzWAmNMMtql-24" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="gatunek" vertex="1">
@@ -96,7 +96,7 @@
         <mxCell id="FASRSMmAtPzWAmNMMtql-38" parent="FASRSMmAtPzWAmNMMtql-37" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id" vertex="1">
           <mxGeometry height="30" width="140" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="FASRSMmAtPzWAmNMMtql-39" parent="FASRSMmAtPzWAmNMMtql-37" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id schronowiska" vertex="1">
+        <mxCell id="FASRSMmAtPzWAmNMMtql-39" parent="FASRSMmAtPzWAmNMMtql-37" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id schroniska&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="30" width="140" y="60" as="geometry" />
         </mxCell>
         <mxCell id="FASRSMmAtPzWAmNMMtql-40" parent="FASRSMmAtPzWAmNMMtql-37" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="imię" vertex="1">
@@ -187,16 +187,19 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="9QQGYGxwczZjDHQOf4tx-6" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Pola" vertex="1">
-          <mxGeometry height="120" width="140" x="50" y="255" as="geometry" />
+          <mxGeometry height="150" width="140" x="50" y="255" as="geometry" />
         </mxCell>
         <mxCell id="9QQGYGxwczZjDHQOf4tx-7" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id" vertex="1">
           <mxGeometry height="30" width="140" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="9QQGYGxwczZjDHQOf4tx-8" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="ilość pracowników" vertex="1">
+        <mxCell id="9QQGYGxwczZjDHQOf4tx-13" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="id schroniska&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="30" width="140" y="60" as="geometry" />
         </mxCell>
-        <mxCell id="9QQGYGxwczZjDHQOf4tx-9" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="rasa zwierząt" vertex="1">
+        <mxCell id="9QQGYGxwczZjDHQOf4tx-8" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="ilość pracowników" vertex="1">
           <mxGeometry height="30" width="140" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9QQGYGxwczZjDHQOf4tx-9" parent="9QQGYGxwczZjDHQOf4tx-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="rasa zwierząt" vertex="1">
+          <mxGeometry height="30" width="140" y="120" as="geometry" />
         </mxCell>
         <mxCell id="9QQGYGxwczZjDHQOf4tx-10" edge="1" parent="1" source="9QQGYGxwczZjDHQOf4tx-4" style="endArrow=none;html=1;rounded=0;exitX=0.412;exitY=-0.027;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">

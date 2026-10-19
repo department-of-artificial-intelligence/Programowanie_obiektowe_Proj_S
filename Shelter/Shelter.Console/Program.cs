@@ -1,5 +1,5 @@
 ﻿namespace Shelter.ConsoleApp;
-using Shelter.Model;
+using Shelter.Model.DataModules;
 
 internal class Program
 {
