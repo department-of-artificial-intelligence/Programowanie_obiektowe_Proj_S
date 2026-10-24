@@ -12,5 +12,13 @@ namespace Project.Model.DataModels
         public string Name { get; set; }
         public string Unit {  get; set; }
         public decimal UnitPrice { get; set; }
+
+        public Ingridient(int id, string name, string unit, decimal unitPrice)
+        {
+            Id = id;
+            Name = name;
+            Unit = unit;
+            UnitPrice = unitPrice;
+        }
     }
 }

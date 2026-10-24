@@ -12,10 +12,10 @@ namespace Project.Model
         public string Description { get; set; }
         public decimal Price { get; set; }
         public string PortionSize { get; set; }
-        public List<Ingridient> Ingridients { get; set; }
+        public List<DishIngridient> Ingridients { get; set; }
         public bool IsAvailable { get; set; }
 
-        public Dish(int id, string name, string description, decimal price, string portionSize, List<Ingridient> ingridients, bool isAvailable)
+        public Dish(int id, string name, string description, decimal price, string portionSize, List<DishIngridient> ingridients, bool isAvailable)
         {
             Id = id;
             Name = name;
@@ -25,5 +25,7 @@ namespace Project.Model
             Ingridients = ingridients;
             IsAvailable = isAvailable;
         }
+
+        public void ChangePrice(decimal price) { Price = price; }
     }
 }
