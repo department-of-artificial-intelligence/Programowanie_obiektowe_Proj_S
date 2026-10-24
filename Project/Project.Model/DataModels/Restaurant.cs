@@ -44,6 +44,7 @@ namespace Project.Model
 
         public void AddEmployee(Employee employee)
         {
+            ArgumentNullException.ThrowIfNull(employee, nameof(employee));
             Employees.Add(employee);
         }
 
@@ -63,6 +64,7 @@ namespace Project.Model
 
         public void AddDish(Dish dish)
         {
+            ArgumentNullException.ThrowIfNull(dish, nameof(dish));
             Menu.Add(dish);
         }
 

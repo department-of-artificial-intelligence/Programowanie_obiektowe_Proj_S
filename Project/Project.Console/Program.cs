@@ -43,6 +43,7 @@ namespace Project
 
             // Restaurant
             Restaurant restaurant = new Restaurant(1, "Italiano", "Marszałkowska 10", "+1312312321321", employee1, storage);
+            Restaurant restaurant1 = new Restaurant(2, "Italiano1", "Marszałkowska1 10", "+1312312321321312321", employee2, storage);
             //{
             //    Id
             //    Name = "Italiano",
@@ -72,6 +73,34 @@ namespace Project
             Console.WriteLine("\n=== EMPLOYEES ===");
             Console.WriteLine(employee1.FirstName + " " + employee1.LastName);
             Console.WriteLine(employee2.FirstName + " " + employee2.LastName);
+
+
+            warsaw.AddRestaurant(restaurant);
+            warsaw.AddRestaurant(restaurant1);
+            List<Restaurant>? founded = chain.FindRestaurants("Warszawa");
+            Console.WriteLine(founded?[0].Name);
+            if(founded != null)
+            foreach(Restaurant res in founded)
+            {
+                    Console.WriteLine(res.Name);
+             }
+
+            try
+            {
+                warsaw.RemoveRestaurant(21);
+            }
+            catch (Exception ex) { 
+                Console.WriteLine("Restaurant is not removed: " + ex.Message);
+            }
+            
+            List<Restaurant>? founded2 = chain.FindRestaurants("Warszawa");
+
+            
+            if (founded2 != null)
+                foreach (Restaurant res in founded2)
+                {
+                    Console.WriteLine(res.Name);
+                }
         }
     }
 }
