@@ -28,12 +28,14 @@ namespace Project.Model
         }
 
         //test!!!!!!!
-        public Restaurant(int id, string name, string adress, string phone)
+        public Restaurant(int id, string name, string adress, string phone, Employee manager, Storage storage)
         {
             Id = id;
             Name = name;
             Adress = adress;
             Phone = phone;
+            Manager = manager;
+            Storage = storage;
             
             Employees = new List<Employee>();
             Menu = new List<Dish>();
