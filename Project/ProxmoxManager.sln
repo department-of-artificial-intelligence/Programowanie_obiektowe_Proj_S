@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36518.9 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Model", "Project.Model\Project.Model.csproj", "{F8CF230C-F360-4EBA-AC64-91B831640C74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxmoxManager.Model", "ProxmoxManager.Model\ProxmoxManager.Model.csproj", "{F8CF230C-F360-4EBA-AC64-91B831640C74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxmoxManager.ConsoleUI", "ProxmoxManager.ConsoleUI\ProxmoxManager.ConsoleUI.csproj", "{76617CB4-1CED-4F9C-86C6-5BF9CEA9BE2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F8CF230C-F360-4EBA-AC64-91B831640C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8CF230C-F360-4EBA-AC64-91B831640C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8CF230C-F360-4EBA-AC64-91B831640C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76617CB4-1CED-4F9C-86C6-5BF9CEA9BE2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76617CB4-1CED-4F9C-86C6-5BF9CEA9BE2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76617CB4-1CED-4F9C-86C6-5BF9CEA9BE2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76617CB4-1CED-4F9C-86C6-5BF9CEA9BE2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
