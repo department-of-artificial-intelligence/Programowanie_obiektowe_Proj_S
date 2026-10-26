@@ -23,4 +23,8 @@ public class Wypozyczenie {
     public void Przedluz(int liczbaGodzin) {
         dataKonca.AddHours(liczbaGodzin);
     }
+    public void Zakoncz() {
+        rower.ZmienStatus("Dostępny");
+        dataKonca = DateTime.Now;
+    }
 }

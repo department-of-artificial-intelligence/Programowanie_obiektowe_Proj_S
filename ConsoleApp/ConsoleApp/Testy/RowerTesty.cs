@@ -1,5 +1,4 @@
-﻿
-namespace ConsoleApp.Testy;
+﻿namespace ConsoleApp.Testy;
 
 public static class RowerTesty {
     public static void TestZmienStatus() {

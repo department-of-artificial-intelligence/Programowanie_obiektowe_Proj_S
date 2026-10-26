@@ -1,6 +1,6 @@
 namespace ConsoleApp;
 
-public class Rower {
+public class Rower : IZmienStatus {
     private int id;
     private string model;
     private string status;
