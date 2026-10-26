@@ -19,6 +19,12 @@ namespace Projekt1
         public MainWindow()
         {
             InitializeComponent();
+
+
+            //klasa abstrakcyjna vs interfejs
+            //dependecy injection związane z interfejsami
+            //zamiast List uzywac IList
+            //interface uzywany jest do tego aby nie miec w klasie zaleznosci od stringa ale od interfacu ktory implementuje rozne klasy
         }
     }
 }
