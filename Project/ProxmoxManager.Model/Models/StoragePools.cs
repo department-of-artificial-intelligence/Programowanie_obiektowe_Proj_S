@@ -7,4 +7,10 @@ public class StoragePools
     public int TotalCapacityGb { get; private set; }
     public int UsedCapacityGb { get; private set; }
     public int ProxmoxNodeId { get; private set; }
+    
+    public void UpdateStoragePools(int totalCapacityGb, int usedCapacityGb)
+    {
+        TotalCapacityGb = totalCapacityGb;
+        UsedCapacityGb = usedCapacityGb;
+    }
 }
