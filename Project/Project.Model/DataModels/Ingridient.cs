@@ -20,5 +20,15 @@ namespace Project.Model.DataModels
             Unit = unit;
             UnitPrice = unitPrice;
         }
+
+        public void UpdatePrice(decimal newPrice)
+        {
+            if (newPrice <= 0)
+                throw new ArgumentOutOfRangeException(nameof(newPrice), "must be > 0");
+            UnitPrice = newPrice;
+        }
+
+        
+
     }
 }

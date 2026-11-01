@@ -26,6 +26,22 @@ namespace Project.Model
             IsAvailable = isAvailable;
         }
 
-        public void ChangePrice(decimal price) { Price = price; }
+        public void ChangePrice(decimal price)
+        {
+            if (price <= 0)
+                throw new ArgumentOutOfRangeException(nameof(price), "must be > 0");
+            Price = price;
+        }
+
+        public void AddIngredient(DishIngridient ingridient)
+        {
+            ArgumentNullException.ThrowIfNull(ingridient, nameof(ingridient));
+            Ingridients.Add(ingridient);
+        }
+        public decimal CalculateCost()
+        {
+            return Ingridients.Sum<DishIngridient>(i => i.Ingridient.UnitPrice * i.Quantity);
+        }
+
     }
 }

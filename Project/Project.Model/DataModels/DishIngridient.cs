@@ -16,5 +16,18 @@ namespace Project.Model.DataModels
             Ingridient = ingridient;
             Quantity = quantity;
         }
+
+        public void ChangeQuantity(decimal quintity)
+        {
+            if (quintity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(quintity), "must be > 0");
+            Quantity = quintity;
+        }
+
+        public void ChangeIngridient(Ingridient ingridient)
+        {
+            ArgumentNullException.ThrowIfNull(ingridient);
+            Ingridient = ingridient;
+        }
     }
 }
