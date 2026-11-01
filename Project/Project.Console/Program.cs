@@ -8,41 +8,152 @@ namespace Project
         static void Main(string[] args)
         {
 
-            Ingridient cheese = new Ingridient(1, "Cheese", "kg", 25m);
-            Ingridient tomato = new Ingridient(2, "Tomato", "kg", 8m);
-            Ingridient flour = new Ingridient(3, "Flour", "kg", 4m);
+            Console.WriteLine("===== WEEK 3: STORAGE TESTS =====\n");
 
-            cheese.UpdatePrice(27m);
+            // ==========================================
+            // 1. CREATE INGREDIENTS
+            // ==========================================
 
-            DishIngridient dishIngridient1 = new DishIngridient(cheese, 10);
-            DishIngridient dishIngridient2 = new DishIngridient(cheese, 10);
-            List<DishIngridient> dishIngridients = new List<DishIngridient>() { dishIngridient1, dishIngridient2 };
-            Dish dish = new Dish(1, "pizza", "blabla", 34, "big", dishIngridients, true);
-            Console.WriteLine(dish.Price);
-            Console.WriteLine(dish.CalculateCost());
-            //Storage storage = new Storage(100m);
+            Ingridient cheese = new Ingridient(1, "Cheese", "kg", 25.00m);
+            Ingridient tomato = new Ingridient(2, "Tomato", "kg", 8.00m);
+            Ingridient flour = new Ingridient(3, "Flour", "kg", 4.00m);
 
-            //storage.AddStock(cheese, 10m);
-            // storage.AddStock(tomato, 20m);
-            //storage.AddStock(flour, 5m);
+            Console.WriteLine("===== INGREDIENT TESTS =====");
 
-            //StockItem cheeseStock = storage.items.Find(item => item.ingredient.id == cheese.id);
+            Console.WriteLine(
+                $"{cheese.Name}: {cheese.UnitPrice} PLN/{cheese.Unit}"
+            );
 
-            //cheeseStock.Increase(5m);
-            //cheeseStock.Decrease(3m);
+            // Test UpdatePrice()
+            cheese.UpdatePrice(28.00m);
 
-            //Console.WriteLine($"Is cheese stock low: {cheeseStock.IsLowStock()}");
+            Console.WriteLine(
+                $"Updated cheese price: {cheese.UnitPrice} PLN/{cheese.Unit}"
+            );
 
-            //storage.UseStock(cheese, 4m);
 
-            //Console.WriteLine("\nLow stock items:");
 
-            //foreach (StockItem item in storage.GetLowStockItems())
-            //{
-            //    Console.WriteLine($"{item.ingredient.name}: {item.quantity} {item.ingredient.unit}");
-            //}
 
-            //Console.WriteLine($"\nTotal stock value: {storage.GetStockValue()}");
+            // ==========================================
+            // 2. CREATE STORAGE
+            // ==========================================
+
+            Storage storage = new Storage(100m);
+
+            Console.WriteLine("\n===== STORAGE TESTS =====");
+
+            // Test AddStock()
+            storage.AddStock(cheese, 10m);
+            storage.AddStock(tomato, 20m);
+            storage.AddStock(flour, 5m);
+
+            Console.WriteLine("Stock added successfully.");
+
+
+            // ==========================================
+            // 3. DISPLAY CURRENT STOCK
+            // ==========================================
+
+            Console.WriteLine("\n===== CURRENT STOCK =====");
+
+            foreach (StockItem item in storage.StockItems)
+            {
+                Console.WriteLine(
+                    $"{item.Ingridient.Name}: " +
+                    $"{item.Quantity} {item.Ingridient.Unit}"
+                );
+            }
+
+
+            // ==========================================
+            // 4. TEST STOCKITEM METHODS
+            // ==========================================
+
+            Console.WriteLine("\n===== STOCK ITEM TESTS =====");
+
+            StockItem? cheeseStock = storage.StockItems.Find(
+                item => item.Ingridient.Id == cheese.Id
+            );
+
+            if (cheeseStock != null)
+            {
+                Console.WriteLine(
+                    $"Initial cheese quantity: {cheeseStock.Quantity}"
+                );
+
+                // Test Increase()
+                cheeseStock.Increase(5m);
+
+                Console.WriteLine(
+                    $"After Increase(5): {cheeseStock.Quantity}"
+                );
+
+                // Test Decrease()
+                cheeseStock.Decrease(3m);
+
+                Console.WriteLine(
+                    $"After Decrease(3): {cheeseStock.Quantity}"
+                );
+
+                // Test IsLowStock()
+                Console.WriteLine(
+                    $"Is cheese stock low? {cheeseStock.IsLowStock()}"
+                );
+            }
+
+
+            // ==========================================
+            // 5. TEST USE STOCK
+            // ==========================================
+
+            Console.WriteLine("\n===== USE STOCK TEST =====");
+
+            storage.UseStock(cheese, 4m);
+
+            Console.WriteLine("Used 4 kg of cheese.");
+
+            foreach (StockItem item in storage.StockItems)
+            {
+                Console.WriteLine(
+                    $"{item.Ingridient.Name}: " +
+                    $"{item.Quantity} {item.Ingridient.Unit}"
+                );
+            }
+
+
+            // ==========================================
+            // 6. TEST LOW STOCK ITEMS
+            // ==========================================
+
+            Console.WriteLine("\n===== LOW STOCK ITEMS =====");
+
+            var lowStockItems = storage.GetLowStockItems();
+
+            foreach (StockItem item in lowStockItems)
+            {
+                Console.WriteLine(
+                    $"{item.Ingridient.Name}: " +
+                    $"{item.Quantity} {item.Ingridient.Unit}"
+                );
+            }
+
+
+            // ==========================================
+            // 7. TEST STOCK VALUE
+            // ==========================================
+
+            Console.WriteLine("\n===== STOCK VALUE =====");
+
+            Console.WriteLine(
+                $"Total stock value: {storage.GetStockValue()} PLN"
+            );
+
+
+            // ==========================================
+            // 8. FINISH
+            // ==========================================
+
+            Console.WriteLine("\n===== ALL TESTS FINISHED =====");
         }
     }
 }

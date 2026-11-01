@@ -33,8 +33,21 @@ namespace Project.Model
         public void UseStock(Ingridient ingridient, decimal quantity)
 
         {
-            StockItem? foundedIngridient = StockItems.Find(i => i.Ingridient.Name == ingridient.Name);
+            StockItem? foundedStockItem = StockItems.Find(i => i.Ingridient.Name == ingridient.Name);
+            ArgumentNullException.ThrowIfNull(foundedStockItem);
+            if (foundedStockItem.Quantity - quantity < 0)
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Not enough stock items for this operation");
+            foundedStockItem.Quantity -= quantity;
+        }
 
+        public List<StockItem> GetLowStockItems()
+        {
+            return StockItems.FindAll(i => i.IsLowStock());
+        }
+
+        public decimal GetStockValue()
+        {
+            return StockItems.Sum<StockItem>(i => i.Quantity * i.Ingridient.UnitPrice);
         }
     }
 
