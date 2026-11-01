@@ -2,9 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <AssemblyName>CinemaNetworkManagement.ConsoleApp</AssemblyName>
+    <RootNamespace>CinemaNetworkManagement.ConsoleApp</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CinemaNetworkManagement.Model\CinemaNetworkManagement.Model.csproj" />
+    <ProjectReference Include="..\CinemaNetworkManagement.Logic\CinemaNetworkManagement.Logic.csproj" />
+  </ItemGroup>
 
 </Project>
