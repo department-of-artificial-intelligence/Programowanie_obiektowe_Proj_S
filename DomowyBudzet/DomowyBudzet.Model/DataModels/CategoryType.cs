@@ -4,8 +4,7 @@ public enum CategoryType {
     Food,
     Bill,
     Transport,
-    Hygiene,
     Entertainment,
-    Income,
+    PayCheque,
     Other
 }
