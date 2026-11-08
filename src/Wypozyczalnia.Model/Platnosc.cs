@@ -1,7 +1,7 @@
-﻿namespace ConsoleApp;
+﻿namespace Wypozyczalnia.Model;
 using System;
 
-class Platnosc : IPlatnoscOnline {
+public class Platnosc : IPlatnoscOnline {
     static int IloscPlatnosciWSystemie { get; set; } = 0;
     public int Id { get; set; }
     private decimal Kwota { get; set; }

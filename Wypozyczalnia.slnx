@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Wypozyczalnia.DAL/Wypozyczalnia.DAL.csproj" />
+    <Project Path="src/Wypozyczalnia.DTO/Wypozyczalnia.DTO.csproj" />
+    <Project Path="src/Wypozyczalnia.Logic/Wypozyczalnia.Logic.csproj" />
+    <Project Path="src/Wypozyczalnia.Model/Wypozyczalnia.Model.csproj" />
+    <Project Path="src/Wypozyczalnia.UI.ConsoleApp/Wypozyczalnia.UI.ConsoleApp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Wypozyczalnia.Tests/Wypozyczalnia.Tests.csproj" />
+  </Folder>
+</Solution>

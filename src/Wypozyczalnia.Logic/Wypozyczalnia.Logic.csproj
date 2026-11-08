@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wypozyczalnia.DAL\Wypozyczalnia.DAL.csproj" />
+    <ProjectReference Include="..\Wypozyczalnia.Model\Wypozyczalnia.Model.csproj" />
+    <ProjectReference Include="..\Wypozyczalnia.DTO\Wypozyczalnia.DTO.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
