@@ -7,153 +7,122 @@ namespace Project
     {
         static void Main(string[] args)
         {
-
-            Console.WriteLine("===== WEEK 3: STORAGE TESTS =====\n");
-
-            // ==========================================
-            // 1. CREATE INGREDIENTS
-            // ==========================================
-
-            Ingridient cheese = new Ingridient(1, "Cheese", "kg", 25.00m);
-            Ingridient tomato = new Ingridient(2, "Tomato", "kg", 8.00m);
-            Ingridient flour = new Ingridient(3, "Flour", "kg", 4.00m);
-
-            Console.WriteLine("===== INGREDIENT TESTS =====");
-
-            Console.WriteLine(
-                $"{cheese.Name}: {cheese.UnitPrice} PLN/{cheese.Unit}"
+            
+            Customer customer = new Customer(
+                1,
+                "Jan Kowalski",
+                "123456789",
+                100
             );
 
-            // Test UpdatePrice()
-            cheese.UpdatePrice(28.00m);
-
-            Console.WriteLine(
-                $"Updated cheese price: {cheese.UnitPrice} PLN/{cheese.Unit}"
+            
+            Dish soup = new Dish(
+                1,
+                "Tomato Soup",
+                "Traditional tomato soup",
+                15.00m,
+                "300 ml",
+                new List<DishIngridient>(),
+                true
             );
 
+            Dish salad = new Dish(
+                2,
+                "Greek Salad",
+                "Salad with feta cheese",
+                20.00m,
+                "250 g",
+                new List<DishIngridient>(),
+                true
+            );
 
+            
+            Restaurant restaurant = new Restaurant(
+                1,
+                "My Restaurant",
+                "Main Street 10",
+                "123456789",
+                null!,
+                null!
+            );
 
+            
+            List<OrderItem> items = new List<OrderItem>();
 
-            // ==========================================
-            // 2. CREATE STORAGE
-            // ==========================================
+            Order order = new Order(
+                1,
+                DateTime.Now,
+                OrderStatus.InProgress,
+                items,
+                customer,
+                restaurant,
+                0m
+            );
 
-            Storage storage = new Storage(100m);
+            
+            order.AddItem(soup, 2);
+            order.AddItem(salad, 3);
 
-            Console.WriteLine("\n===== STORAGE TESTS =====");
+            Console.WriteLine("ORDER CREATED");
+            Console.WriteLine("------------------------------");
 
-            // Test AddStock()
-            storage.AddStock(cheese, 10m);
-            storage.AddStock(tomato, 20m);
-            storage.AddStock(flour, 5m);
+            Console.WriteLine($"Customer: {order.Customer.FullName}");
+            Console.WriteLine($"Order status: {order.Status}");
 
-            Console.WriteLine("Stock added successfully.");
+            Console.WriteLine("\nORDER ITEMS:");
 
-
-            // ==========================================
-            // 3. DISPLAY CURRENT STOCK
-            // ==========================================
-
-            Console.WriteLine("\n===== CURRENT STOCK =====");
-
-            foreach (StockItem item in storage.StockItems)
+            foreach (OrderItem item in order.Items)
             {
                 Console.WriteLine(
-                    $"{item.Ingridient.Name}: " +
-                    $"{item.Quantity} {item.Ingridient.Unit}"
+                    $"{item.Dish.Name} x {item.Quantity} = {item.GetLineTotal()}"
                 );
             }
 
+            
+            decimal total = order.CalculateTotal();
 
-            // ==========================================
-            // 4. TEST STOCKITEM METHODS
-            // ==========================================
+            Console.WriteLine("\nTOTAL PRICE:");
+            Console.WriteLine(total.ToString());
 
-            Console.WriteLine("\n===== STOCK ITEM TESTS =====");
+            
+            Console.WriteLine("\nREMOVING SALAD...");
 
-            StockItem? cheeseStock = storage.StockItems.Find(
-                item => item.Ingridient.Id == cheese.Id
-            );
+            order.RemoveItem(2);
 
-            if (cheeseStock != null)
+            Console.WriteLine($"New total: {order.CalculateTotal()}");
+
+            
+            Console.WriteLine("\nTESTING INVALID QUANTITIES:");
+
+            try
             {
-                Console.WriteLine(
-                    $"Initial cheese quantity: {cheeseStock.Quantity}"
-                );
-
-                // Test Increase()
-                cheeseStock.Increase(5m);
-
-                Console.WriteLine(
-                    $"After Increase(5): {cheeseStock.Quantity}"
-                );
-
-                // Test Decrease()
-                cheeseStock.Decrease(3m);
-
-                Console.WriteLine(
-                    $"After Decrease(3): {cheeseStock.Quantity}"
-                );
-
-                // Test IsLowStock()
-                Console.WriteLine(
-                    $"Is cheese stock low? {cheeseStock.IsLowStock()}"
-                );
+                order.AddItem(soup, 0);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"Quantity 0: {ex.Message}");
             }
 
-
-            // ==========================================
-            // 5. TEST USE STOCK
-            // ==========================================
-
-            Console.WriteLine("\n===== USE STOCK TEST =====");
-
-            storage.UseStock(cheese, 4m);
-
-            Console.WriteLine("Used 4 kg of cheese.");
-
-            foreach (StockItem item in storage.StockItems)
+            try
             {
-                Console.WriteLine(
-                    $"{item.Ingridient.Name}: " +
-                    $"{item.Quantity} {item.Ingridient.Unit}"
-                );
+                order.AddItem(soup, -2);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"Quantity -2: {ex.Message}");
             }
 
+            
+            Console.WriteLine("\nCANCELING ORDER...");
 
-            // ==========================================
-            // 6. TEST LOW STOCK ITEMS
-            // ==========================================
+            order.Cancel();
 
-            Console.WriteLine("\n===== LOW STOCK ITEMS =====");
+            Console.WriteLine($"Order status: {order.Status}");
 
-            var lowStockItems = storage.GetLowStockItems();
-
-            foreach (StockItem item in lowStockItems)
-            {
-                Console.WriteLine(
-                    $"{item.Ingridient.Name}: " +
-                    $"{item.Quantity} {item.Ingridient.Unit}"
-                );
-            }
-
-
-            // ==========================================
-            // 7. TEST STOCK VALUE
-            // ==========================================
-
-            Console.WriteLine("\n===== STOCK VALUE =====");
-
-            Console.WriteLine(
-                $"Total stock value: {storage.GetStockValue()} PLN"
-            );
-
-
-            // ==========================================
-            // 8. FINISH
-            // ==========================================
-
-            Console.WriteLine("\n===== ALL TESTS FINISHED =====");
+            Console.WriteLine("\nDISPLAY MENU");
+            restaurant.AddDish(soup);
+            restaurant.AddDish(salad);
+            restaurant.GetAvailableDishes();
         }
     }
 }

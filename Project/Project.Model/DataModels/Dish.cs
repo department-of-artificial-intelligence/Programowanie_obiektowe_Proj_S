@@ -40,7 +40,25 @@ namespace Project.Model
         }
         public decimal CalculateCost()
         {
-            return Ingridients.Sum<DishIngridient>(i => i.Ingridient.UnitPrice * i.Quantity);
+            return Ingridients.Sum(i => i.Ingridient.UnitPrice * i.Quantity);
+        }
+
+        public override string ToString()
+        {
+            
+            var ingredientsList = string.Join("\n  - ", Ingridients.Select(i => $"{i.Ingridient.Name} ({i.Quantity} {i.Ingridient.Unit})"));
+            decimal cost = CalculateCost();
+
+            return
+$@"----------------------------------------
+Danie: {Name} (ID: {Id})
+Opis: {Description}
+Cena sprzedaży: {Price}
+Koszt własny: {cost}
+Wielkość porcji: {PortionSize}
+Dostępność: {(IsAvailable ? "Dostępne" : "Niedostępne")}
+Składniki:
+  - {ingredientsList}";
         }
 
     }

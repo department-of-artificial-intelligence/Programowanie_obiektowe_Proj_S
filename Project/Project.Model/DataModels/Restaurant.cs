@@ -70,6 +70,11 @@ namespace Project.Model
 
         // TODO!!!
         // CreateOrder(customer, items)
-        // GetAvailableDishes()
+        public void GetAvailableDishes()
+        {
+            foreach (Dish dish in Menu) {
+                Console.WriteLine(dish);
+            }
+        }
     }
 }
