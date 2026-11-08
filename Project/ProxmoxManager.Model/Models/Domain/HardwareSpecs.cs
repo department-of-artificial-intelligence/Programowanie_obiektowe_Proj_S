@@ -1,13 +1,13 @@
-namespace ProxmoxManager.Model.Models;
+namespace ProxmoxManager.Model.Models.Domain;
 
 public class HardwareSpecs
 {
     public int Id { get; private set; }
-    public string CpuModel { get; private set; } = string.Empty;
+    public string CpuModel { get; private set; }
     public int TotalCores { get; private set; }
     public int TotalThreads { get; private set; }
     public int TotalRamMb { get; private set; }
-    public string KernelVersion { get; private set; } = string.Empty;
+    public string KernelVersion { get; private set; }
     public long UptimeSeconds { get; private set; }
 
     public HardwareSpecs()

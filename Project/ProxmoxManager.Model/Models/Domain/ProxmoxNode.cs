@@ -1,12 +1,10 @@
-using System.Linq;
 using ProxmoxManager.Model.Interfaces;
 
-namespace ProxmoxManager.Model.Models;
+namespace ProxmoxManager.Model.Models.Domain;
 public class ProxmoxNode : IResourceAllocatable,IMonitorable
 {
     public int Id { get; private set; }
     public string NodeName { get; private set; } = string.Empty;
-    public string IpAddress { get; private set; } = string.Empty;
     public bool IsConnected { get; private set; }
     public HardwareSpecs Hardware { get; private set; } = new ();
     public List<StoragePools> StoragePools { get; private set; } = [];
@@ -44,5 +42,15 @@ public class ProxmoxNode : IResourceAllocatable,IMonitorable
     public void UpdateStoragePools(int totalCapacityGb, int usedCapacityGb)
     {
         StoragePools.ForEach(p => p.UpdateStoragePools(totalCapacityGb, usedCapacityGb));
+    }
+    public void AddStoragePool(StoragePools storage)
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+        StoragePools.Add(storage);
+    }
+    public void AddInstance(VirtualInstance instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        Instances.Add(instance);
     }
 }

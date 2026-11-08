@@ -1,9 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace ProxmoxManager.Model.Models;
+namespace ProxmoxManager.Model.Models.DTOs;
 
-public class ProxmoxNodeStatusDto
+public class StatusDto
 {
+    [JsonPropertyName("hostname")]
+    public string Hostname { get; set; } = string.Empty;
     [JsonPropertyName("systeminfo")]
     public SystemInfoDto? SystemInfo { get; set; }
     [JsonPropertyName("cpuinfo")]

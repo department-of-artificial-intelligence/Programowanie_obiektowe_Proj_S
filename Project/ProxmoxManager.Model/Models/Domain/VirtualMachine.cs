@@ -1,4 +1,4 @@
-namespace ProxmoxManager.Model.Models;
+namespace ProxmoxManager.Model.Models.Domain;
 
 public class VirtualMachine : VirtualInstance
 {
@@ -9,5 +9,10 @@ public class VirtualMachine : VirtualInstance
     {
         //Example overhead calculation for VMs
         return AllocatedRamMb * 0.15;
+    }
+    public void ConfigureVirtualMachine(bool enableQemuAgent, string mountedIsoFile)
+    {
+        EnableQemuAgent = enableQemuAgent;
+        MountedIsoFile = mountedIsoFile ?? string.Empty;
     }
 }

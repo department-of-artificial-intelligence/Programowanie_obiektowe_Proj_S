@@ -1,4 +1,4 @@
-namespace ProxmoxManager.Model.Models;
+namespace ProxmoxManager.Model.Models.Domain;
 
 public class StoragePools
 {
