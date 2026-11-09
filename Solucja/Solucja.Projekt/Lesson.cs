@@ -27,7 +27,7 @@ namespace Solucja.Projekt
         Student
     }
 
-    internal class Lesson
+    public class Lesson
     {
         public Subject Subject { get; set; }
         public DayOfWeek Day { get; set; }
