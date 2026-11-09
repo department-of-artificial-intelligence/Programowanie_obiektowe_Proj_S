@@ -5,14 +5,19 @@ public class BudgetStatistics {
     public BudgetStatistics() {
         Transactions = [];
     }
-    public BudgetStatistics(List<Transaction> transactions) {
+    public BudgetStatistics(IEnumerable<Transaction> transactions) {
         ArgumentNullException.ThrowIfNull(transactions, "List of transactions has to be initialized (can't be null)");
 
-        Transactions = transactions;
+        Transactions = transactions.ToList();
     }
     public BudgetStatistics(BudgetManager budgetManager) {
         ArgumentNullException.ThrowIfNull(budgetManager, "BudgetManager has to be initialized (can't be null)");
 
-        Transactions = budgetManager.Transactions;
+        Transactions = budgetManager.Transactions.ToList();
     }
+
+    //public decimal AVG()
+    //{
+    //    return Transactions.Average()
+    //}
 }

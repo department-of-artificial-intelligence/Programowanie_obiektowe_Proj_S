@@ -2,16 +2,19 @@
 
 public class BudgetManager {
     public decimal Balance { get; private set; }
-    public List<Transaction> Transactions { get; private set; }
+    //public List<Transaction> Transactions { get; private set; }
+    private List<Transaction> _transactions;
+
+    public IEnumerable<Transaction> Transactions { get { return _transactions; } }
 
     public BudgetManager() {
         Balance = 0m;
-        Transactions = [];
+        _transactions = [];
     }
     public BudgetManager(List<Transaction> transactions) {
         ArgumentNullException.ThrowIfNull(transactions, "List of transactions has to be initialized (can't be null)");
 
-        Transactions = [.. transactions];
+        _transactions = [.. transactions];
         Balance = transactions.Where(x => x.Type == TransactionType.Income).Sum(x => x.Amount) - transactions.Where(x => x.Type == TransactionType.Expense).Sum(x => x.Amount);
     }
 
@@ -20,14 +23,14 @@ public class BudgetManager {
 
         if(transaction.Type == TransactionType.Income) {
             Balance += transaction.Amount;
-            Transactions.Add(transaction);
+            _transactions.Add(transaction);
         }
         else {
             if(Balance - transaction.Amount < 0)
                 throw new InvalidOperationException("You can't do this operation because you don't have enough money");
             else {
                 Balance -= transaction.Amount;
-                Transactions.Add(transaction);
+                _transactions.Add(transaction);
             }
         }
     }
