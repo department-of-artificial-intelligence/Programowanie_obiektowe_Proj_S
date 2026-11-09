@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjektMD
+namespace silownia.model
 {
     public class Trener: Osoba
     {
@@ -18,4 +18,3 @@ namespace ProjektMD
         }
     }
 }
-
