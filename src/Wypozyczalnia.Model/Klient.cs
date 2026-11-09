@@ -1,6 +1,6 @@
 ﻿namespace Wypozyczalnia.Model;
 
-public class Klient {
+public class Klient : IPrintable{
     public int Id { get; set; }
     public string Imie { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

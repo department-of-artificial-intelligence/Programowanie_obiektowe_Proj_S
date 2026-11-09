@@ -1,6 +1,6 @@
 ﻿namespace Wypozyczalnia.Model;
 
-public class Rower : IZmienStatus {
+public class Rower : IZmienStatus, IPrintable {
     public int Id { get; set; }
     public string Nazwa { get; set; } = string.Empty;
     public StatusRoweru Status { get; private set; } = StatusRoweru.Dostepny;
