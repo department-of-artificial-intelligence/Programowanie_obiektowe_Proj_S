@@ -1,0 +1,12 @@
+namespace Korepetycje.Models;
+
+public class Uczen : Osoba
+{
+    public string PoziomNauczania {get; private set;}
+
+    public Uczen(int id, string imie, string nazwisko, string email, string poziomNauczania): base(id, imie, nazwisko, email)
+    {
+        PoziomNauczania = poziomNauczania;
+    }
+
+}
