@@ -12,9 +12,4 @@ public static class Extensions
         }
         return sum / list.Count;
     }
-
-    public static double ObliczSredniaUcznia(this Uczen uczen)
-    {
-        return uczen.Oceny.ObliczSrednia();
-    }
 }

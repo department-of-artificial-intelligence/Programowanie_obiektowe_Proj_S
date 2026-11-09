@@ -1,5 +1,4 @@
 ﻿using Korepetycje.Models;
-using Korepetycje.Extensions;
 
 
 public class Program()
@@ -14,7 +13,7 @@ public class Program()
         uczen.DodajOcene(5, "Kartkówka z matematyki");
         uczen.DodajOcene(5, "Kartkówka z matematyki");
         
-        double wynik = uczen.ObliczSredniaUcznia();
+        double wynik = uczen.ObliczSrednia();
 
         Console.WriteLine($"wynik: {wynik}");
     }

@@ -1,3 +1,5 @@
+using Korepetycje.Extensions;
+
 namespace Korepetycje.Models;
 
 public class Uczen : Osoba
@@ -18,5 +20,10 @@ public class Uczen : Osoba
     {
         Ocena ocena = new Ocena(num, txt);
         Oceny.Add(ocena);
+    }
+
+    public double ObliczSrednia()
+    {
+        return Oceny.ObliczSrednia();
     }
 }

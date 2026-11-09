@@ -16,13 +16,23 @@ public class Lekcja
     public Przedmiot Przedmiot { get; private set;}
     public IReadOnlyList<Uczen> Uczniowie => _uczniowie;
 
-    public Lekcja(int id, DateTime dstart, int czas, StatusLekcji status, decimal cena)
+    public Lekcja(int id, DateTime dstart, int czas, StatusLekcji status, decimal cena, Korepetytor korepetytor, Przedmiot przedmiot, List<Uczen> uczniowie)
     {
+        if(uczniowie.Count <= 0)
+        {
+            throw new ArgumentException("Liczba uczniów musi być większa od 0!");
+        }
+
         Id = id;
         DataStart = dstart;
         CzasTrwaniaMin = czas;
         Status = status;
         Cena = cena;
+
+        Korepetytor = korepetytor;
+        Przedmiot = przedmiot;
+        _uczniowie = uczniowie;
+
     }
 
     public void Odwolaj()
