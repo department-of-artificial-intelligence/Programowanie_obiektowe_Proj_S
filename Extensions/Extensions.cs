@@ -1,4 +1,5 @@
-﻿namespace Korepetycje.Extensions;
+﻿using Korepetycje.Models;
+namespace Korepetycje.Extensions;
 
 public static class Extensions
 {
@@ -14,7 +15,6 @@ public static class Extensions
 
     public static double ObliczSredniaUcznia(this Uczen uczen)
     {
-        double sum = 0;
-        uczen.Oceny.ObliczSrednia();
+        return uczen.Oceny.ObliczSrednia();
     }
 }

@@ -12,6 +12,11 @@ public class Uczen : Osoba
 
     public void DodajOcene(Ocena ocena)
     {
-        _oceny.Add(ocena);
+        Oceny.Add(ocena);
+    }
+    public void DodajOcene(int num, string txt)
+    {
+        Ocena ocena = new Ocena(num, txt);
+        Oceny.Add(ocena);
     }
 }

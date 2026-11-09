@@ -2,10 +2,10 @@
 
 public class Ocena
 {
-    public int OcenaNumeryczna { get; private set; }
+    public double OcenaNumeryczna { get; private set; }
     public string OpisOceny { get; private set; }
 
-    public Ocena(int ocena, string opis)
+    public Ocena(double ocena, string opis)
     {
         if(ocena <= 0 || ocena > 5)
         {
