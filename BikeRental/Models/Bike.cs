@@ -14,6 +14,10 @@ public class Bike
         PricePerHour = pricePerHour;
     }
 
+    public virtual decimal GetHourlyPrice() { return PricePerHour; }
+
+
+
     public void Rent()
     {
         if (!IsAvailable)
