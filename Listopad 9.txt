@@ -1,0 +1,10 @@
+metody rozszerzajce
+
+public static extensions
+public static void compute<I> (this List<T> list)
+jest statyczna i metoda w niej tez 
+kluczowe jest "this", compute rozszerza liste
+
+mozemy to dokleic przez using project.extensions
+
+public static void print<T>(this IPrintable printer)
