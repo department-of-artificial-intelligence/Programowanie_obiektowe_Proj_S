@@ -14,4 +14,23 @@ public class Korepetytor : Osoba
         StawkaGodzinowa = stawkaGodzinowa;
     }
 
+    public bool DodajTermin(TerminDostepnosci termin)
+    {
+        if(termin != null)
+        {
+            _terminy.Add(termin);
+            return true;
+        }
+        return false;
+    }
+
+    public bool UsunTermin(TerminDostepnosci termin)
+    {
+        if(termin != null && _terminy.Contains(termin))
+        {
+            _terminy.Remove(termin);
+            return true;
+        }
+        return false;
+    }
 }
