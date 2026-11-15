@@ -4,8 +4,9 @@ public class Korepetytor : Osoba
 {
     private readonly List<TerminDostepnosci> _terminy = new();
     public decimal StawkaGodzinowa { get; private set;}
+    public static int _nastepneId = 1;
 
-    public Korepetytor(int id, string imie, string nazwisko, string email, decimal stawkaGodzinowa): base(id, imie, nazwisko, email)
+    public Korepetytor(string imie, string nazwisko, string email, decimal stawkaGodzinowa): base(_nastepneId++, imie, nazwisko, email)
     {
         if(stawkaGodzinowa < 0)
         {
