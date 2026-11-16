@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Models
+{
+    public class Expense
+    {
+        public decimal Amount { get; set; }
+        public DateTime Date { get; set; }
+        public bool IsRecurring { get; set; }
+        public Category Category { get; set; }
+    }
+}
