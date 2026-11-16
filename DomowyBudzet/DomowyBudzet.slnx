@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="DomowyBudzet.App/DomowyBudzet.App.csproj" />
   <Project Path="DomowyBudzet.Model/DomowyBudzet.Model.csproj" />
+  <Project Path="DomowyBudzet.Service/DomowyBudzet.Service.csproj" Id="b0f1caa6-525a-4437-bf82-72f81c168ec6" />
+  <Project Path="DomowyBudzet.Tests/DomowyBudzet.Tests.csproj" Id="84062c3a-4e21-4025-afdf-a54439014435" />
 </Solution>

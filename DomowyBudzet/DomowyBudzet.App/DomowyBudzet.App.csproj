@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DomowyBudzet.Model\DomowyBudzet.Model.csproj" />
+    <ProjectReference Include="..\DomowyBudzet.Service\DomowyBudzet.Service.csproj" />
   </ItemGroup>
 
 </Project>

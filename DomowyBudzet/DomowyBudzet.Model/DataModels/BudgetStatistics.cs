@@ -16,8 +16,28 @@ public class BudgetStatistics {
         Transactions = budgetManager.Transactions;
     }
 
-    //public decimal AVG()
-    //{
-    //    return Transactions.Average()
-    //}
+    public decimal SumByCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
+
+        return Transactions.Where(x => x.Category.Type == category.Type).Sum(x => x.Amount);
+    }
+    public decimal AvgByCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
+
+        return Transactions.Where(x => x.Category.Type == category.Type).Average(x => x.Amount);
+    }
+    public decimal MaxByCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
+
+        return Transactions.Where(x => x.Category.Type == category.Type).Max(x => x.Amount);
+    }
+    public decimal MinByCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
+
+        return Transactions.Where(x => x.Category.Type == category.Type).Min(x => x.Amount);
+    }
 }
