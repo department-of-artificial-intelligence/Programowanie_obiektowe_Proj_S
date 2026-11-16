@@ -1,10 +1,9 @@
 ﻿namespace Project
 {
-    internal class Program
+    internal class Project
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-        }
+         
     }
 }
