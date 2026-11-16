@@ -6,7 +6,10 @@ public class Lekcja
 {
     private readonly List<Uczen> _uczniowie = new();
 
-    public int Id {get; private set;}
+    private static int nastepneId = 1;
+    public static int NastepneId { get => nastepneId; set => nastepneId = value; }
+
+    public int Id { get; set;}
     public DateTime DataStart {get; private set;}
     public int CzasTrwaniaMin { get; private set;}
     public StatusLekcji Status { get; private set;}
@@ -16,14 +19,15 @@ public class Lekcja
     public Przedmiot Przedmiot { get; private set;}
     public IReadOnlyList<Uczen> Uczniowie => _uczniowie;
 
-    public Lekcja(int id, DateTime dstart, int czas, StatusLekcji status, decimal cena, Korepetytor korepetytor, Przedmiot przedmiot, List<Uczen> uczniowie)
+
+    public Lekcja(DateTime dstart, int czas, StatusLekcji status, decimal cena, Korepetytor korepetytor, Przedmiot przedmiot, List<Uczen> uczniowie)
     {
         if(uczniowie.Count <= 0)
         {
             throw new ArgumentException("Liczba uczniów musi być większa od 0!");
         }
 
-        Id = id;
+        Id = NastepneId++;
         DataStart = dstart;
         CzasTrwaniaMin = czas;
         Status = status;

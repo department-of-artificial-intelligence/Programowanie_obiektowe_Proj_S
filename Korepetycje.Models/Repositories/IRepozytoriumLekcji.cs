@@ -8,4 +8,10 @@ public interface IRepozytoriumLekcji
     Lekcja? Pobierz(int id);
     IEnumerable<Lekcja> PobierzWszystkie();
     void Usun(Lekcja lekcja);
+
+    void Usun(DateTime data);
+
+    Lekcja? ZnajdzPoDacie(DateTime data);
+    bool CzyIstnieje(Lekcja lekcja);
+
 }

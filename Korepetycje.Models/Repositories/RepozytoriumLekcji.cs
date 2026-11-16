@@ -11,4 +11,26 @@ public class RepozytoriumLekcji : IRepozytoriumLekcji
 
     public IEnumerable<Lekcja> PobierzWszystkie() => _lekcje.ToList();
     public void Usun(Lekcja lekcja) => _lekcje.Remove(lekcja);
+    public void Usun(DateTime data)
+    {
+        Lekcja? lekcja = _lekcje.FirstOrDefault(l => l.DataStart == data);
+        if(lekcja != null)
+        {
+            _lekcje.Remove(lekcja);
+        }
+    }
+
+    public Lekcja? ZnajdzPoDacie(DateTime data)
+    {
+        return _lekcje.FirstOrDefault(l => l.DataStart == data);
+    }
+
+    public bool CzyIstnieje(Lekcja lekcja)
+    {
+        if (_lekcje.Contains(lekcja))
+        {
+            return true;
+        }
+        return false;
+    }
 }
