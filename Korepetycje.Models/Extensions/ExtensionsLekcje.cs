@@ -1,7 +1,7 @@
-using Korepetycje.Models;
-using Korepetycje.Enums;
+using Korepetycje.Models.Models;
+using Korepetycje.Models.Enums;
 
-namespace Korepetycje.Extensions;
+namespace Korepetycje.Models.Extensions;
 
 public static class ExtensionsLekcje
 {

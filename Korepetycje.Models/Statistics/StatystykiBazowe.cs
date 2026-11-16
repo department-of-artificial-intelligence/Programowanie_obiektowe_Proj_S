@@ -1,7 +1,7 @@
-using Korepetycje.Models;
-using Korepetycje.Repositories;
+using Korepetycje.Models.Models;
+using Korepetycje.Models.Repositories;
 
-namespace Korepetycje.Statistics;
+namespace Korepetycje.Models.Statistics;
 
 public abstract class StatystykiBazowe
 {

@@ -1,5 +1,5 @@
-﻿using Korepetycje.Models;
-namespace Korepetycje.Extensions;
+﻿using Korepetycje.Models.Models;
+namespace Korepetycje.Models.Extensions;
 
 public static class Extensions
 {

@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,5 +7,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Korepetycje.Models/Korepetycje.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Korepetycje.Models/**/*.cs" />
+  </ItemGroup>
 
 </Project>

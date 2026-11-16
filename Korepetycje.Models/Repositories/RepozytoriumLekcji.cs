@@ -1,6 +1,6 @@
-using Korepetycje.Models;
+using Korepetycje.Models.Models;
 
-namespace Korepetycje.Repositories;
+namespace Korepetycje.Models.Repositories;
 
 public class RepozytoriumLekcji : IRepozytoriumLekcji
 {

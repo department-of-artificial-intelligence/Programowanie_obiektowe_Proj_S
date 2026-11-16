@@ -1,6 +1,6 @@
-using Korepetycje.Enums;
+using Korepetycje.Models.Enums;
 
-namespace Korepetycje.Statistics;
+namespace Korepetycje.Models.Statistics;
 
 public interface IStatystykiProste
 {

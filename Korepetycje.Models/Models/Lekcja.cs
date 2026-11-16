@@ -1,6 +1,6 @@
-using Korepetycje.Enums;
+using Korepetycje.Models.Enums;
 
-namespace Korepetycje.Models;
+namespace Korepetycje.Models.Models;
 
 public class Lekcja
 {

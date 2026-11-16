@@ -1,8 +1,8 @@
-using Korepetycje.Enums;
-using Korepetycje.Extensions;
-using Korepetycje.Repositories;
+using Korepetycje.Models.Enums;
+using Korepetycje.Models.Extensions;
+using Korepetycje.Models.Repositories;
 
-namespace Korepetycje.Statistics;
+namespace Korepetycje.Models.Statistics;
 
 public class StatystykiProste : StatystykiBazowe, IStatystykiProste
 {

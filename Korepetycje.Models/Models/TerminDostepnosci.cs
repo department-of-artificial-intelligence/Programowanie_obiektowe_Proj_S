@@ -1,4 +1,4 @@
-namespace Korepetycje.Models;
+namespace Korepetycje.Models.Models;
 
 public class TerminDostepnosci
 {

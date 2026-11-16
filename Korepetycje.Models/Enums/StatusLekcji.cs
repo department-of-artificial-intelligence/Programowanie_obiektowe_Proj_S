@@ -1,4 +1,4 @@
-namespace Korepetycje.Enums;
+namespace Korepetycje.Models.Enums;
 
 public enum StatusLekcji
 {
