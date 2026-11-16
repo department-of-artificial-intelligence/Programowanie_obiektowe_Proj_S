@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shelter.Model", "Shelter.Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shelter.ConsoleApp", "Shelter.Console\Shelter.ConsoleApp.csproj", "{9661ED7B-1BEE-4F67-8E92-E4FDF3D92CF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shelter.Services", "Shelter.Services\Shelter.Services.csproj", "{8F276729-E80D-4F0E-9BB4-F78064A62CF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shelter.Tests", "Shelter.Tests\Shelter.Tests.csproj", "{808B76C6-05F6-4B2D-AE90-CDA83F6AB542}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{9661ED7B-1BEE-4F67-8E92-E4FDF3D92CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9661ED7B-1BEE-4F67-8E92-E4FDF3D92CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9661ED7B-1BEE-4F67-8E92-E4FDF3D92CF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F276729-E80D-4F0E-9BB4-F78064A62CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F276729-E80D-4F0E-9BB4-F78064A62CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F276729-E80D-4F0E-9BB4-F78064A62CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F276729-E80D-4F0E-9BB4-F78064A62CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{808B76C6-05F6-4B2D-AE90-CDA83F6AB542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{808B76C6-05F6-4B2D-AE90-CDA83F6AB542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{808B76C6-05F6-4B2D-AE90-CDA83F6AB542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{808B76C6-05F6-4B2D-AE90-CDA83F6AB542}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
