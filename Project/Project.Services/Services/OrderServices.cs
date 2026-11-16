@@ -47,9 +47,10 @@ namespace Project.Services.Services
 
             try
             {
+                StorageServices storageServices = new StorageServices();
                 foreach (var ingridientItem in ingridients)
                 {
-                    storage.UseStock(ingridientItem.ingridient, ingridientItem.quintity);
+                    storageServices.UseStock(storage, ingridientItem.ingridient, ingridientItem.quintity);
                 }
             }
             catch (Exception e)

@@ -200,6 +200,17 @@ namespace Project
             }
 
             Console.WriteLine("\n=== ALL TESTS FINISHED ===");
+
+
+            StorageServices storageServices = new StorageServices();
+            Ingridient cheese2 = new Ingridient(
+                2, "Cheese2", "kg", 30m);
+            storageServices.AddStock(storage, cheese2, 20);
+            foreach (var item in storage.StockItems)
+            {
+                Console.WriteLine(item.Ingridient.Name);
+            }
+
         }
     }
 }
