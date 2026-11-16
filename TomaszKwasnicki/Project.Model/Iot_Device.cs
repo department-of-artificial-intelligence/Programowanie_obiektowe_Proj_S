@@ -1,4 +1,4 @@
-﻿namespace MyHome.Model
+﻿namespace Project.Model
 {
     public abstract class Iot_Device
     {

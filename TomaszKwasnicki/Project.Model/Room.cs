@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MyHome.Model
+namespace Project.Model
 {
     public class Room
     {
