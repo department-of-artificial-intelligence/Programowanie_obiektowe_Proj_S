@@ -8,5 +8,7 @@
         public string DoctorName { get; set; } = string.Empty;
         public DateTime IssueDate { get; set; }
         public bool IsFulfilled { get; set; }
+
+        public Sale? Sale { get; set; }
     }
 }

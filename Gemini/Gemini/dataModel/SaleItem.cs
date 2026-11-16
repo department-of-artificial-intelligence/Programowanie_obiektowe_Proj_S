@@ -7,5 +7,7 @@
         public int MedicineId { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+
+        public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
     }
 }
