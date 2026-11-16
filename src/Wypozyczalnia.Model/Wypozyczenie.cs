@@ -8,23 +8,8 @@ namespace Wypozyczalnia.Model;
 
 public class Wypozyczenie {
     public int Id { get; set; }
-    public Klient Klient { get; set; }
-    public Rower Rower { get; set; }
+    public Klient Klient { get; set; } = null!;
+    public Rower Rower { get; set; } = null!;
     public DateTime DataStart {  get; set; }
     public DateTime DataKonca {  get; set; }
-
-    public Wypozyczenie(Klient klient, Rower rower, DateTime dataStart, DateTime dataKonca) {
-        Klient = klient;
-        Rower = rower;
-        DataStart = dataStart;
-        DataKonca = dataKonca;
-        Rower.ZmienStatus(StatusRoweru.Wypozyczony);
-    }
-    public void Przedluz(int liczbaGodzin) {
-        DataKonca = DataKonca.AddHours(liczbaGodzin);
-    }
-    public void Zakoncz() {
-        Rower.ZmienStatus(StatusRoweru.Dostepny);
-        DataKonca = DateTime.Now;
-    }
 }
