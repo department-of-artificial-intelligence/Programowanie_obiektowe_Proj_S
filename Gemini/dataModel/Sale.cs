@@ -8,5 +8,7 @@
         public DateTime SaleDate { get; set; } = DateTime.UtcNow;
         public decimal TotalAmount { get; set; }
         public int? PrescriptionId { get; set; }
+
+        public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
     }
 }

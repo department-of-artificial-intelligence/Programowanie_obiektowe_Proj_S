@@ -1,4 +1,4 @@
-﻿namespace Gemini.dataModel
+﻿ namespace Gemini.dataModel
 {
     public class User
     {

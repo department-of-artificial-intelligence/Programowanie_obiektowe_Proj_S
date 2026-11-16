@@ -11,7 +11,6 @@
         public bool RequiresPrescription { get; set; }
         public int CategoryId { get; set; }
 
-        public int CategoryId { get; set; }
         public Category? Category { get; set; }
         
         public ICollection<PharmacyInventory> Inventories { get; set; } = new List<PharmacyInventory>();
