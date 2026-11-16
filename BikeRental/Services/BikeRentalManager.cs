@@ -28,9 +28,16 @@ public class BikeRentalManager
         return customer;
     }
 
-    public Bike AddBike(string model, decimal pricePerHour)
+    public Bike AddBike(string model, decimal pricePerHour, string type)
     {
-        var bike = new Bike(_bikes.Count + 1, model, pricePerHour);
+        int id = _bikes.Count + 1;
+        Bike bike = type.ToLower() switch
+        {
+            "city" => new CityBike(id, model, pricePerHour),
+            "mountain" => new MountainBike(id, model, pricePerHour),
+            "electric" => new ElectricBike(id, model, pricePerHour),
+            _ => throw new InvalidOperationException("Unknown bike type. ")
+        };
         _bikes.Add(bike);
         return bike;
     }

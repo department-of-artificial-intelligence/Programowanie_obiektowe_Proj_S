@@ -1,4 +1,5 @@
 using BikeRental.Services;
+using System.Linq;
 
 var manager = new BikeRentalManager(new HourlyRentalPriceCalculator());
 
@@ -8,9 +9,9 @@ var parkStation = manager.AddStation("City Park");
 manager.AddCustomer("Anna Kowalska", "anna@example.com");
 manager.AddCustomer("Jan Nowak", "jan@example.com");
 
-var bike1 = manager.AddBike("City Bike", 5.00m);
-var bike2 = manager.AddBike("Mountain Bike", 8.00m);
-var bike3 = manager.AddBike("Trekking Bike", 7.00m);
+var bike1 = manager.AddBike("City Bike", 5.00m, "city");
+var bike2 = manager.AddBike("Mountain Bike", 8.00m, "moutain");
+var bike3 = manager.AddBike("Trekking Bike", 7.00m, "electric");
 
 manager.AddBikeToStation(bike1.Id, centralStation.Id);
 manager.AddBikeToStation(bike2.Id, centralStation.Id);
@@ -27,6 +28,7 @@ while (true)
     Console.WriteLine("5. Rent a bike");
     Console.WriteLine("6. Return a bike");
     Console.WriteLine("7. Show rentals");
+    Console.WriteLine("8. Show simple statistics");
     Console.WriteLine("0. Exit");
     Console.Write("Choose option: ");
 
@@ -57,6 +59,9 @@ while (true)
             case "7":
                 ShowRentals();
                 break;
+            case "8":
+                ShowStatistics();
+                break;
             case "0":
                 return;
             default:
@@ -67,6 +72,32 @@ while (true)
     catch (Exception ex)
     {
         Console.WriteLine($"Error: {ex.Message}");
+    }
+}
+
+void ShowStatistics()
+{
+    var bikes = manager.Bikes;
+    var rentals = manager.Rentals;
+    int totalBikes = bikes.Count;
+    int availableBikes = bikes.Count(b => b.IsAvailable);
+    int rentedBikes = bikes.Count(b=> !b.IsAvailable);
+    int activeRentals = rentals.Count(r => r.IsActive);
+    decimal averagePrice = bikes.Any() ? bikes.Average(b => b.GetHourlyPrice()) : 0m;
+    decimal totalIncome = rentals
+        .Where(r => !r.IsActive)
+        .Sum(r => r.TotalPrice);
+    var MostExpensiveBike = bikes.OrderByDescending(b=>b.GetHourlyPrice()).FirstOrDefault();
+    Console.WriteLine("\n===== STATISTICS =====");
+    Console.WriteLine($"Total bikes: {totalBikes}");
+    Console.WriteLine($"Available bikes: {availableBikes}");
+    Console.WriteLine($"Rented bikes: {rentedBikes}");
+    Console.WriteLine($"Active Rentals: {activeRentals}");
+    Console.WriteLine($"Average hourly price: {averagePrice:F2} PLN");
+    Console.WriteLine($"Total income: {totalIncome:F2} PLN");
+    if(MostExpensiveBike != null)
+    {
+        Console.WriteLine($"Most Expencive bike: {MostExpensiveBike.Model}" + $"({MostExpensiveBike.GetHourlyPrice()} PLN/hour)");
     }
 }
 
@@ -83,7 +114,7 @@ void ShowStations()
 
         foreach (var bike in station.Bikes)
         {
-            Console.WriteLine($"   Bike ID: {bike.Id}, {bike.Model}, {bike.PricePerHour} PLN/hour");
+            Console.WriteLine($"   Bike ID: {bike.Id}, {bike.Model}, " + $"{bike.GetType().Name}, {bike.GetHourlyPrice()} PLN/hour");
         }
     }
 }
@@ -113,6 +144,18 @@ void AddBike()
     string model = Console.ReadLine() ?? "";
     Console.Write("Price per hour (PLN): ");
     decimal price = decimal.Parse(Console.ReadLine() ?? "0");
+    Console.WriteLine("Choose bike type: ");
+    Console.WriteLine("1. City bike");
+    Console.WriteLine("2. Moutain bike");
+    Console.WriteLine("3. Electric bike");
+    string typeChoice = Console.ReadLine() ?? "";
+    string type = typeChoice switch
+    {
+        "1" => "city",
+        "2" => "moutain",
+        "3" => "electric",
+        _ => throw new InvalidOperationException("Invalid bike type"),
+    };
 
     Console.WriteLine("Available stations:");
     foreach (var station in manager.Stations)
@@ -121,7 +164,7 @@ void AddBike()
     Console.Write("Station ID: ");
     int stationId = int.Parse(Console.ReadLine() ?? "0");
 
-    var bike = manager.AddBike(model, price);
+    var bike = manager.AddBike(model, price, type);
     manager.AddBikeToStation(bike.Id, stationId);
     Console.WriteLine($"Bike added. ID: {bike.Id}");
 }

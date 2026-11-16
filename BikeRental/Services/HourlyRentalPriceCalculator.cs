@@ -9,6 +9,6 @@ public class HourlyRentalPriceCalculator : IRentalPriceCalculator
     {
 
         int hours = Math.Max(1, (int)Math.Ceiling(duration.TotalHours));
-        return hours * bike.PricePerHour;
+        return hours * bike.GetHourlyPrice();
     }
 }
