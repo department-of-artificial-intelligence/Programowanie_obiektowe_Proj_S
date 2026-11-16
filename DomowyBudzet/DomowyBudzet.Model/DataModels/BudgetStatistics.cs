@@ -1,6 +1,6 @@
 ﻿namespace DomowyBudzet.Model.DataModels;
 public class BudgetStatistics {
-    private List<Transaction> Transactions { get; set; }
+    private IEnumerable<Transaction> Transactions { get; set; }
 
     public BudgetStatistics() {
         Transactions = [];
@@ -8,12 +8,12 @@ public class BudgetStatistics {
     public BudgetStatistics(IEnumerable<Transaction> transactions) {
         ArgumentNullException.ThrowIfNull(transactions, "List of transactions has to be initialized (can't be null)");
 
-        Transactions = transactions.ToList();
+        Transactions = transactions;
     }
     public BudgetStatistics(BudgetManager budgetManager) {
         ArgumentNullException.ThrowIfNull(budgetManager, "BudgetManager has to be initialized (can't be null)");
 
-        Transactions = budgetManager.Transactions.ToList();
+        Transactions = budgetManager.Transactions;
     }
 
     //public decimal AVG()
