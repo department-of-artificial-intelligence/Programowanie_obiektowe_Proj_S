@@ -8,15 +8,31 @@ namespace Project1.Model
 {
     internal class Car
     {
+        public int Id { get; private set; }
         public string Model { get; set; }
         public int EnginePower { get; set; }
-        public int Price { get; set; }
-        public bool Status { get; private set; }
-        public Car(string model, int enginePower, int price, bool status) {
+        public decimal PricePerHour { get; set; }
+        public bool IsAvailable { get; private set; }
+        public Car(int id, string model, int enginePower, decimal pricePerHour, bool isAvailable) {
+            Id = id;
             Model = model;
             EnginePower = enginePower;
-            Price = price;
-            Status = status;
+            PricePerHour = pricePerHour;
+            IsAvailable = true;
+        }
+        public void Rent() {
+            if (!IsAvailable)
+            {
+                throw new Exception("Car is rented.");
+            }
+        }
+        public void DisplayInfo()
+        {
+            Console.WriteLine($"Id: {Id}");
+            Console.WriteLine($"Model: {Model}");
+            Console.WriteLine($"EnginePower: {EnginePower}");
+            Console.WriteLine($"PricePerHour: {PricePerHour}");
+            Console.WriteLine($"IsAvailable: {IsAvailable}");
         }
         
     }
