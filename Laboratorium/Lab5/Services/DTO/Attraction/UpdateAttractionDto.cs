@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.DTO.Attraction
 {
-    internal class UpdateCustomerDto
+    internal class UpdateAttractionDto
     {
     }
 }
