@@ -13,6 +13,14 @@ namespace ComputerServiceNetwork.dataModel {
         public string DiagnoseDevice(Device device) {
             return $"Technician {FullName} diagnosed {device.Model}: {device.IssueDescription}";
             }
+
+        public override string GetRoleDescription() => $"Technician ({Specialization})";
+
+        public override string GetContactInfo()
+        {
+            string status = IsBusy ? "Busy" : "Available";
+            return $"[Tech] {base.GetContactInfo()} | Spec: {Specialization} ({status})";
         }
+    }
     }
 

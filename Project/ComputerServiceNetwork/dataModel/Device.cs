@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComputerServiceNetwork.dataModel {
     public class Device {
+        public int Id { get; set; }
         public string SerialNumber { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public string IssueDescription { get; set; } = string.Empty;

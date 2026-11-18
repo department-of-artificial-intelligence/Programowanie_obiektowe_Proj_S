@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ComputerServiceNetwork.dataModel {
-    public class SparePart {
-        public int PartId { get; set; }
+    public class SparePart : IReportable {
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int QuantityInStock { get; set; }
@@ -18,5 +18,7 @@ namespace ComputerServiceNetwork.dataModel {
             }
             return false;
         }
+
+        public string GetReportLine() => $"Part #{Id}: {Name} - {Price} PLN (In stock: {QuantityInStock})";
     }
 }
