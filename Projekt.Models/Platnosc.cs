@@ -1,30 +1,49 @@
+
 namespace Projekt.Models;
+
 using Projekt.Models.Enums;
 
 public class Platnosc
 {
-    public int Id { get; set;}
-    private static int NextId {get; set;} = 1;
+    private static int NextId = 1;
 
-    public TypPlatnosci PaymentMethod {get; set;}
+    public int Id { get; private set; }
 
-    public bool IsPaid { get; set;}
-    public decimal Amount {get; set;}
-    public DateTime PaymentDate {get; set;}
-    public string? Opis { get; set;}
+    public TypPlatnosci PaymentMethod { get; set; }
 
+    public decimal Amount { get; set; }
 
-    public Platnosc(TypPlatnosci paymentmethod, bool ispaid, decimal amount, DateTime pdate, string opis)
+    public DateTime PaymentDate { get; set; }
+
+    public string? Opis { get; set; }
+
+    public StatusPlatnosci PaymentStatus { get; set; }
+
+    public int LekcjaId { get; private set; }
+
+    public Lekcja Lekcja { get; private set; } = null!;
+
+    public Platnosc(
+        TypPlatnosci paymentMethod,
+        decimal amount,
+        Lekcja lekcja,
+        string? opis = null)
     {
-        if(amount <= 0)
-        {
-            throw new ArgumentException("Platnosc nie mozze byc rowna lub mniejsza od 0!");
-        }
+        if (amount <= 0)
+            throw new ArgumentException(
+                "Platnosc nie moze byc rowna lub mniejsza od 0!");
+
+        ArgumentNullException.ThrowIfNull(lekcja);
+
         Id = NextId++;
-        PaymentMethod = paymentmethod;
-        IsPaid = ispaid;
+
+        PaymentMethod = paymentMethod;
         Amount = amount;
-        PaymentDate = pdate;
-        Opis = opis ?? string.Empty;             
+        PaymentDate = DateTime.Now;
+        Opis = opis;
+        Lekcja = lekcja;
+        LekcjaId = lekcja.Id;
+
+        PaymentStatus = StatusPlatnosci.Oczekujaca;
     }
 }

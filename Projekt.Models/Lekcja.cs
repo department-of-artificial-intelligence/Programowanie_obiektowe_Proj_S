@@ -6,6 +6,7 @@ using Projekt.Models.Enums;
 public class Lekcja
 {
     public List<Uczen> Students { get; set;} = new();
+    public List<Platnosc> Payments {get; set;} = new();
 
     private static int NextId {get; set;} = 1;
     public int Id{ get; set;}
