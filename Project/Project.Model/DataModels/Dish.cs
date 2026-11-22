@@ -26,35 +26,17 @@ namespace Project.Model
             IsAvailable = isAvailable;
         }
 
-        public void ChangePrice(decimal price)
-        {
-            if (price <= 0)
-                throw new ArgumentOutOfRangeException(nameof(price), "must be > 0");
-            Price = price;
-        }
-
-        public void AddIngredient(DishIngridient ingridient)
-        {
-            ArgumentNullException.ThrowIfNull(ingridient, nameof(ingridient));
-            Ingridients.Add(ingridient);
-        }
-        public decimal CalculateCost()
-        {
-            return Ingridients.Sum(i => i.Ingridient.UnitPrice * i.Quantity);
-        }
-
         public override string ToString()
         {
             
             var ingredientsList = string.Join("\n  - ", Ingridients.Select(i => $"{i.Ingridient.Name} ({i.Quantity} {i.Ingridient.Unit})"));
-            decimal cost = CalculateCost();
+            
 
             return
 $@"----------------------------------------
 Danie: {Name} (ID: {Id})
 Opis: {Description}
 Cena sprzedaży: {Price}
-Koszt własny: {cost}
 Wielkość porcji: {PortionSize}
 Dostępność: {(IsAvailable ? "Dostępne" : "Niedostępne")}
 Składniki:

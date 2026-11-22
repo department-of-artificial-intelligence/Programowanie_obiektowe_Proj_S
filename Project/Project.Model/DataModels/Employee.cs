@@ -22,10 +22,6 @@ namespace Project.Model
             Salary = salary;
         }
 
-        public void ChnagePosition(string role)
-        {   
-            FirstName = role;
-        }
         
     }
 }
