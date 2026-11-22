@@ -1,5 +1,6 @@
 ﻿using Project.Model;
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services.Services
 {
-    public class DishService
+    public class DishService : IDishService
     {
         public void ChangePrice(Dish dish, decimal price)
         {

@@ -1,10 +1,11 @@
 ﻿
 
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class DishIngridientService
+    public class DishIngridientService: IDishIngridientService
     {
         public void ChangeQuantity(DishIngridient dishIngridient, decimal quintity)
         {

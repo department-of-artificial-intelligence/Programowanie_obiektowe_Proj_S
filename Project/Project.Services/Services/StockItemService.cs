@@ -1,10 +1,11 @@
 ﻿
 
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class StockItemService
+    public class StockItemService : IStockItemService
     {
         public void Increase(StockItem stockItem, decimal quantity)
         {

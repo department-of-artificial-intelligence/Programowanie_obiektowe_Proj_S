@@ -1,10 +1,11 @@
 ﻿using Project.Model;
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 
 
 namespace Project.Services.Services
 {
-    public class OrderServices
+    public class OrderServices : IOrderService
     {
         public decimal ProcessOrder(Order order)
         {

@@ -1,9 +1,10 @@
 ﻿
 using Project.Model;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class CityService
+    public class CityService : ICityService
     {
         public void AddRestaurant(City city, Restaurant restaurant)
         {

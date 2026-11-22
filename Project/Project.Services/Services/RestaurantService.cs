@@ -1,9 +1,10 @@
 ﻿
 using Project.Model;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class RestaurantService
+    public class RestaurantService: IRestaurantService
     {
         public void AddEmployee(Restaurant restaurant, Employee employee)
         {
@@ -33,12 +34,9 @@ namespace Project.Services.Services
 
         // TODO!!!
         // CreateOrder(customer, items)
-        public void GetAvailableDishes(Restaurant restaurant)
+        public List<Dish> GetAvailableDishes(Restaurant restaurant)
         {
-            foreach (Dish dish in restaurant.Menu)
-            {
-                Console.WriteLine(dish);
-            }
+            return restaurant.Menu;
         }
     }
 }

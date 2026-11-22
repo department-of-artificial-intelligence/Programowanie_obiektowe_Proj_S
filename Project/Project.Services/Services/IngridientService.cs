@@ -1,9 +1,10 @@
 ﻿
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class IngridientService
+    public class IngridientService : IIngridientService
     {
         public void UpdatePrice(Ingridient ingridient, decimal newPrice)
         {
