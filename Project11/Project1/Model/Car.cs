@@ -12,6 +12,7 @@ namespace Project1.Model
         private string _model;
         private decimal _enginePower;
         private decimal _pricePerHour;
+        private CarStatus _status;
         public int Id
         {
             get => _id;
@@ -48,21 +49,39 @@ namespace Project1.Model
                 _pricePerHour = value;
             }
         }
-        public bool IsAvailable { get; private set; }
-        public Car(int id, string model, int enginePower, decimal pricePerHour, bool isAvailable) 
+        public CarStatus Status
+        {
+            get => _status;
+            private set
+            {
+                _status = value;
+            }
+        }
+        public enum CarStatus
+        {
+            Available,
+            Rented,
+            Reserved,
+            Maintenance
+        }
+
+        public Car(int id, string model, decimal enginePower, decimal pricePerHour, CarStatus status) 
         {
             Id = id;
             Model = model;
             EnginePower = enginePower;
             PricePerHour = pricePerHour;
-            IsAvailable = true;
+            Status = status;
         }
         public void Rent() 
         {
-            if (!IsAvailable)
-            {
-                throw new Exception("Car is rented.");
-            }
+            if (Status!=CarStatus.Available) throw new Exception("Car is rented.");
+            Status = CarStatus.Rented;
+        }
+        public void Return()
+        {
+            if (Status != CarStatus.Rented) throw new InvalidOperationException("Car is not rented.");
+            Status = CarStatus.Available;
         }
         public void DisplayInfo()
         {
@@ -70,7 +89,7 @@ namespace Project1.Model
             Console.WriteLine($"Model: {Model}");
             Console.WriteLine($"EnginePower: {EnginePower}");
             Console.WriteLine($"PricePerHour: {PricePerHour}");
-            Console.WriteLine($"IsAvailable: {IsAvailable}");
+            Console.WriteLine($"Status: {Status}");
         }
     }
 }
