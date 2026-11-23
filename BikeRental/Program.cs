@@ -1,4 +1,5 @@
 using BikeRental.Services;
+using System;
 using System.Linq;
 
 var manager = new BikeRentalManager(new HourlyRentalPriceCalculator());
@@ -82,6 +83,57 @@ while (true)
 void ShowGroupedStatistics()
 {
     Console.WriteLine("\n===== BIKES BY TYPE =====");
+    var BikeGroups = manager.Bikes.GroupBy(b => b.GetType().Name).Select(g => new
+    {
+        BikeType = g.Key,
+        TotalBikes = g.Count(),
+        AvailableBikes = g.Count(b => b.IsAvailable),
+        AveragePrice = g.Average(b => b.GetHourlyPrice())
+    }).OrderByDescending(g => g.TotalBikes);
+
+    foreach (var group in BikeGroups)
+    {
+        Console.WriteLine(
+            $"{group.BikeType}: " +
+            $"Total: {group.TotalBikes}, " +
+            $"Available Bikes: {group.AvailableBikes}, " +
+            $"Average price: {group.AveragePrice:F2} PLN"
+        );
+    }
+
+    Console.WriteLine("\n===== RENTALS BY STATION =====");
+    var stationGroups = manager.Rentals.GroupBy(r => r.StartStation.Name).Select(g => new
+    {
+        StationName = g.Key,
+        TotalRentals = g.Count(),
+        CompletedRentals = g.Count(r => !r.IsActive),
+        TotalIncome = g.Where(r => !r.IsActive).Sum(r => r.TotalPrice)
+    }).OrderByDescending (g => g.TotalRentals);
+    foreach (var group in stationGroups) 
+    {
+        Console.WriteLine(
+            $"{group.StationName}: " +
+            $"Total: {group.TotalRentals}, " +
+            $"Completed: {group.CompletedRentals}, " +
+            $"Total income: {group.TotalIncome:F2} PLN"
+        );
+    }
+
+    Console.WriteLine("\n===== RENTALS BY CUSTOMER =====");
+    var customerGroups = manager.Rentals.GroupBy(r => r.Customer.Name).Select(g => new
+    {
+        CustomerName = g.Key,
+        TotalRentals = g.Count(),
+        TotalSpent = g.Where(r => !r.IsActive).Sum(r => r.TotalPrice)
+    }).OrderByDescending(g => g.TotalSpent);
+    foreach (var group in customerGroups)
+    {
+        Console.WriteLine(
+            $"{group.CustomerName}: " +
+            $"Rentals: {group.TotalRentals}, " +
+            $"Spent: {group.TotalSpent:F2} PLN"
+        );
+    }
 }
 
 void ShowStatistics()
