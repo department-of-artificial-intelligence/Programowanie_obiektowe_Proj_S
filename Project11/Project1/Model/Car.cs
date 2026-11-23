@@ -8,10 +8,46 @@ namespace Project1.Model
 {
     internal class Car
     {
-        public int Id { get; private set; }
-        public string Model { get; set; }
-        public int EnginePower { get; set; }
-        public decimal PricePerHour { get; set; }
+        private int _id;
+        private string _model;
+        private decimal _enginePower;
+        private decimal _pricePerHour;
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                if (value < 0) throw new ArgumentOutOfRangeException("IdOutOfRange");
+                _id = value;
+            }
+        }
+        public string Model
+        {
+            get => _model;
+            set
+            {
+                if (string.IsNullOrEmpty(value)) throw new ArgumentException("ModelIsEmpty");
+                _model = value;
+            }
+        }
+        public decimal EnginePower
+        {
+            get => _enginePower;
+            set
+            {
+                if (value < 0m) throw new ArgumentOutOfRangeException("EnginePowerOutOfRange");
+                _enginePower = value;
+            }
+        }
+        public decimal PricePerHour
+        {
+            get => _pricePerHour;
+            set
+            {
+                if (value < 0) throw new ArgumentOutOfRangeException("PricePerHourOutOfRange");
+                _pricePerHour = value;
+            }
+        }
         public bool IsAvailable { get; private set; }
         public Car(int id, string model, int enginePower, decimal pricePerHour, bool isAvailable) 
         {
