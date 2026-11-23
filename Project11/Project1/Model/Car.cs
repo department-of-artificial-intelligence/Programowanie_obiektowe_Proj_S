@@ -57,14 +57,6 @@ namespace Project1.Model
                 _status = value;
             }
         }
-        public enum CarStatus
-        {
-            Available,
-            Rented,
-            Reserved,
-            Maintenance
-        }
-
         public Car(int id, string model, decimal enginePower, decimal pricePerHour, CarStatus status) 
         {
             Id = id;
