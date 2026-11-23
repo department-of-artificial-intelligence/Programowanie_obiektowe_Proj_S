@@ -1,43 +1,51 @@
-﻿namespace DomowyBudzet.Model.DataModels;
+﻿using DomowyBudzet.Model.DataModels;
+using DomowyBudzet.Service.Abstractions;
 
-public class BudgetManager {
+namespace DomowyBudzet.Service.Implementaions;
+
+public class BudgetManager : IBudgetManager {
     public decimal Balance { get; private set; }
     //public List<Transaction> Transactions { get; private set; }
     private List<Transaction> _transactions;
 
-    public IEnumerable<Transaction> Transactions { 
+    public IEnumerable<Transaction> Transactions
+    {
         get { return _transactions; }
     }
 
-    public BudgetManager() {
+    public BudgetManager()
+    {
         Balance = 0m;
         _transactions = [];
     }
-    public BudgetManager(List<Transaction> transactions) {
+    public BudgetManager(List<Transaction> transactions)
+    {
         ArgumentNullException.ThrowIfNull(transactions, "List of transactions has to be initialized (can't be null)");
 
         _transactions = [.. transactions];
         Balance = transactions.Where(x => x.Type == TransactionType.Income).Sum(x => x.Amount) - transactions.Where(x => x.Type == TransactionType.Expense).Sum(x => x.Amount);
     }
 
-    public void AddTransaction(Transaction transaction) {
+    public void AddTransaction(Transaction transaction)
+    {
         ArgumentNullException.ThrowIfNull(transaction, "Transaction has to be initialized (can't be null)");
 
-        if(transaction.Type == TransactionType.Income) {
+        if (transaction.Type == TransactionType.Income)
+        {
             Balance += transaction.Amount;
             _transactions.Add(transaction);
         }
-        else {
-            if(Balance - transaction.Amount < 0)
+        else
+        {
+            if (Balance - transaction.Amount < 0)
                 throw new InvalidOperationException("You can't do this operation because you don't have enough money");
-            else {
+            else
+            {
                 Balance -= transaction.Amount;
                 _transactions.Add(transaction);
             }
         }
     }
-
     public string GetBalance() { return $"{Balance:C}"; }
     public string GetTransactionHistory() { return "Transactions:\n" + string.Join("\n", Transactions); }
-
 }
