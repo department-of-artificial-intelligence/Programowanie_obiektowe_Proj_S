@@ -60,5 +60,6 @@ namespace Project1.Model
             HireDate = hireDate;
             Salary = salary;
         }
+
     }
 }
