@@ -1,6 +1,6 @@
 ﻿namespace Gemini.dataModel
 {
-    public class Pharmacy
+    public class Pharmacy : BaseEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -14,5 +14,10 @@
         public ICollection<User> users { get; set; } = new List<User>();
         public ICollection<PharmacyInventory> inventory { get; set; } = new List<PharmacyInventory>();
         public ICollection<Sale> sales { get; set; } = new List<Sale>();
+
+        public override string GetSummary()
+        {
+            return $"Medicine #{Id}: {Name} - {City} - {Address:C2}. Phone number: {Phone}";
+        }
     }
 }

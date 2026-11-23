@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dataModel\Gemini.dataModel.csproj" />
+    <ProjectReference Include="..\Gemini.DAL\Gemini.DAL.csproj" />
+    <ProjectReference Include="..\Gemini.DTO\Gemini.DTO.csproj" />
+  </ItemGroup>
+
 </Project>
