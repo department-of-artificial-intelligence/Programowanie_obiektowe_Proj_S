@@ -18,7 +18,8 @@ namespace Project1.Model
                 _driverLicense = value;
             }
         }
-        public Customer() : base() {
+        public Customer() : base() 
+        {
             DriverLicense = "NoDriverLicense";
         }
         public Customer(int id, string firstName, string lastName, string email, string phoneNumber, string driverLicense) : base(id, firstName, lastName, email, phoneNumber)

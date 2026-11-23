@@ -13,14 +13,16 @@ namespace Project1.Model
         public int EnginePower { get; set; }
         public decimal PricePerHour { get; set; }
         public bool IsAvailable { get; private set; }
-        public Car(int id, string model, int enginePower, decimal pricePerHour, bool isAvailable) {
+        public Car(int id, string model, int enginePower, decimal pricePerHour, bool isAvailable) 
+        {
             Id = id;
             Model = model;
             EnginePower = enginePower;
             PricePerHour = pricePerHour;
             IsAvailable = true;
         }
-        public void Rent() {
+        public void Rent() 
+        {
             if (!IsAvailable)
             {
                 throw new Exception("Car is rented.");
