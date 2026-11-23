@@ -5,7 +5,9 @@ public class BudgetManager {
     //public List<Transaction> Transactions { get; private set; }
     private List<Transaction> _transactions;
 
-    public IEnumerable<Transaction> Transactions { get { return _transactions; } }
+    public IEnumerable<Transaction> Transactions { 
+        get { return _transactions; }
+    }
 
     public BudgetManager() {
         Balance = 0m;

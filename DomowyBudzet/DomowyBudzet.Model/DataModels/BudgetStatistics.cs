@@ -16,28 +16,41 @@ public class BudgetStatistics {
         Transactions = budgetManager.Transactions;
     }
 
-    public decimal SumByCategory(Category category)
-    {
-        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
-
-        return Transactions.Where(x => x.Category.Type == category.Type).Sum(x => x.Amount);
+    public decimal SumByType(TransactionType type) {
+        return Transactions.Where(x => x.Type == type).Sum(x => x.Amount);
     }
-    public decimal AvgByCategory(Category category)
-    {
-        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
-
-        return Transactions.Where(x => x.Category.Type == category.Type).Average(x => x.Amount);
+    public decimal AvgByType(TransactionType type) {
+        return Transactions.Where(x => x.Type == type).Select(x => x.Amount).DefaultIfEmpty(0m).Average();
     }
-    public decimal MaxByCategory(Category category)
-    {
-        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
-
-        return Transactions.Where(x => x.Category.Type == category.Type).Max(x => x.Amount);
+    public decimal MaxByType(TransactionType type) {
+        return Transactions.Where(x => x.Type == type).Select(x => x.Amount).DefaultIfEmpty(0m).Max();
     }
-    public decimal MinByCategory(Category category)
-    {
-        ArgumentNullException.ThrowIfNull(category, "Category has to be initialized (can't be null)");
-
-        return Transactions.Where(x => x.Category.Type == category.Type).Min(x => x.Amount);
+    public decimal MinByType(TransactionType type) {
+        return Transactions.Where(x => x.Type == type).Select(x => x.Amount).DefaultIfEmpty(0m).Min();
     }
+    public decimal SumByCategory(CategoryType categoryType, TransactionType? transactionType = null) {
+        if(transactionType is not null)
+            return Transactions.Where(x => x.Category.Type == categoryType && x.Type == transactionType).Sum(x => x.Amount);
+        else
+            return Transactions.Where(x => x.Category.Type == categoryType).Sum(x => x.Type == TransactionType.Income ? x.Amount : -x.Amount);
+    }
+    public decimal AvgByCategory(CategoryType categoryType, TransactionType? transactionType = null) {
+        if(transactionType is not null)
+            return Transactions.Where(x => x.Category.Type == categoryType && x.Type == transactionType).Select(x => x.Amount).DefaultIfEmpty(0m).Average();
+        else
+            return Transactions.Where(x => x.Category.Type == categoryType).Select(x => x.Type == TransactionType.Income ? x.Amount : -x.Amount).DefaultIfEmpty(0m).Average();
+    }
+    public decimal MaxByCategory(CategoryType categoryType, TransactionType? transactionType = null) {
+        if(transactionType is not null)
+            return Transactions.Where(x => x.Category.Type == categoryType && x.Type == transactionType).Select(x => x.Amount).DefaultIfEmpty(0m).Max();
+        else
+            return Transactions.Where(x => x.Category.Type == categoryType).Select(x => x.Type == TransactionType.Income ? x.Amount : -x.Amount).DefaultIfEmpty(0m).Max();
+    }
+    public decimal MinByCategory(CategoryType categoryType, TransactionType? transactionType = null) {
+        if(transactionType is not null)
+            return Transactions.Where(x => x.Category.Type == categoryType && x.Type == transactionType).Select(x => x.Amount).DefaultIfEmpty(0m).Min();
+        else
+            return Transactions.Where(x => x.Category.Type == categoryType).Select(x => x.Type == TransactionType.Income ? x.Amount : -x.Amount).DefaultIfEmpty(0m).Min();
+    }
+
 }
