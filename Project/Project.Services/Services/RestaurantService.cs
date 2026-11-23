@@ -4,7 +4,7 @@ using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    public class RestaurantService: IRestaurantService
+    public class RestaurantService : IRestaurantService
     {
         public void AddEmployee(Restaurant restaurant, Employee employee)
         {
