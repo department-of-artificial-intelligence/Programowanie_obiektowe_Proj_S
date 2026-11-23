@@ -30,7 +30,7 @@ namespace Project1.Model
             get => _name;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("NameIsEmpty");
+                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("NameIsEmpty");
                 _name = value;
             }
         }
@@ -39,7 +39,7 @@ namespace Project1.Model
             get => _address;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("AddressIsEmpty");
+                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("AddressIsEmpty");
                 _address = value;
             }
         }
@@ -48,7 +48,7 @@ namespace Project1.Model
             get => _city;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("CityIsEmpty");
+                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("CityIsEmpty");
                 _city = value;
             }
         }
@@ -57,7 +57,7 @@ namespace Project1.Model
             get => _phoneNumber;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("PhoneNumberIsEmpty");
+                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("PhoneNumberIsEmpty");
                 _phoneNumber = value;
             }
         }
@@ -66,7 +66,7 @@ namespace Project1.Model
             get => _openingHours;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("OpeningHoursIsEmpty");
+                if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("OpeningHoursIsEmpty");
                 _openingHours = value;
             }
         }
@@ -101,22 +101,22 @@ namespace Project1.Model
         }
         public void AddEmployee(Employee employee)
         {
-            if (employee == null || Employees == null) throw new ArgumentNullException("EmployeeOrEmployeesIsNull");
+            if (employee == null) throw new ArgumentNullException("EmployeeOrEmployeesIsNull");
             Employees.Add(employee);
         }
         public void RemoveEmployee(Employee employee)
         {
-            if (employee == null || Employees == null) throw new ArgumentNullException("EmployeeOrEmployeesIsNull");
+            if (employee == null) throw new ArgumentNullException("EmployeeOrEmployeesIsNull");
             Employees.Remove(employee);
         }
         public void AddCar(Car car)
         {
-            if (car == null || Cars == null) throw new ArgumentNullException("CarOrCarsIsNull");
+            if (car == null) throw new ArgumentNullException("CarOrCarsIsNull");
             Cars.Add(car);
         }
         public void RemoveCar(Car car)
         {
-            if (car == null || Cars == null) throw new ArgumentNullException("CarOrCarsIsNull");
+            if (car == null) throw new ArgumentNullException("CarOrCarsIsNull");
             Cars.Remove(car);
         }
     }
