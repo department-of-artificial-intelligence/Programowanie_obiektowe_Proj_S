@@ -233,10 +233,39 @@ public class Program
 
             service.AddGrade(student, grade);
             Check(student.Oceny.Contains(grade));
-            Check(service.ObliczSrednia(student) == 4.5);
-            Check(service.PrintInfo(student).Contains(student.Name));
             service.RemoveGrade(student, grade);
             Check(!student.Oceny.Contains(grade));
+        });
+
+        Run("UczenMapper maps students and grades", () =>
+        {
+            var student = CreateStudent();
+            var dto = UczenMapper.ToDto(student);
+
+            Check(dto.Id == student.Id);
+            Check(dto.Name == student.Name);
+            Check(dto.Surname == student.Surname);
+            Check(dto.Email == student.Email);
+            Check(dto.PoziomNauczania == student.PoziomNauczania);
+            Check(dto.Oceny.Count == 1);
+            Check(dto.Oceny[0].NumericGrade == student.Oceny[0].NumericGrade);
+            Check(dto.Oceny[0].Description == student.Oceny[0].Descripiton);
+
+            var createDto = new CreateUczenDto(
+                "Maria",
+                "Nowak",
+                "maria@example.com",
+                PoziomNauczania.Wyzszy,
+                new List<OcenaDto> { new(5, "Swietnie") });
+            var mappedStudent = UczenMapper.ToEntity(createDto);
+
+            Check(mappedStudent.Name == createDto.Name);
+            Check(mappedStudent.Surname == createDto.Surname);
+            Check(mappedStudent.Email == createDto.Email);
+            Check(mappedStudent.PoziomNauczania == createDto.PoziomNauczania);
+            Check(mappedStudent.Oceny.Count == 1);
+            Check(mappedStudent.Oceny[0].NumericGrade == createDto.Oceny[0].NumericGrade);
+            Check(mappedStudent.Oceny[0].Descripiton == createDto.Oceny[0].Description);
         });
 
         Run("KorepetytorService availability", () =>
@@ -289,6 +318,7 @@ public class Program
             Check(service.GetRemainingAmount(lesson.Id) == 80);
             Check(service.EditText(payment, "Zaplacono"));
             Check(payment.Opis == "Zaplacono");
+            
 
             Check(!service.CreatePayment(new Platnosc(TypPlatnosci.Gotowka, 81, lesson)));
         });

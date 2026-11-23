@@ -1,43 +1,36 @@
 namespace Projekt.Services.Uczen;
+
+using System.Runtime.InteropServices;
 using Projekt.Models;
+using Projekt.Models.Enums;
 
 public class UczenService : IUczenService
 {
     public void AddGrade(Uczen uczen, Ocena ocena)
     {
-        if(uczen == null)
-        {
-            throw new ArgumentNullException(nameof(uczen));
-        }
-
-        if(ocena == null)
-        {
-            throw new ArgumentNullException(nameof(ocena));
-        }
+        ArgumentNullException.ThrowIfNull(uczen);
+        ArgumentNullException.ThrowIfNull(ocena);
         uczen.Oceny.Add(ocena);
     }
 
-    public string PrintInfo(Uczen uczen)
+
+    public bool RemoveGrade(Uczen uczen, Ocena ocena)
     {
-        return $"ID: {uczen.Id} Name: {uczen.Name} {uczen.Surname}, Email: {uczen.Email}, poziom nauczania: {uczen.PoziomNauczania}, oceny: {uczen.Oceny}";
+        ArgumentNullException.ThrowIfNull(uczen);
+        ArgumentNullException.ThrowIfNull(ocena);
+        return uczen.Oceny.Remove(ocena);
     }
 
-    public void RemoveGrade(Uczen uczen, Ocena ocena)
+    public bool ChangeEducationLevel(Uczen uczen, PoziomNauczania poziom)
     {
-        if(uczen == null)
+        ArgumentNullException.ThrowIfNull(uczen);
+
+        if(uczen.PoziomNauczania != poziom)
         {
-            throw new ArgumentNullException(nameof(uczen));
+            uczen.PoziomNauczania = poziom;
+            return true;
         }
-
-        if(ocena == null)
-        {
-            throw new ArgumentNullException(nameof(ocena));
-        }
-        uczen.Oceny.Remove(ocena);
+        return false;
     }
 
-    public double ObliczSrednia(Uczen uczen)
-    {
-        return uczen.Oceny.Average(o => o.NumericGrade);
-    }
 }
