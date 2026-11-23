@@ -36,6 +36,5 @@ namespace Project1.Model
             Console.WriteLine($"PricePerHour: {PricePerHour}");
             Console.WriteLine($"IsAvailable: {IsAvailable}");
         }
-        
     }
 }
