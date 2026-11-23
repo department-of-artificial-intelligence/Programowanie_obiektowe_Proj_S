@@ -42,39 +42,5 @@ namespace Project.Model
 
         }
 
-        public void AddEmployee(Employee employee)
-        {
-            ArgumentNullException.ThrowIfNull(employee, nameof(employee));
-            Employees.Add(employee);
-        }
-
-        public bool RemoveEmployee(string firstName, string lastName)
-        {
-            Employee? employee = Employees.Find(x => x.FirstName == firstName && x.LastName == lastName);
-            if (employee != null)
-            {
-                Employees.Remove(employee);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public void AddDish(Dish dish)
-        {
-            ArgumentNullException.ThrowIfNull(dish, nameof(dish));
-            Menu.Add(dish);
-        }
-
-        // TODO!!!
-        // CreateOrder(customer, items)
-        public void GetAvailableDishes()
-        {
-            foreach (Dish dish in Menu) {
-                Console.WriteLine(dish);
-            }
-        }
     }
 }

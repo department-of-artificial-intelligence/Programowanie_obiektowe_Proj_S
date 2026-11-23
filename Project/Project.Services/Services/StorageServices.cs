@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Project.Model;
+using Project.Model.DataModels;
+using Project.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Project.Model;
-using Project.Model.DataModels;
 
 namespace Project.Services.Services;
 
-    public class StorageServices
-    {
+    public class StorageServices : IStorageService
+{
     public void AddStock(Storage storage, Ingridient ingridient, decimal quantity)
     {
         ArgumentNullException.ThrowIfNull(ingridient);

@@ -37,37 +37,5 @@ public class Order
 
 
     }
-
-    public void AddItem(Dish dish, int quantity)
-    {
-        ArgumentNullException.ThrowIfNull(dish);
-        if (quantity <= 0)
-            throw new ArgumentOutOfRangeException("quantity can`t be < 1");
-        Items.Add(new OrderItem(dish, quantity));
-
-    }
-
-    public void RemoveItem(int dishId)
-    {
-        OrderItem? founded = Items.Find(i => i.Dish.Id == dishId);
-        if (founded == null)
-            throw new ArgumentException("Order item doesn`t found");
-        Items.Remove(founded);
-    }
-
-    public decimal CalculateTotal()
-    {
-        return Items.Sum(i => i.GetLineTotal());
-    }
-
-    public void ChangeStatus(OrderStatus status)
-    {
-        Status = status;
-    }
-
-    public void Cancel()
-    {
-        Status = OrderStatus.Canceled;
-    }
 }
 

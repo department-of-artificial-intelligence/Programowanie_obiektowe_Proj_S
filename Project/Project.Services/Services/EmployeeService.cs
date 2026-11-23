@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using Project.Model;
+using Project.Services.Interfaces;
 
 namespace Project.Services.Services
 {
-    internal class EmployeeService
+    public class EmployeeService : IEmployeeService
     {
+        public void ChnagePosition(Employee employee, string role)
+        {
+            employee.FirstName = role;
+        }
     }
 }

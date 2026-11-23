@@ -1,10 +1,11 @@
 ﻿using Project.Model;
 using Project.Model.DataModels;
+using Project.Services.Interfaces;
 
 
 namespace Project.Services.Services
 {
-    public class OrderServices
+    public class OrderServices : IOrderService
     {
         public decimal ProcessOrder(Order order)
         {
@@ -73,5 +74,37 @@ namespace Project.Services.Services
 
             order.Status = OrderStatus.Canceled;
     }
+
+        public void AddItem(Order order, Dish dish, int quantity)
+        {
+            ArgumentNullException.ThrowIfNull(dish);
+            if (quantity <= 0)
+                throw new ArgumentOutOfRangeException("quantity can`t be < 1");
+            order.Items.Add(new OrderItem(dish, quantity));
+
+        }
+
+        public void RemoveItem(Order order, int dishId)
+        {
+            OrderItem? founded = order.Items.Find(i => i.Dish.Id == dishId);
+            if (founded == null)
+                throw new ArgumentException("Order item doesn`t found");
+            order.Items.Remove(founded);
+        }
+
+        public decimal CalculateTotal(Order order)
+        {
+            return order.Items.Sum(i => i.GetLineTotal());
+        }
+
+        public void ChangeStatus(Order order, OrderStatus status)
+        {
+            order.Status = status;
+        }
+
+        public void Cancel(Order order)
+        {
+            order.Status = OrderStatus.Canceled;
+        }
     }
 }

@@ -23,19 +23,5 @@ namespace Project.Model
             Restaurants = restaurants;
         }
 
-        public void AddRestaurant(Restaurant restaurant)
-        {
-            ArgumentNullException.ThrowIfNull(restaurant);
-          
-            Restaurants.Add(restaurant);
-        }
-        public Restaurant RemoveRestaurant(int id)
-        {
-            Restaurant? founded = Restaurants.Find(x => x.Id == id);
-            if(founded == null)
-            throw new ArgumentException("No restaruants with this id");
-            Restaurants.Remove(founded);
-            return founded;
-        }
     }
 }
