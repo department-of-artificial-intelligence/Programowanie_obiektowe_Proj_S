@@ -83,7 +83,8 @@ public class BikeRentalManager
             throw new InvalidOperationException("Bike is not at any station.");
 
         station.RemoveBike(bike);
-        bike.Rent();
+        IRentable rentableBike = bike;
+        rentableBike.Rent();
 
         var rental = new Rental(_rentals.Count + 1, customer, bike, station);
         _rentals.Add(rental);
@@ -103,7 +104,8 @@ public class BikeRentalManager
         decimal price = _priceCalculator.CalculatePrice(rental.Bike, rental.Period.GetDuration());
 
         rental.Complete(station, price);
-        rental.Bike.Return();
+        IRentable rentableBike = rental.Bike;
+        rentableBike.Return();
         station.AddBike(rental.Bike);
 
         return price;

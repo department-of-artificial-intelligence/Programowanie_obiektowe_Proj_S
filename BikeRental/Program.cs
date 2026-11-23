@@ -29,6 +29,7 @@ while (true)
     Console.WriteLine("6. Return a bike");
     Console.WriteLine("7. Show rentals");
     Console.WriteLine("8. Show simple statistics");
+    Console.WriteLine("9. Show grouped statistics");
     Console.WriteLine("0. Exit");
     Console.Write("Choose option: ");
 
@@ -62,6 +63,9 @@ while (true)
             case "8":
                 ShowStatistics();
                 break;
+            case "9":
+                ShowGroupedStatistics();
+                break;
             case "0":
                 return;
             default:
@@ -73,6 +77,11 @@ while (true)
     {
         Console.WriteLine($"Error: {ex.Message}");
     }
+}
+
+void ShowGroupedStatistics()
+{
+    Console.WriteLine("\n===== BIKES BY TYPE =====");
 }
 
 void ShowStatistics()

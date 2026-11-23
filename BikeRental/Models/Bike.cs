@@ -1,20 +1,21 @@
+using BikeRental.Interfaces;
 namespace BikeRental.Models;
 
-public class Bike
+public abstract class Bike : IRentable
 {
     public int Id { get; }
     public string Model { get; }
     public decimal PricePerHour { get; }
     public bool IsAvailable { get; private set; } = true;
 
-    public Bike(int id, string model, decimal pricePerHour)
+    protected Bike(int id, string model, decimal pricePerHour)
     {
         Id = id;
         Model = model;
         PricePerHour = pricePerHour;
     }
 
-    public virtual decimal GetHourlyPrice() { return PricePerHour; }
+    public abstract decimal GetHourlyPrice();
 
 
 

@@ -11,5 +11,9 @@ namespace BikeRental.Models
         public CityBike(int id, string model, decimal pricePerHour) : base(id, model, pricePerHour)
         {
         }
+        public override decimal GetHourlyPrice()
+        {
+            return PricePerHour;
+        }
     }
 }
